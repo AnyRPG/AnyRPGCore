@@ -23,64 +23,67 @@ namespace AnyRPG {
 
         private StatusEffectProperties statusEffect;
 
-        public void UpdateApplyCount() {
-            bool completeBefore = IsComplete;
-                CurrentAmount++;
-                questBase.CheckCompletion();
-                if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages) {
-                    messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", statusEffect.DisplayName, CurrentAmount, Amount));
-                }
-                if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages) {
-                    messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, statusEffect.DisplayName));
-                }
+        public void UpdateApplyCount(UnitController sourceUnitController, StatusEffectNode statusEffectNode) {
+            if (statusEffectNode.StatusEffect != statusEffect) {
+                return;
+			}
+			bool completeBefore = IsComplete(sourceUnitController);
+            SetCurrentAmount(sourceUnitController, CurrentAmount(sourceUnitController) + 1);
+            if (CurrentAmount(sourceUnitController) <= Amount && questBase.PrintObjectiveCompletionMessages) {
+                sourceUnitController.WriteMessageFeedMessage(string.Format("Apply {0}: {1}/{2}", statusEffect.DisplayName, CurrentAmount(sourceUnitController), Amount));
+            }
+            if (completeBefore == false && IsComplete(sourceUnitController) && questBase.PrintObjectiveCompletionMessages) {
+                sourceUnitController.WriteMessageFeedMessage(string.Format("Apply {0}: Objective Complete", statusEffect.DisplayName));
+            }
+            questBase.CheckCompletion(sourceUnitController);
         }
 
-        public override void UpdateCompletionCount(bool printMessages = true) {
+        public override void UpdateCompletionCount(UnitController sourceUnitController, bool printMessages = true) {
 
-            base.UpdateCompletionCount(printMessages);
-            bool completeBefore = IsComplete;
+            base.UpdateCompletionCount(sourceUnitController, printMessages);
+            bool completeBefore = IsComplete(sourceUnitController);
             if (completeBefore) {
                 return;
             }
-            if (playerManager.MyCharacter.CharacterStats.GetStatusEffectNode(statusEffect) != null) {
-                CurrentAmount++;
-                questBase.CheckCompletion(true, printMessages);
-                if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && printMessages == true) {
-                    messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", statusEffect.DisplayName, CurrentAmount, Amount));
+            if (sourceUnitController.CharacterStats.GetStatusEffectNode(statusEffect) != null) {
+                SetCurrentAmount(sourceUnitController, CurrentAmount(sourceUnitController) + 1);
+                if (CurrentAmount(sourceUnitController) <= Amount && questBase.PrintObjectiveCompletionMessages && printMessages == true) {
+                    sourceUnitController.WriteMessageFeedMessage(string.Format("Apply {0}: {1}/{2}", statusEffect.DisplayName, CurrentAmount(sourceUnitController), Amount));
                 }
-                if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages && printMessages == true) {
-                    messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, statusEffect.DisplayName));
+                if (completeBefore == false && IsComplete(sourceUnitController) && questBase.PrintObjectiveCompletionMessages && printMessages == true) {
+                    sourceUnitController.WriteMessageFeedMessage(string.Format("Apply {0}: Objective Complete", statusEffect.DisplayName));
                 }
+                questBase.CheckCompletion(sourceUnitController, true, printMessages);
             }
         }
 
-        public override void OnAcceptQuest(QuestBase quest, bool printMessages = true) {
-            base.OnAcceptQuest(quest, printMessages);
-            statusEffect.OnApply += UpdateApplyCount;
-            UpdateCompletionCount(printMessages);
+        public override void OnAcceptQuest(UnitController sourceUnitController, QuestBase quest, bool printMessages = true) {
+            base.OnAcceptQuest(sourceUnitController, quest, printMessages);
+            sourceUnitController.UnitEventController.OnStatusEffectAdd += UpdateApplyCount;
+            UpdateCompletionCount(sourceUnitController, printMessages);
         }
 
-        public override void OnAbandonQuest() {
-            base.OnAbandonQuest();
-            statusEffect.OnApply -= UpdateApplyCount;
+        public override void OnAbandonQuest(UnitController sourceUnitController) {
+            base.OnAbandonQuest(sourceUnitController);
+			sourceUnitController.UnitEventController.OnStatusEffectAdd -= UpdateApplyCount;
         }
 
-        public override string GetUnformattedStatus() {
+        public override string GetUnformattedStatus(UnitController sourceUnitController) {
             string beginText = string.Empty;
             //beginText = "Use ";
             //return beginText + DisplayName + ": " + Mathf.Clamp(CurrentAmount, 0, Amount) + "/" + Amount;
-            return DisplayName + ": " + Mathf.Clamp(CurrentAmount, 0, Amount) + "/" + Amount;
+            return DisplayName + ": " + Mathf.Clamp(CurrentAmount(sourceUnitController), 0, Amount) + "/" + Amount;
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager, QuestBase quest) {
             base.SetupScriptableObjects(systemGameManager, quest);
             
             if (effectName != null && effectName != string.Empty) {
-                StatusEffect tmpAbility = systemDataFactory.GetResource<AbilityEffect>(effectName) as StatusEffect;
+                StatusEffectBase tmpAbility = systemDataFactory.GetResource<AbilityEffect>(effectName) as StatusEffectBase;
                 if (tmpAbility != null) {
                     statusEffect = tmpAbility.StatusEffectProperties;
                 } else {
-                    Debug.LogError("StatusEffectObjective.SetupScriptableObjects(): Could not find ability : " + effectName + " while inititalizing an ability objective for " + quest.ResourceName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"StatusEffectObjective.SetupScriptableObjects(): Could not find ability : {effectName} while inititalizing an ability objective for {quest.ResourceName}.  CHECK INSPECTOR");
                 }
             }
         }

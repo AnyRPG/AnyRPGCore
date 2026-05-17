@@ -38,8 +38,6 @@ MonoBehaviour:
       lineOfSightSourceLocation: 0
       targetRangeSourceLocation: 0
     chanceToCast: 100
-    effectMaterialName: 
-    materialChangeDuration: 2
     onHitAudioProfileNames: []
     randomAudioProfiles: 0
     hitAbilityEffectNames: []
@@ -58,14 +56,17 @@ MonoBehaviour:
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
+    statusEffectObjectList: []
     statusEffectAlignment: 0
     statusEffectTypeName: 
     statusEffectGroupName: 
+    effectMaterialName: 
     classTrait: 0
     requiredLevel: 1
     sceneNames: []
     requireOutOfCombat: 0
     limitedDuration: 1
+    refreshableDuration: 1
     duration: 20
     maxStacks: 1
     statBuffTypeNames: []

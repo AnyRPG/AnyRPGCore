@@ -11,7 +11,7 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Dialog", menuName = "AnyRPG/Dialog")]
     public class Dialog : DescribableResource, IPrerequisiteOwner {
 
-        public event System.Action OnDialogCompleted = delegate { };
+        public event System.Action<UnitController> OnDialogCompleted = delegate { };
 
         [Header("Dialog Settings")]
 
@@ -50,23 +50,14 @@ namespace AnyRPG {
         /// <summary>
         /// Track whether this dialog has been turned in
         /// </summary>
-        public bool TurnedIn {
-            get {
-                return saveManager.GetDialogSaveData(this).turnedIn;
-                //return false;
-            }
-            set {
-                DialogSaveData saveData = saveManager.GetDialogSaveData(this);
-                saveData.turnedIn = value;
-                saveManager.DialogSaveDataDictionary[saveData.DialogName] = saveData;
-                if (saveData.turnedIn == true) {
-                    //Debug.Log(DisplayName + ".Dialog.TurnedIn = true");
-                    // these events are for things that need the dialog turned in as a prerequisite
-                    systemEventManager.NotifyOnDialogCompleted(this);
-                    OnDialogCompleted();
-                }
+        public bool TurnedIn(UnitController sourceUnitController) {
+            return sourceUnitController.CharacterSaveManager.GetDialogSaveData(this).TurnedIn;
+        }
 
-            }
+        public void NotifyOnDialogCompleted(UnitController sourceUnitController) {
+            //Debug.Log($"{ResourceName}.Dialog.NotifyOnDialogCompleted({sourceUnitController.gameObject.name})");
+
+            OnDialogCompleted(sourceUnitController);
         }
 
         public override void SetGameManagerReferences() {
@@ -90,12 +81,12 @@ namespace AnyRPG {
         }
 
 
-        public virtual void UpdatePrerequisites(bool notify = true) {
+        public virtual void UpdatePrerequisites(UnitController sourceUnitController, bool notify = true) {
             //Debug.Log($"{gameObject.name}.Dialog.UpdatePrerequisites()");
             if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.UpdatePrerequisites(false);
+                        tmpPrerequisiteConditions.UpdatePrerequisites(sourceUnitController, false);
                     }
                 }
             } else {
@@ -104,35 +95,20 @@ namespace AnyRPG {
             //HandlePrerequisiteUpdates();
         }
 
-        public bool PrerequisitesMet {
-            get {
+        public bool PrerequisitesMet(UnitController sourceUnitController) {
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
-                    if (!prerequisiteCondition.IsMet()) {
+                    if (!prerequisiteCondition.IsMet(sourceUnitController)) {
                         return false;
                     }
                 }
                 // there are no prerequisites, or all prerequisites are complete
                 return true;
-            }
         }
 
         public List<DialogNode> DialogNodes { get => dialogNodes; set => dialogNodes = value; }
         public bool Automatic { get => automatic; set => automatic = value; }
         //public AudioProfile AudioProfile { get => audioProfile; set => audioProfile = value; }
         public bool Repeatable { get => repeatable; set => repeatable = value; }
-
-        /// <summary>
-        /// Set the shown value to false for all dialog Nodes and reset the turned in status
-        /// </summary>
-        public void ResetStatus() {
-            if (repeatable == false) {
-                return;
-            }
-            TurnedIn = false;
-            foreach (DialogNode dialogNode in dialogNodes) {
-                dialogNode.ResetStatus();
-            }
-        }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
@@ -158,6 +134,12 @@ namespace AnyRPG {
                     Debug.LogError("Dialog.SetupScriptableObjects(): Could not find audioProfile " + audioProfileName + " while initializing " + ResourceName);
                 }
             }
+
+            foreach (DialogNode dialogNode in dialogNodes) {
+                if (dialogNode != null && dialogNode.AudioClip != null) {
+                    systemGameManager.AudioManager.RegisterAudioClip(dialogNode.AudioClip);
+                }
+            }
         }
 
         public override void CleanupScriptableObjects() {
@@ -171,13 +153,13 @@ namespace AnyRPG {
             }
         }
 
-        public void HandlePrerequisiteUpdates() {
+        public void HandlePrerequisiteUpdates(UnitController sourceUnitController) {
             //Debug.Log(DisplayName + ".Dialog.HandlePrerequisiteUpdates()");
             if (prerequisiteOwners != null) {
                 // this event is for the interactable that will display this dialog and needs to know when it becomes available
                 //Debug.Log(DisplayName + ".Dialog.HandlePrerequisiteUpdates()");
                 foreach (IPrerequisiteOwner prerequisiteOwner in prerequisiteOwners) {
-                    prerequisiteOwner.HandlePrerequisiteUpdates();
+                    prerequisiteOwner.HandlePrerequisiteUpdates(sourceUnitController);
                 }
             }
         }

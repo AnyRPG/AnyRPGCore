@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: 862c82d9986a5294eb1debd08b3fe82e, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: very gold
+  description: very iron
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 2
+  itemPickupPrefabProfileName: Plate Boots Iron
   equipmentSlotType: Boots
   equipmentSetName: 
-  umaRecipeProfileName: Iron Plate Boots
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Iron Plate Boots

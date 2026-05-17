@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
-using UnityEditor.UIElements;
+
 using AnyRPG;
 
 namespace AnyRPG.EditorTools {
@@ -120,7 +120,7 @@ namespace AnyRPG.EditorTools {
                 } catch (NullReferenceException) {
                     // that means the serialized object has been disposed and gone out of scope while the editor window is still open
                     // let's just close it and act as nothing happened
-                    Debug.Log("edited property is gone.");
+                    Debug.LogWarning("edited property is gone.");
                     Close();
                 }
                 fileTypeLabel.text = "Resource name: " + resourceType.Name;
@@ -165,7 +165,7 @@ namespace AnyRPG.EditorTools {
             VisualElement filtersElement = new VisualElement() { style = { flexDirection = FlexDirection.Row } };
             root.Add(filtersElement);
 
-            typeFilter = new UnityEditor.UIElements.PopupField<Type>(classNames, 0) { style = { flexGrow = 0.4f } };
+            typeFilter = new UnityEngine.UIElements.PopupField<Type>(classNames, 0) { style = { flexGrow = 0.4f } };
             typeFilter.RegisterCallback<ChangeEvent<Type>>(x => ApplyClassFilter(x.newValue));
             filtersElement.Add(typeFilter);
 
@@ -204,8 +204,8 @@ namespace AnyRPG.EditorTools {
 
             listView.selectionType = SelectionType.Single;
 
-            listView.onItemsChosen += objects => SetSelected(objects);
-            listView.onSelectionChange += objects => SetSelected(objects);
+            listView.itemsChosen += objects => SetSelected(objects);
+            listView.selectionChanged += objects => SetSelected(objects);
 
             listView.style.flexGrow = 1.0f;
 

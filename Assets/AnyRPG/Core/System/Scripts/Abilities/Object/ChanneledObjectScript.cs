@@ -1,5 +1,4 @@
-﻿using AnyRPG;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 namespace AnyRPG {
@@ -94,6 +93,8 @@ namespace AnyRPG {
         private int animationPingPongDirection = 1;
         private bool orthographic;
 
+        private MaterialPropertyBlock materialPropertyBlock;
+
         // game manager references
         private CameraManager cameraManager = null;
 
@@ -112,6 +113,10 @@ namespace AnyRPG {
 
             orthographic = (cameraManager.ActiveMainCamera != null && cameraManager.ActiveMainCamera.orthographic == true);
             lineRenderer = GetComponent<LineRenderer>();
+
+            materialPropertyBlock = new MaterialPropertyBlock();
+            lineRenderer.GetPropertyBlock(materialPropertyBlock);
+
             lineRenderer.positionCount = 0;
             UpdateFromMaterialChange();
         }
@@ -243,10 +248,18 @@ namespace AnyRPG {
             }
 
             if (index >= 0 && index < offsets.Length) {
+                lineRenderer.material.SetVector("_Offset", offsets[index]);
+            } else {
+                lineRenderer.material.SetVector("_Offset", offsets[0]);
+            }
+
+            /*
+            if (index >= 0 && index < offsets.Length) {
                 lineRenderer.material.mainTextureOffset = offsets[index];
             } else {
                 lineRenderer.material.mainTextureOffset = offsets[0];
             }
+            */
         }
 
         private void UpdateLineRenderer() {
@@ -308,11 +321,16 @@ namespace AnyRPG {
         /// </summary>
         public void UpdateFromMaterialChange() {
             size = new Vector2(1.0f / (float)Columns, 1.0f / (float)Rows);
-            lineRenderer.material.mainTextureScale = size;
+            //lineRenderer.material.mainTextureScale = size;
+
+            // new code
+            lineRenderer.material.SetVector("_Tiling", size);
+
             offsets = new Vector2[Rows * Columns];
             for (int y = 0; y < Rows; y++) {
                 for (int x = 0; x < Columns; x++) {
-                    offsets[x + (y * Columns)] = new Vector2((float)x / Columns, (float)y / Rows);
+                    //offsets[x + (y * Columns)] = new Vector2((float)x / Columns, (float)y / Rows);
+                    offsets[x + (y * Columns)] = new Vector2((float)x / Columns, 1.0f - size.y - ((float)y / Rows));
                 }
             }
         }

@@ -1,9 +1,4 @@
-using AnyRPG;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     public class ItemPickupComponent : LootableNodeComponent {
@@ -13,9 +8,9 @@ namespace AnyRPG {
         public ItemPickupComponent(Interactable interactable, ItemPickupProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
-        public override int GetValidOptionCount() {
+        public override int GetValidOptionCount(UnitController sourceUnitController) {
             //Debug.Log(interactable.gameObject.name + ".ItemPickupComponent.GetValidOptionCount()");
-            int returnValue = base.GetValidOptionCount();
+            int returnValue = base.GetValidOptionCount(sourceUnitController);
             if (returnValue == 0) {
                 return returnValue;
             }
@@ -24,6 +19,7 @@ namespace AnyRPG {
             }
             return returnValue;
         }
+
     }
 
 }

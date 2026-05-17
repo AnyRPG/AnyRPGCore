@@ -63,17 +63,19 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
         }
 
+        /*
         public void SpawnUnit(UnitProfile unitProfile) {
             //Debug.Log("CharacterCreatorManager.SpawnUnit(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ")");
 
             if (unitProfile == null) {
-                Debug.Log("CharacterCreatorManager.HandleOpenWindow(): unitProfile is null");
+                //Debug.Log("CharacterCreatorManager.HandleOpenWindow(): unitProfile is null");
                 return;
             }
             this.unitProfile = unitProfile;
 
-            SpawnUnit();
+            //SpawnUnit();
         }
+        */
 
         public void SetPlatformMaterial(Material material) {
             platformRenderer.material = material;

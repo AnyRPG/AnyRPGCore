@@ -8,6 +8,9 @@ namespace AnyRPG {
 
         public MoveablePrefabProps Props { get => interactableOptionProps as MoveablePrefabProps; }
 
+        [SerializeField]
+        private GameObject spawnReference = null;
+
         // by default it is considered closed when not using the sheathed position
         private bool objectOpen = false;
 
@@ -21,7 +24,7 @@ namespace AnyRPG {
         private Coroutine loopCoroutine = null;
 
         public MoveablePrefabComponent(Interactable interactable, MoveablePrefabProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
-            interactableOptionProps.InteractionPanelTitle = "Interactable";
+            interactionPanelTitle = "Interactable";
         }
 
         public override void Cleanup() {
@@ -36,21 +39,23 @@ namespace AnyRPG {
             }
         }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
             //Debug.Log($"{gameObject.name}.AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
             //if (coroutine != null) {
                 //Debug.Log($"{gameObject.name}.AnimatedObject.Interact(): coroutine is not null, exiting");
                 //return false;
             //}
-            base.Interact(source, optionIndex);
-            uIManager.interactionWindow.CloseWindow();
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
             // loop through the animatedobjects prefabobjects
             // check their state (open / closed)
+            // FIX ME - SHOULD THIS COMPONENT JUST GET REMOVED COMPLETELY ?
+            /*
             if (interactable.PrefabProfile == null) {
-                Debug.Log("AnimatedObject.Interact(): prefabprofile was null");
+                //Debug.Log("AnimatedObject.Interact(): prefabprofile was null");
                 return false;
             }
+            */
             if (Props.Loop == true) {
                 if (looping == true) {
                     looping = false;
@@ -63,14 +68,20 @@ namespace AnyRPG {
             }
             // lerp them to the other state, using the values defined in their sheathed and regular positions
 
-            return false;
+            return true;
+        }
+
+        public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
+            uIManager.interactionWindow.CloseWindow();
+
         }
 
         private void ChooseMovement() {
             if (objectOpen) {
-                moveCoroutine = interactable.StartCoroutine(animateObject(interactable.PrefabProfile.SheathedRotation, interactable.PrefabProfile.SheathedPosition, interactable.PrefabProfile.SheathAudioProfile));
+                //moveCoroutine = interactable.StartCoroutine(animateObject(interactable.PrefabProfile.SheathedRotation, interactable.PrefabProfile.SheathedPosition, interactable.PrefabProfile.SheathAudioProfile));
             } else {
-                moveCoroutine = interactable.StartCoroutine(animateObject(interactable.PrefabProfile.Rotation, interactable.PrefabProfile.Position, interactable.PrefabProfile.UnsheathAudioProfile));
+                //moveCoroutine = interactable.StartCoroutine(animateObject(interactable.PrefabProfile.Rotation, interactable.PrefabProfile.Position, interactable.PrefabProfile.UnsheathAudioProfile));
             }
         }
 
@@ -92,20 +103,20 @@ namespace AnyRPG {
 
         private IEnumerator animateObject(Vector3 newAngle, Vector3 newPosition, AudioProfile audioProfile) {
             newAngle = new Vector3(newAngle.x < 0 ? newAngle.x + 360 : newAngle.x, newAngle.y < 0 ? newAngle.y + 360 : newAngle.y, newAngle.z < 0 ? newAngle.z + 360 : newAngle.z);
-            Quaternion originalRotation = interactable.SpawnReference.transform.localRotation;
-            Vector3 originalPosition = interactable.SpawnReference.transform.localPosition;
+            Quaternion originalRotation = spawnReference.transform.localRotation;
+            Vector3 originalPosition = spawnReference.transform.localPosition;
             //Debug.Log($"{gameObject.name}.AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): original position: " + originalPosition + "; rotation: " + originalRotation);
 
-            AudioSource audioSource = interactable.SpawnReference.GetComponent<AudioSource>();
-            if (audioSource != null && audioProfile != null && audioProfile.AudioClip != null) {
+            ObjectAudioController objectAudioController = spawnReference.GetComponent<ObjectAudioController>();
+            if (objectAudioController != null && audioProfile != null && audioProfile.AudioClip != null) {
                 //Debug.Log($"{gameObject.name}.AnimatedObject.animateObject(): playing audioclip: " + audioProfile.AudioClip);
-                audioSource.PlayOneShot(audioProfile.AudioClip);
+                objectAudioController.PlayOneShot(audioProfile.AudioClip);
             }
 
             // testing doing this first to allow an object to reverse before it's animation has completed
             objectOpen = !objectOpen;
 
-            while (interactable.SpawnReference.transform.localEulerAngles != newAngle || interactable.SpawnReference.transform.localPosition != newPosition) {
+            while (spawnReference.transform.localEulerAngles != newAngle || spawnReference.transform.localPosition != newPosition) {
                 //Debug.Log($"{gameObject.name}.AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): localEulerAngles: " + interactable.MySpawnReference.transform.localEulerAngles + "; position: " + interactable.MySpawnReference.transform.localPosition);
                 //Quaternion newRotation = Quaternion.Lerp(originalRotation, Quaternion.Euler(newAngle), 0.01f);
                 //Quaternion newRotation = Quaternion.RotateTowards(interactable.MySpawnReference.transform.localRotation, Quaternion.Euler(newAngle), rotationSpeed);
@@ -114,12 +125,12 @@ namespace AnyRPG {
                 //Quaternion tmpRotation = interactable.MySpawnReference.transform.localRotation * Quaternion.Euler(newAngle);
                 //Vector3 realNewAngle = tmpRotation.eulerAngles;
 
-                Quaternion newRotation = Quaternion.RotateTowards(Quaternion.Euler(interactable.SpawnReference.transform.localEulerAngles), Quaternion.Euler(newAngle), Props.RotationSpeed);
+                Quaternion newRotation = Quaternion.RotateTowards(Quaternion.Euler(spawnReference.transform.localEulerAngles), Quaternion.Euler(newAngle), Props.RotationSpeed);
                 //Quaternion newRotation = Quaternion.RotateTowards(interactable.MySpawnReference.transform.localRotation, Quaternion.Euler(realNewAngle), rotationSpeed);
                 //Quaternion newRotation = Quaternion.RotateTowards(interactable.MySpawnReference.transform.localRotation, tmpRotation, rotationSpeed);
-                Vector3 newLocation = Vector3.MoveTowards(interactable.SpawnReference.transform.localPosition, newPosition, Props.MovementSpeed);
-                interactable.SpawnReference.transform.localPosition = newLocation;
-                interactable.SpawnReference.transform.localRotation = newRotation;
+                Vector3 newLocation = Vector3.MoveTowards(spawnReference.transform.localPosition, newPosition, Props.MovementSpeed);
+                spawnReference.transform.localPosition = newLocation;
+                spawnReference.transform.localRotation = newRotation;
                 yield return null;
             }
             //objectOpen = !objectOpen;

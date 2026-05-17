@@ -1,9 +1,6 @@
-using AnyRPG;
 using System;
 using System.Collections;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     public class TeleportComponent : PortalComponent {
@@ -13,11 +10,12 @@ namespace AnyRPG {
         public TeleportComponent(Interactable interactable, TeleportProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log($"{gameObject.name}.PortalInteractable.Interact()");
-            base.Interact(source, optionIndex);
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            //Debug.Log($"{interactable.gameObject.name}.TeleportComponent.ProcessInteract({sourceUnitController.gameObject.name}, {componentIndex})");
 
-            source.BaseCharacter.CharacterAbilityManager.BeginAbility(TeleportProps.BaseAbility.AbilityProperties);
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
+
+            sourceUnitController.CharacterAbilityManager.BeginAbility(TeleportProps.BaseAbility.AbilityProperties);
             return true;
         }
 

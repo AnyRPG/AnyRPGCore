@@ -36,6 +36,7 @@ namespace AnyRPG {
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext(source);
             }
+            abilityEffectContext.AbilityEffect = this;
             Dictionary<PrefabProfile, List<GameObject>> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
             TargetAOEHit(source, target, abilityEffectContext);
 
@@ -97,7 +98,7 @@ namespace AnyRPG {
         }
 
         protected virtual List<AOETargetNode> GetValidTargets(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffectProperties> abilityEffectList) {
-            //Debug.Log(DisplayName + ".AOEEffect.GetValidTargets()");
+            //Debug.Log($"{ResourceName}.AOEEffect.GetValidTargets({source.gameObject.name}, {(target == null ? "null" : target.gameObject.name)})");
 
             Vector3 aoeSpawnCenter = Vector3.zero;
             Quaternion aoeSpawnRotation = source.AbilityManager.UnitGameObject.transform.rotation;
@@ -115,40 +116,45 @@ namespace AnyRPG {
                 aoeSpawnCenter += aoeSpawnRotation * aoeProperties.AoeCenter;
             } else if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to groundTarget at: " + abilityEffectInput.prefabLocation);
-                aoeSpawnCenter = abilityEffectContext.groundTargetLocation;
+                aoeSpawnCenter = abilityEffectContext.GroundTargetLocation;
                 aoeSpawnCenter += aoeProperties.AoeCenter;
             } else {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to vector3.zero!!! was prefab spawn location not set or target despawned?");
             }
+            //Debug.Log($"{ResourceName}.AOEEffect.GetValidTargets() aoeSpawnCenter: {aoeSpawnCenter}, extents: {aoeProperties.AoeExtents} rotation: {aoeSpawnRotation}");
             //aoeSpawnCenter += source.AbilityManager.UnitGameObject.transform.TransformDirection(aoeCenter);
-            Collider[] colliders = new Collider[0];
+            Collider[] colliders = new Collider[100];
             int playerMask = 1 << LayerMask.NameToLayer("Player");
             int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
             int validMask = (playerMask | characterMask);
             if (aoeProperties.UseRadius) {
-                colliders = Physics.OverlapSphere(aoeSpawnCenter, aoeProperties.AoeRadius, validMask);
+                source.PhysicsScene.OverlapSphere(aoeSpawnCenter, aoeProperties.AoeRadius, colliders, validMask, QueryTriggerInteraction.UseGlobal);
             }
             if (aoeProperties.UseExtents) {
                 //Debug.Log(DisplayName + ".AOEEffect.GetValidTargets(): using aoeSpawnCenter: " + aoeSpawnCenter + ", extents: " + aoeExtents);
-                colliders = Physics.OverlapBox(aoeSpawnCenter, aoeProperties.AoeExtents / 2f, aoeSpawnRotation, validMask);
+                source.PhysicsScene.OverlapBox(aoeSpawnCenter, aoeProperties.AoeExtents / 2f, colliders, aoeSpawnRotation, validMask);
             }
             //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
             List<AOETargetNode> validTargets = new List<AOETargetNode>();
             foreach (Collider collider in colliders) {
                 //Debug.Log(DisplayName + ".AOEEffect.Cast() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
+                if (collider == null) {
+                    continue;
+                }
                 bool canAdd = true;
                 Interactable targetInteractable = collider.gameObject.GetComponent<Interactable>();
                 if (targetInteractable == null) {
                     continue;
                 }
                 foreach (AbilityEffectProperties abilityEffect in abilityEffectList) {
-                    if (abilityEffect.CanUseOn(targetInteractable, source, abilityEffectContext) == false) {
+                    if (abilityEffect.CanUseOn(targetInteractable.CharacterTarget, source, abilityEffectContext) == false) {
                         canAdd = false;
                     }
                 }
                 if (canAdd) {
                     AOETargetNode validTargetNode = new AOETargetNode();
-                    validTargetNode.targetGameObject = targetInteractable.InteractableTarget;
+                    //validTargetNode.targetGameObject = targetInteractable.InteractableTarget;
+                    validTargetNode.targetGameObject = targetInteractable.CharacterTarget;
                     validTargetNode.abilityEffectInput = abilityEffectContext;
                     validTargets.Add(validTargetNode);
                 }

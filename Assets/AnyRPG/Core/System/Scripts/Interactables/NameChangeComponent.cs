@@ -9,7 +9,8 @@ namespace AnyRPG {
     public class NameChangeComponent : InteractableOptionComponent {
 
         // game manager references
-        NameChangeManager nameChangeManager = null;
+        NameChangeManagerClient nameChangeManager = null;
+        CharacterGroupServiceServer characterGroupServiceServer = null;
 
         public NameChangeProps Props { get => interactableOptionProps as NameChangeProps; }
 
@@ -19,17 +20,22 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            nameChangeManager = systemGameManager.NameChangeManager;
+            nameChangeManager = systemGameManager.NameChangeManagerClient;
+            characterGroupServiceServer = systemGameManager.CharacterGroupServiceServer;
         }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
             //Debug.Log($"{gameObject.name}.NameChangeInteractable.Interact()");
             
-            base.Interact(source, optionIndex);
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
-            nameChangeManager.BeginInteraction(this);
-            uIManager.nameChangeWindow.OpenWindow();
             return true;
+        }
+
+        public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
+            nameChangeManager.SetProps(this, componentIndex, choiceIndex);
+            uIManager.nameChangeWindow.OpenWindow();
         }
 
         public override void StopInteract() {
@@ -37,9 +43,23 @@ namespace AnyRPG {
             uIManager.nameChangeWindow.CloseWindow();
         }
 
-        public override int GetCurrentOptionCount() {
+        public override int GetCurrentOptionCount(UnitController sourceUnitController) {
             //Debug.Log(interactable.gameObject.name + ".NameChangeInteractable.GetCurrentOptionCount(): returning " + GetValidOptionCount());
-            return GetValidOptionCount();
+            return GetValidOptionCount(sourceUnitController);
+        }
+
+        public void SetPlayerName(UnitController sourceUnitController, string newName) {
+            //Debug.Log($"{interactable.gameObject.name}.NameChangeComponent.SetPlayerName({sourceUnitController.gameObject.name}, {newName})");
+
+            if (newName != null && newName != string.Empty) {
+                if (systemGameManager.GameMode == GameMode.Local || playerCharacterService.RenamePlayerCharacter(sourceUnitController, newName)) {
+                    sourceUnitController.BaseCharacter.ChangeCharacterName(newName);
+                } else {
+                    sourceUnitController.UnitEventController.NotifyOnNameChangeFail();
+                }
+            }
+
+            NotifyOnConfirmAction(sourceUnitController);
         }
 
         //public override bool PlayInteractionSound() {

@@ -7,18 +7,21 @@ namespace AnyRPG {
         public BankProps Props { get => interactableOptionProps as BankProps; }
 
         public BankComponent(Interactable interactable, BankProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
-            interactableOptionProps.InteractionPanelTitle = "Bank";
+            interactionPanelTitle = "Bank";
         }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
             //Debug.Log($"{gameObject.name}.Bank.Interact(" + (source == null ? "null" : source.name) +")");
-            base.Interact(source, optionIndex);
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
+            return true;
+        }
+
+        public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
             uIManager.interactionWindow.CloseWindow();
             if (!uIManager.bankWindow.IsOpen) {
                 uIManager.bankWindow.OpenWindow();
-                return true;
             }
-            return false;
         }
 
         public override void StopInteract() {

@@ -17,10 +17,12 @@ namespace AnyRPG {
 
         protected InteractableOptionComponent interactableOption = null;
 
-        protected int optionIndex = 0;
+        private int componentIndex = 0;
+        private int choiceIndex = 0;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
+        protected InteractionManagerClient interactionManagerClient = null;
 
         public Image Icon { get => icon; set => icon = value; }
         public InteractableOptionComponent InteractableOption {
@@ -37,26 +39,31 @@ namespace AnyRPG {
             }
         }
 
+        public int ComponentIndex { get => componentIndex; }
+        public int ChoiceIndex { get => choiceIndex; }
+
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+            interactionManagerClient = systemGameManager.InteractionManagerClient;
         }
 
-        public void Setup(InteractableOptionComponent interactableOptionComponent, int optionIndex) {
+        public void Setup(InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
 
             InteractableOption = interactableOptionComponent;
-            text.text = interactableOptionComponent?.InteractableOptionProps?.GetInteractionPanelTitle(optionIndex);
+            text.text = interactableOptionComponent?.GetInteractionButtonText(playerManagerClient.UnitController, componentIndex, choiceIndex);
             text.color = Color.white;
-            this.optionIndex = optionIndex;
+            this.componentIndex = componentIndex;
+            this.choiceIndex = choiceIndex;
         }
 
         public override void ButtonClickAction() {
-            //Debug.Log("InteractionPanelScript.ButtonClickAction()");
+            //Debug.Log($"InteractionPanelScript.ButtonClickAction({text.text}, {componentIndex}, {choiceIndex})");
 
             base.ButtonClickAction();
-            if (playerManager.UnitController != null) {
-                InteractableOption.Interact(playerManager.UnitController.CharacterUnit, optionIndex);
+            if (playerManagerClient.UnitController != null) {
+                interactionManagerClient.InteractWithOption(playerManagerClient.UnitController, InteractableOption.Interactable, interactableOption, componentIndex, choiceIndex);
             }
             InteractableOption.Interactable.CloseInteractionWindow();
 

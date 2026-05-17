@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace AnyRPG {
     [RequireComponent(typeof(UUID))]
@@ -11,6 +9,9 @@ namespace AnyRPG {
 
         private UUID uuid = null;
 
+        // game manager references
+        private LevelManagerServer levelManagerServer = null;
+
         public IUUID UUID { get => uuid; }
         public PersistentObjectComponent PersistentObjectComponent { get => persistentObjectComponent; set => persistentObjectComponent = value; }
 
@@ -19,35 +20,37 @@ namespace AnyRPG {
             GetComponentReferences();
             persistentObjectComponent.Setup(this, systemGameManager);
 
-            // testing : moved here from start() for object pooling.  monitor for breakage
-            persistentObjectComponent.Init();
-        }
-
-        /*
-        private void OnEnable() {
-            GetComponentReferences();
-            persistentObjectComponent.Setup(this, systemGameManager);
+            RegisterWithLevelManager();
 
             // testing : moved here from start() for object pooling.  monitor for breakage
-            persistentObjectComponent.Init();
+            //persistentObjectComponent.Init();
+            persistentObjectComponent.LoadPersistentState();
         }
-        */
 
-        /*
-        void Start() {
-            persistentObjectComponent.Init();
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            levelManagerServer = systemGameManager.LevelManagerServer;
         }
-        */
+
+        private void RegisterWithLevelManager() {
+            if (persistentObjectComponent.SaveOnGameSave == false && persistentObjectComponent.SaveOnLevelUnload == false) {
+                return;
+            }
+            if (levelManagerServer != null) {
+                levelManagerServer.RegisterPersistentObject(this);
+            }
+        }
 
         public void GetComponentReferences() {
             uuid = GetComponent<UUID>();
         }
 
-        private void OnDisable() {
-            if (SystemGameManager.IsShuttingDown) {
-                return;
-            }
-            persistentObjectComponent.Cleanup();
+        public void PopulatePersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
+            // nothing to do here.  This object doesn't have any data to save, but the method needs to be here to satisfy the interface
+        }
+
+        public void LoadPersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
+            // nothing to do here.  This object doesn't have any data to load, but the method needs to be here to satisfy the interface
         }
 
     }

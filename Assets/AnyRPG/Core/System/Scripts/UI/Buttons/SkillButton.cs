@@ -12,7 +12,7 @@ namespace AnyRPG {
         [SerializeField]
         protected string skillName = string.Empty;
 
-        protected Skill skill = null;
+        protected CharacterSkillData characterSkillData = null;
 
         [SerializeField]
         protected Image icon = null;
@@ -23,14 +23,31 @@ namespace AnyRPG {
         [SerializeField]
         protected TextMeshProUGUI description = null;
 
-        public void AddSkill(Skill newSkill) {
+        // game manager references
+        private PlayerManagerClient playerManagerClient = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+        }
+
+        public void AddSkill(CharacterSkillData newSkill) {
             //Debug.Log("SkillButton.AddSkill(" + (skillName != null && skillName != string.Empty ? skillName : "null") + ")");
-            skill = newSkill;
-            if (skill != null) {
-                icon.sprite = skill.Icon;
+            characterSkillData = newSkill;
+            if (characterSkillData != null) {
+                icon.sprite = characterSkillData.Skill.Icon;
                 icon.color = Color.white;
-                skillNameText.text = skill.DisplayName;
-                description.text = skill.GetDescription();
+                skillNameText.text = characterSkillData.Skill.DisplayName;
+                string levelString = string.Empty;
+                string extranewline = string.Empty;
+                if (characterSkillData.Skill.UseSkillLevels) {
+                    levelString = $"Level {characterSkillData.SkillLevel}/{characterSkillData.Skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level)}\n";
+                    extranewline = "\n";
+                    if (characterSkillData.Skill.UseSkillExperience) {
+                        levelString += $"Experience ({characterSkillData.SkillExperience}/{characterSkillData.Skill.GetExperienceRequiredForLevel(characterSkillData.SkillLevel)})";
+                    }
+                }
+                description.text = $"{levelString}<size=12>{extranewline}<i>{characterSkillData.Skill.GetDescription()}</i></size>";
             } else {
                 //Debug.Log("SkillButton.AddSkill(): failed to get skill!!!");
             }

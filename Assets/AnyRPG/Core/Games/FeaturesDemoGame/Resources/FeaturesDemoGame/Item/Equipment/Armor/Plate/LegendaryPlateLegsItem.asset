@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 4
+  itemPickupPrefabProfileName: Plate Pants Gold
   equipmentSlotType: Pants
   equipmentSetName: Legendary Plate
-  umaRecipeProfileName: Gold Plate Legs
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Gold Plate Legs

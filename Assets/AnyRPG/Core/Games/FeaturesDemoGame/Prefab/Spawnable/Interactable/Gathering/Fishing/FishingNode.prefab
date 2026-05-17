@@ -26,6 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 502565618688254078}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -33,8 +34,8 @@ Transform:
   m_Children:
   - {fileID: 5871718508588503792}
   - {fileID: 2088587981551932}
+  - {fileID: 6615008820892572929}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1973492014805054627
 BoxCollider:
@@ -44,9 +45,17 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 502565618688254078}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &245425560069984829
@@ -61,32 +70,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df07de734135f834b9ba0098ec4ed914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabProfileName: 
-  spawnDelay: 0
-  spawnReference: {fileID: 814231395169248134}
-  despawnObject: 1
-  spawnPrerequisites: []
   showTooltip: 1
   interactableName: Fish
   glowOnMouseOver: 1
-  lightEmission: 0
-  glowFlashSpeed: 1.5
-  glowMinIntensity: 4.5
-  glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  temporaryMaterial: {fileID: 2100000, guid: 74229b87f443f8147b736ddd18c87e70, type: 2}
   interactionTooltipText: Catch Fish
   notInteractable: 0
   interactWithAny: 0
   interactOnExit: 0
   isTrigger: 0
   suppressInteractionWindow: 0
-  interactionMaxRange: 5
-  checkOptionsToSpawn: 1
-  spawnRequiresValidOption: 0
-  despawnRequiresNoValidOption: 0
+  overrideInteractionColliderSize: 0
+  interactionMaxRange: 6
+  interactionPoints:
+  - {fileID: 1755736810864162322}
   componentController: {fileID: 7026694329721049842}
-  unitComponentController: {fileID: 0}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!114 &-3919165771164659194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,12 +110,18 @@ MonoBehaviour:
     lootTableNames:
     - Fishing Node
     spawnTimer: 60
+    spawnObject: {fileID: 814231395169248134}
     abilityName: Fishing
+    skillName: Fishing
+    requiredSkillLevel: 0
+    maxSkillExperienceLevel: 0
+    maxCharacterExperienceLevel: 0
 --- !u!1001 &2243469103387972376
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 8704278066669917025}
     m_Modifications:
     - target: {fileID: 1472356435454701726, guid: 473b2db3c570af7469a3588e7924fae3,
@@ -176,6 +185,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 473b2db3c570af7469a3588e7924fae3, type: 3}
 --- !u!4 &2088587981551932 stripped
 Transform:
@@ -194,12 +206,13 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 8704278066669917025}
     m_Modifications:
     - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
         type: 3}
       propertyPath: m_Size.x
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
         type: 3}
@@ -209,7 +222,7 @@ PrefabInstance:
     - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
         type: 3}
       propertyPath: m_Size.z
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4814946152404104989, guid: 37f353160369b234b89e9214e5695cf7,
         type: 3}
@@ -272,6 +285,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37f353160369b234b89e9214e5695cf7, type: 3}
 --- !u!4 &5871718508588503792 stripped
 Transform:
@@ -291,3 +307,83 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbfd1210233fbdf4384ee537a76e5a2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &3563519745928827360
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8704278066669917025}
+    m_Modifications:
+    - target: {fileID: 2966054695481583602, guid: 845c97cd3b4b4d5419724d42618d4d51,
+        type: 3}
+      propertyPath: m_Name
+      value: InteractionPoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 7690196726187887841, guid: 845c97cd3b4b4d5419724d42618d4d51,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7690196726187887841, guid: 845c97cd3b4b4d5419724d42618d4d51,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7690196726187887841, guid: 845c97cd3b4b4d5419724d42618d4d51,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7690196726187887841, guid: 845c97cd3b4b4d5419724d42618d4d51,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7690196726187887841, guid: 845c97cd3b4b4d5419724d42618d4d51,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7690196726187887841, guid: 845c97cd3b4b4d5419724d42618d4d51,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7690196726187887841, guid: 845c97cd3b4b4d5419724d42618d4d51,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7690196726187887841, guid: 845c97cd3b4b4d5419724d42618d4d51,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7690196726187887841, guid: 845c97cd3b4b4d5419724d42618d4d51,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7690196726187887841, guid: 845c97cd3b4b4d5419724d42618d4d51,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 845c97cd3b4b4d5419724d42618d4d51, type: 3}
+--- !u!1 &1755736810864162322 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2966054695481583602, guid: 845c97cd3b4b4d5419724d42618d4d51,
+    type: 3}
+  m_PrefabInstance: {fileID: 3563519745928827360}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6615008820892572929 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7690196726187887841, guid: 845c97cd3b4b4d5419724d42618d4d51,
+    type: 3}
+  m_PrefabInstance: {fileID: 3563519745928827360}
+  m_PrefabAsset: {fileID: 0}

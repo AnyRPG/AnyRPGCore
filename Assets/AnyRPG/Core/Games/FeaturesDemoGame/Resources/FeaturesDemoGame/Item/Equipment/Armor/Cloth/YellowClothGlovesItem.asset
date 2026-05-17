@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0.1
+  itemPickupPrefabProfileName: Cloth Archer Gloves Yellow
   equipmentSlotType: Gloves
   equipmentSetName: 
-  umaRecipeProfileName: Yellow Cloth Gloves
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Yellow Cloth Gloves

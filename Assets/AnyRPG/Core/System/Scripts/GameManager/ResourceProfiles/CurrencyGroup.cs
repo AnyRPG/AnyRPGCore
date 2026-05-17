@@ -1,10 +1,11 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Serialization;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Currency Group", menuName = "AnyRPG/Currencies/CurrencyGroup")]
@@ -25,8 +26,8 @@ namespace AnyRPG {
         [SerializeField]
         private List<CurrencyGroupRate> currencyGroupRates = new List<CurrencyGroupRate>();
 
-        public Currency MyBaseCurrency { get => baseCurrency; set => baseCurrency = value; }
-        public List<CurrencyGroupRate> MyCurrencyGroupRates { get => currencyGroupRates; set => currencyGroupRates = value; }
+        public Currency BaseCurrency { get => baseCurrency; set => baseCurrency = value; }
+        public List<CurrencyGroupRate> CurrencyGroupRates { get => currencyGroupRates; set => currencyGroupRates = value; }
 
         public bool HasCurrency(Currency currency) {
             //Debug.Log("CurrencyGroup.HasCurrency(" + (currency == null ? "null" : currency.DisplayName) + ")");
@@ -34,7 +35,7 @@ namespace AnyRPG {
                 return false;
             }
             if (baseCurrency == null) {
-                Debug.Log("CurrencyGroup.HasCurrency(" + (currency == null ? "null" : currency.ResourceName) + "): basecurrency is null");
+                Debug.LogWarning($"CurrencyGroup.HasCurrency({(currency == null ? "null" : currency.ResourceName)}): basecurrency is null");
             }
             if (SystemDataUtility.MatchResource(baseCurrency.ResourceName, currency.ResourceName)) {
                 return true;
@@ -47,6 +48,24 @@ namespace AnyRPG {
             return false;
         }
 
+        public List<Currency> GetCurrencyList() {
+            List<Currency> currencyList = new List<Currency>();
+
+            // create a sorted list and work down from the largest denomination, carrying the remainders
+            SortedDictionary<int, Currency> sortList = new SortedDictionary<int, Currency>();
+            foreach (CurrencyGroupRate currencyGroupRate in currencyGroupRates) {
+                sortList.Add(currencyGroupRate.BaseMultiple, currencyGroupRate.Currency);
+            }
+
+            //foreach (KeyValuePair<int, Currency> currencyGroupRate in sortList) {
+            foreach (KeyValuePair<int, Currency> currencyGroupRate in sortList.Reverse()) {
+                //Debug.Log($"CurrencyGroup.GetCurrencyList() adding {currencyGroupRate.Value}");
+                currencyList.Add(currencyGroupRate.Value);
+            }
+            currencyList.Add(baseCurrency);
+            return currencyList;
+        }
+
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
             baseCurrency = null;
@@ -55,7 +74,7 @@ namespace AnyRPG {
                 if (tmpCurrency != null) {
                     baseCurrency = tmpCurrency;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + baseCurrencyName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"CurrencyGroup.SetupScriptableObjects(): Could not find currency {baseCurrencyName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
 

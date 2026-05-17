@@ -1,7 +1,4 @@
-using AnyRPG;
 using UnityEngine;
-using UnityEngine.Serialization;
-using System.Collections.Generic;
 
 namespace AnyRPG {
     public class ResourceProfileData : IDescribable {
@@ -67,6 +64,10 @@ namespace AnyRPG {
         public virtual string GetDescription() {
             return string.Format("{0}", description);
         }
+
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
+
 
         public virtual void SetupScriptableObjects(SystemGameManager systemGameManager) {
             //Configure(systemGameManager);

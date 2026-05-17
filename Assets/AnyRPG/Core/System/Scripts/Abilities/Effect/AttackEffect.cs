@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class AttackEffect : AbilityEffect {
 
         [SerializeField]
-        private AttackEffectProperties attackEffectProperties = new AttackEffectProperties();
+        public AttackEffectProperties attackEffectProperties = new AttackEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => attackEffectProperties; }
 

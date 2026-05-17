@@ -1,10 +1,8 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Serialization;
-using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
 
@@ -165,6 +163,14 @@ namespace AnyRPG {
                     } else {
                         Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): null or empty default audio hit profile found while inititalizing.  CHECK INSPECTOR");
                     }
+                }
+            }
+
+            foreach (AudioClip audioClip in onHitSoundEffects) {
+                if (audioClip != null) {
+                    systemGameManager.AudioManager.RegisterAudioClip(audioClip);
+                } else {
+                    Debug.LogError($"WeaponSkillProps.SetupScriptableObjects(): null audio clip found while inititalizing.  CHECK INSPECTOR");
                 }
             }
 

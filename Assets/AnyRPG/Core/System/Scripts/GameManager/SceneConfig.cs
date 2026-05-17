@@ -15,7 +15,7 @@ namespace AnyRPG {
                 return;
             }
 
-            SystemGameManager systemGameManager = GameObject.FindObjectOfType<SystemGameManager>();
+            SystemGameManager systemGameManager = GameObject.FindAnyObjectByType<SystemGameManager>();
             if (systemGameManager != null) {
                 //Debug.Log("Found a system game manager");
                 return;

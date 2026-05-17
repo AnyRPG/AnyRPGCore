@@ -27,7 +27,7 @@ namespace AnyRPG {
             get {
                 int freeBagSlots = 0;
                 for (int i = 0; i < bagButtonCount; i++) {
-                    if (bagButtons[i].BagNode.Bag == null) {
+                    if (bagButtons[i].BagNode.InstantiatedBag == null) {
                         freeBagSlots++;
                     }
                 }
@@ -116,8 +116,9 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}BagBarController.ClearBagButtons()");
             foreach (BagButton _bagButton in bagButtons) {
                 if (_bagButton.BagNode != null) {
-                    if (_bagButton.BagNode.Bag != null) {
-                        Destroy(_bagButton.BagNode.Bag);
+                    if (_bagButton.BagNode.InstantiatedBag != null) {
+                        // is this needed ? Will garbage collection just take care of this?
+                        //Destroy(_bagButton.BagNode.InstantiatedBag);
                         _bagButton.BagNode.RemoveBag();
                     }
                 }

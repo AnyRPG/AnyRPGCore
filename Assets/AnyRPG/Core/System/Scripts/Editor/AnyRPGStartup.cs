@@ -1,4 +1,5 @@
 using AnyRPG;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,25 +9,40 @@ namespace AnyRPG {
     public class AnyRPGStartup {
 
         static AnyRPGStartup() {
-            if (PlayerPrefs.HasKey("DisplayWelcomeWindow") == false) {
-                PlayerPrefs.SetInt("DisplayWelcomeWindow", 1);
+            EditorApplication.delayCall += () => {
+                EditorApplication.delayCall += Initialize;
+            };
+        }
+
+        private static void Initialize() {
+            if (!EditorPrefs.HasKey("AnyRPG_DisplayWelcome")) {
+                EditorPrefs.SetBool("AnyRPG_DisplayWelcome", true);
             }
 
-            EditorApplication.update -= TriggerWelcomeScreen;
-            EditorApplication.update += TriggerWelcomeScreen;
+            // Get the unique ID for this specific running instance of Unity
+            int currentPID = Process.GetCurrentProcess().Id;
+            int lastShownPID = EditorPrefs.GetInt("AnyRPG_LastShownPID", -1);
+
+            // If the PIDs match, we've already shown it since Unity was opened.
+            bool alreadyShownThisSession = (currentPID == lastShownPID);
+
+            if (EditorPrefs.GetBool("AnyRPG_DisplayWelcome") && !alreadyShownThisSession) {
+                EditorApplication.update -= TriggerWelcomeScreen;
+                EditorApplication.update += TriggerWelcomeScreen;
+            }
         }
 
         private static void TriggerWelcomeScreen() {
-            bool showAtStartup = PlayerPrefs.GetInt("DisplayWelcomeWindow") == 1 && EditorApplication.timeSinceStartup < 30f;
+            if (EditorApplication.isUpdating || EditorApplication.isCompiling) return;
 
-            if (showAtStartup) {
-                WelcomeWindow.Open();
-            }
-            EditorApplication.update -= TriggerWelcomeScreen;
-        }
+            // Final check: Mark this Process ID as "shown"
+            int currentPID = Process.GetCurrentProcess().Id;
+            EditorPrefs.SetInt("AnyRPG_LastShownPID", currentPID);
 
-        private static void PlayModeChanged() {
+            WelcomeWindow.Open();
+
             EditorApplication.update -= TriggerWelcomeScreen;
         }
     }
+
 }

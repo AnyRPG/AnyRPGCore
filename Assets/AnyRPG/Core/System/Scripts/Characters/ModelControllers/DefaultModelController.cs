@@ -20,10 +20,10 @@ namespace AnyRPG {
             return this as T;
         }
 
-        public override void SaveAppearanceSettings(ISaveDataOwner saveDataOwner, AnyRPGSaveData saveData) {
+        public override void SaveAppearanceSettings(CharacterSaveData saveData) {
         }
 
-        public override void SetInitialSavedAppearance(AnyRPGSaveData saveData) {
+        public override void SetInitialSavedAppearance(CharacterAppearanceData characterAppearanceData) {
             // do nothing
         }
 
@@ -44,6 +44,8 @@ namespace AnyRPG {
         }
 
         public override void ConfigureUnitModel() {
+            //Debug.Log($"{unitController.gameObject.name}.DefaultModelController.ConfigureUnitModel()");
+
             if (unitModelController.UnitModel == null) {
                 return;
             }

@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0.5
+  itemPickupPrefabProfileName: Cloth Pants Yellow
   equipmentSlotType: Pants
   equipmentSetName: Legendary Cloth
-  umaRecipeProfileName: Yellow Cloth Pants
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Yellow Cloth Pants

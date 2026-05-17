@@ -22,12 +22,12 @@ namespace AnyRPG {
         public Faction Faction { get => faction; }
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public string GetSummary() {
@@ -38,12 +38,15 @@ namespace AnyRPG {
             return faction.GetDescription();
         }
 
-        public void GiveReward() {
-            playerManager.MyCharacter.CharacterFactionManager.AddReputation(Faction, reputationAmount);
+        public void GiveReward(UnitController sourceUnitController) {
+            sourceUnitController.CharacterFactionManager.AddReputation(Faction, reputationAmount);
         }
 
-        public bool HasReward() {
+        public bool HasReward(UnitController sourceUnitController) {
             return false;
+        }
+
+        public void ProcessShowTooltip(TooltipController tooltipController) {
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGamenManager) {

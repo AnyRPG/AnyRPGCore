@@ -10,7 +10,7 @@ namespace AnyRPG {
     public class SummonEffect : AbilityEffect {
 
         [SerializeField]
-        private SummonEffectProperties summonEffectProperties = new SummonEffectProperties();
+        public SummonEffectProperties summonEffectProperties = new SummonEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => summonEffectProperties; }
 

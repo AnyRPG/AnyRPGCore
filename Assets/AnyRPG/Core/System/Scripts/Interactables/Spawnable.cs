@@ -34,21 +34,13 @@ namespace AnyRPG {
         [FormerlySerializedAs("prerequisiteConditions")]
         protected List<PrerequisiteConditions> spawnPrerequisites = new List<PrerequisiteConditions>();
 
-        // state management
-        protected bool startHasRun = false;
-
-        // get references step tracker
-        protected bool componentReferencesInitialized = false;
-
-        // initialize step tracker
         protected bool initialized = false;
-
-        // subscriptions step tracker
         protected bool eventSubscriptionsInitialized = false;
+        //protected bool spawnedByPrefab = false;
 
         // game manager references
 
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected SystemDataFactory systemDataFactory = null;
         protected ObjectPooler objectPooler = null;
 
@@ -62,17 +54,15 @@ namespace AnyRPG {
             }
         }
 
-        public virtual bool SpawnPrerequisitesMet {
-            get {
-                //Debug.Log($"{gameObject.name}.Spawnable.MyPrerequisitesMet");
-                foreach (PrerequisiteConditions prerequisiteCondition in spawnPrerequisites) {
-                    if (!prerequisiteCondition.IsMet()) {
-                        return false;
-                    }
+        public virtual bool SpawnPrerequisitesMet(UnitController sourceUnitController) {
+            //Debug.Log($"{gameObject.name}.Spawnable.MyPrerequisitesMet");
+            foreach (PrerequisiteConditions prerequisiteCondition in spawnPrerequisites) {
+                if (!prerequisiteCondition.IsMet(sourceUnitController)) {
+                    return false;
                 }
-                // there are no prerequisites, or all prerequisites are complete
-                return true;
             }
+            // there are no prerequisites, or all prerequisites are complete
+            return true;
         }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -80,34 +70,18 @@ namespace AnyRPG {
 
             base.Configure(systemGameManager);
 
-            GetComponentReferences();
             SetupScriptableObjects();
             CreateEventSubscriptions();
-            ConfigureComponents();
-            CreateComponents();
-            LateConfigure();
-            if (playerManager.PlayerUnitSpawned == false) {
+            if (playerManagerClient.PlayerUnitSpawned == false) {
                 // this allows us to spawn things with no prerequisites that don't need to check against the player
-                PrerequisiteCheck();
+                PrerequisiteCheck(null);
             }
-        }
-
-        protected virtual void LateConfigure() {
-            // nothing here yet
-        }
-
-        protected virtual void ConfigureComponents() {
-            // nothing here yet
-        }
-
-        protected virtual void CreateComponents() {
-            // nothing here yet
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             systemDataFactory = systemGameManager.SystemDataFactory;
             objectPooler = systemGameManager.ObjectPooler;
         }
@@ -123,32 +97,17 @@ namespace AnyRPG {
             if (initialized == true) {
                 return;
             }
-            ProcessInit();
 
             // moved here from CreateEventSubscriptions.  Init should have time to occur before processing this
-            if (playerManager.PlayerUnitSpawned) {
+            if (playerManagerClient.PlayerUnitSpawned) {
                 //Debug.Log($"{gameObject.name}.Spawnable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
-                ProcessPlayerUnitSpawn();
+                ProcessPlayerUnitSpawn(playerManagerClient.UnitController);
             } else {
                 //Debug.Log($"{gameObject.name}.Spawnable.CreateEventSubscriptions(): Player Unit is not spawned. Added Handle Spawn listener");
             }
-            startHasRun = true;
             initialized = true;
         }
 
-        public virtual void ProcessInit() {
-            // do nothing here
-        }
-
-        protected virtual void Start() {
-            //Debug.Log($"{gameObject.name}.Spawnable.Start()");
-            if (systemGameManager == null) {
-                Debug.LogError(gameObject.name + ": SystemGameManager not found. Is the Game Manager in the scene?");
-                return;
-            }
-
-            Init();
-        }
 
         public void CreateEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Spawnable.CreateEventSubscriptions()");
@@ -160,8 +119,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessCreateEventSubscriptions() {
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
-            SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
+            systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
         }
 
         public void CleanupEventSubscriptions() {
@@ -174,32 +132,13 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessCleanupEventSubscriptions() {
-            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
-            SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
+            systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
         }
 
-        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-            ProcessLevelUnload();
-        }
-
-        public virtual void ProcessLevelUnload() {
-            // nothing here
-        }
-
-        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
+        public void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.InanimateUnit.HandlePlayerUnitSpawn()");
-            ProcessPlayerUnitSpawn();
+            ProcessPlayerUnitSpawn(sourceUnitController);
         }
-
-        /*
-        public virtual void OnDisable() {
-            //Debug.Log($"{gameObject.name}.Spawnable.OnDisable()");
-            if (SystemGameManager.IsShuttingDown) {
-                return;
-            }
-            ResetSettings();
-        }
-        */
 
         public virtual void OnDestroy() {
             //Debug.Log($"{gameObject.name}.Spawnable.OnDisable()");
@@ -212,11 +151,10 @@ namespace AnyRPG {
 
         public virtual void ResetSettings() {
             //Debug.Log($"{gameObject.name}.Spawnable.ResetSettings()");
+
             CleanupEventSubscriptions();
             CleanupEverything();
 
-            startHasRun = false;
-            componentReferencesInitialized = false;
             initialized = false;
             eventSubscriptionsInitialized = false;
         }
@@ -231,37 +169,30 @@ namespace AnyRPG {
             CleanupScriptableObjects();
         }
 
-        public virtual void GetComponentReferences() {
-            //Debug.Log($"{gameObject.name}.Spawnable.InitializeComponents()");
+        
 
-            if (componentReferencesInitialized == true) {
-                return;
-            }
-            componentReferencesInitialized = true;
-        }
-
-        public virtual void HandlePrerequisiteUpdates() {
+        public virtual void HandlePrerequisiteUpdates(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.Spawnable.HandlePrerequisiteUpdates()");
             //InitializeComponents();
-            if (CanSpawn()) {
+            if (CanSpawn(sourceUnitController)) {
                 StartSpawn();
             }
-            if (despawnObject && CanDespawn()) {
+            if (despawnObject && CanDespawn(sourceUnitController)) {
                 DestroySpawn();
             }
         }
 
-        protected virtual bool CanDespawn() {
+        protected virtual bool CanDespawn(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.Spawnable.CanDespawn()");
-            if (!SpawnPrerequisitesMet) {
+            if (!SpawnPrerequisitesMet(sourceUnitController)) {
                 return true;
             }
             return false;
         }
 
-        public virtual bool CanSpawn() {
+        public virtual bool CanSpawn(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.Spawnable.CanSpawn()");
-            if (SpawnPrerequisitesMet && (prefabProfile?.Prefab != null || spawnReference != null)) {
+            if (SpawnPrerequisitesMet(sourceUnitController) && (prefabProfile?.Prefab != null || spawnReference != null)) {
                 return true;
             }
             return false;
@@ -285,6 +216,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.Spawnable.Spawn()");
 
             if (spawnReference == null && prefabProfile?.Prefab != null) {
+                //Debug.Log($"{gameObject.name}.Spawnable.Spawn() reference is null but prefab is not");
                 Vector3 usedPosition = prefabProfile.SheathedPosition;
                 Vector3 usedScale = prefabProfile.SheathedScale;
                 Vector3 usedRotation = prefabProfile.SheathedRotation;
@@ -302,10 +234,21 @@ namespace AnyRPG {
 
                 //spawnReference.transform.Rotate(usedRotation);
                 spawnReference.transform.localRotation = Quaternion.Euler(usedRotation);
+                //spawnedByPrefab = true;
             } else {
                 if (spawnReference != null && spawnReference.activeSelf == false) {
+                    //Debug.Log($"{gameObject.name}.Spawnable.Spawn() setting {spawnReference.name} active");
                     spawnReference.SetActive(true);
                 }
+            }
+            if (spawnReference != null) {
+                AutoConfiguredMonoBehaviour autoConfiguredMonoBehaviour = spawnReference.GetComponent<AutoConfiguredMonoBehaviour>();
+                if (autoConfiguredMonoBehaviour != null) {
+                    //Debug.Log($"{gameObject.name}.Spawnable.Spawn() found autoconfiguredmonobehaviour: configuring");
+                    autoConfiguredMonoBehaviour.AutoConfigure(systemGameManager);
+                }
+            } else {
+                Debug.LogError($"{gameObject.name}.Spawnable.Spawn(): COULD NOT SPAWN OBJECT");
             }
 
         }
@@ -324,24 +267,26 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void ProcessPlayerUnitSpawn() {
-            UpdateOnPlayerUnitSpawn();
+        public virtual void ProcessPlayerUnitSpawn(UnitController sourceUnitController) {
+            UpdateOnPlayerUnitSpawn(sourceUnitController);
         }
 
-        public bool PrerequisiteCheck() {
-            if (spawnPrerequisites != null && spawnPrerequisites.Count > 0) {
+        public bool PrerequisiteCheck(UnitController sourceUnitController) {
+            //Debug.Log($"{gameObject.name}.Spawnable.PrerequisiteCheck({(sourceUnitController == null ? "null" : sourceUnitController.gameObject.name)})");
+
+            if (spawnPrerequisites.Count > 0 && sourceUnitController != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in spawnPrerequisites) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.UpdatePrerequisites(false);
+                        tmpPrerequisiteConditions.UpdatePrerequisites(sourceUnitController, false);
                     }
                 }
-                if (SpawnPrerequisitesMet) {
-                    HandlePrerequisiteUpdates();
+                if (SpawnPrerequisitesMet(sourceUnitController)) {
+                    HandlePrerequisiteUpdates(sourceUnitController);
                     return true;
                 }
-            } else {
-                if (SpawnPrerequisitesMet) {
-                    HandlePrerequisiteUpdates();
+            } else if (spawnPrerequisites.Count == 0) {
+                if (SpawnPrerequisitesMet(sourceUnitController)) {
+                    HandlePrerequisiteUpdates(sourceUnitController);
                     return true;
                 }
             }
@@ -349,14 +294,16 @@ namespace AnyRPG {
 
         }
 
-        public virtual bool UpdateOnPlayerUnitSpawn() {
-            //Debug.Log($"{gameObject.name}.Spawnable.UpdateOnPlayerUnitSpawn()");
-            return PrerequisiteCheck();
+        public virtual bool UpdateOnPlayerUnitSpawn(UnitController sourceUnitController) {
+            //Debug.Log($"{gameObject.name}.Spawnable.UpdateOnPlayerUnitSpawn({sourceUnitController.gameObject.name})");
+
+            return PrerequisiteCheck(sourceUnitController);
             //HandlePrerequisiteUpdates();
         }
 
         public virtual void SetupScriptableObjects() {
             //Debug.Log($"{gameObject.name}.Spawnable.SetupScriptableObjects()");
+
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
                 PrefabProfile tmpPrefabProfile = systemDataFactory.GetResource<PrefabProfile>(prefabProfileName);
                 if (tmpPrefabProfile != null && tmpPrefabProfile.Prefab != null) {

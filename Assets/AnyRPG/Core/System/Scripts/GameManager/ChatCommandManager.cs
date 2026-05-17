@@ -6,14 +6,13 @@ using UnityEngine.EventSystems;
 
 namespace AnyRPG {
 
-    public class ChatCommandManager : ConfiguredMonoBehaviour {
+    public class ChatCommandManager : ConfiguredClass {
 
 
         protected Dictionary<string, ChatCommand> commandDictionary = new Dictionary<string, ChatCommand>();
 
         // game manager references
-        protected SystemDataFactory systemDataFactory = null;
-        protected LogManager logManager = null;
+        protected MessageLogClient logManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -27,14 +26,14 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            systemDataFactory = systemGameManager.SystemDataFactory;
-            logManager = systemGameManager.LogManager;
+            logManager = systemGameManager.MessageLogClient;
         }
 
-        public void ParseChatCommand(string commandText) {
+        public void ParseChatCommand(string commandText, int accountId) {
+            //Debug.Log($"ChatCommandManager.ParseChatCommand({commandText}, {accountId})");
 
             if (commandText == string.Empty) {
-                Debug.Log("Empty Chat Message");
+                //Debug.Log("Empty Chat Message");
                 return;
             }
 
@@ -55,10 +54,10 @@ namespace AnyRPG {
             }
 
             if (commandDictionary.ContainsKey(chatCommandString)) {
-                commandDictionary[chatCommandString].ExecuteCommand(commandParameters);
-            } else {
-                logManager.WriteChatMessage("Unknown command : " + chatCommandString);
-            }
+                commandDictionary[chatCommandString].ExecuteCommand(commandParameters, accountId);
+            }/* else {
+                logManager.RequestChatMessageClient("Unknown command : " + chatCommandString);
+            }*/
         }
 
     }

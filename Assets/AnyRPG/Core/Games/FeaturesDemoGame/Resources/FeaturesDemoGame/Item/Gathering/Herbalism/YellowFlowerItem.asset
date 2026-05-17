@@ -34,3 +34,5 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0.01
+  itemPickupPrefabProfileName: Yellow Flower

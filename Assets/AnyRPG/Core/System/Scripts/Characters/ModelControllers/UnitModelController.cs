@@ -1,4 +1,4 @@
-using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +17,7 @@ namespace AnyRPG {
 
         // track model
         private bool modelCreated = false;
+        private string defaultLayerName = string.Empty;
 
         // specific controllers
         private ModelAppearanceController modelAppearanceController = null;
@@ -28,9 +29,11 @@ namespace AnyRPG {
         // options
         private bool suppressEquipment = false;
 
+        private CharacterAppearanceData characterAppearanceData = null;
+
         // game manager references
         private ObjectPooler objectPooler = null;
-        private UIManager uIManager = null;
+        private CharacterManager characterManager = null;
 
         public ModelAppearanceController ModelAppearanceController { get => modelAppearanceController; }
         public MecanimModelController MecanimModelController { get => mecanimModelController; }
@@ -49,15 +52,15 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
-            uIManager = systemGameManager.UIManager;
+            characterManager = systemGameManager.CharacterManager;
         }
 
         public void Initialize() {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.Initialize()");
 
-            characterEquipmentManager = unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
+            characterEquipmentManager = unitController.CharacterEquipmentManager;
             if (characterEquipmentManager == null) {
-                Debug.LogWarning("CharacterEquipmentManager was null");
+                Debug.LogWarning($"{unitController.gameObject.name}.UnitModelController.Initialize() CharacterEquipmentManager was null");
             }
             mecanimModelController.Initialize();
         }
@@ -94,14 +97,19 @@ namespace AnyRPG {
         }
 
         public void ResetSettings() {
-            modelAppearanceController.ResetSettings();
+            // check for null here because this could happen from a network disconnect
+            modelAppearanceController?.ResetSettings();
+        }
+
+        public void SetUnitModel(GameObject go) {
+            unitModel = go;
         }
 
         public void SpawnUnitModel() {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SpawnUnitModel()");
 
             if (unitController.UnitProfile?.UnitPrefabProps?.ModelPrefab != null) {
-                unitModel = unitController.UnitProfile.SpawnModelPrefab(unitController.transform, unitController.transform.position, unitController.transform.forward);
+                unitModel = systemGameManager.CharacterManager.SpawnModelPrefab(unitController, unitController.UnitProfile, unitController.transform, unitController.transform.position, unitController.transform.forward);
             }
         }
 
@@ -131,6 +139,7 @@ namespace AnyRPG {
 
             modelAppearanceController.RebuildModelAppearance();
             mecanimModelController.RebuildModelAppearance();
+            unitController.UnitEventController.NotifyOnRebuildModelAppearance();
         }
 
         /*
@@ -139,13 +148,22 @@ namespace AnyRPG {
         }
         */
 
-        public void SaveAppearanceSettings(ISaveDataOwner saveDataOwner, AnyRPGSaveData saveData) {
+        public void SaveAppearanceSettings(CharacterSaveData saveData) {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SaveAppearanceSettings()");
-
-            modelAppearanceController.SaveAppearanceSettings(saveDataOwner, saveData);
+            
+            if (modelAppearanceController == null) {
+                // this function will be called once before the model is spawned
+                return;
+            }
+            modelAppearanceController.SaveAppearanceSettings(saveData);
         }
 
         public void SetAnimatorOverrideController(AnimatorOverrideController animatorOverrideController) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetAnimatorOverrideController({animatorOverrideController.GetInstanceID()})");
+
+            //if (modelAppearanceController == null) {
+                //Debug.LogWarning("Null model appearance controller!");
+            //}
             modelAppearanceController.SetAnimatorOverrideController(animatorOverrideController);
         }
 
@@ -216,13 +234,22 @@ namespace AnyRPG {
         }
         */
 
-        public void SetInitialSavedAppearance(AnyRPGSaveData saveData) {
+        public void LoadInitialSavedAppearance(CharacterAppearanceData characterAppearanceData) {
+            this.characterAppearanceData = characterAppearanceData;
+        }
+
+        public void SetInitialSavedAppearance() {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetInitialSavedAppearance()");
-            if (saveData == null) {
+
+            if (characterAppearanceData == null) {
                 // in empty game mode, this can be null
                 return;
             }
-            modelAppearanceController.SetInitialSavedAppearance(saveData);
+            //if (modelAppearanceController == null) {
+              //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetInitialSavedAppearance() model appearance controller is null");
+              //return;
+            //}
+            modelAppearanceController.SetInitialSavedAppearance(characterAppearanceData);
         }
 
         public void ConfigureUnitModel() {
@@ -248,18 +275,37 @@ namespace AnyRPG {
 
         public void DespawnModel() {
             //Debug.Log($"{unitController.gameObject.name}UnitModelController.DespawnModel()");
-
-            mecanimModelController.DespawnModel();
-            modelAppearanceController.DespawnModel();
+            if (SystemGameManager.IsShuttingDown == true) {
+                return;
+            }
+            // check for null here because this could happen from a network disconnect
+            mecanimModelController?.DespawnModel();
+            modelAppearanceController?.DespawnModel();
             if (unitController.UnitProfile?.UnitPrefabProps?.ModelPrefab != null) {
-                objectPooler.ReturnObjectToPool(unitModel);
+                if (networkManagerServer.ServerModeActive == true) {
+                    // this is happening on the server, return the object to the pool
+                    networkManagerServer.ReturnObjectToPool(unitModel);
+                } else {
+                    // this is happening on the client
+                    if (characterManager.LocalUnits.Contains(unitController)) {
+                        // this unit was requested in a local game, pool it
+                        objectPooler.ReturnObjectToPool(unitModel);
+                    } else {
+                        // this unit was requested in a network game, deactivate it and let it wait for the network pooler to claim it
+                        // if client crashes during spawn process, this could be null so must check for that
+                        unitModel?.SetActive(false);
+                    }
+                }
             }
         }
 
-
+        public void ResetDefaultLayer() {
+            SetDefaultLayer(defaultLayerName);
+        }
 
         public void SetDefaultLayer(string layerName) {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetDefaultLayer(" + layerName + ")");
+            defaultLayerName = layerName;
 
             if (layerName != null && layerName != string.Empty) {
                 int defaultLayer = LayerMask.NameToLayer(layerName);
@@ -283,15 +329,15 @@ namespace AnyRPG {
         }
 
         public void HoldWeapons() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.HoldWeapons()");
+
             mecanimModelController.HoldWeapons();
         }
 
         public void SetModelReady() {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetModelReady()");
 
-            if (modelCreated == false) {
-                unitController.CharacterUnit.BaseCharacter.HandleCharacterUnitSpawn();
-            }
+            bool modelWasCreated = modelCreated;
 
             //RebuildModelAppearance();
             // give mecanim model controller a chance to spawn or despawn weapons now that character skeleton is available (if UMA was used)
@@ -308,11 +354,18 @@ namespace AnyRPG {
                 //Debug.Log("OnModelUpdated()");
                 OnModelUpdated();
             }
+
+            if (modelWasCreated == false) {
+                unitController.CharacterStats.HandleCharacterUnitSpawn();
+            }
+
             unitController.SetModelReady();
         }
 
         public void CalculateFloatHeight() {
-            unitController.FloatHeight += unitController.UnitProfile.UnitPrefabProps.FloatHeight;
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.CalculateFloatHeight()");
+
+            unitController.FloatHeight = unitController.UnitProfile.UnitPrefabProps.FloatHeight;
 
             if (unitController.UnitProfile?.UnitPrefabProps?.FloatTransform == string.Empty) {
                 return;
@@ -324,13 +377,43 @@ namespace AnyRPG {
             }
 
             unitController.FloatHeight = floatTransform.position.y - unitController.transform.position.y;
-            if (unitController.UnitProfile.UnitPrefabProps.AddFloatHeightToTransform == false) {
-                return;
+            if (unitController.UnitProfile.UnitPrefabProps.AddFloatHeightToTransform == true) {
+                unitController.FloatHeight += unitController.UnitProfile.UnitPrefabProps.FloatHeight;
             }
-            unitController.FloatHeight += unitController.UnitProfile.UnitPrefabProps.FloatHeight;
-
 
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.CalculateFloatHeight() new float height: " + unitController.FloatHeight);
+        }
+
+        public void ProcessAddStatusEffect(StatusEffectNode newStatusEffectNode, StatusEffectProperties statusEffect, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.ProcessAddStatusEffect({statusEffect.DisplayName})");
+
+            if (modelCreated == false) {
+                return;
+            }
+
+            // on non authoritative network clients, do not spawn visual effect when stealthed
+            if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && unitController.IsStealth == true) {
+                return;
+            }
+
+            Dictionary<PrefabProfile, List<GameObject>> returnObjects = unitController.CharacterAbilityManager.SpawnStatusEffectPrefabs(unitController, statusEffect, abilityEffectContext);
+            if (returnObjects != null) {
+                // pass in the ability effect object so we can independently destroy it and let it last as long as the status effect (which could be refreshed).
+                newStatusEffectNode.PrefabObjects = returnObjects;
+            }
+            statusEffect.PerformMaterialChange(unitController);
+
+        }
+
+        public void ActivateFirstPersonView() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.ActivateFirstPersonView()");
+
+            modelAppearanceController.ActivateFirstPersonView();
+            unitController.NamePlateController.RemoveNamePlate();
+        }
+
+        public void DeactivateFirstPersonView() {
+            modelAppearanceController.DeactivateFirstPersonView();
         }
     }
 

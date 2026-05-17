@@ -20,30 +20,12 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  deprecatedUMARecipeProfileProperties:
-    uMARecipes:
-    - {fileID: 11400000, guid: 757c42a47f5810183a5f59843c860b13, type: 2}
-    - {fileID: 11400000, guid: 8d775c7cbbacf4684a669aa6ed889680, type: 2}
-    sharedColors:
-    - sharedColorname: Hand Equipment Color 1
-      color: {r: 0.78431374, g: 0.6627451, b: 0.34509805, a: 1}
   properties:
     equipmentModels:
-    - rid: 5705935833309905006
     - rid: 5705935844592058368
   references:
     version: 2
     RefIds:
-    - rid: 5705935833309905006
-      type: {class: UMAEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        properties:
-          uMARecipes:
-          - {fileID: 11400000, guid: 757c42a47f5810183a5f59843c860b13, type: 2}
-          - {fileID: 11400000, guid: 8d775c7cbbacf4684a669aa6ed889680, type: 2}
-          sharedColors:
-          - sharedColorname: Hand Equipment Color 1
-            color: {r: 0.78431374, g: 0.6627451, b: 0.34509805, a: 1}
     - rid: 5705935844592058368
       type: {class: SwappableMeshEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
       data:

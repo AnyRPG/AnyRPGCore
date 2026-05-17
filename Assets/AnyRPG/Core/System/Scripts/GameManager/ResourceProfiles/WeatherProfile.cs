@@ -79,6 +79,10 @@ namespace AnyRPG {
                 }
             }
 
+            if (ambientSoundsAudio != null) {
+                systemGameManager.AudioManager.RegisterAudioClip(ambientSoundsAudio);
+            }
+
         }
     }
 

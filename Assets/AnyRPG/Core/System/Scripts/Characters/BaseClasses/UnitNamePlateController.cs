@@ -1,14 +1,10 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.Serialization;
 
 namespace AnyRPG {
 
-    [System.Serializable]
     public class UnitNamePlateController : BaseNamePlateController {
 
         public override event System.Action OnInitializeNamePlate = delegate { };
@@ -18,45 +14,44 @@ namespace AnyRPG {
 
         public override string UnitDisplayName {
             get {
-                return (unitController.CharacterUnit.BaseCharacter != null ? unitController.CharacterUnit.BaseCharacter.CharacterName : base.UnitDisplayName);
+                return (unitController.BaseCharacter != null ? unitController.BaseCharacter.CharacterName : base.UnitDisplayName);
             }
         }
         public override Faction Faction {
             get {
-                if (unitController.CharacterUnit.BaseCharacter != null) {
-                    return unitController.CharacterUnit.BaseCharacter.Faction;
+                if (unitController.BaseCharacter != null) {
+                    return unitController.BaseCharacter.Faction;
                 }
                 return base.Faction;
             }
         }
         public override string Title {
             get {
-                return (unitController.CharacterUnit.BaseCharacter != null ? unitController.CharacterUnit.BaseCharacter.Title : base.Title); }
+                return (unitController.BaseCharacter != null ? unitController.BaseCharacter.Title : base.Title); }
         }
 
-        public override Transform NamePlateTransform {
+        public override Vector3 NameplatePosition {
             get {
-                if (unitController.Mounted == true
-                    && unitController.UnitMountManager.MountUnitController != null
-                    && unitController.UnitMountManager.MountUnitController.NamePlateController != null
-                    && unitController.UnitMountManager.MountUnitController.NamePlateController.NamePlateTransform != null) {
-                    return unitController.UnitMountManager.MountUnitController.NamePlateController.NamePlateTransform;
+                //Debug.Log($"{unitController.gameObject.name}.UnitNamePlateController.NamePlateTransform() mount: {(unitController.UnitMountManager.MountUnitController == null ? "null" : unitController.UnitMountManager.MountUnitController.gameObject.name)}");
+                if (unitController.IsMounted == true
+                    && unitController.UnitMountManager.MountUnitController != null) {
+                    return unitController.UnitMountManager.MountUnitController.GetNameplatePosition();
                 }
-                return base.NamePlateTransform;
+                return base.NameplatePosition;
             }
         }
         public override int Level {
             get {
-                if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
-                    return unitController.CharacterUnit.BaseCharacter.CharacterStats.Level;
+                if (unitController.BaseCharacter != null && unitController.CharacterStats != null) {
+                    return unitController.CharacterStats.Level;
                 }
                 return base.Level;
             }
         }
         public override List<PowerResource> PowerResourceList {
             get {
-                if (unitController != null && unitController.CharacterUnit.BaseCharacter != null) {
-                    return unitController.CharacterUnit.BaseCharacter.CharacterStats.PowerResourceList;
+                if (unitController != null && unitController.BaseCharacter != null) {
+                    return unitController.CharacterStats.PowerResourceList;
                 }
                 return base.PowerResourceList;
             }
@@ -65,10 +60,8 @@ namespace AnyRPG {
 
         public UnitController UnitController { get => unitController; set => unitController = value; }
 
-        public UnitNamePlateController(NamePlateUnit namePlateUnit, SystemGameManager systemGameManager) : base(namePlateUnit, systemGameManager) {
-            if ((namePlateUnit as UnitController) is UnitController) {
-                unitController = (namePlateUnit as UnitController);
-            }
+        public UnitNamePlateController(UnitController unitController, SystemGameManager systemGameManager) : base(unitController, systemGameManager) {
+            this.unitController = unitController;
         }
 
         /*
@@ -79,9 +72,9 @@ namespace AnyRPG {
                 return;
             }
             if (unitController != null) {
-                if (unitController.CharacterUnit.BaseCharacter.CharacterStats != null
-                    && unitController.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == false
-                    && unitController.CharacterUnit.BaseCharacter.SpawnDead == false) {
+                if (unitController.CharacterStats != null
+                    && unitController.CharacterStats.IsAlive == false
+                    && unitController.BaseCharacter.SpawnDead == false) {
                     // if this is not a character that spawns dead, and is currently dead, then there is no reason to display a nameplate as dead characters usually cannot have nameplates
                     return;
                 }
@@ -96,7 +89,8 @@ namespace AnyRPG {
         */
 
         public override NamePlateController AddNamePlate() {
-            return namePlateManager.AddNamePlate(unitController, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
+            //return namePlateManager.AddNamePlate(unitController, (unitController.ComponentController.NamePlateTransform == null ? true : false));
+            return namePlateManager.AddNamePlate(unitController, false);
         }
 
         public override void RemoveNamePlate() {
@@ -104,6 +98,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnTitleChange -= HandleTitleChange;
             unitController.UnitEventController.OnNameChange -= HandleNameChange;
             unitController.UnitEventController.OnReputationChange -= HandleReputationChange;
+            unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
 
             base.RemoveNamePlate();
         }
@@ -118,9 +113,16 @@ namespace AnyRPG {
             unitController.UnitEventController.OnTitleChange += HandleTitleChange;
             unitController.UnitEventController.OnNameChange += HandleNameChange;
             unitController.UnitEventController.OnReputationChange += HandleReputationChange;
+            unitController.UnitEventController.OnSetGuildId += HandleSetGuildId;
         }
 
-        public void HandleReputationChange() {
+        private void HandleSetGuildId(int guildId, string guildName) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitNamePlateController.HandleSetGuildId({guildId}, {guildName})");
+
+            namePlate.HandleSetGuildId();
+        }
+
+        public void HandleReputationChange(UnitController sourceUnitController) {
             namePlate.HandleReputationChange();
         }
 
@@ -132,6 +134,8 @@ namespace AnyRPG {
             namePlate.HandleNameChange(newName);
         }
 
+
+
         public void HandleResourceAmountChanged(PowerResource powerResource, int maxAmount, int currentAmount) {
             //Debug.Log($"{unitController.gameObject.name}.UnitNamePlateController.HandleResourceAmountChanged()");
             namePlate.HandleResourceAmountChanged(powerResource, maxAmount, currentAmount);
@@ -142,9 +146,9 @@ namespace AnyRPG {
             if (unitController == null) {
                 return false;
             }
-            if (unitController.CharacterUnit.BaseCharacter.CharacterStats != null
-                                && unitController.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == false
-                                && unitController.CharacterUnit.BaseCharacter.SpawnDead == false) {
+            if (unitController.CharacterStats != null
+                                && unitController.CharacterStats.IsAlive == false
+                                && unitController.BaseCharacter.SpawnDead == false) {
                 // if this is not a character that spawns dead, and is currently dead, then there is no reason to display a nameplate as dead characters usually cannot have nameplates
                 return false;
             }
@@ -157,64 +161,131 @@ namespace AnyRPG {
         }
 
         public override int CurrentHealth() {
-            if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
-                return unitController.CharacterUnit.BaseCharacter.CharacterStats.CurrentPrimaryResource;
+            if (unitController.BaseCharacter != null && unitController.CharacterStats != null) {
+                return unitController.CharacterStats.CurrentPrimaryResource;
             }
             return base.CurrentHealth();
         }
 
         public override int MaxHealth() {
             //Debug.Log($"{gameObject.name}.CharacterUnit.MaxHealth()");
-            if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
-                return unitController.CharacterUnit.BaseCharacter.CharacterStats.MaxPrimaryResource;
+            if (unitController.BaseCharacter != null && unitController.CharacterStats != null) {
+                return unitController.CharacterStats.MaxPrimaryResource;
             }
             return base.MaxHealth();
         }
 
         public override bool HasPrimaryResource() {
             //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
-            if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
-                return unitController.CharacterUnit.BaseCharacter.CharacterStats.HasPrimaryResource;
+            if (unitController.BaseCharacter != null && unitController.CharacterStats != null) {
+                return unitController.CharacterStats.HasPrimaryResource;
             }
             return base.HasPrimaryResource();
         }
 
         public override bool HasSecondaryResource() {
             //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
-            if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
-                return unitController.CharacterUnit.BaseCharacter.CharacterStats.HasSecondaryResource;
+            if (unitController.BaseCharacter != null && unitController.CharacterStats != null) {
+                return unitController.CharacterStats.HasSecondaryResource;
             }
             return base.HasSecondaryResource();
         }
 
         public override bool HasHealth() {
-            //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
+            //Debug.Log($"UnitNamePlateController.HasHealth()");
+
             if (unitController == null) {
-                Debug.Log("UnitNamePlateController.HasHealth(): unitcontroller is null");
+                Debug.LogWarning("UnitNamePlateController.HasHealth(): unitcontroller is null");
             }
             if (unitController.CharacterUnit == null) {
-                Debug.Log(unitController.gameObject.name + ".UnitNamePlateController.HasHealth(): unitcontroller.CharacterUnit is null");
+                Debug.LogWarning($"{unitController.gameObject.name}.UnitNamePlateController.HasHealth(): unitcontroller.CharacterUnit is null");
             }
-            if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
-                return unitController.CharacterUnit.BaseCharacter.CharacterStats.HasHealthResource;
+            if (unitController.BaseCharacter != null && unitController.CharacterStats != null) {
+                return unitController.CharacterStats.HasHealthResource;
+            } else {
+                Debug.LogWarning($"{unitController.gameObject.name}.UnitNamePlateController.HasHealth(): unitcontroller.BaseCharacter or CharacterStats is null");
             }
             return base.HasHealth();
         }
 
         public override float GetPowerResourceMaxAmount(PowerResource powerResource) {
-            if (unitController != null && unitController.CharacterUnit.BaseCharacter != null) {
-                return unitController.CharacterUnit.BaseCharacter.CharacterStats.GetPowerResourceMaxAmount(powerResource);
+            if (unitController != null && unitController.BaseCharacter != null) {
+                return unitController.CharacterStats.GetPowerResourceMaxAmount(powerResource);
             }
             return base.GetPowerResourceMaxAmount(powerResource);
         }
 
         public override float GetPowerResourceAmount(PowerResource powerResource) {
-            if (unitController != null && unitController.CharacterUnit.BaseCharacter != null) {
-                return unitController.CharacterUnit.BaseCharacter.CharacterStats.GetPowerResourceAmount(powerResource);
+            if (unitController != null && unitController.BaseCharacter != null) {
+                return unitController.CharacterStats.GetPowerResourceAmount(powerResource);
             }
             return base.GetPowerResourceAmount(powerResource);
         }
 
+        public Color32 GetTextColor() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitNamePlateController.GetTextColor()");
+
+            // player is always green
+            if (playerManagerClient.UnitController != null && unitController == playerManagerClient.UnitController) {
+                return Color.green;
+            }
+
+            // this is not the player, check for faction
+            if (Faction == null) {
+                return Color.white;
+            }
+
+            // faction is not null, check for cutscene
+            if (uIManager.CutSceneBarController.CurrentCutscene == null) {
+                return Faction.GetFactionColor(playerManagerClient, interactable);
+            }
+
+            // cutscene is not null, check for faction color setting
+            if (uIManager.CutSceneBarController.CurrentCutscene.UseDefaultFactionColors == true) {
+                return Faction.GetFactionColor();
+            }
+
+            return Color.white;
+        }
+
+        public override string GetNameplateString() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitNamePlateController.GetNamePlateString()");
+
+            Color textColor = GetTextColor();
+
+                string nameString = string.Empty;
+                string tagString = string.Empty;
+                if (playerManagerClient.UnitController == null ||unitController != playerManagerClient.UnitController || PlayerPrefs.GetInt("ShowPlayerName") == 1) {
+                    // player is not spawned, or this is not the player, or player is allowed to show name
+                    nameString = UnitDisplayName;
+                }
+
+                // faction is lowest priority
+                if (playerManagerClient.UnitController == null || unitController != playerManagerClient.UnitController || PlayerPrefs.GetInt("ShowPlayerFaction") == 1) {
+                    if (unitController.UnitProfile.SuppressNameplateFaction == false) {
+                        tagString = $"<{Faction.DisplayName}>";
+                    }
+                }
+
+                // title is higher priority than faction
+                if (Title != string.Empty) {
+                    tagString = $"<{Title}>";
+                }
+
+                // guild is the highest priority
+                if (unitController.CharacterGuildManager.IsInGuild()) {
+                    tagString = $"<{unitController.CharacterGuildManager.GuildName}>";
+                }
+
+                string newLineString = string.Empty;
+                if (tagString != string.Empty && nameString != string.Empty) {
+                    newLineString = "\n";
+                    //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): faction and name are both not empty");
+                }
+
+                //Debug.Log($"{unitNamePlateController.NamePlateUnit.DisplayName}.NamePlateController.SetCharacterName(): setting character name text: {nameString}{newLineString}{factionString}");
+                return $"<color=#{ColorUtility.ToHtmlStringRGB(textColor)}>{nameString}{newLineString}{tagString}</color>";
+        }
 
 
     }

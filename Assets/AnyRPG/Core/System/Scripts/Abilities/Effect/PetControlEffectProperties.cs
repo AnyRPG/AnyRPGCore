@@ -36,8 +36,8 @@ namespace AnyRPG {
         public void CheckPetSpawn(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn()");
             CharacterPetManager characterPetManager = null;
-            if ((source as BaseCharacter) is BaseCharacter) {
-                characterPetManager = (source as BaseCharacter).CharacterPetManager;
+            if ((source as UnitController) is UnitController) {
+                characterPetManager = (source as UnitController).CharacterPetManager;
             } else {
                 //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn(): source is not basecharacter");
                 return;
@@ -65,7 +65,7 @@ namespace AnyRPG {
 
         }
 
-        public override void CancelEffect(BaseCharacter targetCharacter) {
+        public override void CancelEffect(UnitController targetCharacter) {
             //Debug.Log("PetControlEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
 
             foreach (SummonEffectProperties petEffect in petEffectList) {

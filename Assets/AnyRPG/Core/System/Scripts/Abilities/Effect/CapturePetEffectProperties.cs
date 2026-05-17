@@ -29,30 +29,29 @@ namespace AnyRPG {
             if (target == null) {
                 // capture pet effect requires a target under all circumstances
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". Target required");
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage($"Cannot cast {DisplayName}. Target required");
                 }
                 return false;
             }
-            BaseCharacter targetCharacter = target.GetComponent<BaseCharacter>();
-            if (targetCharacter == null) {
+            UnitController unitController = target.GetComponent<UnitController>();
+            if (unitController == null) {
                 // if there is no target character, it cannot possibly match a unit type
                 //Debug.Log(DisplayName + ".CapturePetEffect.CanUseOn(): no target character");
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". target must be a character");
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage($"Cannot cast {DisplayName}. target must be a character");
                 }
                 return false;
             }
-            UnitController unitController = target as UnitController;
             if (unitController?.UnitProfile == null || unitController.UnitProfile.IsPet == false) {
                 // has to be the right unit type plus needs to be capturable specifically
                 //Debug.Log(DisplayName + ".CapturePetEffect.CanUseOn(): pet was not capturable ");
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". Target is not a capturable pet");
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage($"Cannot cast {DisplayName}. Target is not a capturable pet");
                 }
                 return false;
             }
             if (unitTypeRestrictionList != null && unitTypeRestrictionList.Count > 0) {
-                if (targetCharacter.UnitType == null || !unitTypeRestrictionList.Contains(targetCharacter.UnitType)) {
+                if (unitController.BaseCharacter.UnitType == null || !unitTypeRestrictionList.Contains(unitController.BaseCharacter.UnitType)) {
                     //Debug.Log(MyDisplayName + ".CapturePetEffect.CanUseOn(): pet was not allowed by your restrictions ");
                     if (playerInitiated) {
                         sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". pet was not allowed by your restrictions");

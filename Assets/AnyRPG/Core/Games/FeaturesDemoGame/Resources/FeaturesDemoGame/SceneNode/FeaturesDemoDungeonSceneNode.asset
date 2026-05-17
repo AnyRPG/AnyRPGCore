@@ -16,10 +16,12 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
-  description: 
+  description: A dangerous volcanic valley with lava, enemy minions, and a tough
+    boss.
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
+  loadingScreenImage: {fileID: 0}
   useRegionalFile: 0
   sceneFile: FeaturesDemoDungeon
   dayAmbientSoundsProfile: 
@@ -77,6 +79,7 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
+    m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   blendedSkybox: 0

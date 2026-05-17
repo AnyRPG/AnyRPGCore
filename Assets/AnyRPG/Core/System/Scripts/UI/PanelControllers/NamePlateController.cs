@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 namespace AnyRPG {
-    public class NamePlateController : ConfiguredMonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
+    public class NamePlateController : ConfiguredMonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler {
 
         [SerializeField]
         private GameObject healthBar = null;
@@ -76,22 +76,24 @@ namespace AnyRPG {
         public GameObject QuestIndicatorBackground { get => questIndicatorBackground; set => questIndicatorBackground = value; }
         public Image GenericIndicatorImage { get => genericIndicatorImage; set => genericIndicatorImage = value; }
         public NamePlateCanvasController NamePlateCanvasController { get => namePlateCanvasController; set => namePlateCanvasController = value; }
+        public BaseNamePlateController UnitNamePlateController { get => unitNamePlateController; }
 
         // game manager references
         private UIManager uIManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private CameraManager cameraManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
             uIManager = systemGameManager.UIManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             cameraManager = systemGameManager.CameraManager;
         }
 
         private void OnEnable() {
-            //Debug.Log("NamePlateController.OnEnable()");
+            //Debug.Log($"NamePlateController.OnEnable() InstanceId: {GetInstanceID()}");
+
             /*
             CreateEventSubscriptions();
             HideSpeechBubble();
@@ -99,13 +101,13 @@ namespace AnyRPG {
         }
 
         private void CreateEventSubscriptions() {
-            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.CreateEventSubscriptions()");
+            //Debug.Log($"{unitNamePlateController.NamePlateUnit.gameObject.name}.NamePlateController.CreateEventSubscriptions() InstanceId: {GetInstanceID()}");
 
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
+            systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            systemEventManager.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
             //if (playerManager.MyPlayerUnitSpawned) {
             ProcessPlayerUnitSpawn();
             //}
@@ -113,13 +115,13 @@ namespace AnyRPG {
         }
 
         private void CleanupEventSubscriptions() {
-            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.CleanupEventSubscriptions()");
+            //Debug.Log($"{unitNamePlateController.NamePlateUnit.gameObject.name}.NamePlateController.CleanupEventSubscriptions() InstanceId: {GetInstanceID()}");
 
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
+            systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+            systemEventManager.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
 
             eventSubscriptionsInitialized = false;
         }
@@ -128,7 +130,7 @@ namespace AnyRPG {
             if (playerEventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StartListening("OnReputationChange", HandleReputationChange);
+            systemEventManager.OnReputationChange += HandleReputationChange;
             playerEventSubscriptionsInitialized = true;
         }
 
@@ -136,36 +138,39 @@ namespace AnyRPG {
             if (!playerEventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StopListening("OnReputationChange", HandleReputationChange);
+            systemEventManager.OnReputationChange -= HandleReputationChange;
             playerEventSubscriptionsInitialized = false;
         }
 
-        public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
+        public void HandlePlayerUnitDespawn(UnitController unitController) {
             //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.HandlePlayerUnitDespawn()");
 
             CleanupPlayerEventSubscriptions();
         }
 
-        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.HandlePlayerUnitSpawn()");
+        public void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
+            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.HandlePlayerUnitSpawn() instanceId: {GetInstanceID()}");
 
             ProcessPlayerUnitSpawn();
         }
 
 
         public void ProcessPlayerUnitSpawn() {
+            //Debug.Log($"NamePlateController.ProcessPlayerUnitSpawn() instanceId: {GetInstanceID()}");
+
             CreatePlayerEventSubscriptions();
             SetFactionColor();
         }
 
-        public void HandleReputationChange(string eventName, EventParamProperties eventParam) {
+        public void HandleReputationChange(UnitController targetUnitController) {
             //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.HandleReputationChange()");
 
             SetFactionColor();
         }
 
         private void InitializeLocalComponents() {
-            //Debug.Log(unitNamePlateController.UnitDisplayName + "NamePlateController.InitializeLocalComponents()");
+            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.InitializeLocalComponents()");
+
             if (localComponentsInitialized == true) {
                 //Debug.Log(namePlateUnit.DisplayName + "NamePlateController.InitializeLocalComponents(): already done.  exiting!");
 
@@ -205,91 +210,34 @@ namespace AnyRPG {
         }
 
         private void SetCharacterName() {
-            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName()");
+            //Debug.Log($"{unitNamePlateController.Interactable.DisplayName}.NamePlateController.SetCharacterName()");
+
+            if (CharacterName == null) {
+                return;
+            }
+
             if (isPlayerUnitNamePlate && PlayerPrefs.GetInt("ShowPlayerName") == 0 && PlayerPrefs.GetInt("ShowPlayerFaction") == 0) {
                 //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): ShowPlayerName and ShowPlayerFaction are both set to zero, setting charactername.text to string.empty");
                 CharacterName.text = string.Empty;
                 return;
             }
 
-            if (CharacterName != null && unitNamePlateController != null) {
-                if (CharacterName.text != null) {
-                    // character names have special coloring. white if no faction, green if character, otherwise normal faction colors
-                    if (unitNamePlateController.Faction != null) {
-                        //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName);
-                        Color textColor;
-                        if (uIManager.CutSceneBarController.CurrentCutscene != null && uIManager.CutSceneBarController.CurrentCutscene.UseDefaultFactionColors == true) {
-                            if (unitNamePlateController.Faction != null) {
-                                //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING DEFAULT");
-                                textColor = unitNamePlateController.Faction.GetFactionColor();
-                            } else {
-                                //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING UNIT");
-                                textColor = Faction.GetFactionColor(playerManager, unitNamePlateController.NamePlateUnit);
-                            }
-                        } else {
-                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING UNIT");
-                            textColor = Faction.GetFactionColor(playerManager, unitNamePlateController.NamePlateUnit);
-                        }
-                        //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: " + ColorUtility.ToHtmlStringRGB(textColor));
-
-
-                        string nameString = string.Empty;
-                        string factionString = string.Empty;
-                        if (isPlayerUnitNamePlate && PlayerPrefs.GetInt("ShowPlayerName") == 0) {
-                            // nothing for now
-                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): not showing name");
-                        } else {
-                            nameString = unitNamePlateController.UnitDisplayName;
-                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): showing name");
-                        }
-                        if (isPlayerUnitNamePlate && PlayerPrefs.GetInt("ShowPlayerFaction") == 0) {
-                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): not showing faction");
-                        } else {
-                            if (unitNamePlateController.SuppressFaction == false) {
-                                factionString = "<" + unitNamePlateController.Faction.DisplayName + ">";
-                            }
-                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): showing faction");
-                        }
-                        if (unitNamePlateController.Title != string.Empty) {
-                            factionString = "<" + unitNamePlateController.Title + ">";
-                        }
-                        string newLineString = string.Empty;
-                        if (factionString != string.Empty && nameString != string.Empty) {
-                            newLineString = "\n";
-                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): faction nad name are both not empty");
-                        } else {
-                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): faction or name are empty");
-                        }
-                        CharacterName.text = string.Format("<color=#{0}>{1}{2}{3}</color>", ColorUtility.ToHtmlStringRGB(textColor), nameString, newLineString, factionString);
-                    } else {
-                        //Debug.Log("NamePlateController.SetCharacterName(): namePlateUnit has no faction!");
-                        Color textColor;
-                        if (playerManager.UnitController != null && unitNamePlateController.NamePlateUnit.gameObject == playerManager.UnitController.gameObject) {
-                            textColor = Color.green;
-                        } else {
-                            textColor = Color.white;
-                        }
-                        if (PlayerPrefs.GetInt("ShowPlayerName") == 0 && isPlayerUnitNamePlate) {
-                            // nothing
-                        } else {
-                            CharacterName.text = string.Format("<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGB(textColor), unitNamePlateController.UnitDisplayName);
-                        }
-                    }
-                } else {
-                    //Debug.Log("NamePlateController.SetCharacterName(): text field is null!");
-                }
-            } else {
-                //Debug.Log("NamePlateController.SetCharacterName(): character name is null!");
+            if (unitNamePlateController == null) {
+                return;
             }
+
+            CharacterName.text = unitNamePlateController.GetNameplateString();
         }
 
-        public void SetNamePlateUnit(NamePlateUnit namePlateUnit, bool usePositionOffset) {
-            //Debug.Log("NamePlateController.SetNamePlateUnit(" + namePlateUnit.DisplayName + ") setting namePlateUnit on nameplate in instanceid" + GetInstanceID().ToString());
+        public void SetNamePlateUnit(Interactable interactable, bool usePositionOffset) {
+            //Debug.Log($"NamePlateController.SetNamePlateUnit({interactable.gameObject.name}) setting namePlateUnit on nameplate in instanceid {GetInstanceID()}");
+
+            unitNamePlateController = interactable.NamePlateController;
+
             // moved code here from awake since a nameplate always has to be initialized so this method will always be called before anything else
             CreateEventSubscriptions();
             HideSpeechBubble();
 
-            unitNamePlateController = namePlateUnit.NamePlateController;
             if (usePositionOffset == false) {
                 positionOffset = 0f;
             }
@@ -308,6 +256,12 @@ namespace AnyRPG {
             SetCharacterName();
         }
 
+        public void HandleSetGuildId() {
+            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.HandleSetGuildId()");
+
+            SetCharacterName();
+        }
+
         /// <summary>
         /// because name plates only show health, filter resource updates to health only
         /// </summary>
@@ -317,9 +271,9 @@ namespace AnyRPG {
         public void HandleResourceAmountChanged(PowerResource powerResource, int currentHealth, int maxHealth) {
             //Debug.Log(unitNamePlateController.NamePlateUnit.gameObject.name + ".CharacterUnit.HandleResourceAmountChanged(" + currentHealth + ", " + maxHealth + ")");
             if (unitNamePlateController.HasHealth()
-                && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterUnit.BaseCharacter != null
-                && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterUnit.BaseCharacter.CharacterStats != null
-                && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterUnit.BaseCharacter.CharacterStats.PrimaryResource == powerResource) {
+                && (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter != null
+                && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterStats != null
+                && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterStats.PrimaryResource == powerResource) {
                 ProcessHealthChanged(currentHealth, maxHealth);
             }
         }
@@ -332,9 +286,9 @@ namespace AnyRPG {
             //Debug.Log(unitNamePlateController.UnitDisplayName + ".NamePlateController.CheckForDisableHealthBar()");
             if (unitNamePlateController.HasHealth() && isPlayerUnitNamePlate) {
                 //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  CHECK IF MAX HEALTH: ");
-                if (playerManager != null && playerManager.MyCharacter != null && playerManager.MyCharacter.CharacterStats != null) {
-                    //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  ABOUT TO CHECK PRIMARY RESOURCE: hidebar: " + PlayerPrefs.GetInt("HideFullHealthBar") + " current: " + playerManager.MyCharacter.CharacterStats.CurrentPrimaryResource + "; max: " + playerManager.MyCharacter.CharacterStats.MaxPrimaryResource);
-                    if (playerManager.MyCharacter.CharacterStats.CurrentPrimaryResource == playerManager.MyCharacter.CharacterStats.MaxPrimaryResource && PlayerPrefs.GetInt("HideFullHealthBar") == 1) {
+                if (playerManagerClient != null && playerManagerClient.UnitController != null && playerManagerClient.UnitController.CharacterStats != null) {
+                    //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  ABOUT TO CHECK PRIMARY RESOURCE: hidebar: " + PlayerPrefs.GetInt("HideFullHealthBar") + " current: " + playerManager.UnitController.CharacterStats.CurrentPrimaryResource + "; max: " + playerManager.UnitController.CharacterStats.MaxPrimaryResource);
+                    if (playerManagerClient.UnitController.CharacterStats.CurrentPrimaryResource == playerManagerClient.UnitController.CharacterStats.MaxPrimaryResource && PlayerPrefs.GetInt("HideFullHealthBar") == 1) {
                         DisableHealthBar();
                         return;
                     }
@@ -379,12 +333,10 @@ namespace AnyRPG {
             CheckForDisabledHealthBar();
         }
 
-        //private void Update() {
-        //private void LateUpdate() {
         public void UpdatePosition() {
-            //Debug.Log("NamePlateController.UpdatePosition(): frame " + Time.frameCount + "; " + unitNamePlateController.UnitDisplayName);
+            //Debug.Log($"NamePlateController.UpdatePosition(): frame {Time.frameCount}; {unitNamePlateController.UnitDisplayName}");
             if (unitNamePlateController != null
-                && (playerManager.UnitController != null || uIManager.CutSceneBarController.CurrentCutscene != null)) {
+                && (playerManagerClient.UnitController != null || uIManager.CutSceneBarController.CurrentCutscene != null)) {
                 //Debug.Log("Setting the position of the nameplate transform in lateupdate");
                 bool renderNamePlate = true;
                 //Debug.Log("NamePlateController.LateUpdate(): the position of the character is " + characterUnit.transform.position);
@@ -401,7 +353,7 @@ namespace AnyRPG {
                     return;
                 }
                 //Debug.Log("NamePlateController.LateUpdate(): namePlateUnit: " + (namePlateUnit as MonoBehaviour).gameObject.name + "; currentcamera: " + (currentCamera == null ? "null" : currentCamera.name));
-                Vector3 relativePosition = currentCamera.WorldToViewportPoint(unitNamePlateController.NamePlateTransform.position);
+                Vector3 relativePosition = currentCamera.WorldToViewportPoint(unitNamePlateController.NameplatePosition);
                 //Debug.Log("NamePlateController.LateUpdate(): the relative position of the character(" + (namePlateUnit as MonoBehaviour).gameObject.name + ") is " + relativePosition);
                 if (!(relativePosition.z >= 0 && (relativePosition.x >= 0 && relativePosition.x <= 1) && (relativePosition.y >= 0 && relativePosition.y <= 1))) {
                     //Debug.Log("outisde viewport, not rendering");
@@ -409,22 +361,22 @@ namespace AnyRPG {
                 }
                 if (uIManager.CutSceneBarController.CurrentCutscene != null) {
                     //Debug.Log("NamePlateController.LateUpdate(): cutscene: calculating distance from camera");
-                    float unitDistance = Mathf.Abs(Vector3.Distance(cameraManager.CurrentCutsceneCameraController.gameObject.transform.position, unitNamePlateController.NamePlateTransform.position));
+                    float unitDistance = Mathf.Abs(Vector3.Distance(cameraManager.CurrentCutsceneCameraController.gameObject.transform.position, unitNamePlateController.NameplatePosition));
                     if (unitDistance > 40f) {
                         //Debug.Log("NamePlateController.LateUpdate(): cutscene: calculating distance from camera: more than 40f: " + unitDistance);
                         renderNamePlate = false;
                     }
                 } else {
                     //Debug.Log("NamePlateController.LateUpdate(): not cutscene: calculating distance from player");
-                    if (playerManager.ActiveUnitController == null
-                        || Mathf.Abs(Vector3.Distance(playerManager.ActiveUnitController.transform.position, unitNamePlateController.NamePlateTransform.position)) > 40f) {
+                    if (playerManagerClient.ActiveUnitController == null
+                        || Mathf.Abs(Vector3.Distance(playerManagerClient.ActiveUnitController.transform.position, unitNamePlateController.NameplatePosition)) > 40f) {
                         renderNamePlate = false;
                     }
                 }
                 if (renderNamePlate) {
                     //Debug.Log("renderNamePlate");
                     //Vector3 usedPosition = currentCamera.WorldToScreenPoint(worldPosition);
-                    Vector3 usedPosition = currentCamera.WorldToScreenPoint(unitNamePlateController.NamePlateTransform.position + (Vector3.up * positionOffset));
+                    Vector3 usedPosition = currentCamera.WorldToScreenPoint(unitNamePlateController.NameplatePosition + (Vector3.up * positionOffset));
                     namePlateContents.position = usedPosition;
                     speechBubbleContents.position = usedPosition;
                     //Debug.Log(characterUnit.gameObject.name + ".distance to player: " + Mathf.Abs(Vector3.Distance(playerManager.MyPlayerUnitObject.transform.position, characterUnit.transform.position)));
@@ -441,26 +393,78 @@ namespace AnyRPG {
                     namePlateCanvasGroup.alpha = 0;
                     namePlateCanvasGroup.blocksRaycasts = false;
                 }
-            } else {
-                //Debug.Log("charcterstats is null in nameplate on lateupdate in instanceid " + GetInstanceID().ToString());
             }
         }
 
+        public bool PreFilter(Camera currentCamera) {
+            if (unitNamePlateController == null) return false;
+            if (playerManagerClient.UnitController == null && uIManager.CutSceneBarController.CurrentCutscene == null) return false;
+
+            // 1. Viewport Check
+            Vector3 relPos = currentCamera.WorldToViewportPoint(unitNamePlateController.NameplatePosition);
+            bool inFrustum = relPos.z >= 0 && relPos.x >= 0 && relPos.x <= 1 && relPos.y >= 0 && relPos.y <= 1;
+
+            if (!inFrustum) {
+                SetUIVisibility(false);
+                return false;
+            }
+
+            // 2. Distance Check
+            float distLimit = 40f;
+            Vector3 sourcePos = (uIManager.CutSceneBarController.CurrentCutscene != null)
+                ? cameraManager.CurrentCutsceneCameraController.transform.position
+                : playerManagerClient.ActiveUnitController.transform.position;
+
+            if (Vector3.Distance(sourcePos, unitNamePlateController.NameplatePosition) > distLimit) {
+                SetUIVisibility(false);
+                return false;
+            }
+
+            return true; // Survived filters, needs a raycast
+        }
+
+        public void FinalizeVisibility(bool isVisible) {
+            if (isVisible) {
+                Camera currentCamera = (uIManager.CutSceneBarController.CurrentCutscene != null)
+                    ? cameraManager.CurrentCutsceneCameraController.Camera
+                    : cameraManager.ActiveMainCamera;
+
+                Vector3 usedPosition = currentCamera.WorldToScreenPoint(unitNamePlateController.NameplatePosition + (Vector3.up * positionOffset));
+                namePlateContents.position = usedPosition;
+                speechBubbleContents.position = usedPosition;
+
+                namePlateCanvasGroup.alpha = 1;
+                speechBubbleCanvasGroup.alpha = 1;
+                namePlateCanvasGroup.blocksRaycasts = !isPlayerUnitNamePlate;
+            } else {
+                SetUIVisibility(false);
+            }
+        }
+
+        private void SetUIVisibility(bool visible) {
+            float alpha = visible ? 1 : 0;
+            namePlateCanvasGroup.alpha = alpha;
+            speechBubbleCanvasGroup.alpha = alpha;
+            if (!visible) namePlateCanvasGroup.blocksRaycasts = false;
+        }
+
         private void SetFactionColor() {
-            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor()");
-            if (playerManager.PlayerUnitSpawned == false && uIManager.CutSceneBarController.CurrentCutscene == null) {
-                //Debug.Log(namePlateUnit.DisplayName + "NamePlateController.SetFactionColor(): player unit not spawned yet and this is not a cutscene");
+            //Debug.Log($"{unitNamePlateController.Interactable.gameObject.name}.NamePlateController.SetFactionColor()");
+
+            if (playerManagerClient.PlayerUnitSpawned == false && uIManager.CutSceneBarController.CurrentCutscene == null) {
+                //Debug.Log($"{unitNamePlateController.Interactable.gameObject.name}.NamePlateController.SetFactionColor(): player unit not spawned yet and this is not a cutscene");
                 return;
             }
             // the last condition was preventing inanimate units from setting their nameplate name color properly
-            if (unitNamePlateController == null || playerManager.MyCharacter == null) {
-                //Debug.Log(namePlateUnit.DisplayName + "NamePlateController.SetFactionColor() characterunit or player instance is null. returning!");
+            if (unitNamePlateController == null || (playerManagerClient.UnitController == null && uIManager.CutSceneBarController.CurrentCutscene == null)) {
+                //Debug.Log($"NamePlateController.SetFactionColor(): unitNamePlateController or player unit controller is null, exiting");
                 return;
             }
             //CheckForPlayerOwnerShip();
             if (unitNamePlateController.HasHealth() == true) {
                 //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): nameplateUnit has health, setting bar color");
-                if (uIManager.CutSceneBarController.CurrentCutscene != null && uIManager.CutSceneBarController.CurrentCutscene.UseDefaultFactionColors == true) {
+                if (uIManager.CutSceneBarController.CurrentCutscene != null) {
+                    /*
                     if (unitNamePlateController.Faction != null) {
                         //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING DEFAULT");
                         HealthSlider.color = unitNamePlateController.Faction.GetFactionColor();
@@ -468,21 +472,33 @@ namespace AnyRPG {
                         //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING UNIT");
                         HealthSlider.color = Faction.GetFactionColor(playerManager, (unitNamePlateController as UnitNamePlateController).UnitController);
                     }
+                    */
+                    if (uIManager.CutSceneBarController.CurrentCutscene.UseDefaultFactionColors == true) {
+                        if (unitNamePlateController.Faction != null) {
+                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING DEFAULT");
+                            HealthSlider.color = unitNamePlateController.Faction.GetFactionColor();
+                        } else {
+                            HealthSlider.color = Color.yellow;
+                        }
+                    } else {
+                        HealthSlider.color = Color.yellow;
+                    }
                 } else {
-                    //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING UNIT");
-                    HealthSlider.color = Faction.GetFactionColor(playerManager, (unitNamePlateController as UnitNamePlateController).UnitController);
+                    //Debug.Log($"{unitNamePlateController.Interactable.gameObject.name}.NamePlateController.SetFactionColor(): getting color for faction: {unitNamePlateController.Faction.DisplayName} isplayerUnitNamePlate: {isPlayerUnitNamePlate}; name: {unitNamePlateController.Interactable.gameObject.name}; color: USING UNIT");
+                    HealthSlider.color = Faction.GetFactionColor(playerManagerClient, (unitNamePlateController as UnitNamePlateController).UnitController);
                 }
-                //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): nameplateUnit has health, set faction color: " + MyHealthSlider.color);
-                //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: " + ColorUtility.ToHtmlStringRGB(MyHealthSlider.color));
+            }// else {
+                //Debug.Log($"{unitNamePlateController.Interactable.gameObject.name}.NamePlateController.SetFactionColor(): nameplateUnit does not have health.  not setting faction color");
+            //}
 
-            }
-            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): setting character name");
             SetCharacterName();
             CheckForDisabledHealthBar();
         }
 
+        /*
         public void OnClick(BaseEventData eventData) {
             //Debug.Log("NamePlateController: OnClick()");
+
             if (playerManager.PlayerUnitSpawned == false) {
                 return;
             }
@@ -495,9 +511,25 @@ namespace AnyRPG {
                 HandleRightClick();
             }
         }
+        */
+
+        public void OnPointerClick(PointerEventData pointerEventData) {
+            //Debug.Log("NamePlateController.OnPointerClick()");
+
+            if (playerManagerClient.PlayerUnitSpawned == false) {
+                return;
+            }
+            if (pointerEventData.button == PointerEventData.InputButton.Left) {
+                HandleLeftClick();
+            }
+            if (pointerEventData.button == PointerEventData.InputButton.Right) {
+                HandleRightClick();
+            }
+        }
+
 
         public void OnPointerEnter(PointerEventData eventData) {
-            if (unitNamePlateController?.Interactable != playerManager?.UnitController?.gameObject) {
+            if (unitNamePlateController?.Interactable != playerManagerClient?.UnitController?.gameObject) {
                 uIManager.NamePlateManager.AddMouseOver(this);
                 if (unitNamePlateController.Interactable != null) {
                     unitNamePlateController.Interactable.IsMouseOverNameplate = true;
@@ -507,11 +539,14 @@ namespace AnyRPG {
         }
 
         public void OnPointerExit(PointerEventData eventData) {
+            if (SystemGameManager.IsShuttingDown == true) {
+                return;
+            }
             ProcessPointerExit();
         }
 
         public void ProcessPointerExit() {
-            if (unitNamePlateController?.Interactable != playerManager?.UnitController?.gameObject) {
+            if (unitNamePlateController?.Interactable != playerManagerClient?.UnitController?.gameObject) {
                 uIManager.NamePlateManager.RemoveMouseOver(this);
                 if (unitNamePlateController?.Interactable != null && unitNamePlateController.Interactable.IsMouseOverNameplate == true) {
                     unitNamePlateController.Interactable.IsMouseOverNameplate = false;
@@ -523,21 +558,21 @@ namespace AnyRPG {
         private void HandleRightClick() {
             //Debug.Log("NamePlateController: HandleRightClick()");
 
-            if (playerManager.UnitController == null) {
+            if (playerManagerClient.UnitController == null) {
                 return;
             }
-            if (unitNamePlateController.Interactable.gameObject != playerManager.UnitController.gameObject && unitNamePlateController.Interactable.IsTrigger == false) {
-                playerManager.PlayerController.InterActWithTarget(unitNamePlateController.Interactable);
+            if (unitNamePlateController.Interactable.gameObject != playerManagerClient.UnitController.gameObject && unitNamePlateController.Interactable.IsTrigger == false) {
+                playerManagerClient.PlayerController.RightMouseInteraction(unitNamePlateController.Interactable);
             }
         }
 
         private void HandleLeftClick() {
             //Debug.Log("NamePlateController: HandleLeftClick(): " + namePlateUnit.DisplayName);
-            if (playerManager.UnitController == null) {
+            if (playerManagerClient.UnitController == null) {
                 return;
             }
-            if (unitNamePlateController.Interactable.gameObject != (playerManager.UnitController.gameObject)) {
-                playerManager.UnitController.SetTarget(unitNamePlateController.Interactable);
+            if (unitNamePlateController.Interactable.gameObject != (playerManagerClient.UnitController.gameObject)) {
+                playerManagerClient.UnitController.SetTarget(unitNamePlateController.Interactable);
             }
         }
 
@@ -555,15 +590,22 @@ namespace AnyRPG {
         }
 
         public void SetSpeechText(string newSpeechText) {
+            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.SetSpeechText({newSpeechText})");
+
             if (speechBubbleText != null && newSpeechText != null) {
                 speechBubbleText.text = newSpeechText;
             }
         }
 
-        // name plates can be disabled by hiding the ui with the '.' button, so this should only be done when sending them to the pool
-        //public void OnDisable() {
-        public void OnSendObjectToPool() {
-            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.OnSendObjectToPool()");
+        /*
+        public void OnDisable() {
+            //Debug.Log($"NamePlateController.OnDisable() InstanceId: {GetInstanceID()}");
+        }
+        */
+
+        // name plates can be disabled by hiding the ui with the '.' button, so this cleanup should only be done when sending them to the pool
+        public void OnSendObjectToPoolManual() {
+            //Debug.Log($"{unitNamePlateController.NamePlateUnit.gameObject.name}.NamePlateController.OnSendObjectToPoolManual() instanceId: {GetInstanceID()}");
 
             if (SystemGameManager.IsShuttingDown) {
                 return;

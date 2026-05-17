@@ -1,60 +1,62 @@
-using AnyRPG;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     public class InventorySlot : ConfiguredClass {
 
         public event System.Action OnUpdateSlot = delegate { };
+        public event System.Action<InventorySlot, InstantiatedItem> OnAddItem = delegate { };
+        public event System.Action<InventorySlot, InstantiatedItem> OnRemoveItem = delegate { };
 
         /// <summary>
         /// A stack for all items on this slot
         /// </summary>
-        protected List<Item> items = new List<Item>();
+        protected Dictionary<long, InstantiatedItem> instantiatedItems = new Dictionary<long, InstantiatedItem>();
 
         // game manager references
         protected HandScript handScript = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
 
+        /*
         /// <summary>
         /// A referecne to the bag that this slot belongs to
         /// </summary>
+        /// no longer in use, now linked from SlotScript
         public BagPanel BagPanel { get; set; }
+        */
 
         public bool IsEmpty {
             get {
-                return Items.Count == 0;
+                return InstantiatedItems.Count == 0;
             }
         }
 
         public bool IsFull {
             get {
-                if (IsEmpty || Count < Item.MaximumStackSize) {
+                if (IsEmpty || Count < InstantiatedItem.Item.MaximumStackSize) {
                     return false;
                 }
                 return true;
             }
         }
 
-        public Item Item {
+        public InstantiatedItem InstantiatedItem {
             get {
                 if (!IsEmpty) {
-                    return Items[0];
+                    return InstantiatedItems.First().Value;
                 }
                 return null;
             }
         }
 
-        public int Count { get => Items.Count; }
-        public List<Item> Items {
+        public int Count { get => InstantiatedItems.Count; }
+        public Dictionary<long, InstantiatedItem> InstantiatedItems {
             get {
-                return items;
+                return instantiatedItems;
             }
             set {
-                items = value;
+                instantiatedItems = value;
                 UpdateSlot();
             }
         }
@@ -68,39 +70,53 @@ namespace AnyRPG {
 
             //inventoryManager = systemGameManager.InventoryManager;
             handScript = systemGameManager.UIManager.HandScript;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
-        private void UpdateSlot() {
+        protected virtual void UpdateSlot() {
+            //Debug.Log($"InventorySlot.UpdateSlot()");
+
             SetSlotOnItems();
             OnUpdateSlot();
         }
 
         private void SetSlotOnItems() {
             //Debug.Log("SlotScript.SetSlotOnItems(): MyItem is null");
-            foreach (Item tmpItem in Items) {
+            foreach (InstantiatedItem tmpItem in InstantiatedItems.Values) {
                 //Debug.Log("SlotScript.SetSlotOnItems(): going through MyItems");
                 tmpItem.Slot = this;
             }
         }
 
-        public bool AddItem(Item item) {
-            //Debug.Log("Slot " + GetInstanceID().ToString() + " with count " + MyItems.Count.ToString() + " adding item " + item.GetInstanceID().ToString());
-            Items.Add(item);
+        public bool AddItem(InstantiatedItem instantiatedItem) {
+            //Debug.Log($"InventorySlot.Additem({instantiatedItem.Item.ResourceName}) (instance: {GetHashCode()})");
+            if (InstantiatedItems.ContainsKey(instantiatedItem.InstanceId)) {
+                Debug.LogWarning($"InventorySlot.AddItem(name: {instantiatedItem.ResourceName} id: {instantiatedItem.InstanceId}) attempted to add an item that is already in the slot.");
+                return false;
+            }
+            InstantiatedItems.Add(instantiatedItem.InstanceId, instantiatedItem);
+            instantiatedItem.Slot = this;
             UpdateSlot();
+            NotifyOnAddItem(instantiatedItem);
             //Debug.Log("Slot " + GetInstanceID().ToString() + " now has count " + MyItems.Count.ToString());
             return true;
         }
 
-        public bool AddItems(List<Item> newItems) {
-            if (IsEmpty || SystemDataUtility.MatchResource(newItems[0].ResourceName, Item.ResourceName)) {
-                int count = newItems.Count;
+        public virtual void NotifyOnAddItem(InstantiatedItem instantiatedItem) {
+            OnAddItem(this, instantiatedItem);
+        }
+
+        public bool AddItems(List<InstantiatedItem> newInstantiatedItems) {
+            //Debug.Log($"InventorySlot.AddItems({newInstantiatedItems.Count})");
+
+            if (IsEmpty || SystemDataUtility.MatchResource(newInstantiatedItems[0].Item.ResourceName, InstantiatedItem.Item.ResourceName)) {
+                int count = newInstantiatedItems.Count;
 
                 for (int i = 0; i < count; i++) {
                     if (IsFull) {
                         return false;
                     }
-                    AddItem(newItems[i]);
+                    AddItem(newInstantiatedItems[i]);
                     //newItems[0].Remove();
                 }
                 return true;
@@ -108,20 +124,37 @@ namespace AnyRPG {
             return false;
         }
 
-        public void RemoveItem(Item item) {
-            if (!IsEmpty) {
-                Items.Remove(item);
-                UpdateSlot();
-                playerManager.MyCharacter.CharacterInventoryManager.OnItemCountChanged(item);
+        public void RemoveAllItems() {
+            //Debug.Log($"InventorySlot.RemoveAllItems()");
+
+            while (InstantiatedItems.Count > 0) {
+                long itemInstanceId = instantiatedItems.First().Key;
+                RemoveItem(InstantiatedItems[itemInstanceId]);
             }
+        }
+
+        public void RemoveItem(InstantiatedItem instantiatedItem) {
+            //Debug.Log($"InventorySlot.RemoveItem({instantiatedItem.Item.ResourceName})");
+
+            if (!IsEmpty) {
+                InstantiatedItems.Remove(instantiatedItem.InstanceId);
+                UpdateSlot();
+                NotifyOnRemoveItem(instantiatedItem);
+            }
+        }
+
+        public virtual void NotifyOnRemoveItem(InstantiatedItem instantiatedItem) {
+            //Debug.Log($"InventorySlot.NotifyOnRemoveItem({instantiatedItem.Item.ResourceName})");
+
+            OnRemoveItem(this, instantiatedItem);
         }
 
         /*
         public void DropItemFromInventorySlot() {
             //Debug.Log("Dropping an item from an inventory slot");
-            if (PutItemBack() || MergeItems(playerManager.MyCharacter.CharacterInventoryManager.FromSlot.InventorySlot) || SwapItems(playerManager.MyCharacter.CharacterInventoryManager.FromSlot.InventorySlot) || AddItems(playerManager.MyCharacter.CharacterInventoryManager.FromSlot.InventorySlot.Items)) {
+            if (PutItemBack() || MergeItems(playerManager.UnitController.CharacterInventoryManager.FromSlot.InventorySlot) || SwapItems(playerManager.UnitController.CharacterInventoryManager.FromSlot.InventorySlot) || AddItems(playerManager.UnitController.CharacterInventoryManager.FromSlot.InventorySlot.Items)) {
                 handScript.Drop();
-                playerManager.MyCharacter.CharacterInventoryManager.FromSlot = null;
+                playerManager.UnitController.CharacterInventoryManager.FromSlot = null;
             }
         }
         */
@@ -134,13 +167,13 @@ namespace AnyRPG {
         public void SendItemToHandScript() {
             //Debug.Log("SlotScript.SendItemToHandScript(): setting inventorymanager.myinstance.fromslot to this");
             handScript.TakeMoveable(Item as IMoveable);
-            playerManager.MyCharacter.CharacterInventoryManager.FromSlot = this;
+            playerManager.UnitController.CharacterInventoryManager.FromSlot = this;
         }
         */
 
-        public int GetCurrentSlotIndex() {
-            for (int i = 0; i < playerManager.MyCharacter.CharacterInventoryManager.InventorySlots.Count; i++) {
-                if (playerManager.MyCharacter.CharacterInventoryManager.InventorySlots[i] == this) {
+        public int GetCurrentInventorySlotIndex(UnitController sourceUnitController) {
+            for (int i = 0; i < sourceUnitController.CharacterInventoryManager.InventorySlots.Count; i++) {
+                if (sourceUnitController.CharacterInventoryManager.InventorySlots[i] == this) {
                     return i;
                 }
             }
@@ -149,11 +182,21 @@ namespace AnyRPG {
             return -1;
         }
 
+        public int GetCurrentBankSlotIndex(UnitController sourceUnitController) {
+            for (int i = 0; i < sourceUnitController.CharacterInventoryManager.BankSlots.Count; i++) {
+                if (sourceUnitController.CharacterInventoryManager.BankSlots[i] == this) {
+                    return i;
+                }
+            }
+
+            // didn't find anything, this will send whatever needs this to the default slot
+            return -1;
+        }
+
+
         public void Clear() {
-            if (Items.Count > 0) {
-                Item tmpItem = Items[0];
-                Items.Clear();
-                playerManager.MyCharacter.CharacterInventoryManager.OnItemCountChanged(tmpItem);
+            if (InstantiatedItems.Count > 0) {
+                InstantiatedItems.Clear();
                 UpdateSlot();
             }
         }
@@ -161,20 +204,31 @@ namespace AnyRPG {
         /// <summary>
         /// Uses the item if it is useable
         /// </summary>
-        public void UseItem() {
-            //Debug.Log("SlotScript.HandleRightClick()");
-            if (Item is Equipment) {
-                (Item as Equipment).Use();
-            } else if (Item is IUseable) {
-                (Item as IUseable).Use();
-            } 
+        public void UseItem(UnitController sourceUnitController) {
+            //Debug.Log($"InventorySlot.UseItem({sourceUnitController.gameObject.name})");
+
+            if (InstantiatedItem != null) {
+                InstantiatedItem.Use(sourceUnitController);
+            }
         }
 
-        public bool StackItem(Item item) {
-            if (!IsEmpty && item.ResourceName == Item.ResourceName && Items.Count < Item.MaximumStackSize) {
-                Items.Add(item);
-                UpdateSlot();
-                item.Slot = this;
+        public bool CanStackOrEmptyItem(InstantiatedItem instantiatedItem) {
+            if (!IsEmpty && instantiatedItem.Item.ResourceName == InstantiatedItem.Item.ResourceName && InstantiatedItems.Count < InstantiatedItem.Item.MaximumStackSize) {
+                return true;
+            }
+            if (IsEmpty) {
+                return true;
+            }
+            return false;
+        }
+
+        public bool StackItem(InstantiatedItem instantiatedItem) {
+            if (IsEmpty) {
+                AddItem(instantiatedItem);
+                return true;
+            }
+            if (!IsEmpty && instantiatedItem.Item.ResourceName == InstantiatedItem.Item.ResourceName && InstantiatedItems.Count < InstantiatedItem.Item.MaximumStackSize) {
+                AddItem(instantiatedItem);
                 return true;
             }
             return false;
@@ -183,7 +237,7 @@ namespace AnyRPG {
         /*
         public bool PutItemBack() {
             //Debug.Log("attempting to put an item back in a slot");
-            if (playerManager.MyCharacter.CharacterInventoryManager.FromSlot == this) {
+            if (playerManager.UnitController.CharacterInventoryManager.FromSlot == this) {
                 //Debug.Log("Confirmed that the item came from this slot.  now returning it.");
                 UpdateSlot();
                 return true;
@@ -195,29 +249,34 @@ namespace AnyRPG {
         */
 
         public bool SwapItems(InventorySlot from) {
-            //Debug.Log("SlotScript " + this.GetInstanceID().ToString() + " receiving items to swap from slotscript " + from.GetInstanceID().ToString());
+            //Debug.Log($"InventorySlot.SwapItems()");
+
             // use a temporary list to swap references to the stacks
-            List<Item> tmpFrom = new List<Item>(from.Items);
-            from.Items = Items;
-            Items = tmpFrom;
+            Dictionary<long, InstantiatedItem> tmpFrom = new Dictionary<long, InstantiatedItem>(from.InstantiatedItems);
+            //from.InstantiatedItems = InstantiatedItems;
+            from.RemoveAllItems();
+            from.AddItems(InstantiatedItems.Values.ToList());
+            RemoveAllItems();
+            AddItems(tmpFrom.Values.ToList());
 
             return true;
         }
 
         public bool MergeItems(InventorySlot from) {
-            //Debug.Log("attempting to merge items");
+            //Debug.Log($"InventorySlot.MergeItems()");
+
             if (IsEmpty) {
                 //Debug.Log("This slot is empty, there is nothing to merge.");
                 return false;
             }
-            if (SystemDataUtility.MatchResource(from.Item.ResourceName, Item.ResourceName) && !IsFull) {
+            if (SystemDataUtility.MatchResource(from.InstantiatedItem.Item.ResourceName, InstantiatedItem.Item.ResourceName) && !IsFull) {
                 // how many free slots there are in the new stack
-                int free = Item.MaximumStackSize - Count;
+                int free = InstantiatedItem.Item.MaximumStackSize - Count;
                 if (free >= from.Count) {
                     int maxCount = from.Count;
                     for (int i = 0; i < maxCount; i++) {
-                        AddItem(from.Items[0]);
-                        from.RemoveItem(from.Items[0]);
+                        AddItem(from.InstantiatedItems.First().Value);
+                        from.RemoveItem(from.InstantiatedItems.First().Value);
                     }
                     return true;
                 } else {

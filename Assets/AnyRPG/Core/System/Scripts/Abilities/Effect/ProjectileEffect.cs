@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class ProjectileEffect : AbilityEffect {
 
         [SerializeField]
-        private ProjectileEffectProperties projectileEffectProperties = new ProjectileEffectProperties();
+        public ProjectileEffectProperties projectileEffectProperties = new ProjectileEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => projectileEffectProperties; }
 

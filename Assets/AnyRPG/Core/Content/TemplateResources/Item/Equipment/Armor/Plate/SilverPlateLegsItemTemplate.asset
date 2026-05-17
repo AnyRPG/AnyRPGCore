@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 4
+  itemPickupPrefabProfileName: Plate Pants Silver
   equipmentSlotType: Pants
   equipmentSetName: 
-  umaRecipeProfileName: Silver Plate Legs
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Silver Plate Legs

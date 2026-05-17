@@ -113,7 +113,7 @@ namespace AnyRPG {
         }
 
         public virtual Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(DisplayName + ".AbilityEffect.Cast(" + source.AbilityManager.Name + ", " + (target? target.name : "null") + ")");
+            //Debug.Log($"{ResourceName}.AbilityEffectProperties.Cast({source.AbilityManager.Name}, {(target? target.name : "null")})");
             /*
             if (abilityEffectInput != null) {
                 this.abilityEffectInput = abilityEffectInput;
@@ -126,9 +126,9 @@ namespace AnyRPG {
         public virtual Interactable ReturnTarget(IAbilityCaster sourceCharacter, Interactable target, AbilityEffectContext abilityEffectContext = null) {
             if (sourceCharacter?.AbilityManager?.UnitGameObject == null) {
                 /*
-                /Debug.Log(DisplayName + ".AbilityEffect.ReturnTarget(): source is null! This should never happen!!!!! (unless the thing that put the dot on you despawns)");
+                /Debug.LogWarning(DisplayName + ".AbilityEffect.ReturnTarget(): source is null! This should never happen!!!!! (unless the thing that put the dot on you despawns)");
                 if (sourceCharacter == null) {
-                    Debug.Log(DisplayName + ".AbilityEffect.ReturnTarget(): source abilitymanager is null! This should never happen!!!!! " + sourceCharacter.AbilityManager.Name);
+                    Debug.LogWarning(DisplayName + ".AbilityEffect.ReturnTarget(): source abilitymanager is null! This should never happen!!!!! " + sourceCharacter.AbilityManager.Name);
                 }
                 */
                 return null;
@@ -140,7 +140,10 @@ namespace AnyRPG {
                 if (GetTargetOptions(sourceCharacter).CanCastOnSelf && GetTargetOptions(sourceCharacter).AutoSelfCast) {
                     target = sourceCharacter.AbilityManager.UnitGameObject.GetComponent<Interactable>();
                     //Debug.Log(DisplayName + ".BaseAbility.ReturnTarget(): returning target as sourcecharacter: " + target.name);
-                    return target;
+                    if (CanUseOn(target, sourceCharacter, abilityEffectContext) == true) {
+                        return target;
+                    }
+                    return null;
                 } else {
                     //Debug.Log(DisplayName + ".BaseAbility.ReturnTarget(): returning null");
                     return null;
@@ -173,7 +176,7 @@ namespace AnyRPG {
                         Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                     } else {
                         if (!(abilityEffect is AmountEffectProperties)) {
-                            abilityEffectOutput.spellDamageMultiplier = 1f;
+                            abilityEffectOutput.SpellDamageMultiplier = 1f;
                         }
                         Dictionary<PrefabProfile, List<GameObject>> tmpObjects = PerformAbilityEffect(source, target, abilityEffectOutput, abilityEffect);
                         if (tmpObjects != null) {
@@ -233,41 +236,56 @@ namespace AnyRPG {
 
         public virtual void PlayAudioEffects(List<AudioProfile> audioProfiles, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.PlayAudioEffects(" + (target == null ? "null" : target.name) + ")");
-            if (audioProfiles != null) {
-                AudioSource audioSource = null;
-                if (target?.UnitComponentController == null) {
+            if (audioProfiles == null) {
+                return;
+            }
 
-                    if (abilityEffectContext.PrefabObjects != null
-                        && abilityEffectContext.PrefabObjects.Count > 0
-                        && abilityEffectContext.PrefabObjects.First().Value.Count > 0) {
-                        //prefabObjects.First();
-                        audioSource = abilityEffectContext.PrefabObjects.First().Value.First().GetComponent<AudioSource>();
-                        /*
-                        if (audioSource != null) {
-                            Debug.Log("Found Audio Source on " + abilityEffectContext.PrefabObjects.First().Value.name);
-                        }
-                        */
-                    }
-                }
-                if (audioSource != null || target?.UnitComponentController != null) {
-                    List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
-                    if (randomAudioProfiles == true) {
-                        usedAudioProfiles.Add(audioProfiles[UnityEngine.Random.Range(0, audioProfiles.Count)]);
-                    } else {
-                        usedAudioProfiles = audioProfiles;
-                    }
-                    foreach (AudioProfile audioProfile in usedAudioProfiles) {
-                        if (audioProfile.AudioClips.Count > 0) {
-                            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.AudioClip.name);
-                            if (target != null && target.UnitComponentController != null) {
-                                target.UnitComponentController.PlayEffectSound(audioProfile.RandomAudioClip);
-                            } else {
-                                audioSource.PlayOneShot(audioProfile.RandomAudioClip);
-                            }
-                        }
-                    }
+            if (target != null) {
+                List<AudioClip> audioClips = GetAudioClips(audioProfiles);
+                PlayEffectsOnTarget(target, audioClips);
+                return;
+            }
+
+            ObjectAudioController objectAudioController = null;
+            if (abilityEffectContext.PrefabObjects != null
+                && abilityEffectContext.PrefabObjects.Count > 0
+                && abilityEffectContext.PrefabObjects.First().Value.Count > 0) {
+                objectAudioController = abilityEffectContext.PrefabObjects.First().Value.First().GetComponent<ObjectAudioController>();
+            }
+
+            if (objectAudioController != null) {
+                List<AudioClip> audioClips = GetAudioClips(audioProfiles);
+                PlayEffectsOnTarget(objectAudioController, audioClips);
+            }
+        }
+
+        private void PlayEffectsOnTarget(Interactable target, List<AudioClip> audioClips) {
+            foreach (AudioClip audioClip in audioClips) {
+                target.InteractableEventController.NotifyOnPlayEffectSound(audioClip, false);
+            }
+        }
+
+        private void PlayEffectsOnTarget(ObjectAudioController objectAudioController, List<AudioClip> audioClips) {
+            foreach (AudioClip audioClip in audioClips) {
+                objectAudioController.PlayOneShot(audioClip);
+            }
+        }
+
+        private List<AudioClip> GetAudioClips(List<AudioProfile> audioProfiles) {
+            List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
+            if (randomAudioProfiles == true) {
+                usedAudioProfiles.Add(audioProfiles[UnityEngine.Random.Range(0, audioProfiles.Count)]);
+            } else {
+                usedAudioProfiles = audioProfiles;
+            }
+
+            List<AudioClip> returnList = new List<AudioClip>();
+            foreach (AudioProfile audioProfile in audioProfiles) {
+                if (audioProfile.AudioClips.Count > 0) {
+                    returnList.Add(audioProfile.RandomAudioClip);
                 }
             }
+            return returnList;
         }
 
         public virtual void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
@@ -295,9 +313,12 @@ namespace AnyRPG {
             return abilityEffectContext;
         }
 
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
+
         public virtual void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
             //public virtual void SetupScriptableObjects(SystemGameManager systemGameManager, string displayName) {
-            //Debug.Log(DisplayName + ".AbilityEffect.SetupscriptableObjects()");
+            //Debug.Log($"AbilityEffectProperties.SetupScriptableObjects({describable.ResourceName})");
 
             //this.displayName = displayName;
             describableData = describable;

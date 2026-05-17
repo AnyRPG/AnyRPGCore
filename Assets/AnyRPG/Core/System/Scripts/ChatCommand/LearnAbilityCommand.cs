@@ -18,7 +18,7 @@ namespace AnyRPG {
 
         [Tooltip("Only applies if Fixed Ability is true")]
         [SerializeField]
-        [ResourceSelector(resourceType = typeof(BaseAbility))]
+        [ResourceSelector(resourceType = typeof(Ability))]
         private string abilityName = string.Empty;
 
         public override void SetGameManagerReferences() {
@@ -27,12 +27,12 @@ namespace AnyRPG {
             //systemItemManager = systemGameManager.SystemItemManager;
         }
 
-        public override void ExecuteCommand(string commandParameters) {
+        public override void ExecuteCommand(string commandParameters, int accountId) {
             //Debug.Log("GainItemCommand.ExecuteCommand() Executing command " + DisplayName + " with parameters (" + commandParameters + ")");
 
             // add a fixed item
             if (fixedAbility == true) {
-                LearnAbility(abilityName);
+                LearnAbility(abilityName, accountId);
                 return;
             }
 
@@ -42,21 +42,18 @@ namespace AnyRPG {
             }
 
             // add an item from parameters
-            LearnAbility(commandParameters);
+            LearnAbility(commandParameters, accountId);
         }
 
-        private void LearnAbility(string abilityName) {
-            BaseAbility tmpAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
-            if (tmpAbility != null) {
-                playerManager.ActiveCharacter.CharacterAbilityManager.LearnAbility(tmpAbility.AbilityProperties);
-            }
+        private void LearnAbility(string abilityName, int accountId) {
+            playerManagerServer.LearnAbility(abilityName, accountId);
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
 
             if (fixedAbility == true && abilityName != null && abilityName != string.Empty) {
-                BaseAbility tmpAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
+                Ability tmpAbility = systemDataFactory.GetResource<Ability>(abilityName);
                 if (tmpAbility == null) {
                     Debug.LogError("LearnAbilityCommand.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }

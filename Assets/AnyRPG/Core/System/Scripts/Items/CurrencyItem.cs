@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "CurrencyItem", menuName = "AnyRPG/Inventory/Items/CurrencyItem", order = 1)]
-    public class CurrencyItem : Item, IUseable {
+    public class CurrencyItem : Item {
 
         [Header("Currency")]
 
@@ -19,28 +19,31 @@ namespace AnyRPG {
         //[SerializeField]
         private CurrencyNode currencyNode;
 
-        public CurrencyNode MyCurrencyNode { get => currencyNode; }
+        public CurrencyNode CurrencyNode { get => currencyNode; }
+        public string GainCurrencyName { get => gainCurrencyName; }
+        public int GainCurrencyAmount { get => gainCurrencyAmount; }
 
-        public override bool Use() {
-            //Debug.Log("CurrencyItem.Use()");
-            bool returnValue = base.Use();
-            if (returnValue == false) {
-                return false;
+        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, long itemId, Item item, ItemQuality usedItemQuality) {
+            if ((item is CurrencyItem) == false) {
+                return null;
             }
-            if (currencyNode.currency != null) {
-                playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.Amount);
-            }
-            Remove();
-            return true;
+            return new InstantiatedCurrencyItem(systemGameManager, itemId, item as CurrencyItem, usedItemQuality);
         }
 
-        public override string GetDescription(ItemQuality usedItemQuality) {
-            //Debug.Log(DisplayName + ".CurrencyItem.GetSummary();");
+        public override string GetDescription(ItemQuality usedItemQuality, int usedItemLevel) {
+            //Debug.Log($"CurrencyItem.GetDescription({(usedItemQuality == null ? "null" : usedItemQuality.ResourceName)}, {usedItemLevel});");
+
             string tmpCurrencyName = string.Empty;
             if (currencyNode.currency != null) {
-                tmpCurrencyName = currencyNode.currency.DisplayName;
+                tmpCurrencyName = $"{currencyNode.Amount} {currencyNode.currency.DisplayName}";
             }
-            return base.GetDescription(usedItemQuality) + string.Format("\n<color=green>Use: Gain {0} {1}</color>", tmpCurrencyName, currencyNode.Amount);
+            return base.GetDescription(usedItemQuality, usedItemLevel) + GetCurrencyItemDescription(tmpCurrencyName);
+        }
+
+        public string GetCurrencyItemDescription(string gainCurrencyString) {
+            //Debug.Log($"CurrencyItem.GetCurrencyItemDescription({currencyDisplayName}, {currencyGainAmount})");
+
+            return string.Format("\n<color=green>Use: Gain {0}</color>", gainCurrencyString);
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
@@ -51,7 +54,7 @@ namespace AnyRPG {
                     currencyNode.currency = tmpCurrency;
                     currencyNode.Amount = gainCurrencyAmount;
                 } else {
-                    Debug.LogError("CurrencyItem.SetupScriptableObjects(): Could not find currency : " + gainCurrencyName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"CurrencyItem.SetupScriptableObjects(): Could not find currency : {gainCurrencyName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
         }

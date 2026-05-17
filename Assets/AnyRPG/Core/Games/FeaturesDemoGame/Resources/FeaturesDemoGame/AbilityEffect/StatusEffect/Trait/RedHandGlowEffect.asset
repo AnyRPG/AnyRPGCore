@@ -38,8 +38,6 @@ MonoBehaviour:
       lineOfSightSourceLocation: 0
       targetRangeSourceLocation: 0
     chanceToCast: 100
-    effectMaterialName: 
-    materialChangeDuration: 2
     onHitAudioProfileNames: []
     randomAudioProfiles: 0
     hitAbilityEffectNames: []
@@ -63,14 +61,23 @@ MonoBehaviour:
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
+    statusEffectObjectList:
+    - holdableObjectName: Red Hand Glow
+      useUniversalAttachment: 1
+      attachmentName: Right Hand
+    - holdableObjectName: Red Hand Glow
+      useUniversalAttachment: 1
+      attachmentName: Left Hand
     statusEffectAlignment: 0
     statusEffectTypeName: 
     statusEffectGroupName: 
+    effectMaterialName: 
     classTrait: 1
     requiredLevel: 1
     sceneNames: []
     requireOutOfCombat: 0
     limitedDuration: 0
+    refreshableDuration: 1
     duration: 0
     maxStacks: 1
     statBuffTypeNames: []

@@ -10,18 +10,18 @@ namespace AnyRPG {
 
         [Tooltip("If true, look for the resource description with the same name as this resource.")]
         [SerializeField]
-        private bool useRegionalDescription = false;
+        public bool useRegionalDescription = false;
 
         [Tooltip("Manually set a resource description to be used.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(ResourceDescription))]
-        protected string resourceDescriptionProfile;
+        public string resourceDescriptionProfile;
 
         protected ResourceDescription resourceDescription = null;
 
         [Tooltip("If true, the regional override is optional, and will not cause an error if it doesn't exist.")]
         [SerializeField]
-        protected bool optionalOverride = false;
+        public bool optionalOverride = false;
 
         // game manager references
 

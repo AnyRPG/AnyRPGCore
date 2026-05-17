@@ -1,6 +1,8 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -15,45 +17,141 @@ namespace AnyRPG {
         /// <summary>
         /// The currently focused nameplate so we can highlight the outline
         /// </summary>
-        private NamePlateUnit focus;
+        private Interactable focus;
+
+        private NativeArray<RaycastCommand> commands;
+        private NativeArray<RaycastHit> results;
+        private JobHandle jobHandle;
+        private bool isJobRunning = false;
+        private List<NamePlateController> raycastCandidates = new List<NamePlateController>();
+
 
         private List<NamePlateController> mouseOverList = new List<NamePlateController>();
 
-        private Dictionary<NamePlateUnit, NamePlateController> namePlates = new Dictionary<NamePlateUnit, NamePlateController>();
+        private Dictionary<Interactable, NamePlateController> namePlates = new Dictionary<Interactable, NamePlateController>();
 
         // game manager references
-        private CameraManager cameraManager = null;
-        private PlayerManager playerManager = null;
         private ObjectPooler objectPooler = null;
+        private LevelManagerClient levelManagerClient = null;
+        private UIManager uIManager = null;
+        private CameraManager cameraManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            cameraManager = systemGameManager.CameraManager;
-            playerManager = systemGameManager.PlayerManager;
-            objectPooler = systemGameManager.ObjectPooler;
 
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            objectPooler = systemGameManager.ObjectPooler;
+            levelManagerClient = systemGameManager.LevelManagerClient;
+            uIManager = systemGameManager.UIManager;
+            cameraManager = systemGameManager.CameraManager;
         }
 
         public void AddMouseOver(NamePlateController namePlateController) {
+            //Debug.Log($"NamePlateManager.AddMouseOver({namePlateController.gameObject?.name})");
+
             if (!mouseOverList.Contains(namePlateController)) {
                 mouseOverList.Add(namePlateController);
             }
         }
 
         public void RemoveMouseOver(NamePlateController namePlateController) {
+            //Debug.Log($"NamePlateManager.RemoveMouseOver({namePlateController.gameObject?.name})");
+
             mouseOverList.Remove(namePlateController);
         }
 
         public void HandleAfterCameraUpdate(string eventName, EventParamProperties eventParamProperties) {
-            UpdateNamePlates();
+            UpdateNameplates();
         }
 
-        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+        /*
+        private void UpdateNamePlates() {
+            foreach (NamePlateController namePlateController in namePlates.Values) {
+                namePlateController.UpdatePosition();
+            }
+        }
+        */
+
+        private void UpdateNameplates() {
+            if (isJobRunning) {
+                if (jobHandle.IsCompleted) {
+                    jobHandle.Complete();
+                    for (int i = 0; i < raycastCandidates.Count; i++) {
+                        var controller = raycastCandidates[i];
+
+                        // Safety check: Did this object get destroyed while the job was running?
+                        if (controller?.UnitNamePlateController != null) {
+                            bool isBlocked = results[i].collider != null;
+                            controller.FinalizeVisibility(!isBlocked);
+                        }
+                    }
+                    CleanupNative();
+                    isJobRunning = false;
+                } else return;
+            }
+
+            raycastCandidates.Clear();
+            Camera currentCamera = GetCurrentCamera();
+            if (currentCamera == null) return;
+
+            foreach (NamePlateController controller in namePlates.Values) {
+                if (controller.PreFilter(currentCamera)) raycastCandidates.Add(controller);
+            }
+
+            if (raycastCandidates.Count > 0) {
+                int count = raycastCandidates.Count;
+                commands = new NativeArray<RaycastCommand>(count, Allocator.TempJob);
+                results = new NativeArray<RaycastHit>(count, Allocator.TempJob);
+
+                // Modern QueryParameters for the standard Physics engine
+                // Use 1 << layerIndex to create the mask
+                QueryParameters queryParams = new QueryParameters(1 << LayerMask.NameToLayer("Default"), false, QueryTriggerInteraction.Ignore);
+                Vector3 camPos = currentCamera.transform.position;
+
+                for (int i = 0; i < count; i++) {
+                    Vector3 targetPos = raycastCandidates[i].UnitNamePlateController.NameplatePosition;
+                    Vector3 dir = targetPos - camPos;
+
+                    // Use the new constructor that takes QueryParameters
+                    commands[i] = new RaycastCommand(camPos, dir.normalized, queryParams, dir.magnitude);
+                }
+
+                jobHandle = RaycastCommand.ScheduleBatch(commands, results, 1);
+                isJobRunning = true;
+            }
+        }
+
+        private void CleanupNative() {
+            if (commands.IsCreated) commands.Dispose();
+            if (results.IsCreated) results.Dispose();
+        }
+
+        private Camera GetCurrentCamera() {
+            if (uIManager.CutSceneBarController.CurrentCutscene != null)
+                return cameraManager.CurrentCutsceneCameraController?.Camera;
+            return cameraManager.ActiveMainCamera;
+        }
+
+        private void CleanupNativeArrays() {
+            if (commands.IsCreated) commands.Dispose();
+            if (results.IsCreated) results.Dispose();
+        }
+
+        public void HandleLevelUnload(int sceneHandle, string sceneName) {
             mouseOverList.Clear();
+            if (isJobRunning) {
+                jobHandle.Complete(); // Force finish immediately
+                CleanupNative();      // Free the memory buffers
+                isJobRunning = false;
+                raycastCandidates.Clear(); // Clear the stale references
+            }
         }
-
+        /*
         public void LateUpdate() {
             if (systemConfigurationManager.UseThirdPartyCameraControl == true
                 && cameraManager.ThirdPartyCamera.activeInHierarchy == true
@@ -61,14 +159,9 @@ namespace AnyRPG {
                 UpdateNamePlates();
             }
         }
+        */
 
-        private void UpdateNamePlates() {
-            foreach (NamePlateController namePlateController in namePlates.Values) {
-                namePlateController.UpdatePosition();
-            }
-        }
-
-        public void SetFocus(NamePlateUnit newInteractable) {
+        public void SetFocus(Interactable newInteractable) {
             ClearFocus();
             //Debug.Log("NamePlateManager.SetFocus(" + characterUnit.MyCharacter.MyCharacterName + ")");
             if (namePlates.ContainsKey(newInteractable)) {
@@ -89,20 +182,22 @@ namespace AnyRPG {
             focus = null;
         }
 
-        public NamePlateController SpawnNamePlate(NamePlateUnit namePlateUnit, bool usePositionOffset) {
-            //Debug.Log("NamePlateManager.SpawnNamePlate(" + namePlateUnit.DisplayName + ")");
+        public NamePlateController SpawnNamePlate(Interactable interactable, bool usePositionOffset) {
+            //Debug.Log($"NamePlateManager.SpawnNamePlate({namePlateUnit.gameObject.name})");
+
             NamePlateController namePlate = objectPooler.GetPooledObject(namePlatePrefab, namePlateContainer).GetComponent<NamePlateController>();
             namePlate.Configure(systemGameManager);
-            namePlates.Add(namePlateUnit, namePlate);
-            namePlate.SetNamePlateUnit(namePlateUnit, usePositionOffset);
+            namePlates.Add(interactable, namePlate);
+            namePlate.SetNamePlateUnit(interactable, usePositionOffset);
 
             // testing - so nameplates spawned after setting target don't end up in front of the target
             namePlate.transform.SetAsFirstSibling();
             return namePlate;
         }
 
-        public NamePlateController AddNamePlate(NamePlateUnit interactable, bool usePositionOffset) {
-            //Debug.Log("NamePlateManager.AddNamePlate(" + interactable.gameObject.name + ")");
+        public NamePlateController AddNamePlate(Interactable interactable, bool usePositionOffset) {
+            //Debug.Log($"NamePlateManager.AddNamePlate({interactable.gameObject.name})");
+
             if (namePlates.ContainsKey(interactable) == false) {
                 return SpawnNamePlate(interactable, usePositionOffset);
             }
@@ -110,13 +205,20 @@ namespace AnyRPG {
             return namePlates[interactable];
         }
 
-        public void RemoveNamePlate(NamePlateUnit namePlateUnit) {
-            //Debug.Log("NamePlatemanager.RemoveNamePlate(" + namePlateUnit.DisplayName + ")");
-            if (namePlates.ContainsKey(namePlateUnit)) {
-                if (namePlates[namePlateUnit] != null && namePlates[namePlateUnit].gameObject != null) {
-                    objectPooler.ReturnObjectToPool(namePlates[namePlateUnit].gameObject);
+        public void RemoveNamePlate(Interactable interactable) {
+            //Debug.Log($"NamePlatemanager.RemoveNamePlate({namePlateUnit?.gameObject?.name})");
+
+            if (namePlates.ContainsKey(interactable)) {
+                //Debug.Log($"NamePlatemanager.RemoveNamePlate({namePlateUnit.gameObject.name}) namePlates contains key");
+                if (namePlates[interactable] != null && namePlates[interactable].gameObject != null) {
+                    namePlates[interactable].OnSendObjectToPoolManual();
+                    objectPooler.ReturnObjectToPool(namePlates[interactable].gameObject);
+                } else {
+                    //Debug.Log($"NamePlatemanager.RemoveNamePlate({namePlateUnit.gameObject.name}) could not find nameplate gameobject");
                 }
-                namePlates.Remove(namePlateUnit);
+                namePlates.Remove(interactable);
+            } else {
+                //Debug.Log($"NamePlatemanager.RemoveNamePlate({namePlateUnit.gameObject.name}) namePlates did not contain key");
             }
         }
 
@@ -134,11 +236,15 @@ namespace AnyRPG {
 
         public void CleanupEventSubscriptions() {
             SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+            levelManagerClient.OnLevelUnload -= HandleLevelUnload;
         }
 
         public void OnDestroy() {
             CleanupEventSubscriptions();
+            if (isJobRunning) {
+                jobHandle.Complete();
+                CleanupNativeArrays();
+            }
         }
 
     }

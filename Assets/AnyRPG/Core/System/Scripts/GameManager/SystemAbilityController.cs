@@ -8,47 +8,138 @@ namespace AnyRPG {
 
         private AbilityManager abilityManager = null;
 
+        /// <summary>
+        /// sceneHandle, gameObject
+        /// </summary>
+        protected Dictionary<int, List<GameObject>> abilityEffectGameObjects = new Dictionary<int, List<GameObject>>();
+
+        /// <summary>
+        /// gameobject, scene handle
+        /// </summary>
+        private Dictionary<GameObject, int> abilityEffectGameObjectLookup = new Dictionary<GameObject, int>();
+
+        /// <summary>
+        /// sceneHandle, coroutine
+        /// </summary>
+        protected Dictionary<int, List<Coroutine>> destroyAbilityEffectObjectCoroutines = new Dictionary<int, List<Coroutine>>();
+
+
+        private Dictionary<GameObject, Coroutine> coroutineLookup = new Dictionary<GameObject, Coroutine>();
+
         // game manager references
-        ObjectPooler objectPooler = null;
+        private ObjectPooler objectPooler = null;
+        private NetworkManagerServer networkManagerServer = null;
+        private LevelManagerClient levelManagerClient = null;
+        private LevelManagerServer levelManagerServer = null;
 
         public IAbilityManager AbilityManager { get => abilityManager; }
+        public MonoBehaviour MonoBehaviour { get => this; }
 
         public override  void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            objectPooler = systemGameManager.ObjectPooler;
-
             abilityManager = new AbilityManager(this, systemGameManager);
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
+            levelManagerServer.OnBeforeStartUnloadScene += HandleLevelUnload;
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            objectPooler = systemGameManager.ObjectPooler;
+            networkManagerServer = systemGameManager.NetworkManagerServer;
+            levelManagerClient = systemGameManager.LevelManagerClient;
+            levelManagerServer = systemGameManager.LevelManagerServer;
+        }
+
+        public virtual void AddDestroyAbilityEffectObjectCoroutine(int sceneHandle, Coroutine coroutine) {
+            if (destroyAbilityEffectObjectCoroutines.ContainsKey(sceneHandle) == false) {
+                destroyAbilityEffectObjectCoroutines[sceneHandle] = new List<Coroutine>();
+            }
+            destroyAbilityEffectObjectCoroutines[sceneHandle].Add(coroutine);
         }
 
         // ensure that no coroutine continues or other spell effects exist past the end of a level
-        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-            foreach (Coroutine coroutine in abilityManager.DestroyAbilityEffectObjectCoroutines) {
-                StopCoroutine(coroutine);
-            }
-            abilityManager.DestroyAbilityEffectObjectCoroutines.Clear();
+        public void HandleLevelUnload(int sceneHandle, string sceneName) {
+            //Debug.Log($"SystemAbilityController.HandleLevelUnload({sceneHandle}, {sceneName})");
 
-            foreach (GameObject go in abilityManager.AbilityEffectGameObjects) {
-                if (go != null) {
-                    objectPooler.ReturnObjectToPool(go);
+            if (destroyAbilityEffectObjectCoroutines.ContainsKey(sceneHandle) == true) {
+                foreach (Coroutine coroutine in destroyAbilityEffectObjectCoroutines[sceneHandle]) {
+                    StopCoroutine(coroutine);
                 }
+                destroyAbilityEffectObjectCoroutines.Remove(sceneHandle);
             }
-            abilityManager.AbilityEffectGameObjects.Clear();
+
+            if (abilityEffectGameObjects.ContainsKey(sceneHandle) == true) {
+                foreach (GameObject go in abilityEffectGameObjects[sceneHandle]) {
+                    abilityEffectGameObjectLookup.Remove(go);
+                    if (go != null) {
+                        objectPooler.ReturnObjectToPool(go);
+                    }
+                }
+                abilityEffectGameObjects.Remove(sceneHandle);
+            }
         }
 
         public void BeginDestroyAbilityEffectObject(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, Interactable target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffectProperties fixedLengthEffect) {
+            //Debug.Log($"SystemAbilityController.BeginDestroyAbilityEffectObject(objectCount: {abilityEffectObjects.Count}, {(source == null ? "null" : source.AbilityManager.Name)}, {(target == null ? "null" : target.gameObject.name)}, {timer}, {fixedLengthEffect.ResourceName})");
+
+            if (abilityEffectGameObjects.ContainsKey(source.gameObject.scene.handle) == false) {
+                abilityEffectGameObjects.Add(source.gameObject.scene.handle, new List<GameObject>());
+            }
             foreach (List<GameObject> gameObjectList in abilityEffectObjects.Values) {
                 foreach (GameObject go in gameObjectList) {
-                    abilityManager.AbilityEffectGameObjects.Add(go);
+                    //Debug.Log($"SystemAbilityController.BeginDestroyAbilityEffectObject(objectCount: {abilityEffectObjects.Count}, {(source == null ? "null" : source.AbilityManager.Name)}, {(target == null ? "null" : target.gameObject.name)}, {timer}, {fixedLengthEffect.ResourceName}) tracking : {go.name} ({go.GetInstanceID()}) scene handle: {source.gameObject.scene.handle}");
+                    abilityEffectGameObjects[source.gameObject.scene.handle].Add(go);
+                    abilityEffectGameObjectLookup.Add(go, source.gameObject.scene.handle);
                 }
             }
-            abilityManager.AddDestroyAbilityEffectObjectCoroutine(StartCoroutine(DestroyAbilityEffectObject(abilityEffectObjects, source, target, timer, abilityEffectInput, fixedLengthEffect)));
+            Coroutine coroutine = StartCoroutine(DestroyAbilityEffectObject(abilityEffectObjects, source, target, timer, abilityEffectInput, fixedLengthEffect));
+            AddDestroyAbilityEffectObjectCoroutine(source.gameObject.scene.handle, coroutine);
+            if (timer > 0f) {
+                foreach (List<GameObject> gameObjectList in abilityEffectObjects.Values) {
+                    foreach (GameObject go in gameObjectList) {
+                        if (coroutineLookup.ContainsKey(go) == false) {
+                            coroutineLookup.Add(go, coroutine);
+                        } else {
+                            Debug.LogWarning($"SystemAbilityController.BeginDestroyAbilityEffectObject: coroutineLookup already contains {go.name} ({go.GetInstanceID()}) caster: {source?.AbilityManager?.UnitGameObject?.name}");
+                        }
+                    }
+                }
+            }
+        }
+
+        public void CancelDestroyAbilityEffectObject(GameObject abilityEffectObject) {
+            //Debug.Log($"SystemAbilityController.CancelDestroyAbilityEffectObject({abilityEffectObject.name} ({abilityEffectObject.GetInstanceID()})) scene handle: {abilityEffectObject.scene.handle}");
+
+            if (coroutineLookup.ContainsKey(abilityEffectObject)) {
+                //Debug.Log($"SystemAbilityController.CancelDestroyAbilityEffectObject({abilityEffectObject.name} ({abilityEffectObject.GetInstanceID()})) coroutine existed");
+                Coroutine coroutine = coroutineLookup[abilityEffectObject];
+                StopCoroutine(coroutine);
+                coroutineLookup.Remove(abilityEffectObject);
+            }
+            if (abilityEffectGameObjectLookup.ContainsKey(abilityEffectObject)) {
+                if (abilityEffectGameObjects.ContainsKey(abilityEffectGameObjectLookup[abilityEffectObject])) {
+                    abilityEffectGameObjects[abilityEffectGameObjectLookup[abilityEffectObject]].Remove(abilityEffectObject);
+                }
+                abilityEffectGameObjectLookup.Remove(abilityEffectObject);
+            }
         }
 
         public IEnumerator DestroyAbilityEffectObject(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, Interactable target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffectProperties fixedLengthEffect) {
-            //Debug.Log("SystemAbilityController.DestroyAbilityEffectObject(" + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ", " + timer + ")");
+            //Debug.Log($"SystemAbilityController.DestroyAbilityEffectObject(objectCount: {abilityEffectObjects.Count}, {(source == null ? "null" : source.AbilityManager.Name)}, {(target == null ? "null" : target.gameObject.name)}, {timer}, {fixedLengthEffect.ResourceName})");
+
             float timeRemaining = timer;
+            // debug print instance ids of the objects we are about to destroy
+            /*
+            foreach (List<GameObject> gameObjectList in abilityEffectObjects.Values) {
+                foreach (GameObject go in gameObjectList) {
+                    if (go != null) {
+                        //Debug.Log($"SystemAbilityController.DestroyAbilityEffectObject(): starting timer for {go.name} {go.GetInstanceID()}");
+                    }
+                }
+            }
+            //Debug.Log($"SystemAbilityController.DestroyAbilityEffectObject(): fixedLengthEffect: {(fixedLengthEffect == null ? "null" : fixedLengthEffect.ResourceName)}");
+            */
 
             // keep track of temporary elapsed time between ticks
             float elapsedTime = 0f;
@@ -58,7 +149,7 @@ namespace AnyRPG {
             if (target != null) {
                 CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(target);
                 if (_characterUnit != null) {
-                    targetStats = _characterUnit.BaseCharacter.CharacterStats;
+                    targetStats = _characterUnit.UnitController.CharacterStats;
                 }
             } else {
                 nullTarget = true;
@@ -93,26 +184,39 @@ namespace AnyRPG {
                     elapsedTime += Time.deltaTime;
                     if (elapsedTime > finalTickRate) {
                         //Debug.Log(fixedLengthEffect.DisplayName + ".FixedLengthEffect.Tick() TickTime!");
-                        fixedLengthEffect.CastTick(source, target, abilityEffectInput);
+                        if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                            fixedLengthEffect.CastTick(source, target, abilityEffectInput);
+                        }
                         elapsedTime -= finalTickRate;
                     }
                 }
             }
             //Debug.Log(fixedLengthEffect.DisplayName + ".FixedLengthEffect.Tick() Done ticking and about to perform ability affects.");
-            fixedLengthEffect.CastComplete(source, target, abilityEffectInput);
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                fixedLengthEffect.CastComplete(source, target, abilityEffectInput);
+            }
             foreach (List<GameObject> gameObjectList in abilityEffectObjects.Values) {
                 foreach (GameObject go in gameObjectList) {
-                    if (abilityManager.AbilityEffectGameObjects.Contains(go)) {
-                        abilityManager.AbilityEffectGameObjects.Remove(go);
+                    if (abilityEffectGameObjectLookup.ContainsKey(go)) {
+                        if (abilityEffectGameObjects.ContainsKey(abilityEffectGameObjectLookup[go])) {
+                            abilityEffectGameObjects[abilityEffectGameObjectLookup[go]].Remove(go);
+                        }
+                        abilityEffectGameObjectLookup.Remove(go);
+                        coroutineLookup.Remove(go);
                     }
                     if (go != null) {
+                        //Debug.Log($"SystemAbilityController.DestroyAbilityEffectObject(objectCount: {abilityEffectObjects.Count}, {(source == null ? "null" : source.AbilityManager.Name)}, {(target == null ? "null" : target.gameObject.name)}, {timer}, {fixedLengthEffect.ResourceName}) DESTROYING AT END OF TIMER : {go.name} ({go.GetInstanceID()})");
                         objectPooler.ReturnObjectToPool(go, fixedLengthEffect.PrefabDestroyDelay);
+                        // since effects can persist beyond death (like aoe clouds etc), the source could be dead or despawned by the time we get here
+                        if (source?.AbilityManager != null) {
+                            source.AbilityManager.ProcessAbilityEffectPooled(go);
+                        }
                     }
                 }
             }
-            abilityEffectObjects.Clear();
 
-            abilityManager.DestroyAbilityEffectObjectCoroutine = null;
+            // this should not be necessary because it's a local variable
+            //abilityEffectObjects.Clear();
         }
 
         public static string GetTimeText(float durationSeconds) {
@@ -141,7 +245,10 @@ namespace AnyRPG {
 
         public void OnDestroy() {
             StopAllCoroutines();
-            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+            destroyAbilityEffectObjectCoroutines.Clear();
+
+            //systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
+            //systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
         }
     }
 

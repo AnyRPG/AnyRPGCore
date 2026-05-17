@@ -32,13 +32,12 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 1
+      unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 0
       lineOfSightSourceLocation: 0
       targetRangeSourceLocation: 0
     chanceToCast: 100
-    effectMaterialName: 
-    materialChangeDuration: 2
     onHitAudioProfileNames: []
     randomAudioProfiles: 0
     hitAbilityEffectNames: []
@@ -56,13 +55,17 @@ MonoBehaviour:
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
+    statusEffectObjectList: []
     statusEffectAlignment: 0
     statusEffectTypeName: 
     statusEffectGroupName: 
+    effectMaterialName: 
     classTrait: 1
     requiredLevel: 1
     sceneNames: []
+    requireOutOfCombat: 0
     limitedDuration: 0
+    refreshableDuration: 1
     duration: 0
     maxStacks: 1
     statBuffTypeNames: []
@@ -74,6 +77,7 @@ MonoBehaviour:
     outgoingDamageMultiplier: 1
     incomingDamageMultiplier: 0.9
     factionModifiers: []
+    stealth: 0
     canFly: 0
     canGlide: 0
     disableAnimator: 0
@@ -85,3 +89,4 @@ MonoBehaviour:
     controlTarget: 0
     reflectAbilityEffectNames: []
     weaponHitAbilityEffectNames: []
+    saveEffect: 1

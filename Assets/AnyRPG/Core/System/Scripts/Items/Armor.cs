@@ -37,7 +37,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override string GetDescription(ItemQuality usedItemQuality) {
+        public override string GetDescription(ItemQuality usedItemQuality, int usedItemLevel) {
             //Debug.Log(DisplayName + ".Armor.GetSummary()");
 
             List<string> abilitiesList = new List<string>();
@@ -46,27 +46,16 @@ namespace AnyRPG {
             if (abilitiesList.Count > 0) {
                 abilitiesString = "\n" + string.Join("\n", abilitiesList);
             }
-            // TODO: this code does not yet account for all the new capabilityProviders and will show red if something like faction provides the capability
-            /*
-            List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
-            if (allowedCharacterClasses.Count > 0) {
-                string colorString = "red";
-                if (allowedCharacterClasses.Contains(playerManager.MyCharacter.CharacterClass)) {
-                    colorString = "white";
-                }
-                abilitiesString += string.Format("\n<color={0}>{1}</color>", colorString, armorClassName);
-            }
-            */
-            // testing replacement for above code
+           
             if (armorClassName != null && armorClassName != string.Empty) {
                 string colorString = "white";
-                if (!CanEquip(playerManager.ActiveCharacter)) {
+                if (!CanEquip(usedItemLevel, playerManagerClient.UnitController)) {
                     colorString = "red";
                 }
                 abilitiesString += string.Format("\n<color={0}>{1}</color>", colorString, armorClassName);
             }
 
-            return base.GetDescription(usedItemQuality) + abilitiesString;
+            return base.GetDescription(usedItemQuality, usedItemLevel) + abilitiesString;
         }
 
         public override bool CapabilityConsumerSupported(ICapabilityConsumer capabilityConsumer) {

@@ -22,20 +22,20 @@ namespace AnyRPG {
         private string sceneName = string.Empty;
 
         // game manager references
-        LevelManager levelManager = null;
+        LevelManagerClient levelManagerClient = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
-        public override void ExecuteCommand(string commandParameters) {
-            //Debug.Log("LoadSceneCommand.ExecuteCommand() Executing command " + DisplayName + " with parameters (" + commandParameters + ")");
+        public override void ExecuteCommand(string commandParameters, int accountId) {
+            //Debug.Log($"{resourceName}.LoadSceneCommand.ExecuteCommand({commandParameters}, {accountId})");
 
             // load a fixed scene
             if (fixedScene == true) {
-                levelManager.LoadLevel(sceneName);
+                LoadScene(sceneName, accountId);
                 return;
             }
 
@@ -45,25 +45,14 @@ namespace AnyRPG {
             }
 
             // load a scene from parameters
-            LoadScene(commandParameters);
+            LoadScene(commandParameters, accountId);
         }
 
-        private void LoadScene(string sceneName) {
-            levelManager.LoadLevel(sceneName);
-        }
+        private void LoadScene(string sceneName, int accountId) {
+            //Debug.Log($"{resourceName}.LoadSceneCommand.LoadScene({sceneName}, {accountId})");
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            base.SetupScriptableObjects(systemGameManager);
-
-            /*
-            // check is disabled because you can load scenes directly by name without a scene node
-            if (fixedScene == true && sceneName != null && sceneName != string.Empty) {
-                SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(sceneName);
-                if (sceneNode == null) {
-                    Debug.LogError("LoadSceneCommand.SetupScriptableObjects(): Could not find scene node for : " + sceneName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
-                }
-            }
-            */
+            playerManagerServer.AddSpawnRequest(accountId, new SpawnPlayerRequest());
+            playerManagerServer.LoadScene(sceneName, accountId);
         }
 
     }

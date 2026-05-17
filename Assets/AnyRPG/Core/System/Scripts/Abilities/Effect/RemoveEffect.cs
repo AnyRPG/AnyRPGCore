@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class RemoveEffect : AbilityEffect {
 
         [SerializeField]
-        private RemoveEffectProperties removeEffectProperties = new RemoveEffectProperties();
+        public RemoveEffectProperties removeEffectProperties = new RemoveEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => removeEffectProperties; }
 

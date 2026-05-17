@@ -7,7 +7,7 @@ namespace AnyRPG {
     [System.Serializable]
     public class VisitZonePrerequisite : ConfiguredClass, IPrerequisite {
 
-        public event System.Action OnStatusUpdated = delegate { };
+        public event System.Action<UnitController> OnStatusUpdated = delegate { };
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(SceneNode))]
@@ -19,24 +19,24 @@ namespace AnyRPG {
 
         private SceneNode prerequisiteSceneNode = null;
 
-        public void UpdateStatus(bool notify = true) {
+        public void UpdateStatus(UnitController sourceUnitController, bool notify = true) {
             bool originalResult = prerequisiteMet;
-            bool checkResult = (prerequisiteSceneNode.Visited == true);
+            bool checkResult = (sourceUnitController.CharacterSaveManager.IsSceneNodeVisited(prerequisiteSceneNode) == true);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
                 if (notify == true) {
-                    OnStatusUpdated();
+                    OnStatusUpdated(sourceUnitController);
                 }
             }
         }
 
 
-        public void HandleSceneNodeVisisted() {
+        public void HandleSceneNodeVisisted(UnitController unitController) {
             prerequisiteMet = true;
-            OnStatusUpdated();
+            OnStatusUpdated(unitController);
         }
 
-        public virtual bool IsMet(BaseCharacter baseCharacter) {
+        public virtual bool IsMet(UnitController sourceUnitController) {
             return prerequisiteMet;
         }
 

@@ -20,7 +20,7 @@ namespace AnyRPG {
         private AnimatedActionProperties actionProperties = new AnimatedActionProperties();
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected UIManager uIManager = null;
         protected SystemAbilityController systemAbilityController = null;
 
@@ -28,6 +28,7 @@ namespace AnyRPG {
         public float CoolDown { get => 0f; }
         public virtual bool RequireOutOfCombat { get => false; }
         public virtual bool RequireStealth { get => false; }
+        public bool AlwaysDisplayCount { get => false; }
 
         /// <summary>
         /// return the casting time of the ability without any speed modifiers applied
@@ -42,7 +43,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             uIManager = systemGameManager.UIManager;
             systemAbilityController = systemGameManager.SystemAbilityController;
         }
@@ -51,7 +52,7 @@ namespace AnyRPG {
             // do nothing
         }
 
-        public virtual bool IsUseableStale() {
+        public virtual bool IsUseableStale(UnitController sourceUnitController) {
             return false;
         }
 
@@ -59,20 +60,24 @@ namespace AnyRPG {
             actionButton.BackgroundImage.color = new Color32(0, 0, 0, 255);
         }
 
+        public void HandleRemoveFromActionButton(ActionButton actionButton) {
+        }
+
+
         public void AssignToHandScript(Image backgroundImage) {
             backgroundImage.color = new Color32(0, 0, 0, 255);
         }
 
-        public bool ActionButtonUse() {
-            return Use();
+        public bool ActionButtonUse(UnitController sourceUnitController) {
+            return Use(sourceUnitController);
         }
 
         public IUseable GetFactoryUseable() {
-            return systemDataFactory.GetResource<BaseAbility>(ResourceName).AbilityProperties;
+            return systemDataFactory.GetResource<Ability>(ResourceName).AbilityProperties;
         }
 
-        public virtual void UpdateChargeCount(ActionButton actionButton) {
-            uIManager.UpdateStackSize(actionButton, 0, false);
+        public virtual int GetChargeCount() {
+            return 0;
         }
 
         public virtual bool HadSpecialIcon(ActionButton actionButton) {
@@ -87,7 +92,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (!CanCast(playerManager.MyCharacter)) {
+            if (!CanCast(playerManagerClient.UnitController)) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): can't cast due to spell restrictions");
                 actionButton.EnableFullCoolDownIcon();
                 return;
@@ -145,7 +150,7 @@ namespace AnyRPG {
             string requireString = string.Empty;
             string colorString = string.Empty;
 
-            //string abilityRange = (GetTargetOptions(playerManager.MyCharacter).UseMeleeRange == true ? "melee" : GetTargetOptions(playerManager.MyCharacter).MaxRange + " meters");
+            //string abilityRange = (GetTargetOptions(playerManager.UnitController).UseMeleeRange == true ? "melee" : GetTargetOptions(playerManager.UnitController).MaxRange + " meters");
 
             return string.Format("<color=#ffff00ff>{0}</color>",
                 description);
@@ -163,12 +168,12 @@ namespace AnyRPG {
             return true;
         }
 
-        public bool Use() {
+        public bool Use(UnitController sourceUnitController) {
             //Debug.Log(DisplayName + ".BaseAbility.Use()");
             // prevent casting any ability without the proper weapon affinity
-            if (CanCast(playerManager.MyCharacter, true)) {
+            if (CanCast(sourceUnitController, true)) {
                 //Debug.Log(DisplayName + ".BaseAbility.Use(): cancast is true");
-                //playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(this, true);
+                //playerManager.UnitController.CharacterAbilityManager.BeginAbility(this, true);
                 //playerManager.ActiveUnitController.UnitActionManager.BeginAction(this, true);
                 return true;
             }
@@ -198,7 +203,7 @@ namespace AnyRPG {
 
         [Header("Animation")]
 
-        [Tooltip("The animation clip the character will perform")]
+        [Tooltip("The animation clip the character will perform. If this is set, the animation profile will not be used.")]
         [SerializeField]
         protected AnimationClip animationClip = null;
 

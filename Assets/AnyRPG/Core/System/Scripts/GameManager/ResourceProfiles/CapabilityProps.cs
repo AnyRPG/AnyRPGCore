@@ -13,10 +13,10 @@ namespace AnyRPG {
         [Tooltip("Abilities learned")]
         [FormerlySerializedAs("learnedAbilityNames")]
         [SerializeField]
-        [ResourceSelector(resourceType = typeof(BaseAbility))]
+        [ResourceSelector(resourceType = typeof(Ability))]
         protected List<string> abilityNames = new List<string>();
 
-        protected List<BaseAbilityProperties> abilityList = new List<BaseAbilityProperties>();
+        protected List<AbilityProperties> abilityList = new List<AbilityProperties>();
 
         [Tooltip("Traits are status effects which are automatically active at all times if the level requirement is met")]
         [SerializeField]
@@ -59,7 +59,7 @@ namespace AnyRPG {
 
 
         public List<string> AbilityNames { get => abilityNames; set => abilityNames = value; }
-        public List<BaseAbilityProperties> AbilityList { get => abilityList; set => abilityList = value; }
+        public List<AbilityProperties> AbilityList { get => abilityList; set => abilityList = value; }
         public List<StatusEffect> TraitList { get => traitList; set => traitList = value; }
         public List<string> ArmorClassList { get => armorClassList; set => armorClassList = value; }
         public List<WeaponSkill> WeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
@@ -88,7 +88,7 @@ namespace AnyRPG {
             if (abilityNames != null) {
                 foreach (string baseAbilityName in abilityNames) {
                     if (baseAbilityName != null && baseAbilityName != string.Empty) {
-                        BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(baseAbilityName);
+                        Ability baseAbility = systemDataFactory.GetResource<Ability>(baseAbilityName);
                         if (baseAbility != null) {
                             abilityList.Add(baseAbility.AbilityProperties);
                         } else {

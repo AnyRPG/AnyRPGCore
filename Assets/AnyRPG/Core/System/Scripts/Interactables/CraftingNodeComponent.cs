@@ -1,11 +1,8 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     public class CraftingNodeComponent : InteractableOptionComponent {
@@ -23,13 +20,11 @@ namespace AnyRPG {
             craftingManager = systemGameManager.CraftingManager;
         }
 
-        public override bool PrerequisitesMet {
-            get {
-                if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(Props.Ability) == false) {
+        public override bool PrerequisitesMet(UnitController sourceUnitController) {
+                if (sourceUnitController.CharacterAbilityManager.HasAbility(Props.Ability) == false) {
                     return false;
                 }
-                return base.PrerequisitesMet;
-            }
+                return base.PrerequisitesMet(sourceUnitController);
         } 
 
         public override void ProcessCreateEventSubscriptions() {
@@ -50,29 +45,40 @@ namespace AnyRPG {
             if (searchInteractable == null) {
                 return new List<CraftingNodeComponent>();
             }
-            return searchInteractable.GetInteractableOptionList(typeof(CraftingNodeComponent)).Cast<CraftingNodeComponent>().ToList();
+            return searchInteractable.GetInteractableOptionList(typeof(CraftingNodeComponent)).Values.Cast<CraftingNodeComponent>().ToList();
         }
 
-        public void HandleAbilityListChange(BaseAbilityProperties baseAbility) {
+        public override string GetInteractionButtonText(UnitController sourceUnitController, int componentIndex = 0, int choiceIndex = 0) {
+            return (Props.Ability != null ? Props.Ability.DisplayName : base.GetInteractionButtonText(sourceUnitController, componentIndex, choiceIndex));
+        }
+
+        public void HandleAbilityListChange(UnitController sourceUnitController, AbilityProperties baseAbility) {
             //Debug.Log($"{gameObject.name}.GatheringNode.HandleAbilityListChange(" + baseAbility.DisplayName + ")");
-            HandlePrerequisiteUpdates();
+            HandlePrerequisiteUpdates(sourceUnitController);
         }
 
-        public override int GetCurrentOptionCount() {
+        public override int GetCurrentOptionCount(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.GatheringNode.GetCurrentOptionCount()");
-            return ((playerManager.MyCharacter.CharacterAbilityManager.HasAbility(Props.Ability) == true) ? 1 : 0);
+            return ((sourceUnitController.CharacterAbilityManager.HasAbility(Props.Ability) == true) ? 1 : 0);
         }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            base.Interact(source, optionIndex);
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex = 0) {
+            //Debug.Log($"{interactable.gameObject.name}.CraftingNode.ProcessInteract({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
+
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
             if (Props == null || Props.Ability == null) {
-                Debug.Log("Props is null");
+                Debug.LogWarning("Props is null");
             }
-            craftingManager.SetAbility(Props.Ability);
-            //source.MyCharacter.MyCharacterAbilityManager.BeginAbility(ability);
+            sourceUnitController.CharacterCraftingManager.SetCraftAbility(Props.Ability);
             return true;
-            //return PickUp();
+        }
+
+        public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            //Debug.Log($"{interactable.gameObject.name}.CraftingNodeComponent.ClientInteraction({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
+
+            base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
+            uIManager.craftingWindow.OpenWindow();
         }
 
         public override void StopInteract() {

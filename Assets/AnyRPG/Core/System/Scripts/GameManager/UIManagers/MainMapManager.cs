@@ -24,6 +24,9 @@ namespace AnyRPG {
         // indicators
         private List<Interactable> mapIndicatorControllers = new List<Interactable>();
 
+        // game manager references
+        private LevelManagerClient levelManagerClient = null;
+
         public List<Interactable> MapIndicatorControllers { get => mapIndicatorControllers; set => mapIndicatorControllers = value; }
         public GameObject MapIndicatorPrefab { get => mapIndicatorPrefab; set => mapIndicatorPrefab = value; }
 
@@ -32,7 +35,12 @@ namespace AnyRPG {
             CreateEventSubscriptions();
         }
 
-        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            levelManagerClient = systemGameManager.LevelManagerClient;
+        }
+
+        public void HandleLevelUnload(int sceneHandle, string sceneName) {
             List<Interactable> removeList = new List<Interactable>();
             removeList.AddRange(mapIndicatorControllers);
             foreach (Interactable interactable in removeList) {
@@ -64,13 +72,12 @@ namespace AnyRPG {
             OnUpdateIndicatorRotation(interactable);
         }
 
-
         private void CreateEventSubscriptions() {
             //Debug.Log("MainMapController.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
             eventSubscriptionsInitialized = true;
         }
 
@@ -79,7 +86,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+            levelManagerClient.OnLevelUnload -= HandleLevelUnload;
             eventSubscriptionsInitialized = false;
         }
 

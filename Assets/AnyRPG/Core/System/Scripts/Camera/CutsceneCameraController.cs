@@ -1,6 +1,4 @@
-using AnyRPG;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace AnyRPG {
     public class CutsceneCameraController : AutoConfiguredMonoBehaviour {
@@ -10,16 +8,14 @@ namespace AnyRPG {
         public Camera Camera { get => thisCamera; set => thisCamera = value; }
 
         // game manager references
-        private InputManager inputManager = null;
         private UIManager uIManager = null;
-        private LevelManager levelManager = null;
+        private LevelManagerClient levelManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            inputManager = systemGameManager.InputManager;
             uIManager = systemGameManager.UIManager;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
 
             thisCamera = GetComponent<Camera>();
         }
@@ -35,6 +31,7 @@ namespace AnyRPG {
 
         public void EndCutScene() {
             //Debug.Log("CutsceneCameraController.EndCutScene()");
+
             if (uIManager != null && uIManager.CutSceneBarController != null) {
                 uIManager.CutSceneBarController.EndCutScene();
             }
@@ -53,7 +50,7 @@ namespace AnyRPG {
 
         public void ActivateEnvironmentStateByIndex(int index) {
 
-            SceneNode currentNode = levelManager.GetActiveSceneNode();
+            SceneNode currentNode = levelManagerClient.GetActiveSceneNode();
             if (currentNode != null && currentNode.EnvironmentStates != null && currentNode.EnvironmentStates.Count > index && currentNode.EnvironmentStates[index].MySkyBoxMaterial != null) {
                 SystemEnvironmentManager.SetSkyBox(currentNode.EnvironmentStates[index].MySkyBoxMaterial);
             }

@@ -11,8 +11,8 @@ namespace AnyRPG {
 
     public abstract class QuestBase : DescribableResource, IPrerequisiteOwner {
 
-        public event System.Action OnQuestStatusUpdated = delegate { };
-        public event System.Action OnQuestObjectiveStatusUpdated = delegate { };
+        public event System.Action<UnitController> OnQuestBaseStatusUpdated = delegate { };
+        public event System.Action<UnitController> OnQuestBaseObjectiveStatusUpdated = delegate { };
 
         [Header("Objectives")]
 
@@ -28,188 +28,158 @@ namespace AnyRPG {
 
         // game manager references
         protected SaveManager saveManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected MessageFeedManager messageFeedManager = null;
+        protected NetworkManagerServer networkManagerServer = null;
 
         public virtual bool PrintObjectiveCompletionMessages {
             get => false;
         }
 
-        public virtual bool IsComplete {
-            get {
-                //Debug.Log("Quest.IsComplete: " + MyTitle);
-                // disabled because if a quest is raw completable (not required to be in log), it shouldn't have objectives anyway since there is no way to track them
-                // therefore the default true at the bottom should return true anyway
-                /*
-                if (MyAllowRawComplete == true) {
-                    return true;
-                }
-                */
-
-                if (steps.Count > 0) {
-                    foreach (QuestObjective questObjective in steps[steps.Count -1].QuestObjectives) {
-                        if (!questObjective.IsComplete) {
-                            return false;
-                        }
-                    }
-                }
-
-                return true;
-            }
-        }
-
-        public virtual void SetTurnedIn(bool turnedIn, bool notify = true) {
-            this.TurnedIn = turnedIn;
-            //Debug.Log(DisplayName + ".Quest.TurnedIn = " + value);
-            if (notify) {
-                if (playerManager.PlayerUnitSpawned == false) {
-                    // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
-                    return;
-                }
-                SystemEventManager.TriggerEvent("OnQuestStatusUpdated", new EventParamProperties());
-                SystemEventManager.TriggerEvent("OnAfterQuestStatusUpdated", new EventParamProperties());
-                OnQuestStatusUpdated();
-            }
-        }
-
-        public virtual bool PrerequisitesMet {
-            get {
-                foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
-                    if (!prerequisiteCondition.IsMet()) {
-                        return false;
-                    }
-                }
-                // there are no prerequisites, or all prerequisites are complete
-                return true;
-            }
-        }
-
         public virtual Quest QuestTemplate { get => questTemplate; set => questTemplate = value; }
-
-        public bool TurnedIn {
-            get {
-                return GetSaveData().turnedIn;
-                //return false;
-            }
-            set {
-                QuestSaveData saveData = GetSaveData();
-                saveData.turnedIn = value;
-                SetSaveData(saveData.QuestName, saveData);
-            }
-        }
-
-        public int CurrentStep {
-            get {
-                return GetSaveData().questStep;
-                //return false;
-            }
-            set {
-                QuestSaveData saveData = GetSaveData();
-                saveData.questStep = value;
-                SetSaveData(saveData.QuestName, saveData);
-            }
-        }
-        public bool MarkedComplete {
-            get {
-                return GetSaveData().markedComplete;
-                //return false;
-            }
-            set {
-                QuestSaveData saveData = GetSaveData();
-                saveData.markedComplete = value;
-                SetSaveData(saveData.QuestName, saveData);
-            }
-        }
 
         public List<QuestStep> Steps { get => steps; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             saveManager = systemGameManager.SaveManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
+            networkManagerServer = systemGameManager.NetworkManagerServer;
         }
 
-        protected abstract void ResetObjectiveSaveData();
-        protected abstract QuestSaveData GetSaveData();
-        protected abstract void SetSaveData(string QuestName, QuestSaveData questSaveData);
-        protected abstract bool HasQuest();
+        protected abstract QuestSaveData GetSaveData(UnitController sourceUnitController);
+        protected abstract void SetSaveData(UnitController sourceUnitController, string QuestName, QuestSaveData questSaveData);
+        protected abstract bool HasQuest(UnitController sourceUnitController);
 
-        public virtual void RemoveQuest(bool resetQuestStep = true) {
-            //Debug.Log("Quest.RemoveQuest(): " + DisplayName + " calling OnQuestStatusUpdated()");
+        public virtual bool IsComplete(UnitController sourceUnitController) {
+            if (steps.Count > 0) {
+                foreach (QuestObjective questObjective in steps[steps.Count -1].QuestObjectives) {
+                    if (!questObjective.IsComplete(sourceUnitController)) {
+                        return false;
+                    }
+                }
+            }
 
-            OnAbandonQuest();
+            return true;
+        }
 
-            // reset the quest objective save data so any completed portion is reset in case the quest is picked back up
-            ResetObjectiveSaveData();
+        public virtual void SetTurnedIn(UnitController sourceUnitController, bool turnedIn, bool notify = true) {
+            
+            QuestSaveData saveData = GetSaveData(sourceUnitController);
+            saveData.TurnedIn = turnedIn;
+            SetSaveData(sourceUnitController, saveData.QuestName, saveData);
+
+            //Debug.Log(DisplayName + ".Quest.TurnedIn = " + value);
+            if (notify) {
+                OnQuestBaseStatusUpdated(sourceUnitController);
+            }
+        }
+
+        public virtual bool PrerequisitesMet(UnitController sourceUnitController) {
+            foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
+                if (!prerequisiteCondition.IsMet(sourceUnitController)) {
+                    return false;
+                }
+            }
+            // there are no prerequisites, or all prerequisites are complete
+            return true;
+        }
+
+
+        public bool TurnedIn(UnitController sourceUnitController) {
+            //Debug.Log($"{ResourceName}.QuestBase.TurnedIn({sourceUnitController.gameObject.name})");
+
+            return GetSaveData(sourceUnitController).TurnedIn;
+        }
+
+        public int CurrentStep(UnitController sourceUnitController) {
+            return GetSaveData(sourceUnitController).QuestStep;
+        }
+
+        public virtual void SetCurrentStep(UnitController sourceUnitController, int value) {
+            //Debug.Log($"{ResourceName}.QuestBase.SetCurrentStep({sourceUnitController.gameObject.name}, {value})");
+
+            QuestSaveData saveData = GetSaveData(sourceUnitController);
+            saveData.QuestStep = value;
+            SetSaveData(sourceUnitController, saveData.QuestName, saveData);
+        }
+
+        public bool MarkedComplete(UnitController sourceUnitController) {
+            return GetSaveData(sourceUnitController).MarkedComplete;
+        }
+
+        public void SetMarkedComplete(UnitController sourceUnitController, bool value) { 
+            QuestSaveData saveData = GetSaveData(sourceUnitController);
+            saveData.MarkedComplete = value;
+            SetSaveData(sourceUnitController, saveData.QuestName, saveData);
+        }
+
+        public virtual void RemoveQuest(UnitController sourceUnitController, bool resetQuestStep = true) {
+            //Debug.Log($"{ResourceName}.QuestBase.RemoveQuest({sourceUnitController.gameObject.name}, {resetQuestStep})");
+
+            OnAbandonQuest(sourceUnitController);
 
             // reset current step so the correct objective shows up in the quest giver window when the quest is picked back up
             if (resetQuestStep == true) {
-                CurrentStep = 0;
+                SetCurrentStep(sourceUnitController, 0);
             }
-            MarkedComplete = false;
-
-            if (playerManager != null && playerManager.PlayerUnitSpawned == false) {
-                // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
-                return;
-            }
-            SystemEventManager.TriggerEvent("OnQuestStatusUpdated", new EventParamProperties());
-            SystemEventManager.TriggerEvent("OnAfterQuestStatusUpdated", new EventParamProperties());
-            OnQuestStatusUpdated();
         }
 
-        protected virtual void ProcessMarkComplete(bool printMessages) {
+        protected virtual void NotifyOnQuestBaseStatusUpdated(UnitController sourceUnitController) {
+            //Debug.Log($"{ResourceName}.QuestBase.NotifyOnQuestBaseStatusUpdated({sourceUnitController.gameObject.name})");
+            OnQuestBaseStatusUpdated(sourceUnitController);
+        }
+
+        protected virtual void ProcessMarkComplete(UnitController sourceUnitController, bool printMessages) {
             // nothing to do here
         }
 
-        public virtual void MarkComplete(bool notifyOnUpdate = true, bool printMessages = true) {
-            if (MarkedComplete == true) {
+        public virtual void MarkComplete(UnitController sourceUnitController, bool notifyOnUpdate = true, bool printMessages = true) {
+            //Debug.Log($"{ResourceName}.QuestBase.MarkComplete({sourceUnitController.gameObject.name}, {notifyOnUpdate}, {printMessages})");
+
+            if (MarkedComplete(sourceUnitController) == true) {
                 return;
             }
 
-            ProcessMarkComplete(printMessages);
+            SetMarkedComplete(sourceUnitController, true);
+            ProcessMarkComplete(sourceUnitController, printMessages);
 
-            MarkedComplete = true;
             if (notifyOnUpdate == true) {
-                if (playerManager != null && playerManager.PlayerUnitSpawned == false) {
-                    // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
-                    return;
-                }
-                SystemEventManager.TriggerEvent("OnQuestStatusUpdated", new EventParamProperties());
-                SystemEventManager.TriggerEvent("OnAfterQuestStatusUpdated", new EventParamProperties());
-                OnQuestStatusUpdated();
+                NotifyOnMarkComplete(sourceUnitController);
+                OnQuestBaseStatusUpdated(sourceUnitController);
             }
         }
 
-        public virtual void OnAbandonQuest() {
+        public virtual void OnAbandonQuest(UnitController sourceUnitController) {
             
             if (steps.Count == 0) {
                 return;
             }
 
-            foreach (QuestObjective questObjective in steps[CurrentStep].QuestObjectives) {
-                questObjective.OnAbandonQuest();
+            foreach (QuestObjective questObjective in steps[CurrentStep(sourceUnitController)].QuestObjectives) {
+                questObjective.OnAbandonQuest(sourceUnitController);
             }
 
         }
 
-        public virtual string GetStatus() {
+        public virtual string GetStatus(UnitController sourceUnitController) {
             //Debug.Log(DisplayName + ".Quest.GetStatus()");
 
-            if (StatusCompleted()) {
+            if (StatusCompleted(sourceUnitController)) {
                 //Debug.Log(DisplayName + ".Quest.GetStatus(): returning completed");
                 return "completed";
             }
 
-            if (StatusComplete()) {
+            if (StatusComplete(sourceUnitController)) {
                 return "complete";
             }
 
-            if (StatusInProgress()) {
+            if (StatusInProgress(sourceUnitController)) {
                 return "inprogress";
             }
 
-            if (StatusAvailable()) {
+            if (StatusAvailable(sourceUnitController)) {
                 //Debug.Log(DisplayName + ".Quest.GetStatus(): returning available");
                 return "available";
             }
@@ -219,28 +189,28 @@ namespace AnyRPG {
             return "unavailable";
         }
 
-        protected virtual bool StatusCompleted() {
-            if (TurnedIn == true) {
+        protected virtual bool StatusCompleted(UnitController sourceUnitController) {
+            if (TurnedIn(sourceUnitController) == true) {
                 return true;
             }
 
             return false;
         }
 
-        protected virtual bool StatusAvailable() {
-            if (PrerequisitesMet == false) {
+        protected virtual bool StatusAvailable(UnitController sourceUnitController) {
+            if (PrerequisitesMet(sourceUnitController) == false) {
                 return false;
             }
 
-            if (HasQuest() == true) {
+            if (HasQuest(sourceUnitController) == true) {
                 return false;
             }
 
             return true;
         }
 
-        protected virtual bool StatusComplete() {
-            if (HasQuest() && IsComplete == true) {
+        protected virtual bool StatusComplete(UnitController sourceUnitController) {
+            if (HasQuest(sourceUnitController) && IsComplete(sourceUnitController) == true) {
                 //Debug.Log(DisplayName + ".Quest.GetStatus(): returning complete");
                 return true;
             }
@@ -248,8 +218,8 @@ namespace AnyRPG {
             return false;
         }
 
-        protected virtual bool StatusInProgress() {
-            if (HasQuest() && IsComplete == false) {
+        protected virtual bool StatusInProgress(UnitController sourceUnitController) {
+            if (HasQuest(sourceUnitController) && IsComplete(sourceUnitController) == false) {
                 //Debug.Log(DisplayName + ".Quest.GetStatus(): returning inprogress");
                 return true;
             }
@@ -266,19 +236,19 @@ namespace AnyRPG {
             return Color.yellow;
         }
 
-        public virtual string GetObjectiveDescription() {
+        public virtual string GetObjectiveDescription(UnitController sourceUnitController) {
 
             Color titleColor = GetTitleColor();
-            return string.Format("<size=30><b><color=#{0}>{1}</color></b></size>\n\n<size=18>{2}</size>\n\n<b><size=24>Objectives:</size></b>\n\n<size=18>{3}</size>", ColorUtility.ToHtmlStringRGB(titleColor), DisplayName, Description, GetUnformattedObjectiveList());
+            return string.Format("<size=30><b><color=#{0}>{1}</color></b></size>\n\n<size=18>{2}</size>\n\n<b><size=24>Objectives:</size></b>\n\n<size=18>{3}</size>", ColorUtility.ToHtmlStringRGB(titleColor), DisplayName, Description, GetUnformattedObjectiveList(sourceUnitController));
 
         }
 
-        public virtual string GetUnformattedObjectiveList() {
+        public virtual string GetUnformattedObjectiveList(UnitController sourceUnitController) {
             string objectives = string.Empty;
             List<string> objectiveList = new List<string>();
             if (steps.Count > 0) {
-                foreach (QuestObjective questObjective in steps[GetSaveData().questStep].QuestObjectives) {
-                    objectiveList.Add(questObjective.GetUnformattedStatus());
+                foreach (QuestObjective questObjective in steps[GetSaveData(sourceUnitController).QuestStep].QuestObjectives) {
+                    objectiveList.Add(questObjective.GetUnformattedStatus(sourceUnitController));
                 }
             }
             objectives = string.Join("\n", objectiveList);
@@ -288,84 +258,83 @@ namespace AnyRPG {
             return objectives;
         }
 
-        protected virtual void ProcessAcceptQuest() {
+        protected virtual void ProcessAcceptQuest(UnitController sourceUnitController) {
             // nothing to do here
         }
 
-        public virtual void AcceptQuest(bool printMessages = true, bool resetStep = true) {
-            QuestSaveData questSaveData = GetSaveData();
+        public virtual void AcceptQuest(UnitController sourceUnitController, bool printMessages = true, bool resetStep = true) {
+            //Debug.Log($"{ResourceName}.QuestBase.AcceptQuest({sourceUnitController.gameObject.name}, {printMessages}, {resetStep})");
+
+            QuestSaveData questSaveData = GetSaveData(sourceUnitController);
             if (resetStep == true) {
-                questSaveData.questStep = 0;
+                questSaveData.QuestStep = 0;
             }
-            questSaveData.markedComplete = false;
-            questSaveData.turnedIn = false;
-            SetSaveData(ResourceName, questSaveData);
-            if (steps.Count > 0) {
-                foreach (QuestObjective questObjective in steps[CurrentStep].QuestObjectives) {
-                    questObjective.OnAcceptQuest(this, printMessages);
+            questSaveData.MarkedComplete = false;
+            questSaveData.TurnedIn = false;
+            SetSaveData(sourceUnitController, ResourceName, questSaveData);
+
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                if (steps.Count > 0) {
+                    foreach (QuestObjective questObjective in steps[CurrentStep(sourceUnitController)].QuestObjectives) {
+                        questObjective.OnAcceptQuest(sourceUnitController, this, printMessages);
+                    }
                 }
             }
 
             if (printMessages == true) {
-                ProcessAcceptQuest();
+                ProcessAcceptQuest(sourceUnitController);
             }
 
-            // this next statement seems unnecessary.  is it a holdover from when quests were cloned ?
-            // disable for now and see if anything breaks
-            //if (!MarkedComplete) {
-                // needs to be done here if quest wasn't auto-completed in checkcompletion
-                if (playerManager != null && playerManager.PlayerUnitSpawned == false) {
-                    // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
-                    return;
-                }
-                SystemEventManager.TriggerEvent("OnQuestStatusUpdated", new EventParamProperties());
-                SystemEventManager.TriggerEvent("OnAfterQuestStatusUpdated", new EventParamProperties());
-                OnQuestStatusUpdated();
-            //}
+            NotifyOnAcceptQuest(sourceUnitController);
+            OnQuestBaseStatusUpdated(sourceUnitController);
         }
 
-        public virtual void CheckCompletion(bool notifyOnUpdate = true, bool printMessages = true) {
-            //Debug.Log("QuestLog.CheckCompletion()");
-            if (MarkedComplete) {
+        public virtual void CheckCompletion(UnitController sourceUnitController, bool notifyOnUpdate = true, bool printMessages = true) {
+            //Debug.Log($"{ResourceName}.QuestBase.CheckCompletion({sourceUnitController.gameObject.name}, {notifyOnUpdate}, {printMessages})");
+
+            if (MarkedComplete(sourceUnitController)) {
                 // no need to waste cycles checking, we are already done
                 return;
             }
 
-            if (StepsComplete(printMessages)) {
-                MarkComplete(notifyOnUpdate, printMessages);
+            if (StepsComplete(sourceUnitController, printMessages)) {
+                MarkComplete(sourceUnitController, notifyOnUpdate, printMessages);
             } else {
-                // since this method only gets called as a result of a quest objective status updating, we need to notify for that at minimum
-                //Debug.Log(DisplayName + ".Quest.CheckCompletion(): about to notify for objective status updated");
-                SystemEventManager.TriggerEvent("OnQuestObjectiveStatusUpdated", new EventParamProperties());
-                OnQuestObjectiveStatusUpdated();
+                // TESTING - moved these notifications to after StepsComplete() so things that get notified have the correct step
+                // since this method only gets called as a result of a quest objective status updating, we need to notify for that
+                // anything subscribing to this will also subscribe to the complete above so it's redundant to call both
+                OnQuestBaseObjectiveStatusUpdated(sourceUnitController);
+                NotifyOnObjectiveStatusUpdated(sourceUnitController);
             }
         }
 
-        private bool StepsComplete(bool printMessages) {
+        public bool StepsComplete(UnitController sourceUnitController, bool printMessages) {
+            //Debug.Log($"{ResourceName}.QuestBase.StepsComplete({sourceUnitController.gameObject.name}, {printMessages})");
+
             if (steps.Count == 0) {
                 return true;
             }
 
-            for (int i = CurrentStep; i < steps.Count; i++) {
+            for (int i = CurrentStep(sourceUnitController); i < steps.Count; i++) {
                 // advance current step to ensure quest tracker and log show proper objectives
-                if (CurrentStep != i) {
-                    CurrentStep = i;
+                if (CurrentStep(sourceUnitController) != i) {
+                    SetCurrentStep(sourceUnitController, i);
 
                     // unsubscribe the previous step objectives
                     foreach (QuestObjective questObjective in steps[i - 1].QuestObjectives) {
-                        questObjective.OnAbandonQuest();
+                        questObjective.OnAbandonQuest(sourceUnitController);
                     }
 
                     // reset save data from this step in case the next step contains an objective of the same type, but different amount
-                    ResetObjectiveSaveData();
+                    ResetObjectiveSaveData(sourceUnitController);
 
                     // subscribe the current step objectives
                     foreach (QuestObjective questObjective in steps[i].QuestObjectives) {
-                        questObjective.OnAcceptQuest(this, printMessages);
+                        questObjective.OnAcceptQuest(sourceUnitController, this, printMessages);
                     }
                 }
                 foreach (QuestObjective questObjective in steps[i].QuestObjectives) {
-                    if (!questObjective.IsComplete) {
+                    if (!questObjective.IsComplete(sourceUnitController)) {
                         return false;
                     }
                 }
@@ -375,9 +344,9 @@ namespace AnyRPG {
         }
 
         // force prerequisite status update outside normal event notification
-        public virtual void UpdatePrerequisites(bool notify = true) {
+        public virtual void UpdatePrerequisites(UnitController sourceUnitController, bool notify = true) {
             foreach (PrerequisiteConditions conditions in prerequisiteConditions) {
-                conditions.UpdatePrerequisites(notify);
+                conditions.UpdatePrerequisites(sourceUnitController, notify);
             }
         }
 
@@ -403,9 +372,16 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void HandlePrerequisiteUpdates() {
-            OnQuestStatusUpdated();
+        public virtual void HandlePrerequisiteUpdates(UnitController sourceUnitController) {
+            OnQuestBaseStatusUpdated(sourceUnitController);
         }
+
+        public abstract int GetObjectiveCurrentAmount(UnitController sourceUnitController, string name, string objectiveName);
+        public abstract void SetObjectiveCurrentAmount(UnitController sourceUnitController, string name, string objectiveName, int value);
+        public abstract void ResetObjectiveSaveData(UnitController sourceUnitController);
+        public abstract void NotifyOnObjectiveStatusUpdated(UnitController sourceUnitController);
+        public abstract void NotifyOnMarkComplete(UnitController sourceUnitController);
+        public abstract void NotifyOnAcceptQuest(UnitController sourceUnitController);
     }
 
     [System.Serializable]

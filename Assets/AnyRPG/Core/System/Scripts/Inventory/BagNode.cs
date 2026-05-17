@@ -6,7 +6,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class BagNode {
 
-        public event System.Action<Bag> OnAddBag = delegate { };
+        public event System.Action<InstantiatedBag> OnAddBag = delegate { };
         public event System.Action OnRemoveBag = delegate { };
 
         //private List<SlotScript> inventorySlots = new List<SlotScript>();
@@ -14,57 +14,53 @@ namespace AnyRPG {
 
         private CharacterInventoryManager characterInventoryManager = null;
 
-        private Bag bag;
+        private InstantiatedBag instantiatedBag;
 
         private bool isBankNode = false;
+        private int nodeIndex;
 
         //private BagPanel bagPanel;
 
-        public Bag Bag { get => bag; }
+        public InstantiatedBag InstantiatedBag { get => instantiatedBag; }
         //public BagPanel BagPanel { get => bagPanel; set => bagPanel = value; }
 
         //public BagButton BagButton { get => bagButton; set => bagButton = value; }
         //public List<SlotScript> InventorySlots { get => inventorySlots; set => inventorySlots = value; }
         public List<InventorySlot> InventorySlots { get => inventorySlots; set => inventorySlots = value; }
         public bool IsBankNode { get => isBankNode; }
+        public int NodeIndex { get => nodeIndex; }
 
         public BagNode() {
         }
 
-        public BagNode(CharacterInventoryManager characterInventoryManager, bool isBankNode) {
+        public BagNode(CharacterInventoryManager characterInventoryManager, bool isBankNode, int nodeIndex) {
             this.characterInventoryManager = characterInventoryManager;
             this.isBankNode = isBankNode;
+            this.nodeIndex = nodeIndex;
         }
 
-        public void AddBag(Bag bag) {
-            //Debug.Log("BagNode.AddBag()");
-            this.bag = bag;
-            //inventorySlots = bagPanel.AddSlots(bag.Slots);
-            if (isBankNode) {
-                inventorySlots = characterInventoryManager.AddBankSlots(bag.Slots);
-            } else {
-                inventorySlots = characterInventoryManager.AddInventorySlots(bag.Slots);
-            }
-            bag.BagNode = this;
+        public void AddBag(InstantiatedBag instantiatedBag) {
+            //Debug.Log($"BagNode.AddBag({instantiatedBag.ResourceName})");
 
-            OnAddBag(bag);
+            this.instantiatedBag = instantiatedBag;
+            if (isBankNode) {
+                inventorySlots = characterInventoryManager.AddBankSlots(instantiatedBag.Slots);
+            } else {
+                inventorySlots = characterInventoryManager.AddInventorySlots(instantiatedBag.Slots);
+            }
+            instantiatedBag.BagNode = this;
+
+            OnAddBag(instantiatedBag);
         }
 
         public void RemoveBag() {
-            bag = null;
+            instantiatedBag = null;
             OnRemoveBag();
             //foreach (SlotScript inventorySlot in inventorySlots) {
             foreach (InventorySlot inventorySlot in inventorySlots) {
                 inventorySlot.Clear();
             }
-            /*
-            if (BagPanel != null) {
-                BagPanel.ClearSlots(inventorySlots);
-            }
-            */
             characterInventoryManager.ClearSlots(inventorySlots);
-            //bagPanel = null;
-
             ClearSlots();
         }
 
@@ -72,22 +68,22 @@ namespace AnyRPG {
             inventorySlots.Clear();
         }
 
-        public virtual List<Item> GetItems() {
+        public virtual List<InstantiatedItem> GetItems() {
             //Debug.Log("BagPanel.GetItems() slots count: " + slots.Count);
-            List<Item> items = new List<Item>();
+            List<InstantiatedItem> instantiatedItems = new List<InstantiatedItem>();
 
             foreach (InventorySlot inventorySlot in inventorySlots) {
                 //Debug.Log("BagPanel.GetItems(): found slot");
                 if (!inventorySlot.IsEmpty) {
                     //Debug.Log("BagPanel.GetItems(): found slot and it is not empty");
-                    foreach (Item item in inventorySlot.Items) {
-                        items.Add(item);
+                    foreach (InstantiatedItem item in inventorySlot.InstantiatedItems.Values) {
+                        instantiatedItems.Add(item);
                     }
                 } else {
                     //Debug.Log("BagPanel.GetItems(): found slot and it is empty");
                 }
             }
-            return items;
+            return instantiatedItems;
         }
 
 

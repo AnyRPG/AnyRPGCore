@@ -6,34 +6,48 @@ using UnityEngine;
 namespace AnyRPG {
     public class CharacterRecipeManager : ConfiguredClass {
 
-        protected BaseCharacter baseCharacter;
+        protected UnitController unitController;
 
         protected Dictionary<string, Recipe> recipeList = new Dictionary<string, Recipe>();
 
-        public BaseCharacter BaseCharacter {
-            get => baseCharacter;
-            set => baseCharacter = value;
-        }
-
         public Dictionary<string, Recipe> RecipeList { get => recipeList; }
 
-        public CharacterRecipeManager(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
-            this.baseCharacter = baseCharacter;
+        public CharacterRecipeManager(UnitController unitController, SystemGameManager systemGameManager) {
+            this.unitController = unitController;
             Configure(systemGameManager);
-        }
-
-        public void Init() {
-            UpdateRecipeList(baseCharacter.CharacterStats.Level);
         }
 
         public virtual void UpdateRecipeList(int newLevel) {
             foreach (Recipe recipe in systemDataFactory.GetResourceList<Recipe>()) {
-                foreach (Skill skill in baseCharacter.CharacterSkillManager.MySkillList.Values) {
-                    if (!HasRecipe(recipe) && recipe.RequiredLevel <= newLevel && recipe.AutoLearn == true && skill.AbilityList.Contains(recipe.CraftAbility)) {
-                        LearnRecipe(recipe);
-                    }
+                if (CanAutoLearnRecipe(recipe, newLevel)) {
+                    LearnRecipe(recipe);
                 }
             }
+        }
+
+        private bool CanAutoLearnRecipe(Recipe recipe, int newLevel) {
+            // recipe cannot be auto learned
+            if (recipe.AutoLearn == false) {
+                return false;
+            }
+            // recipe is already known
+            if (HasRecipe(recipe)) {
+                return false;
+            }
+            // recipe is above the character's level
+            if (recipe.RequiredLevel > newLevel) {
+                return false;
+            }
+            if (recipe.Skill != null) {
+                if (unitController.CharacterSkillManager.HasSkill(recipe.Skill) == false) {
+                    return false;
+                }
+                CharacterSkillData skillData = unitController.CharacterSkillManager.GetCharacterSkillData(recipe.Skill);
+                if (skillData.SkillLevel < recipe.RequiredSkillLevel) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public bool HasRecipe(Recipe checkRecipe) {
@@ -49,10 +63,8 @@ namespace AnyRPG {
                 return;
             }
             if (!recipeList.ContainsValue(newRecipe)) {
-                recipeList[SystemDataUtility.PrepareStringForMatch(newRecipe.ResourceName)] = newRecipe;
-                EventParamProperties eventParamProperties = new EventParamProperties();
-                eventParamProperties.simpleParams.StringParam = newRecipe.ResourceName;
-                SystemEventManager.TriggerEvent("OnRecipeListChanged", eventParamProperties);
+                recipeList[newRecipe.ResourceName] = newRecipe;
+                unitController.UnitEventController.NotifyOnLearnRecipe(newRecipe);
             }
         }
 
@@ -63,12 +75,11 @@ namespace AnyRPG {
             if (recipeName == null || recipeName == string.Empty) {
                 return;
             }
-            string keyName = SystemDataUtility.PrepareStringForMatch(recipeName);
-            if (!recipeList.ContainsKey(keyName)) {
-                recipeList[keyName] = systemDataFactory.GetResource<Recipe>(recipeName);
-                if (recipeList[keyName] == null) {
+            if (!recipeList.ContainsKey(recipeName)) {
+                recipeList[recipeName] = systemDataFactory.GetResource<Recipe>(recipeName);
+                if (recipeList[recipeName] == null) {
                     // failed to get a valid recipe
-                    recipeList.Remove(keyName);
+                    recipeList.Remove(recipeName);
                 }
             }
         }
@@ -76,7 +87,9 @@ namespace AnyRPG {
 
         public void UnlearnRecipe(Recipe oldRecipe) {
             if (recipeList.ContainsValue(oldRecipe)) {
-                recipeList.Remove(SystemDataUtility.PrepareStringForMatch(oldRecipe.ResourceName));
+                recipeList.Remove(oldRecipe.ResourceName);
+                unitController.UnitEventController.NotifyOnUnlearnRecipe(oldRecipe);
+
             }
         }
 

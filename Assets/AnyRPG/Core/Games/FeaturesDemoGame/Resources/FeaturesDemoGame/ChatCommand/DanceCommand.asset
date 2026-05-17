@@ -20,6 +20,7 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
+  actionName: Dance
   actionProperties:
     animationClip: {fileID: 7400000, guid: d334fddc69f20214e9b1e924e4739624, type: 2}
     animationProfileName: 

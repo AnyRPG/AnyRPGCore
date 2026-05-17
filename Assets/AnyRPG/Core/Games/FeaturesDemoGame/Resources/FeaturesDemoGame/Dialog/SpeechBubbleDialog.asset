@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   automatic: 1
   repeatable: 1
   audioProfileName: 
@@ -26,9 +27,11 @@ MonoBehaviour:
   - startTime: 0
     showTime: 5
     description: This is a repeatable dialog, but in a speech bubble
+    audioClip: {fileID: 0}
     nextOption: 
   - startTime: 5
     showTime: 5
     description: This text will show at 5 seconds
+    audioClip: {fileID: 0}
     nextOption: 
   prerequisiteConditions: []

@@ -41,7 +41,7 @@ namespace AnyRPG {
             // cast twice?  is this intentional?
             base.Cast(source, target, originalTarget, abilityEffectInput);
             Dictionary<PrefabProfile, List<GameObject>> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
-            (source.AbilityManager as CharacterAbilityManager).BaseCharacter.CharacterPetManager.SpawnPet(unitProfile);
+            (source as UnitController).CharacterPetManager.SpawnPet(unitProfile);
             return returnObjects;
         }
         /*

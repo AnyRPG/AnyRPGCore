@@ -10,7 +10,7 @@ namespace AnyRPG {
     public class AOEEffect : AbilityEffect {
 
         [SerializeField]
-        private AOEEffectProperties aoeEffectProperties = new AOEEffectProperties();
+        public AOEEffectProperties aoeEffectProperties = new AOEEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => aoeEffectProperties; }
 

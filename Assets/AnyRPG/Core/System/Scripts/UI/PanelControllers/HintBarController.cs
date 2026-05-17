@@ -68,7 +68,7 @@ namespace AnyRPG {
         public void SetOptions(string aOptionString, string xOptionString, string yOptionString, string bOptionString, string dPadOptionString, string rDownOptionString) {
             //Debug.Log("HintBarController.SetOptions()");
 
-            if (controlsManager.GamePadModeActive == false) {
+            if (controlsManager.GamepadModeActive == false) {
                 return;
             }
 

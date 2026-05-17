@@ -23,16 +23,16 @@ namespace AnyRPG {
 
         private Vector3 originalPosition = Vector3.zero;
         private Vector3 originalRotation = Vector3.zero;
-        AudioSource audioSource = null;
+        ObjectAudioController objectAudioController = null;
 
         public MoveableObjectComponent(Interactable interactable, MoveableObjectProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
-            interactableOptionProps.InteractionPanelTitle = "Interactable";
+            interactionPanelTitle = "Interactable";
             if (Props.MoveableObject != null) {
                 originalPosition = Props.MoveableObject.transform.localPosition;
                 
                 // all angles are rounded to 4 decimals and than made positive to attempt to avoid rotations greater than 180 degrees
                 originalRotation = GetTranslatedEulerAngles(Props.MoveableObject.transform.localEulerAngles);
-                audioSource = Props.MoveableObject.GetComponent<AudioSource>();
+                objectAudioController = Props.MoveableObject.GetComponent<ObjectAudioController>();
             }
         }
 
@@ -48,22 +48,21 @@ namespace AnyRPG {
             }
         }
 
-        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0, bool processNonCombatCheck = true) {
+        public override bool CanInteract(UnitController sourceUnitController, bool processRangeCheck, bool passedRangeCheck, bool processNonCombatCheck, bool viaSwitch = false) {
 
-            if (Props.SwitchOnly == true) {
+            if (Props.SwitchOnly == true && viaSwitch == false) {
                 return false;
             }
-            return base.CanInteract(processRangeCheck, passedRangeCheck, factionValue, processNonCombatCheck);
+            return base.CanInteract(sourceUnitController, processRangeCheck, passedRangeCheck, processNonCombatCheck);
         }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log($"{gameObject.name}.AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            //Debug.Log($"{interactable.gameObject.name}.AnimatedObject.Interact({(sourceUnitController == null ? "null" : sourceUnitController.name)})");
 
-            base.Interact(source, optionIndex);
-            uIManager.interactionWindow.CloseWindow();
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
             if (Props.MoveableObject == null) {
-                Debug.Log("MoveableObject.Interact(): gameObject was null. Check Inspector");
+                Debug.LogWarning("MoveableObject.Interact(): gameObject was null. Check Inspector");
                 return false;
             }
             if (Props.Loop == true) {
@@ -78,7 +77,13 @@ namespace AnyRPG {
                 ChooseMovement();
             }
 
-            return false;
+            return true;
+        }
+
+        public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
+            uIManager.interactionWindow.CloseWindow();
+
         }
 
         private void ChooseMovement() {
@@ -124,9 +129,9 @@ namespace AnyRPG {
 
             newAngle = GetTranslatedEulerAngles(newAngle);
 
-            if (audioSource != null && audioClip != null) {
+            if (objectAudioController != null && audioClip != null) {
                 //Debug.Log($"{gameObject.name}.AnimatedObject.animateObject(): playing audioclip: " + audioProfile.AudioClip);
-                audioSource.PlayOneShot(audioClip);
+                objectAudioController.PlayOneShot(audioClip);
             }
 
             // setting open / closed state first to allow an object to reverse before its animation has completed
@@ -154,6 +159,42 @@ namespace AnyRPG {
             // eg : 36 + 0.123456 = 36.12346
             // eg : 360 + 0.123456 = 360.1234
             return new Vector3(MathF.Round(originalAngle.x, 4) < 0f ? MathF.Round(originalAngle.x, 4) + 360f : MathF.Round(originalAngle.x, 4), MathF.Round(originalAngle.y, 4) < 0f ? MathF.Round(originalAngle.y, 4) + 360f : MathF.Round(originalAngle.y, 4), MathF.Round(originalAngle.z, 4) < 0f ? MathF.Round(originalAngle.z, 4) + 360f : MathF.Round(originalAngle.z, 4));
+        }
+
+        public override void SetSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.MoveableObjectComponent.SetSaveData(): objectOpen = {objectOpen}, position: {Props.MoveableObject.transform.position}, rotation: {Props.MoveableObject.transform.rotation}");
+
+            base.SetSaveData(interactableSaveData);
+            MoveableObjectSaveData moveableObjectSaveData = new MoveableObjectSaveData() {
+                ObjectOpen = objectOpen,
+                ObjectPositionX = Props.MoveableObject.transform.position.x,
+                ObjectPositionY = Props.MoveableObject.transform.position.y,
+                ObjectPositionZ = Props.MoveableObject.transform.position.z,
+                ObjectRotationX = Props.MoveableObject.transform.rotation.x,
+                ObjectRotationY = Props.MoveableObject.transform.rotation.y,
+                ObjectRotationZ = Props.MoveableObject.transform.rotation.z,
+                ObjectRotationW = Props.MoveableObject.transform.rotation.w
+            };
+            if (interactableSaveData.MoveableObjectSaveData.Count > 0) {
+                interactableSaveData.MoveableObjectSaveData[0] = moveableObjectSaveData;
+            } else {
+                interactableSaveData.MoveableObjectSaveData.Add(moveableObjectSaveData);
+            }
+        }
+
+        public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.MoveableObjectComponent.LoadFromSaveData()");
+
+            base.LoadFromSaveData(interactableSaveData);
+            if (interactableSaveData.MoveableObjectSaveData.Count > 0) {
+                //Debug.Log($"{interactable.gameObject.name}.MoveableObjectComponent.LoadFromSaveData(): moveableObjectSaveData found, loading data");
+                MoveableObjectSaveData moveableObjectSaveData = interactableSaveData.MoveableObjectSaveData[0];
+                objectOpen = moveableObjectSaveData.ObjectOpen;
+                Props.MoveableObject.transform.position = new Vector3(moveableObjectSaveData.ObjectPositionX, moveableObjectSaveData.ObjectPositionY, moveableObjectSaveData.ObjectPositionZ);
+                Props.MoveableObject.transform.rotation = new Quaternion(moveableObjectSaveData.ObjectRotationX, moveableObjectSaveData.ObjectRotationY, moveableObjectSaveData.ObjectRotationZ, moveableObjectSaveData.ObjectRotationW);
+            }// else {
+                //Debug.Log($"{interactable.gameObject.name}.MoveableObjectComponent.LoadFromSaveData(): moveableObjectSaveData not found");
+            //}
         }
 
         /*

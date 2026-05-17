@@ -1,70 +1,71 @@
-using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
     public class FollowState : IState {
-        private UnitController baseController;
+        private UnitController unitController;
 
-        public void Enter(UnitController baseController) {
-            //Debug.Log(baseController.gameObject.name + ".FollowState.Enter()");
-            this.baseController = baseController;
-            this.baseController.UnitMotor.MovementSpeed = baseController.MovementSpeed;
+        public void Enter(UnitController unitController) {
+            //Debug.Log($"FollowState.Enter({unitController.gameObject.name})");
+
+            this.unitController = unitController;
+            this.unitController.UnitMotor.MovementSpeed = unitController.MovementSpeed;
             MakeFollowDecision();
         }
 
         public void Exit() {
-            //Debug.Log(baseController.gameObject.name + ".FollowState.Exit()");
-            baseController.UnitMotor.StopFollowingTarget();
-            // stop following target code goes here
+            //Debug.Log($"{unitController.gameObject.name}.FollowState.Exit()");
+
+            unitController.UnitMotor.StopFollowingTarget();
         }
 
         public void Update() {
-            //Debug.Log(aiController.gameObject.name + ": FollowState.Update()");
+            //Debug.Log($"{unitController.gameObject.name}: FollowState.Update()");
+
             MakeFollowDecision();
         }
 
         private void MakeFollowDecision() {
-            baseController.UpdateTarget();
+            //Debug.Log($"{unitController.gameObject.name}: FollowState.MakeFollowDecision()");
 
-            if (baseController.Target != null) {
-                //Debug.Log("current agro range is " + baseController.Target.name + " and current distance to target is " + baseController.DistanceToTarget);
+            unitController.UpdateTarget();
+
+            if (unitController.Target != null) {
+                //Debug.Log($"{unitController.gameObject.name}: FollowState: Target found: {unitController.Target.gameObject.name}");
                 // evade if the target is out of aggro range.  In the future this could also be calculated as distance from start point if we would rather use a leash approach
-                // temporarily disable leashing.
-                /*
-                if (Vector3.Distance(aiController.transform.position, aiController.MyStartPosition) > aiController.MyLeashDistance ) {
-                    aiController.ChangeState(new EvadeState());
-                    return;
-                }
-                */
-                /*
-                if (aiController.MyDistanceToTarget > aiController.MyAggroRange) {
-                    aiController.ChangeState(new EvadeState());
-                    return;
-                }
-                */
 
-                if (baseController.CanGetValidAttack()) {
-                    baseController.ChangeState(new AttackState());
+                if (unitController.EnableLeashing == true && unitController.UnderControl == false) {
+                    //Debug.Log($"{unitController.gameObject.name}: FollowState: Leash check: distance from start position is {Vector3.Distance(unitController.transform.position, unitController.StartPosition)} and leash distance is {unitController.LeashDistance}");
+                    if (Vector3.Distance(unitController.transform.position, unitController.StartPosition) > unitController.LeashDistance) {
+                        unitController.ChangeState(new EvadeState());
+                        return;
+                    }
+                }
+
+                if (unitController.CanGetValidAttack()) {
+                    unitController.ChangeState(new AttackState());
                     return;
                 }
-                if (baseController.IsTargetInHitBox(baseController.Target)) {
+                if (unitController.IsTargetInHitBox(unitController.Target)) {
                     // they are in the hitbox and we can attack them
-                    baseController.ChangeState(new AttackState());
+                    unitController.ChangeState(new AttackState());
                     return;
                 } else {
-                    //Debug.Log(aiController.gameObject.name + ": FollowTarget: " + aiController.MyTarget.name);
                     // if within agro distance but out of hitbox range, move toward target
-                    if (baseController.HasMeleeAttack() || (baseController.GetMinAttackRange() > 0f && (baseController.GetMinAttackRange() < baseController.DistanceToTarget))) {
-                        baseController.FollowTarget(baseController.Target, baseController.GetMinAttackRange());
-                    } else {
-                        baseController.UnitMotor.StopFollowingTarget();
+                    // do not re-issue the command if we are already moving toward the target
+                    // the unit motor will handle the case where the target moves and we need to update the follow position
+                    if (unitController.UnitMotor.AttackTarget != unitController.Target) {
+                        //Debug.Log($"{unitController.gameObject.name}: AttackTarget: {unitController.UnitMotor.AttackTarget?.gameObject.name} -> {unitController.Target.gameObject.name}");
+                        float minAttackRange = unitController.GetMinAttackRange();
+                        if (unitController.HasMeleeAttack() || (minAttackRange > 0f && (minAttackRange < unitController.DistanceToTarget))) {
+                            unitController.FollowAttackTarget(unitController.Target, minAttackRange);
+                        } else {
+                            unitController.UnitMotor.StopFollowingTarget();
+                        }
                     }
                 }
             } else {
                 // there is no target so start idling.  should we return to our start position instead?
-                baseController.ChangeState(new ReturnState());
+                unitController.ChangeState(new ReturnState());
                 return;
             }
         }

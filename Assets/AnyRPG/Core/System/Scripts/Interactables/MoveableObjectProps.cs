@@ -84,6 +84,16 @@ namespace AnyRPG {
             }
             return returnValue;
         }
+
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
+            if (openAudioClip != null) {
+                systemGameManager.AudioManager.RegisterAudioClip(openAudioClip);
+            }
+            if (closeAudioClip != null) {
+                systemGameManager.AudioManager.RegisterAudioClip(closeAudioClip);
+            }
+        }
     }
 
 }

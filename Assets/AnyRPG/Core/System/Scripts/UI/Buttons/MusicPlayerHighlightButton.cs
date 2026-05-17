@@ -6,13 +6,13 @@ namespace AnyRPG {
 
     public class MusicPlayerHighlightButton : HighlightButton {
 
-        protected MusicPlayerUI musicPlayerUI = null;
+        protected MusicPlayerPanel musicPlayerUI = null;
 
         protected AudioProfile musicProfile = null;
 
         public AudioProfile MusicProfile { get => musicProfile; }
 
-        public void SetMusicProfile(MusicPlayerUI musicPlayerUI, AudioProfile newMusicProfile) {
+        public void SetMusicProfile(MusicPlayerPanel musicPlayerUI, AudioProfile newMusicProfile) {
             this.musicPlayerUI = musicPlayerUI;
             if (newMusicProfile != null) {
                 musicProfile = newMusicProfile;

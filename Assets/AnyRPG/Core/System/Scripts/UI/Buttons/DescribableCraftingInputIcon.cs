@@ -1,4 +1,5 @@
 using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -20,8 +21,7 @@ namespace AnyRPG {
         // game manager references
         //private InventoryManager inventoryManager = null;
         protected CraftingManager craftingManager = null;
-        protected SystemEventManager systemEventManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
 
         public GameObject MaterialSlot { get => materialSlot; }
 
@@ -30,8 +30,7 @@ namespace AnyRPG {
 
             //inventoryManager = systemGameManager.InventoryManager;
             craftingManager = systemGameManager.CraftingManager;
-            systemEventManager = systemGameManager.SystemEventManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public override void UpdateVisual() {
@@ -40,27 +39,29 @@ namespace AnyRPG {
             description.text = Describable.DisplayName;
 
             //if (count > 1) {
-            stackSize.text = playerManager.MyCharacter.CharacterInventoryManager.GetItemCount(Describable.DisplayName) + " / " + count.ToString();
+            stackSize.text = playerManagerClient.UnitController.CharacterInventoryManager.GetItemCount(Describable.DisplayName) + " / " + count.ToString();
             //} else {
             //stackSize.text = "";
             //}
-            craftingManager.TriggerCraftAmountUpdated();
         }
 
-        
+      
 
         protected override void SetDescribableCommon(IDescribable describable) {
             base.SetDescribableCommon(describable);
             systemEventManager.OnItemCountChanged += UpdateVisual;
         }
 
+        private void UpdateVisual(UnitController controller, Item item) {
+            UpdateVisual();
+        }
 
         public override void OnDisable() {
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
             base.OnDisable();
-            if (playerManager.MyCharacter.CharacterInventoryManager != null) {
+            if (playerManagerClient.UnitController.CharacterInventoryManager != null) {
                 systemEventManager.OnItemCountChanged -= UpdateVisual;
             }
 

@@ -17,6 +17,12 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> loadResourcesFolders = new List<string>();
 
+        [SerializeField]
+        private bool allowOfflinePlay = true;
+
+        [SerializeField]
+        private bool allowOnlinePlay = false;
+
         [Header("Scenes")]
 
         [Tooltip("The name of the scene that loads the game manager into memory, and then proceeds to the main menu")]
@@ -105,7 +111,7 @@ namespace AnyRPG {
 
         // reference to the default profile
         private List<UnitProfile> defaultUnitProfileList = new List<UnitProfile>();
-
+        
         [Header("Inventory")]
 
         /*
@@ -140,11 +146,33 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(Item))]
         private List<string> defaultBankContents = new List<string>();
 
+        [Tooltip("If true, the player can drop items on the ground.  If false, they cannot drop items and must sell or destroy them to get rid of them.")]
+        [SerializeField]
+        private bool canDropItems = true;
+
+        [Tooltip("If true, any stacked items will be split when dropped.")]
+        [SerializeField]
+        private bool splitStacksOnDrop = false;
+
         /*
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Bag))]
         private string defaultBankBagItem = "Bank";
         */
+
+        [Header("CAMERA")]
+
+        [Tooltip("In free mode, the player can move the camera.  In isometric mode, the camera is locked to the specified angle")]
+        [SerializeField]
+        private CameraViewMode cameraViewMode = CameraViewMode.Free;
+
+        [Tooltip("When the camera is in isometric mode, this is the world space initial vector from the target (defaults to looking NorthEast).")]
+        [SerializeField]
+        private Vector3 initialIsometricVector = new Vector3(-4f, 4f, -4f);
+
+        [Tooltip("If true, when the camera is in free mode, allow it to be zoomed all the way in.")]
+        [SerializeField]
+        private bool allowFirstPersonCamera = false;
 
         [Header("CONTROLLER")]
 
@@ -158,9 +186,33 @@ namespace AnyRPG {
         [SerializeField]
         private DefaultControllerConfiguration defaultControllerConfiguration;
 
+        [Tooltip("Targets must be closer than this distance for tab target to target them.")]
+        [SerializeField]
+        private float tabTargetMaxDistance = 40f;
+
+        [Tooltip("When standing on any object in this layer mask, the character will be considered to be grounded")]
+        [SerializeField]
+        private LayerMask defaultGroundMask;
+
+        [Tooltip("The maximum movement speed in meters per second.  Any movement over this speed will be capped.")]
+        [SerializeField]
+        private float maxMovementSpeed = 20f;
+
         [Tooltip("The maximum turn speed in degrees per second.")]
         [SerializeField]
         private float maxTurnSpeed = 360f;
+
+        [Tooltip("If true, the character will have an encumbered speed when carrying too much weight.")]
+        [SerializeField]
+        private bool useEncumberance = false;
+
+        [Tooltip("The weight limit (in kilograms) at which the character will be encumbered. Any value provided by stats be added to this value.")]
+        [SerializeField]
+        private float baseCarryWeight = 10f;
+
+        [Tooltip("The default character encumbered speed in meters per second.")]
+        [SerializeField]
+        private float encumberedSpeed = 1f;
 
         [Tooltip("The default character walk speed in meters per second.")]
         [SerializeField]
@@ -198,26 +250,18 @@ namespace AnyRPG {
         [SerializeField]
         private float fallDamageMinDistance = 10f;
 
-        [Tooltip("When not mounted, disable native movement input to allow a third party controller (such as Invector) to move the character")]
+        [Tooltip("If true, the player can be moved using the keyboard.")]
         [SerializeField]
-        private bool useThirdPartyMovementControl = false;
+        private bool allowFreeMove = true;
+
+        [Tooltip("If true, the player can be moved by clicking on the ground.")]
+        [SerializeField]
+        private bool allowClickToMove = false;
 
         [Tooltip("If a third party movement controller is used, disable this to prevent movement lock in combat.")]
         [SerializeField]
         private bool allowAutoAttack = true;
        
-
-        [Header("CAMERA")]
-
-        [Tooltip("Use a third party camera (such as Invector) to follow the character.  Built-in camera will still be used for menus and cutscenes.")]
-        [SerializeField]
-        private bool useThirdPartyCameraControl = false;
-
-        [Tooltip("A reference to the third party camera prefab to be used")]
-        [SerializeField]
-        private GameObject thirdPartyCamera = null;
-
-
         [Header("ANIMATION")]
 
         [Tooltip("This profile should contain references to all the default animations that are on the default animation controller so the system knows which animations to replace when overriding them.")]
@@ -258,9 +302,15 @@ namespace AnyRPG {
         [SerializeField]
         private int maxLevel = 50;
 
-        [Tooltip("Every level, the amount of experience you need for the next level is increased by this amount.")]
+        [Tooltip("A list of experience amounts required to level up the character.  The index of the list is the character level, and the value is the experience required to reach the next level.")]
         [SerializeField]
-        private int xpRequiredPerLevel = 100;
+        private List<int> experienceChart = new List<int>() {
+            500,1000,1500,2000,2500,3500,4500,5500,6500,7500,
+            8500,10000,11500,13000,14500,16000,17500,19000,21000,23000,
+            25000,27000,29000,31500,34000,36500,39000,41500,44000,47000,
+            50000,54000,58000,62000,66000,70000,75000,80000,85000,90000,
+            95000,100000,105000,110000,116000,122000,128000,134000,140000,145000,
+            151000,158000,165000,172000,179500,187000,194500,202000,209500,217000};
 
         [Header("Currency")]
 
@@ -274,6 +324,32 @@ namespace AnyRPG {
         [Tooltip("When selling an item to a vendor, the offered amount will be the regular purchase amount multiplied by this number.")]
         [SerializeField]
         private float vendorPriceMultiplier = 0.25f;
+
+        [Header("Mail Currency")]
+
+        [Tooltip("The amount of currency required to send a mail message (in the base currency of the default system currency group).")]
+        [SerializeField]
+        private int basePostageCurrencyAmount = 0;
+
+        [Tooltip("The amount of currency required to send a mail message (in the base currency of the default system currency group).")]
+        [SerializeField]
+        private int postageCurrencyAmountPerAttachment = 0;
+
+        [Header("Auction Currency")]
+
+        [Tooltip("The amount of currency required to post an item for auction (in the base currency of the default system currency group). This will be returned on successful sale.")]
+        [SerializeField]
+        private int auctionDepositAmount = 0;
+
+        [Tooltip("The percentage of the auction proceeds that will be removed from the total amount sent to the player when an item sells (in the base currency of the default system currency group).")]
+        [SerializeField]
+        private float auctionSoldFeePercentage = 0;
+
+        [Header("Guildmaster Currency")]
+
+        [Tooltip("The amount of currency required to create a guild (in the base currency of the default system currency group).")]
+        [SerializeField]
+        private int createGuildCurrencyAmount = 0;
 
 
         [Header("Currency Scaling")]
@@ -342,6 +418,11 @@ namespace AnyRPG {
         [SerializeField]
         private float defaultDespawnTimer = 0f;
 
+        [Header("AI Behavior")]
+
+        [Tooltip("If true, the AI will return to their start position if pulled too far away from it")]
+        [SerializeField]
+        private bool enableLeashing = true;
 
         [Header("DPS Scaling")]
 
@@ -444,6 +525,10 @@ namespace AnyRPG {
         [SerializeField]
         private Material defaultCastTargetCircle;
 
+        [Tooltip("The material that will be used to display the movement target on the ground when using click-to-move.")]
+        [SerializeField]
+        private Material defaultMovementTargetCircle;
+
         [FormerlySerializedAs("focusProjectorColorMap")]
         [SerializeField]
         private List<ProjectorColorMapNode> highlightCircleColorMap = new List<ProjectorColorMapNode>();
@@ -456,6 +541,14 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite multipleCraftNamePlateImage = null;
 
+        [Tooltip("An image to use beside an auction option in the interaction UI window.")]
+        [SerializeField]
+        private Sprite auctionInteractionPanelImage = null;
+
+        [Tooltip("An image to for an auction option on a nameplate.")]
+        [SerializeField]
+        private Sprite auctionNamePlateImage = null;
+
         [Tooltip("An image to use beside a bank option in the interaction UI window.")]
         [SerializeField]
         private Sprite bankInteractionPanelImage = null;
@@ -463,6 +556,14 @@ namespace AnyRPG {
         [Tooltip("An image to for a bank option on a nameplate.")]
         [SerializeField]
         private Sprite bankNamePlateImage = null;
+
+        [Tooltip("An image to use beside a guildmaster option in the interaction UI window.")]
+        [SerializeField]
+        private Sprite guildmasterInteractionPanelImage = null;
+
+        [Tooltip("An image to for a guildmaster option on a nameplate.")]
+        [SerializeField]
+        private Sprite guildmasterNamePlateImage = null;
 
         [Tooltip("An image to use beside a quest giver option in the interaction UI window.")]
         [SerializeField]
@@ -480,6 +581,14 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite dialogNamePlateImage = null;
 
+        [Tooltip("An image to use beside a mailbox option in the interaction UI window.")]
+        [SerializeField]
+        private Sprite mailboxInteractionPanelImage = null;
+
+        [Tooltip("An image to for a mailbox option on a nameplate.")]
+        [SerializeField]
+        private Sprite mailboxNamePlateImage = null;
+
         [Tooltip("An image to use beside a name change option in the interaction UI window.")]
         [SerializeField]
         private Sprite nameChangeInteractionPanelImage = null;
@@ -487,6 +596,14 @@ namespace AnyRPG {
         [Tooltip("An image to for a name change option on a nameplate.")]
         [SerializeField]
         private Sprite nameChangeNamePlateImage = null;
+
+        [Tooltip("An image to use beside a storage container option in the interaction UI window.")]
+        [SerializeField]
+        private Sprite storageContainerInteractionPanelImage = null;
+
+        [Tooltip("An image to for a storage container option on a nameplate.")]
+        [SerializeField]
+        private Sprite storageContainerNamePlateImage = null;
 
         [Tooltip("An image to use beside a cutscene option in the interaction UI window.")]
         [SerializeField]
@@ -568,6 +685,14 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite musicPlayerNamePlateImage = null;
 
+        [Tooltip("An image to use beside an activatable object option in the interaction UI window.")]
+        [SerializeField]
+        private Sprite activatableObjectInteractionPanelImage = null;
+
+        [Tooltip("An image to for an activatable object option on a nameplate.")]
+        [SerializeField]
+        private Sprite activatableObjectNamePlateImage = null;
+
         [Header("Quest Configuration")]
 
         [SerializeField]
@@ -590,6 +715,64 @@ namespace AnyRPG {
         [SerializeField]
         private Gradient defaultSunGradient;
 
+        [Header("NETWORK")]
+
+        [Tooltip("Select the backend that will be used to store and retrieve player and account data.")]
+        [SerializeField]
+        private ServerBackend serverBackend = ServerBackend.File;
+
+        [Tooltip("This is the address of the API server that the dedicated game server will connect to for database operations. Do not use a trailing slash.")]
+        [SerializeField]
+        private string apiServerAddress = "https://apiserver.yourdomain.com";
+
+        [Tooltip("This should only be set to false during development and testing when the APIServer is using a self-signed SSL certificate.")]
+        [SerializeField]
+        private bool validateAPIServerCert = true;
+
+        [Tooltip("This is the shared secret that allows the game server to login to the api server.")]
+        [SerializeField]
+        private string apiServerSharedSecret = "AnySecretThatCouldNotBeGuessed";
+
+        [Tooltip("This is the address (and optionally port) of the dedicated authoritative game server that all clients connect to.")]
+        [SerializeField]
+        private string gameServerAddress = "localhost";
+
+        [Tooltip("If the server and client both do not have this version, the client will be told to upgrade.")]
+        [SerializeField]
+        private string clientVersion = "1";
+
+        [Tooltip("This is the address of a web page where the latest client can be downloaded.")]
+        [SerializeField]
+        private string clientDownloadUrl = "https://www.anyrpg.org/downloads";
+
+        [Tooltip("The list of scenes that can be chosen in lobby game mode.")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(SceneNode))]
+        private List<string> lobbyGameSceneNames = new List<string>();
+
+        [Tooltip("The chat command that is configured to send a private message (eg: tell or whisper)")]
+        [SerializeField]
+        private string privateMessageChatCommand = string.Empty;
+
+        [Tooltip("The length of time (in minutes) a personal instance must be empty before the scene is unloaded. -1 means it never unloads.")]
+        [SerializeField]
+        private float personalInstanceTimeout = 30f;
+
+        [Tooltip("The length of time (in minutes) a group instance must be empty before the scene is unloaded. -1 means it never unloads.")]
+        [SerializeField]
+        private float groupInstanceTimeout = 30f;
+
+        [Tooltip("The length of time (in minutes) a lobby game instance must be empty before the scene is unloaded. -1 means it never unloads.")]
+        [SerializeField]
+        private float lobbyGameInstanceTimeout = 2f;
+
+        [Tooltip("The length of time (in minutes) a world instance must be empty before the scene is unloaded. -1 means it never unloads.")]
+        [SerializeField]
+        private float worldInstanceTimeout = 5f;
+
+        // reference to the lobby game scene nodes
+        private List<SceneNode> lobbyGameScenes = new List<SceneNode>();
+
         // game manager references
         SystemDataFactory systemDataFactory = null;
 
@@ -601,6 +784,8 @@ namespace AnyRPG {
         public Sprite DialogNamePlateImage { get => dialogNamePlateImage; set => dialogNamePlateImage = value; }
         public Sprite NameChangeInteractionPanelImage { get => nameChangeInteractionPanelImage; set => nameChangeInteractionPanelImage = value; }
         public Sprite NameChangeNamePlateImage { get => nameChangeNamePlateImage; set => nameChangeNamePlateImage = value; }
+        public Sprite StorageContainerInteractionPanelImage { get => storageContainerInteractionPanelImage; set => storageContainerInteractionPanelImage = value; }
+        public Sprite StorageContainerNamePlateImage { get => storageContainerNamePlateImage; set => storageContainerNamePlateImage = value; }
         public Sprite CutSceneInteractionPanelImage { get => cutSceneInteractionPanelImage; set => cutSceneInteractionPanelImage = value; }
         public Sprite CutSceneNamePlateImage { get => cutSceneNamePlateImage; set => cutSceneNamePlateImage = value; }
         public Sprite LootableCharacterInteractionPanelImage { get => lootableCharacterInteractionPanelImage; set => lootableCharacterInteractionPanelImage = value; }
@@ -620,6 +805,8 @@ namespace AnyRPG {
         public float DefaultDespawnTimer { get => defaultDespawnTimer; set => defaultDespawnTimer = value; }
         public Sprite BankInteractionPanelImage { get => bankInteractionPanelImage; set => bankInteractionPanelImage = value; }
         public Sprite BankNamePlateImage { get => bankNamePlateImage; set => bankNamePlateImage = value; }
+        public Sprite GuildmasterInteractionPanelImage { get => guildmasterInteractionPanelImage; set => guildmasterInteractionPanelImage = value; }
+        public Sprite GuildmasterNamePlateImage { get => guildmasterNamePlateImage; set => guildmasterNamePlateImage = value; }
         public Sprite VendorInteractionPanelImage { get => vendorInteractionPanelImage; set => vendorInteractionPanelImage = value; }
         public Sprite VendorNamePlateImage { get => vendorNamePlateImage; set => vendorNamePlateImage = value; }
         public Sprite MultipleCraftNamePlateImage { get => multipleCraftNamePlateImage; set => multipleCraftNamePlateImage = value; }
@@ -629,6 +816,8 @@ namespace AnyRPG {
         public Sprite UnitSpawnControllerNamePlateImage { get => unitSpawnControllerNamePlateImage; set => unitSpawnControllerNamePlateImage = value; }
         public Sprite MusicPlayerInteractionPanelImage { get => musicPlayerInteractionPanelImage; set => musicPlayerInteractionPanelImage = value; }
         public Sprite MusicPlayerNamePlateImage { get => musicPlayerNamePlateImage; set => musicPlayerNamePlateImage = value; }
+        public Sprite ActivatableObjectInteractionPanelImage { get => activatableObjectInteractionPanelImage; set => activatableObjectInteractionPanelImage = value; }
+        public Sprite ActivatableObjectNamePlateImage { get => activatableObjectNamePlateImage; set => activatableObjectNamePlateImage = value; }
         public RuntimeAnimatorController DefaultAnimatorController { get => defaultAnimatorController; set => defaultAnimatorController = value; }
         public AnimationProfile DefaultAnimationProfile { get => defaultAnimationProfile; set => defaultAnimationProfile = value; }
         public Material DefaultCastingLightProjector { get => defaultCastTargetCircle; set => defaultCastTargetCircle = value; }
@@ -641,10 +830,9 @@ namespace AnyRPG {
         public string DefaultCharacterUnitLayer { get => defaultCharacterUnitLayer; set => defaultCharacterUnitLayer = value; }
         public AnimationProfile SystemAnimationProfile { get => systemAnimationProfile; set => systemAnimationProfile = value; }
         public List<ProjectorColorMapNode> FocusProjectorColorMap { get => highlightCircleColorMap; set => highlightCircleColorMap = value; }
-        public bool UseThirdPartyMovementControl { get => useThirdPartyMovementControl; set => useThirdPartyMovementControl = value; }
-        public bool UseThirdPartyCameraControl { get => useThirdPartyCameraControl; set => useThirdPartyCameraControl = value; }
+        //public bool UseThirdPartyMovementControl { get => useThirdPartyMovementControl; set => useThirdPartyMovementControl = value; }
+        //public bool UseThirdPartyCameraControl { get => useThirdPartyCameraControl; set => useThirdPartyCameraControl = value; }
         public bool AllowAutoAttack { get => allowAutoAttack; set => allowAutoAttack = value; }
-        public int XpRequiredPerLevel { get => xpRequiredPerLevel; set => xpRequiredPerLevel = value; }
         public int BaseQuestXP { get => baseQuestXP; set => baseQuestXP = value; }
         public int QuestXPPerLevel { get => questXPPerLevel; set => questXPPerLevel = value; }
         public bool UseQuestXPLevelMultiplierDemoninator { get => useQuestXPLevelMultiplierDemoninator; set => useQuestXPLevelMultiplierDemoninator = value; }
@@ -681,17 +869,22 @@ namespace AnyRPG {
         public AudioProfile NewGameAudioProfile { get => newGameAudioProfile; set => newGameAudioProfile = value; }
         public string DefaultPlayerName { get => defaultPlayerName; set => defaultPlayerName = value; }
         public string DefaultPlayerUnitProfileName { get => defaultPlayerUnitProfile; set => defaultPlayerUnitProfile = value; }
-        public UnitProfile DefaultPlayerUnitProfile { get => defaultPlayerUnitProfileRef; set => defaultPlayerUnitProfileRef = value; }
         public string DefaultUnitProfileName {
             get {
+                if (defaultPlayerUnitProfileRef != null) {
+                    return defaultPlayerUnitProfileRef.ResourceName;
+                }
                 if (defaultUnitProfiles.Count > 0) {
                     return defaultUnitProfiles[0];
                 }
                 return null;
             }
         }
-        public UnitProfile DefaultUnitProfile {
+        public UnitProfile DefaultPlayerUnitProfile {
             get {
+                if (defaultPlayerUnitProfileRef != null) {
+                    return defaultPlayerUnitProfileRef;
+                }
                 if (defaultUnitProfileList != null && defaultUnitProfileList.Count > 0) {
                     return defaultUnitProfileList[0];
                 }
@@ -707,7 +900,7 @@ namespace AnyRPG {
 
         //public bool EquipDefaultBackPack { get => equipDefaultBackPack; set => equipDefaultBackPack = value; }
         public string DefaultPlayerUnitLayer { get => defaultPlayerUnitLayer; set => defaultPlayerUnitLayer = value; }
-        public GameObject ThirdPartyCamera { get => thirdPartyCamera; set => thirdPartyCamera = value; }
+        //public GameObject ThirdPartyCamera { get => thirdPartyCamera; set => thirdPartyCamera = value; }
         public string DefaultBackpackItem { get => defaultBackpackItem; set => defaultBackpackItem = value; }
         //public string DefaultBankBagItem { get => defaultBankBagItem; set => defaultBankBagItem = value; }
         public string MainMenuScene { get => mainMenuScene; set => mainMenuScene = value; }
@@ -747,8 +940,46 @@ namespace AnyRPG {
         public string DefaultPreviewUnitLayer { get => defaultPreviewUnitLayer; set => defaultPreviewUnitLayer = value; }
         public bool EditPlayerName { get => editPlayerName; set => editPlayerName = value; }
         public PlayerNameSource PlayerNameSource { get => playerNameSource; set => playerNameSource = value; }
-
-        //public bool AllowClickToMove { get => allowClickToMove; }
+        public string ApiServerAddress { get => apiServerAddress; set => apiServerAddress = value; }
+        public bool AllowOfflinePlay { get => allowOfflinePlay; set => allowOfflinePlay = value; }
+        public bool AllowOnlinePlay { get => allowOnlinePlay; set => allowOnlinePlay = value; }
+        public string ClientDownloadUrl { get => clientDownloadUrl; set => clientDownloadUrl = value; }
+        public string ClientVersion { get => clientVersion; set => clientVersion = value; }
+        public string GameServerAddress { get => gameServerAddress; set => gameServerAddress = value; }
+        public List<SceneNode> LobbyGameScenes { get => lobbyGameScenes; }
+        public bool EnableLeashing { get => enableLeashing; set => enableLeashing = value; }
+        public ServerBackend ServerBackend { get => serverBackend; set => serverBackend = value; }
+        public string PrivateMessageChatCommand { get => privateMessageChatCommand; set => privateMessageChatCommand = value; }
+        public Sprite MailboxInteractionPanelImage { get => mailboxInteractionPanelImage; set => mailboxInteractionPanelImage = value; }
+        public Sprite MailboxNamePlateImage { get => mailboxNamePlateImage; set => mailboxNamePlateImage = value; }
+        public Sprite AuctionInteractionPanelImage { get => auctionInteractionPanelImage; set => auctionInteractionPanelImage = value; }
+        public Sprite AuctionNamePlateImage { get => auctionNamePlateImage; set => auctionNamePlateImage = value; }
+        public int BasePostageCurrencyAmount { get => basePostageCurrencyAmount; set => basePostageCurrencyAmount = value; }
+        public int PostageCurrencyAmountPerAttachment { get => postageCurrencyAmountPerAttachment; set => postageCurrencyAmountPerAttachment = value; }
+        public int AuctionDepositAmount { get => auctionDepositAmount; set => auctionDepositAmount = value; }
+        public float AuctionSoldFeePercentage { get => auctionSoldFeePercentage; set => auctionSoldFeePercentage = value; }
+        public int CreateGuildCurrencyAmount { get => createGuildCurrencyAmount; set => createGuildCurrencyAmount = value; }
+        public bool ValidateAPIServerCert { get => validateAPIServerCert; set => validateAPIServerCert = value; }
+        public string ApiServerSharedSecret { get => apiServerSharedSecret; set => apiServerSharedSecret = value; }
+        public float PersonalInstanceTimeout { get => personalInstanceTimeout; set => personalInstanceTimeout = value; }
+        public float GroupInstanceTimeout { get => groupInstanceTimeout; set => groupInstanceTimeout = value; }
+        public float LobbyGameInstanceTimeout { get => lobbyGameInstanceTimeout; set => lobbyGameInstanceTimeout = value; }
+        public float WorldInstanceTimeout { get => worldInstanceTimeout; set => worldInstanceTimeout = value; }
+        public bool AllowFreeMove { get => allowFreeMove; set => allowFreeMove = value; }
+        public bool AllowClickToMove { get => allowClickToMove; set => allowClickToMove = value; }
+        public Material DefaultMovementTargetCircle { get => defaultMovementTargetCircle; set => defaultMovementTargetCircle = value; }
+        public float MaxMovementSpeed { get => maxMovementSpeed; set => maxMovementSpeed = value; }
+        public LayerMask DefaultGroundMask { get => defaultGroundMask; set => defaultGroundMask = value; }
+        public float TabTargetMaxDistance { get => tabTargetMaxDistance; set => tabTargetMaxDistance = value; }
+        public CameraViewMode CameraViewMode { get => cameraViewMode; set => cameraViewMode = value; }
+        public Vector3 InitialIsometricVector { get => initialIsometricVector; set => initialIsometricVector = value; }
+        public bool AllowFirstPersonCamera { get => allowFirstPersonCamera; set => allowFirstPersonCamera = value; }
+        public List<int> ExperienceChart { get => experienceChart; set => experienceChart = value; }
+        public bool CanDropItems { get => canDropItems; set => canDropItems = value; }
+        public bool SplitStacksOnDrop { get => splitStacksOnDrop; set => splitStacksOnDrop = value; }
+        public bool UseEncumberance { get => useEncumberance; set => useEncumberance = value; }
+        public float EncumberedSpeed { get => encumberedSpeed; set => encumberedSpeed = value; }
+        public float BaseCarryWeight { get => baseCarryWeight; set => baseCarryWeight = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -764,6 +995,14 @@ namespace AnyRPG {
 
         // verify that system abilities are available through the factory
         public void SetupScriptableObjects() {
+
+            if (weaponMissAudioClip != null) {
+                systemGameManager.AudioManager.RegisterAudioClip(weaponMissAudioClip);
+            }
+
+            if (vendorAudioClip != null) {
+                systemGameManager.AudioManager.RegisterAudioClip(vendorAudioClip);
+            }
 
             if (systemAnimationProfileName != null && systemAnimationProfileName != string.Empty) {
                 AnimationProfile animationProfile = systemDataFactory.GetResource<AnimationProfile>(systemAnimationProfileName);
@@ -789,7 +1028,7 @@ namespace AnyRPG {
             if (levelUpEffectName != null && levelUpEffectName != string.Empty) {
                 AbilityEffect testAbility = systemDataFactory.GetResource<AbilityEffect>(levelUpEffectName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + levelUpEffectName + " could not be found in factory.  CHECK INSPECTOR");
+                    Debug.LogError($"SystemConfigurationManager.SetupScriptableObjects(): {levelUpEffectName} could not be found in factory.  CHECK INSPECTOR");
                     return;
                 } else {
                     levelUpEffect = testAbility;
@@ -799,30 +1038,44 @@ namespace AnyRPG {
             if (deathEffectName != null && deathEffectName != string.Empty) {
                 AbilityEffect testAbility = systemDataFactory.GetResource<AbilityEffect>(deathEffectName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + deathEffectName + " could not be found in factory.  CHECK INSPECTOR");
+                    Debug.LogError($"SystemConfigurationManager.SetupScriptableObjects(): {deathEffectName} could not be found in factory.  CHECK INSPECTOR");
                     return;
                 } else {
                     deathEffect = testAbility;
                 }
             }
+
             if (lootSparkleEffectName != null && lootSparkleEffectName != string.Empty) {
                 AbilityEffect testAbility = systemDataFactory.GetResource<AbilityEffect>(lootSparkleEffectName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + lootSparkleEffectName + " could not be found in factory.  CHECK INSPECTOR");
+                    Debug.LogError($"SystemConfigurationManager.SetupScriptableObjects(): {lootSparkleEffectName} could not be found in factory.  CHECK INSPECTOR");
                     return;
                 } else {
                     lootSparkleEffect = testAbility;
                 }
             }
+
             if (currencyGroupName != null && currencyGroupName != string.Empty) {
                 CurrencyGroup tmpCurrencyGroup = systemDataFactory.GetResource<CurrencyGroup>(currencyGroupName);
                 if (tmpCurrencyGroup == null) {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + currencyGroupName + " could not be found in factory.  CHECK INSPECTOR");
+                    Debug.LogError($"SystemConfigurationManager.SetupScriptableObjects(): {currencyGroupName} could not be found in factory.  CHECK INSPECTOR");
                     return;
                 } else {
                     defaultCurrencyGroup = tmpCurrencyGroup;
                 }
             }
+
+            /*
+            if (postageCurrencyName != string.Empty) {
+                Currency tmpCurrency = systemDataFactory.GetResource<Currency>(postageCurrencyName);
+                if (tmpCurrency == null) {
+                    Debug.LogError($"SystemConfigurationManager.SetupScriptableObjects(): {postageCurrencyName} could not be found in factory.  CHECK INSPECTOR");
+                    return;
+                } else {
+                    postageCurrency = tmpCurrency;
+                }
+            }
+            */
 
             if (defaultAnimationProfile == null) {
                 Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): no default animation profile set.  CHECK INSPECTOR");
@@ -938,7 +1191,7 @@ namespace AnyRPG {
                 }
                 // it shouldn't be required to have this scene node
                 /* else {
-                    Debug.LogError("LevelManager.SetupScriptableObjects: could not find scene node " + initializationScene + ". Check inspector.");
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects: could not find scene node " + initializationScene + ". Check inspector.");
                 }*/
             }
 
@@ -947,11 +1200,20 @@ namespace AnyRPG {
                 if (tmpSceneNode != null) {
                     mainMenuSceneNode = tmpSceneNode;
                 }/* else {
-                    Debug.LogError("LevelManager.SetupScriptableObjects: could not find scene node " + mainMenuScene + ". Check inspector.");
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects: could not find scene node " + mainMenuScene + ". Check inspector.");
                 }*/
             }
 
-
+            foreach (string sceneName in lobbyGameSceneNames) {
+                if (sceneName != null && sceneName != string.Empty) {
+                    SceneNode tmpSceneNode = systemDataFactory.GetResource<SceneNode>(sceneName);
+                    if (tmpSceneNode != null) {
+                        lobbyGameScenes.Add(tmpSceneNode);
+                    } else {
+                        Debug.LogError($"SystemConfigurationManager.SetupScriptableObjects: could not find scene node {sceneName}. Check inspector.");
+                    }
+                }
+            }
 
 
         }
@@ -963,5 +1225,7 @@ namespace AnyRPG {
     public enum CharacterSelectionType { DefaultCharacter, CharacterList, RaceAndGender }
 
     public enum PlayerNameSource { DefaultPlayerName, UnitProfile }
+
+    public enum CameraViewMode { Free, Isometric }
 
 }

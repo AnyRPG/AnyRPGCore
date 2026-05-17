@@ -133,9 +133,9 @@ namespace AnyRPG {
             return returnList;
         }
 
-        public List<BaseAbilityProperties> GetAbilityList() {
+        public List<AbilityProperties> GetAbilityList() {
             //Debug.Log("CapabilityConsumerSnapshot.GetAbilityList()");
-            List<BaseAbilityProperties> returnList = new List<BaseAbilityProperties>();
+            List<AbilityProperties> returnList = new List<AbilityProperties>();
 
             foreach (ICapabilityProvider capabilityProvider in capabilityProviders) {
                 //Debug.Log("CapabilityConsumerSnapshot.GetAbilityList() process capabilityProvder: " + capabilityProvider.DisplayName);
@@ -152,10 +152,10 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="newCapabilityConsumerSnapshot"></param>
         /// <returns></returns>
-        public List<BaseAbilityProperties> GetAbilitiesToRemove(CapabilityConsumerSnapshot newCapabilityConsumerSnapshot) {
-            List<BaseAbilityProperties> returnList = new List<BaseAbilityProperties>();
+        public List<AbilityProperties> GetAbilitiesToRemove(CapabilityConsumerSnapshot newCapabilityConsumerSnapshot) {
+            List<AbilityProperties> returnList = new List<AbilityProperties>();
 
-            List<BaseAbilityProperties> currentList = GetAbilityList();
+            List<AbilityProperties> currentList = GetAbilityList();
 
             returnList.AddRange(currentList.Except(newCapabilityConsumerSnapshot.GetAbilityList()));
 
@@ -167,10 +167,10 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="newCapabilityConsumerSnapshot"></param>
         /// <returns></returns>
-        public List<BaseAbilityProperties> GetAbilitiesToAdd(CapabilityConsumerSnapshot newCapabilityConsumerSnapshot, CharacterAbilityManager sourceAbilityManager) {
-            List<BaseAbilityProperties> returnList = new List<BaseAbilityProperties>();
+        public List<AbilityProperties> GetAbilitiesToAdd(CapabilityConsumerSnapshot newCapabilityConsumerSnapshot, CharacterAbilityManager sourceAbilityManager) {
+            List<AbilityProperties> returnList = new List<AbilityProperties>();
 
-            List<BaseAbilityProperties> currentList = GetAbilityList();
+            List<AbilityProperties> currentList = GetAbilityList();
 
             returnList.AddRange(newCapabilityConsumerSnapshot.GetAbilityList().Except(currentList));
 

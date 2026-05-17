@@ -1,4 +1,5 @@
 using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,7 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class ActionButton : NavigableElement, IClickable {
+    public class ActionButton : NavigableElement, IClickable, IMoveableOwner {
 
         // A reference to the useable on the actionbutton
         protected IUseable useable = null;
@@ -54,8 +55,7 @@ namespace AnyRPG {
 
         // game manager references
         protected UIManager uIManager = null;
-        protected SystemEventManager systemEventManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected HandScript handScript = null;
         protected ActionBarManager actionBarManager = null;
         //InventoryManager inventoryManager = null;
@@ -70,6 +70,8 @@ namespace AnyRPG {
         public Coroutine MonitorCoroutine { get => monitorCoroutine; set => monitorCoroutine = value; }
         public Image BackgroundImage { get => backgroundImage; set => backgroundImage = value; }
         public Image RangeIndicator { get => rangeIndicator; }
+        public int ActionButtonIndex { get => actionButtonIndex; }
+        public IMoveable Moveable => useable as IMoveable;
 
         public override void Configure(SystemGameManager systemGameManager) {
             if (configureCount > 0) {
@@ -78,11 +80,9 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
-            systemEventManager = systemGameManager.SystemEventManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             handScript = uIManager.HandScript;
             actionBarManager = uIManager.ActionBarManager;
-            //inventoryManager = systemGameManager.InventoryManager;
 
             // setting useable to null should not be necessary since useable is already null at start
             //Useable = null;
@@ -98,7 +98,7 @@ namespace AnyRPG {
         }
 
 
-        public void SetIndex(int index) {
+        public void SetIndex(int index, bool gamepadButton) {
             actionButtonIndex = index;
             // for now, we only set index on gamepad buttons, so this call can tell the button it's a gamepad button
             gamepadButton = true;
@@ -122,7 +122,7 @@ namespace AnyRPG {
         public void OnClickFromButton() {
 
             // do not allow clicks to have any effect when gamepad mode is active to prevent pickup with hand script
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 //Debug.Log("ActionButton.OnClickFromButton() gamepad mode active, returning");
                 return;
             }
@@ -139,65 +139,64 @@ namespace AnyRPG {
                 if (Input.GetKey(KeyCode.LeftShift)) {
                     return;
                 }
-                if (handScript.Moveable != null) {
+                if (handScript.MoveableOwner != null) {
                     // if we have something in the handscript we are trying to drop an item, not use one
                     return;
                 }
             }
 
             if (Useable != null) {
-                Useable.ActionButtonUse();
+                Useable.ActionButtonUse(playerManagerClient.UnitController);
             }
         }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log("ActionButton.OnPointerClick()");
-
+        protected override void HandleLeftClick() {
             // do not allow clicks to have any effect when gamepad mode is active to prevent pickup with hand script
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 //Debug.Log("ActionButton.OnPointerClick() gamepad mode active, returning");
                 return;
             }
 
-            base.OnPointerClick(eventData);
-            if (playerManager.ActiveUnitController != null) {
-                if (playerManager.ActiveUnitController.ControlLocked == true) {
+            base.HandleLeftClick();
+            if (playerManagerClient.ActiveUnitController != null) {
+                if (playerManagerClient.ActiveUnitController.ControlLocked == true) {
                     return;
                 }
             }
 
-            // left click
-            if (eventData.button == PointerEventData.InputButton.Left) {
-
-                if (Input.GetKey(KeyCode.LeftShift)) {
-                    // attempt to pick up - the only valid option when shift is held down
-                    if (Useable != null && actionBarManager.FromButton == null && handScript.Moveable == null) {
-                        // left shift down, pick up a useable
-                        //Debug.Log("ActionButton: OnPointerClick(): shift clicked and useable is not null. picking up");
-                        handScript.TakeMoveable(Useable as IMoveable);
-                        actionBarManager.FromButton = this;
-                    }
-                } else {
-                    // attempt to put down
-                    if (handScript.Moveable != null && handScript.Moveable is IUseable) {
-                        if (actionBarManager.FromButton != this) {
-                            if (actionBarManager.FromButton != null) {
-                                //Debug.Log("ActionButton: OnPointerClick(): FROMBUTTON IS NOT NULL, SWAPPING ACTIONBAR ITEMS");
-                                // this came from another action button slot.  now decide to swap (if we are not empty), or remove from original (if we are empty)
-                                if (Useable != null) {
-                                    actionBarManager.FromButton.ClearUseable();
-                                    actionBarManager.FromButton.SetUseable(Useable);
-                                } else {
-                                    actionBarManager.FromButton.ClearUseable();
-                                }
+            if (Input.GetKey(KeyCode.LeftShift)) {
+                // attempt to pick up - the only valid option when shift is held down
+                if (Useable != null && actionBarManager.FromButton == null && handScript.MoveableOwner == null) {
+                    // left shift down, pick up a useable
+                    //Debug.Log("ActionButton: OnPointerClick(): shift clicked and useable is not null. picking up");
+                    handScript.TakeMoveable(this);
+                    actionBarManager.FromButton = this;
+                }
+            } else {
+                // attempt to put down
+                if (handScript.MoveableOwner != null && handScript.MoveableOwner.Moveable is IUseable) {
+                    if (actionBarManager.FromButton != this) {
+                        if (actionBarManager.FromButton != null) {
+                            //Debug.Log("ActionButton: OnPointerClick(): FROMBUTTON IS NOT NULL, SWAPPING ACTIONBAR ITEMS");
+                            // this came from another action button slot.  now decide to swap (if we are not empty), or remove from original (if we are empty)
+                            /*
+                            if (Useable != null) {
+                                actionBarManager.FromButton.ClearUseable();
+                                actionBarManager.FromButton.SetUseable(Useable);
+                            } else {
+                                actionBarManager.FromButton.ClearUseable();
                             }
-                            // no matter whether we sent our useable over or not, we can now clear our useable and set whatever is in the handscript
-                            ClearUseable();
-                            SetUseable(handScript.Moveable as IUseable);
+                            */
+                            actionBarManager.RequestMoveMouseUseable(actionBarManager.FromButton.actionButtonIndex, actionButtonIndex);
+                        } else {
+                            actionBarManager.RequestAssignMouseUseable(handScript.MoveableOwner.Moveable as IUseable, actionButtonIndex);
                         }
-
-                        handScript.Drop();
+                        // no matter whether we sent our useable over or not, we can now clear our useable and set whatever is in the handscript
+                        //ClearUseable();
+                        //SetUseable(handScript.Moveable as IUseable);
                     }
+
+                    handScript.CancelMove();
                 }
             }
         }
@@ -225,28 +224,17 @@ namespace AnyRPG {
         /// <summary>
         /// Sets the useable on the actionbutton
         /// </summary>
-        /// <param name="useable"></param>
-        public void SetUseable(IUseable useable, bool monitor = true) {
-            //Debug.Log($"{gameObject.name}.ActionButton.SetUsable(" + (useable == null ? "null" : useable.DisplayName) + ")");
+        /// <param name="newUseable"></param>
+        public void SetUseable(IUseable newUseable, bool monitor = true) {
+            //Debug.Log($"{gameObject.name}.ActionButton.SetUsable({(useable == null ? "null" : useable.ResourceName)}, {monitor})");
 
-            playerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility -= OnAttemptUseableUse;
-            playerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility -= OnUseableUse;
-            playerManager.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown -= HandleBeginAbilityCooldown;
+            ClearUseable();
 
-            UnsubscribeFromCombatEvents();
+            newUseable.AssignToActionButton(this);
 
-            DisableCoolDownIcon();
+            LoadUseable(newUseable);
 
-            useable.AssignToActionButton(this);
-
-            // replaced with new call
-            //Useable = useable;
-            LoadUseable(useable);
-
-            playerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility += OnAttemptUseableUse;
-            playerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility += OnUseableUse;
-            playerManager.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown += HandleBeginAbilityCooldown;
-
+            SubscribeToAbilityEvents();
             SubscribeToCombatEvents();
             SubscribeToStealthEvents();
 
@@ -258,38 +246,73 @@ namespace AnyRPG {
             // there was the assumption that these were only being called when a player clicked to add an ability
             if (UIManager.MouseInRect(Icon.rectTransform)) {
                 //uIManager.ShowToolTip(transform.position, useable as IDescribable);
-                uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable, "");
+                uIManager.ShowGamepadTooltip(tooltipTransform, transform, newUseable as IDescribable);
 
             }
 
-            //if (gamepadButton == true) {
-            //rangeIndicator.color = Color.white;
-            //}
+        }
+
+        public void SubscribeToAbilityEvents() {
+            //Debug.Log($"{gameObject.name}.ActionButton.SubscribeToAbilityEvents()");
+
+            playerManagerClient.UnitController.UnitEventController.OnAttemptPerformAbility += HandleAttemptPerformAbility;
+            playerManagerClient.UnitController.UnitEventController.OnPerformAbility += HandlePerformAbility;
+            playerManagerClient.UnitController.UnitEventController.OnBeginAbilityCoolDown += HandleBeginAbilityCooldown;
+            playerManagerClient.UnitController.UnitEventController.OnBeginActionCoolDown += HandleBeginActionCooldown;
+        }
+
+        public void SubscribeToAutoAttackEvents() {
+            //Debug.Log($"{gameObject.name}.ActionButton.SubscribeToAutoAttackEvents()");
+
+            playerManagerClient.UnitController.UnitEventController.OnActivateAutoAttack += HandleActivateAutoAttack;
+        }
+
+
+        public void UnsubscribeFromAutoAttackEvents() {
+            //Debug.Log($"{gameObject.name}.ActionButton.UnsubscribeFromAutoAttackEvents()");
+
+            playerManagerClient.UnitController.UnitEventController.OnActivateAutoAttack -= HandleActivateAutoAttack;
+        }
+
+        private void HandleActivateAutoAttack() {
+            //Debug.Log($"{gameObject.name}.ActionButton.HandleActivateAutoAttack()");
+
+            if (monitorCoroutine == null && gameObject.activeInHierarchy == true) {
+                monitorCoroutine = StartCoroutine(MonitorAutoAttack());
+            }
         }
 
         public void SubscribeToCombatEvents() {
             if (Useable != null && Useable.RequireOutOfCombat == true) {
-                playerManager.MyCharacter.CharacterCombat.OnEnterCombat += HandleEnterCombat;
-                playerManager.MyCharacter.CharacterCombat.OnDropCombat += HandleDropCombat;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnEnterCombat += HandleEnterCombat;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnDropCombat += HandleDropCombat;
             }
         }
 
         public void SubscribeToStealthEvents() {
             if (Useable != null && Useable.RequireStealth == true) {
-                playerManager.MyCharacter.CharacterStats.OnEnterStealth += HandleEnterStealth;
-                playerManager.MyCharacter.CharacterStats.OnLeaveStealth += HandleLeaveStealth;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnEnterStealth += HandleEnterStealth;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnLeaveStealth += HandleLeaveStealth;
             }
         }
 
-        public void OnAttemptUseableUse(BaseAbilityProperties ability) {
+        public void HandleAttemptPerformAbility(AbilityProperties ability) {
             //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + ")");
             ChooseMonitorCoroutine();
         }
 
-        public void HandleBeginAbilityCooldown() {
-            //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + ")");
+        public void HandleBeginAbilityCooldown(AbilityProperties abilityProperties, float coolDownLength) {
+            //Debug.Log($"{gameObject.name}.ActionButton.HandleBeginAbilityCooldown({abilityProperties.ResourceName}, {coolDownLength})");
+
             ChooseMonitorCoroutine();
         }
+
+        private void HandleBeginActionCooldown(InstantiatedActionItem item, float coolDownLength) {
+            //Debug.Log($"{gameObject.name}.ActionButton.HandleBeginActionCooldown({item.ResourceName}, {coolDownLength})");
+
+            ChooseMonitorCoroutine();
+        }
+
 
         public void ChooseMonitorCoroutine() {
             // if this action button is empty, there is nothing to monitor
@@ -310,18 +333,18 @@ namespace AnyRPG {
             }
         }
 
-        public void OnUseableUse(BaseAbilityProperties ability) {
+        public void HandlePerformAbility(UnitController sourceUnitController, AbilityProperties ability) {
             //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + ")");
             ChooseMonitorCoroutine();
         }
 
-        public IEnumerator MonitorAutoAttack(BaseAbilityProperties ability) {
+        public IEnumerator MonitorAutoAttack() {
             //Debug.Log("ActionButton.MonitorautoAttack(" + ability.DisplayName + ")");
             yield return null;
 
             while (Useable != null
-                && playerManager.MyCharacter.CharacterCombat.GetInCombat() == true
-                && playerManager.MyCharacter.CharacterCombat.AutoAttackActive == true) {
+                && playerManagerClient.UnitController.CharacterCombat.GetInCombat() == true
+                && playerManagerClient.UnitController.CharacterCombat.AutoAttackActive == true) {
                 UpdateVisual();
                 yield return new WaitForSeconds(0.5f);
             }
@@ -337,7 +360,7 @@ namespace AnyRPG {
         public IEnumerator MonitorCooldown(IUseable useable) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
             while (Useable != null
-                && playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(useable.DisplayName)) {
+                && playerManagerClient.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(useable.DisplayName)) {
                 UpdateVisual();
                 yield return null;
             }
@@ -354,8 +377,8 @@ namespace AnyRPG {
         public IEnumerator MonitorAbility(string abilityName) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
             while (Useable != null
-                && (playerManager.MyCharacter.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
-                || playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(abilityName))) {
+                && (playerManagerClient.UnitController.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
+                || playerManagerClient.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(abilityName))) {
                 UpdateVisual();
                 yield return null;
             }
@@ -383,7 +406,10 @@ namespace AnyRPG {
         /// attempt to remove unlearned spells from the button
         /// </summary>
         public void RemoveStaleActions() {
-            if (Useable != null && Useable.IsUseableStale() == true) {
+            //Debug.Log($"{gameObject.name}.ActionButton.RemoveStaleActions()");
+
+            if (Useable != null && Useable.IsUseableStale(playerManagerClient.UnitController) == true) {
+                //Debug.Log($"{gameObject.name}.ActionButton.RemoveStaleActions() removing useable: {Useable.ResourceName}");
                 savedUseable = Useable;
                 useable = null;
                 UpdateVisual();
@@ -394,8 +420,9 @@ namespace AnyRPG {
         /// Updates the visual representation of the actionbutton
         /// </summary>
         public void UpdateVisual() {
-            //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.UpdateVisual() useable: " + (useable == null ? "null" : useable.DisplayName));
-            if (playerManager == null || playerManager.MyCharacter == null) {
+            //Debug.Log($"{gameObject.name} ({GetInstanceID()}).ActionButton.UpdateVisual() useable: {(useable == null ? "null" : useable.DisplayName)}");
+
+            if (playerManagerClient == null || playerManagerClient.UnitController == null) {
                 return;
             }
 
@@ -428,7 +455,7 @@ namespace AnyRPG {
             }
 
             //Debug.Log("ActionButton.UpdateVisual(): about to get useable count");
-            Useable.UpdateChargeCount(this);
+            UpdateChargeCount();
             Useable.UpdateActionButtonVisual(this);
 
             // if this object is disabled, then there is no reason to process pointer enter
@@ -441,8 +468,13 @@ namespace AnyRPG {
             }
         }
 
+        public void UpdateChargeCount() {
+            uIManager.UpdateStackSize(this, Useable.GetChargeCount(), useable is InstantiatedItem);
+        }
+
         public void EnableFullCoolDownIcon() {
-            //Debug.Log("ActionButton.EnableFullCoolDownIcon(): useable: " + (useable == null ? "null" : useable.DisplayName));
+            //Debug.Log($"ActionButton.EnableFullCoolDownIcon(): useable: {(useable == null ? "null" : useable.DisplayName)}");
+
             if (coolDownIcon.isActiveAndEnabled == false) {
                 coolDownIcon.enabled = true;
             }
@@ -460,9 +492,10 @@ namespace AnyRPG {
             }
         }
 
-        public void UpdateItemCount(Item item) {
+        public void UpdateItemCount(UnitController unitController, Item item) {
+            //Debug.Log($"{gameObject.name}.ActionButton.UpdateItemCount({unitController.gameObject.name}, {(item == null ? "null" : item.ResourceName)})");
 
-            if (item is IUseable) {
+            if (useable != null && useable is InstantiatedItem && (useable as InstantiatedItem).Item == item) {
                 UpdateVisual();
             }
         }
@@ -482,7 +515,7 @@ namespace AnyRPG {
             }
             if (tmp != null) {
                 //uIManager.ShowToolTip(transform.position, tmp);
-                uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable, "");
+                uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable);
 
             }
         }
@@ -494,34 +527,43 @@ namespace AnyRPG {
 
         public void UnsubscribeFromCombatEvents() {
             if (Useable != null && Useable.RequireOutOfCombat == true) {
-                playerManager.MyCharacter.CharacterCombat.OnEnterCombat -= HandleEnterCombat;
-                playerManager.MyCharacter.CharacterCombat.OnDropCombat -= HandleDropCombat;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnEnterCombat -= HandleEnterCombat;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnDropCombat -= HandleDropCombat;
             }
         }
 
         public void UnsubscribeFromStealthEvents() {
             if (Useable != null && Useable.RequireStealth == true) {
-                playerManager.MyCharacter.CharacterStats.OnEnterStealth -= HandleEnterStealth;
-                playerManager.MyCharacter.CharacterStats.OnLeaveStealth -= HandleLeaveStealth;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnEnterStealth -= HandleEnterStealth;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnLeaveStealth -= HandleLeaveStealth;
             }
         }
 
 
         public void ClearUseable() {
-            //Debug.Log("ActionButton.ClearUseable()");
+            //Debug.Log($"{gameObject.name}.ActionButton.ClearUseable()");
 
-            UnsubscribeFromCombatEvents();
-            if (Useable != null) {
+            if (useable != null) {
+                //Debug.Log($"{gameObject.name}.ActionButton.ClearUseable() useable: {Useable.ResourceName}");
+                UnsubscribeFromAbilityEvents();
+                UnsubscribeFromCombatEvents();
+                UnsubscribeFromStealthEvents();
+                useable.HandleRemoveFromActionButton(this);
+
                 savedUseable = Useable;
+                useable = null;
+
+                UpdateVisual();
             }
-            useable = null;
+        }
 
-            // disablecooldownIcon is done in updatevisual
-            //DisableCoolDownIcon();
-            UpdateVisual();
+        public void UnsubscribeFromAbilityEvents() {
+            //Debug.Log($"{gameObject.name}.ActionButton.UnsubscribeFromAbilityEvents()");
 
-            // hiderangeindicator is done in updatevisual
-            //HideRangeIndicator();
+            playerManagerClient.UnitController.UnitEventController.OnAttemptPerformAbility -= HandleAttemptPerformAbility;
+            playerManagerClient.UnitController.UnitEventController.OnPerformAbility -= HandlePerformAbility;
+            playerManagerClient.UnitController.UnitEventController.OnBeginAbilityCoolDown -= HandleBeginAbilityCooldown;
+            playerManagerClient.UnitController.UnitEventController.OnBeginActionCoolDown -= HandleBeginActionCooldown;
         }
 
         public override void Select() {
@@ -529,7 +571,7 @@ namespace AnyRPG {
             if (useable != null) {
                 owner.SetControllerHints("Move", "Clear", "", "", "", "");
                 if (tooltipTransform != null) {
-                    uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable, "");
+                    uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable);
                 }
             } else {
                 owner.HideControllerHints();
@@ -548,7 +590,7 @@ namespace AnyRPG {
             if (useable == null) {
                 return;
             }
-            actionBarManager.ClearUseableByIndex(actionButtonIndex);
+            actionBarManager.RequestClearGamepadUseable(actionButtonIndex);
             uIManager.HideToolTip();
             owner.HideControllerHints();
         }
@@ -561,10 +603,14 @@ namespace AnyRPG {
             actionBarManager.StartUseableAssignment(useable, actionButtonIndex);
 
             // ensure the assignment window is set to the same navigation controller and element index so the move starts in the same spot on the screen
-            (uIManager.assignToActionBarsWindow.CloseableWindowContents as AssignToActionBarsUI).SetNavigationControllerByIndex(windowPanel.GetNavigationControllerIndex());
-            (uIManager.assignToActionBarsWindow.CloseableWindowContents as AssignToActionBarsUI).CurrentNavigationController.SetCurrentIndex(windowPanel.CurrentNavigationController.CurrentIndex);
+            (uIManager.assignToActionBarsWindow.CloseableWindowContents as AssignToActionBarsPanel).SetNavigationControllerByIndex(windowPanel.GetNavigationControllerIndex());
+            (uIManager.assignToActionBarsWindow.CloseableWindowContents as AssignToActionBarsPanel).CurrentNavigationController.SetCurrentIndex(windowPanel.CurrentNavigationController.CurrentIndex);
 
             uIManager.assignToActionBarsWindow.OpenWindow();
+        }
+
+        public void CancelHandscriptMove() {
+            //Debug.Log("ActionButton.CancelHandscriptMove()");
         }
     }
 

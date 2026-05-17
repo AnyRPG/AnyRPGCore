@@ -25,13 +25,13 @@ namespace AnyRPG {
         public Vector3 VirtualCursor { get => virtualCursor; }
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected CameraManager cameraManager = null;
         protected ControlsManager controlsManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             cameraManager = systemGameManager.CameraManager;
             controlsManager = systemGameManager.ControlsManager;
         }
@@ -46,7 +46,7 @@ namespace AnyRPG {
 
         void Update() {
             //Debug.Log("CastTargettingController.Update()");
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 FollowVirtualCursor();
             } else {
                 FollowMouse();
@@ -67,7 +67,7 @@ namespace AnyRPG {
         }
 
         private void FollowVirtualCursor() {
-            if (playerManager.ActiveUnitController == null) {
+            if (playerManagerClient.ActiveUnitController == null) {
                 return;
             }
             virtualCursor.x += Input.GetAxis("RightAnalogHorizontal");
@@ -77,7 +77,7 @@ namespace AnyRPG {
 
         private void FollowMouse() {
             //Debug.Log("CastTargettingController.FollowMouse()");
-            if (playerManager.ActiveUnitController == null) {
+            if (playerManagerClient.ActiveUnitController == null) {
                 return;
             }
             if (!EventSystem.current.IsPointerOverGameObject()) {
@@ -89,10 +89,10 @@ namespace AnyRPG {
             Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(followVector);
             RaycastHit hit;
             //if (Physics.Raycast(ray, out hit, 100)) {
-            if (Physics.Raycast(ray, out hit, 100, playerManager.PlayerController.movementMask.value)) {
+            if (Physics.Raycast(ray, out hit, 100, systemConfigurationManager.DefaultGroundMask)) {
                 //Debug.Log("CastTargettingController.FollowMouse() hit movement mask at hit.point: " + hit.point + "; gameObject: " + hit.transform.gameObject.name + hit.transform.gameObject.layer);
                 Vector3 cameraPoint = new Vector3(hit.point.x, hit.point.y + 0.1f, hit.point.z);
-                if (Vector3.Distance(hit.point, playerManager.ActiveUnitController.transform.position) < 40f) {
+                if (Vector3.Distance(hit.point, playerManagerClient.ActiveUnitController.transform.position) < 40f) {
                     //Debug.Log("CastTargettingController.FollowMouse() hit movement mask and was within 40 meters from player");
                     this.transform.position = cameraPoint;
                 }

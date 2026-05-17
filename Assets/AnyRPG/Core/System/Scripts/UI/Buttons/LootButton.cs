@@ -20,13 +20,24 @@ namespace AnyRPG {
         [SerializeField]
         protected TextMeshProUGUI title = null;
 
-        protected LootUI lootWindow = null;
+        protected LootPanel lootWindow = null;
 
         protected LootDrop lootDrop = null;
+
+        // game manager references
+        protected PlayerManagerClient playerManagerClient = null;
+        protected LootManager lootManager = null;
 
         public TextMeshProUGUI Title { get => title; }
         public Image Icon { get => icon; }
         public LootDrop LootDrop { get => lootDrop; }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+            lootManager = systemGameManager.LootManager;
+        }
 
         public void SetLootDrop(LootDrop lootDrop) {
             //Debug.Log($"{gameObject.name}.LootButton.SetLootDrop(" + lootDrop.DisplayName + ")");
@@ -56,7 +67,7 @@ namespace AnyRPG {
                 return;
             }
 
-            LootDrop.TakeLoot();
+            lootManager.RequestTakeLoot(LootDrop, playerManagerClient.UnitController);
         }
 
         public override void OnPointerEnter(PointerEventData eventData) {
@@ -74,8 +85,18 @@ namespace AnyRPG {
             uIManager.HideToolTip();
         }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            base.OnPointerClick(eventData);
+        protected override void HandleLeftClick() {
+            base.HandleLeftClick();
+            if (LootDrop == null) {
+                return;
+            }
+
+            // loot the item
+            TakeLoot();
+        }
+
+        protected override void HandleRightClick() {
+            base.HandleRightClick();
             if (LootDrop == null) {
                 return;
             }
@@ -90,7 +111,7 @@ namespace AnyRPG {
         }
 
         public void ShowGamepadTooltip() {
-            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, lootDrop, "");
+            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, lootDrop);
         }
 
         public override void Select() {

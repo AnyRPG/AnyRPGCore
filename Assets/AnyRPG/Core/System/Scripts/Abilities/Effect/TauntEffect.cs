@@ -10,7 +10,7 @@ namespace AnyRPG {
     public class TauntEffect : AbilityEffect {
 
         [SerializeField]
-        private TauntEffectProperties tauntEffectProperties = new TauntEffectProperties();
+        public TauntEffectProperties tauntEffectProperties = new TauntEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => tauntEffectProperties; }
 

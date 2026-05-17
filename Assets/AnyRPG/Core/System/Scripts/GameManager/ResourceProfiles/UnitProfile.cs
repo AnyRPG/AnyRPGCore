@@ -6,6 +6,16 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Unit Profile", menuName = "AnyRPG/UnitProfile")]
     public class UnitProfile : DescribableResource, IStatProvider, ICapabilityProvider, ISerializationCallbackReceiver, IUUID {
 
+        [Header("Nameplate")]
+
+        [Tooltip("If true, this unit will have a nameplate over its head.")]
+        [SerializeField]
+        private bool hasNameplate = true;
+
+        [Tooltip("If true, the nameplate will show the title instead of the faction.  If true, the title will show in the nameplate instead of the faction.  If false, the faction will show in the nameplate instead of the title.  This only applies if a title is set.  If no title is set, the faction will be used regardless of this setting.")]
+        [SerializeField]
+        private bool suppressNameplateFaction = false;
+
         [Header("Unit Prefab")]
 
         [Tooltip("If true, the unit prefab is loaded by searching for a UnitPrefabProfile with the same name as this resource.")]
@@ -130,7 +140,7 @@ namespace AnyRPG {
         [SerializeField]
         private CapabilityProps capabilities = new CapabilityProps();
 
-        private BaseAbilityProperties defaultAutoAttackAbility = null;
+        private AbilityProperties defaultAutoAttackAbility = null;
 
         [Tooltip("Stats available to this unit, in addition to the stats defined at the system level that all character use")]
         [FormerlySerializedAs("statScaling")]
@@ -250,6 +260,12 @@ namespace AnyRPG {
         [SerializeField]
         private bool persistObjectPosition = false;
 
+        /*
+        [Tooltip("If true, the character will save it state. This option only applies to AI units, and result in the same level of save data as a player save.")]
+        [SerializeField]
+        private bool persistCharacterState = false;
+        */
+
         [Tooltip("If true, this object will save it's position when switching from one scene to another (including the main menu).  It will not save if the game is quit directly from the main menu.")]
         [SerializeField]
         private bool saveOnLevelUnload = false;
@@ -277,7 +293,6 @@ namespace AnyRPG {
         private string m_IDBackup = null;
 
         // game manager references
-
         private ObjectPooler objectPooler = null;
 
         public string ID { get => m_UUID; set => m_UUID = value; }
@@ -300,7 +315,7 @@ namespace AnyRPG {
         }
 
         public UnitToughness DefaultToughness { get => unitToughness; set => unitToughness = value; }
-        public BaseAbilityProperties DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
+        public AbilityProperties DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
         public bool IsPet { get => isPet; set => isPet = value; }
         public FootstepType FootstepType { get => footstepType; set => footstepType = value; }
         public bool PlayOnFootstep { get => playOnFootstep; set => playOnFootstep = value; }
@@ -324,8 +339,10 @@ namespace AnyRPG {
         public VoiceProps VoiceProps {
             get {
                 if (useInlineVoiceProps) {
+                    //Debug.Log($"{ResourceName}.UnitProfile.VoiceProps: using inline voice props");
                     return voiceProps;
                 }
+                //Debug.Log($"{ResourceName}.UnitProfile.VoiceProps: using voiceProfileProps");
                 return voiceProfileProps;
             }
         }
@@ -358,6 +375,10 @@ namespace AnyRPG {
         public List<string> MovementAudioProfileNames { get => movementAudioProfileNames; set => movementAudioProfileNames = value; }
         public bool FaceInteractionTarget { get => faceInteractionTarget; set => faceInteractionTarget = value; }
         public List<AbilityEffectProperties> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
+        public bool SuppressNameplateFaction { get => suppressNameplateFaction; set => suppressNameplateFaction = value; }
+        public bool HasNameplate { get => hasNameplate; set => hasNameplate = value; }
+
+        //public bool PersistCharacterState { get => persistCharacterState; set => persistCharacterState = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -389,50 +410,6 @@ namespace AnyRPG {
     }
     */
 
-        /// <summary>
-        /// spawn unit with parent. rotation and position from settings
-        /// </summary>
-        /// <param name="parentTransform"></param>
-        /// <param name="settingsTransform"></param>
-        /// <returns></returns>
-        public UnitController SpawnUnitPrefab(Transform parentTransform, Vector3 position, Vector3 forward, UnitControllerMode unitControllerMode, int unitLevel = -1) {
-            GameObject prefabObject = SpawnPrefab(UnitPrefabProps.UnitPrefab, parentTransform, position, forward);
-            UnitController unitController = null;
-            if (prefabObject != null) {
-                unitController = prefabObject.GetComponent<UnitController>();
-                if (unitController != null) {
-
-                    // give this unit a unique name
-                    unitController.gameObject.name = ResourceName.Replace(" ", "") + systemGameManager.GetSpawnCount();
-                    unitController.Configure(systemGameManager);
-                    // test - set unitprofile first so we don't overwrite players baseCharacter settings
-                    unitController.SetUnitProfile(this, unitControllerMode, unitLevel);
-                }
-            }
-
-            return unitController;
-        }
-
-        /// <summary>
-        /// spawn unit with parent. rotation and position from settings
-        /// </summary>
-        /// <param name="parentTransform"></param>
-        /// <param name="settingsTransform"></param>
-        /// <returns></returns>
-        public GameObject SpawnModelPrefab(Transform parentTransform, Vector3 position, Vector3 forward) {
-            return SpawnPrefab(UnitPrefabProps.ModelPrefab, parentTransform, position, forward);
-        }
-
-        public GameObject SpawnPrefab(GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward) {
-            if (spawnPrefab == null) {
-                return null;
-            }
-
-            GameObject prefabObject = objectPooler.GetPooledObject(spawnPrefab, position, (forward == Vector3.zero ? Quaternion.identity : Quaternion.LookRotation(forward)), parentTransform);
-
-            return prefabObject;
-        }
-
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
             /*
@@ -440,6 +417,8 @@ namespace AnyRPG {
             if (defaultAutoAttackAbilityName != null && defaultAutoAttackAbilityName != string.Empty) {
                 defaultAutoAttackAbility = systemDataFactory.GetResource<BaseAbility>(defaultAutoAttackAbilityName);
             }*/
+
+            voiceProps.Configure(systemGameManager);
 
             if (unitToughness == null && defaultToughness != null && defaultToughness != string.Empty) {
                 UnitToughness tmpToughness = systemDataFactory.GetResource<UnitToughness>(defaultToughness);
@@ -563,12 +542,13 @@ namespace AnyRPG {
 
             SetupUnitPrefabProps();
 
-            if (voiceProfile != null && voiceProfile != string.Empty) {
+            if (voiceProfile != string.Empty) {
                 VoiceProfile tmpVoiceProfile = systemDataFactory.GetResource<VoiceProfile>(voiceProfile);
                 if (tmpVoiceProfile != null) {
+                    //Debug.Log($"{ResourceName}.UnitProfile.SetupScriptableObjects(): Loaded voice profile {voiceProfile}");
                     voiceProfileProps = tmpVoiceProfile.VoiceProps;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find voice profile : " + voiceProfile + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError($"UnitProfile.SetupScriptableObjects(): Could not find voice profile : {voiceProfile} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
 
@@ -580,7 +560,7 @@ namespace AnyRPG {
                         if (interactableOptionConfig != null && interactableOptionConfig.InteractableOptionProps != null) {
                             interactableOptionProps.Add(interactableOptionConfig.InteractableOptionProps);
                         } else {
-                            Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find interactableOptionConfig: " + interactableOptionName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                            Debug.LogError($"UnitProfile.SetupScriptableObjects(): Could not find interactableOptionConfig: {interactableOptionName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                         }
                     }
                 }
@@ -613,7 +593,7 @@ namespace AnyRPG {
                     unitPrefabProps = tmpPrefabProfile.UnitPrefabProps;
                     return;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find prefab profile : " + prefabProfileName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError($"UnitProfile.SetupScriptableObjects(): Could not find prefab profile : {prefabProfileName} while inititalizing {name}.  CHECK INSPECTOR");
                 }
             }
 

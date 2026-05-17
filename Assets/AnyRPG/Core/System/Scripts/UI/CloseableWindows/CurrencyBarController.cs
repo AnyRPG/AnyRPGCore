@@ -19,11 +19,15 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        private bool hideZeroAmounts = false;
+
         // game manager references
         private CurrencyConverter currencyConverter = null;
 
         [SerializeField]
         protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
+
+        public bool HideZeroAmounts { get => hideZeroAmounts; set => hideZeroAmounts = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -55,7 +59,9 @@ namespace AnyRPG {
                 currencyAmountController.gameObject.SetActive(false);
             }
             //currencyAmountControllers.Clear();
-            priceText.gameObject.SetActive(false);
+            if (priceText != null) {
+                priceText.gameObject.SetActive(false);
+            }
         }
 
         public void UpdateCurrencyAmount(Currency currency, int currencyAmount) {
@@ -69,7 +75,6 @@ namespace AnyRPG {
             Dictionary<Currency, int> currencyList = currencyConverter.RedistributeCurrency(currency, currencyAmount);
 
             ClearCurrencyAmounts();
-            // spawn new ones
 
             if (priceText != null) {
                 if (priceString != string.Empty) {
@@ -78,16 +83,28 @@ namespace AnyRPG {
                 }
             }
             int counter = 0;
+            bool nonZeroFound = false;
             foreach (KeyValuePair<Currency, int> currencyPair in currencyList) {
                 //Debug.Log($"{gameObject.name}.CurrencyBarController.UpdateCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + "): currencyPair.Key: " + currencyPair.Key + "; currencyPair.Value: " + currencyPair.Value);
                 if (currencyAmountControllers.Count > counter) {
                     CurrencyAmountController currencyAmountController = currencyAmountControllers[counter];
                     currencyAmountController.gameObject.SetActive(true);
+                    if (currencyPair.Value > 0 && nonZeroFound == false) {
+                        nonZeroFound = true;
+                    }
                     if (currencyAmountController.CurrencyIcon != null) {
-                        currencyAmountController.CurrencyIcon.SetDescribable(currencyPair.Key);
+                        if (currencyPair.Value == 0 && (nonZeroFound == false && hideZeroAmounts == true)) {
+                            currencyAmountController.CurrencyIcon.SetDescribable(null);
+                        } else {
+                            currencyAmountController.CurrencyIcon.SetDescribable(currencyPair.Key);
+                        }
                     }
                     if (currencyAmountController.AmountText != null) {
-                        currencyAmountController.AmountText.text = currencyPair.Value.ToString();
+                        if (currencyPair.Value == 0 && (nonZeroFound == false && hideZeroAmounts == true)) {
+                            currencyAmountController.AmountText.text = string.Empty;
+                        } else {
+                            currencyAmountController.AmountText.text = currencyPair.Value.ToString();
+                        }
                     }
                 }
                 counter += 1;

@@ -1,4 +1,5 @@
 using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -194,12 +195,31 @@ namespace AnyRPG {
         }
 
         public virtual void OnPointerClick(PointerEventData eventData) {
+            if (eventData.button == PointerEventData.InputButton.Left) {
+                HandleLeftClick();
+            }
+            if (eventData.button == PointerEventData.InputButton.Right) {
+                HandleRightClick();
+            }
+            if (eventData.button == PointerEventData.InputButton.Middle) {
+                HandleMiddleClick();
+            }
         }
+
 
         public virtual void OnPointerDown(PointerEventData eventData) {
         }
 
         public virtual void OnPointerUp(PointerEventData eventData) {
+        }
+
+        protected virtual void HandleRightClick() {
+        }
+
+        protected virtual void HandleLeftClick() {
+        }
+
+        protected virtual void HandleMiddleClick() {
         }
 
         public virtual void Select() {

@@ -98,7 +98,7 @@ namespace AnyRPG {
             // this next check is to ensure we don't accidentally edit the base game manager prefab and affect all games in this Unity project
             // we only want to edit the game manager prefab variant for the current game
             if (systemConfigurationManager == null) {
-                SceneConfig sceneConfig = GameObject.FindObjectOfType<SceneConfig>();
+                SceneConfig sceneConfig = GameObject.FindAnyObjectByType<SceneConfig>();
                 if (sceneConfig != null) {
                     // if no system configuration manager was in the scene, but we did find a sceneConfig, then we already have a direct reference to the
                     // correct prefab variant on disk through the sceneConfig.  In this case, we can return it directly
@@ -114,7 +114,7 @@ namespace AnyRPG {
         }
 
         public static SystemConfigurationManager GetSceneSystemConfigurationManager() {
-            return GameObject.FindObjectOfType<SystemConfigurationManager>();
+            return GameObject.FindAnyObjectByType<SystemConfigurationManager>();
         }
 
         public static bool CheckFileExists(string partialFilePath, string messageString) {

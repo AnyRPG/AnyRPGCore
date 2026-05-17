@@ -1,30 +1,14 @@
-using AnyRPG;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
     public class UnitAnimator : ConfiguredClass {
 
-        // events
-        public event System.Action OnReviveComplete = delegate { };
-        public event System.Action<bool> OnStartCasting = delegate { };
-        public event System.Action<bool> OnEndCasting = delegate { };
-        public event System.Action<bool> OnStartActing = delegate { };
-        public event System.Action<bool> OnEndActing = delegate { };
-        public event System.Action<bool> OnStartAttacking = delegate { };
-        public event System.Action<bool> OnEndAttacking = delegate { };
-        public event System.Action OnStartLevitated = delegate { };
-        public event System.Action<bool> OnEndLevitated = delegate { };
-        public event System.Action OnStartStunned = delegate { };
-        public event System.Action<bool> OnEndStunned = delegate { };
-        public event System.Action OnStartRevive = delegate { };
-        public event System.Action OnDeath = delegate { };
-
         // components
         private Animator animator = null;
+
+        // reference to the system animation profile
+        //private AnimationProfile systemAnimationProfile = null;
 
         // reference to default animation profile
         private AnimationProps defaultAnimationProps = null;
@@ -35,8 +19,8 @@ namespace AnyRPG {
         private RuntimeAnimatorController animatorController = null;
         private AnimatorOverrideController overrideController = null;
 
-        private RuntimeAnimatorController thirdPartyAnimatorController = null;
-        private AnimatorOverrideController thirdPartyOverrideController = null;
+        //private RuntimeAnimatorController thirdPartyAnimatorController = null;
+        //private AnimatorOverrideController thirdPartyOverrideController = null;
 
         // have to keep track of current override controller separately
         private AnimatorOverrideController currentOverrideController = null;
@@ -101,8 +85,6 @@ namespace AnyRPG {
         private float baseCombatWalkStrafeForwardLeftAnimationSpeed = 1f;
         private float baseCombatJogStrafeForwardLeftAnimationSpeed = 2.67f;
 
-        private Coroutine resurrectionCoroutine = null;
-
         private Dictionary<AnimatorOverrideController, List<string>> animatorParameters = new Dictionary<AnimatorOverrideController, List<string>>();
 
         protected bool componentReferencesInitialized = false;
@@ -125,7 +107,7 @@ namespace AnyRPG {
         public UnitAnimator(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
             Configure(systemGameManager);
-            systemAnimations = systemConfigurationManager.SystemAnimationProfile.AnimationProps;
+            systemAnimations = systemConfigurationManager.SystemAnimationProfile?.AnimationProps;
             currentAnimationProps = new AnimationProps();
             currentAnimationProps.Configure();
 
@@ -143,6 +125,7 @@ namespace AnyRPG {
 
             animatorController = systemConfigurationManager.DefaultAnimatorController;
             defaultAnimationProps = systemConfigurationManager.DefaultAnimationProfile.AnimationProps;
+            //systemAnimationProfile = systemConfigurationManager.SystemAnimationProfile;
 
             // out of combat animations
             animationSpeeds.Add("WalkClip", 1f);
@@ -223,7 +206,8 @@ namespace AnyRPG {
         }
 
         public void Init(Animator animator) {
-            //animator = unitController.gameObject.GetComponentInChildren<Animator>();
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.Init({animator.GetInstanceID()})");
+
             if (animator == null) {
                 return;
             }
@@ -236,8 +220,16 @@ namespace AnyRPG {
             }
             characterAnimationEventReceiver.Setup(unitController);
             InitializeAnimator();
+            //unitController.UnitModelController.OnModelCreated += HandleModelCreated;
         }
 
+        /*
+        public void SetAnimator(Animator animator) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetAnimator({animator.GetInstanceID()})");
+
+            this.animator = animator;
+        }
+        */
 
         public void DisableRootMotion() {
             //Debug.Log($"{gameObject.name}: CharacterAnimator.DisableRootMotion()");
@@ -254,27 +246,23 @@ namespace AnyRPG {
         }
 
         public void EnableAnimator() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.EnableAnimator()");
+
             if (animator != null) {
                 animator.enabled = true;
+                //animator.Rebind();
             }
         }
 
         public void InitializeAnimator() {
             //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.InitializeAnimator()");
+
             if (initialized) {
                 return;
             }
             if (animator == null) {
                 //Debug.Log($"{gameObject.name}.UnitAnimator.InitializeAnimator(): Could not find animator in children");
                 return;
-            }
-            if (systemConfigurationManager.UseThirdPartyMovementControl == true) {
-                if (thirdPartyAnimatorController == null) {
-                    thirdPartyAnimatorController = animator.runtimeAnimatorController;
-                }
-                if (thirdPartyAnimatorController != null) {
-                    thirdPartyOverrideController = new AnimatorOverrideController(thirdPartyAnimatorController);
-                }
             }
 
             if (overrideController == null) {
@@ -285,7 +273,7 @@ namespace AnyRPG {
                     //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.InitializeAnimator() creating new override controller");
                     overrideController = new AnimatorOverrideController(animatorController);
                     //SetOverrideController(overrideController);
-                    SetCorrectOverrideController(false);
+                    SetOverrideController(overrideController/*, false*/);
                 }
             }
             //Debug.Log($"{gameObject.name}: setting override controller to: " + overrideController.name);
@@ -297,26 +285,17 @@ namespace AnyRPG {
             SetAnimationProfileOverride(defaultAnimationProps);
 
             initialized = true;
-        }
 
-        public void SetCorrectOverrideController(bool runUpdate = true) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetCorrectOverrideController()");
-            if (unitController.UnitControllerMode == UnitControllerMode.Player && systemConfigurationManager.UseThirdPartyMovementControl == true) {
-                SetOverrideController(thirdPartyOverrideController, runUpdate);
-                return;
+            unitController.UnitEventController.NotifyOnInitializeAnimator();
+
+            // now that the network animator has been set due to the above notification, check for spawn dead
+            if (unitController.CharacterStats.IsAlive == false) {
+                HandleDie();
             }
-
-            // AI or no third party movement control case
-            SetOverrideController(overrideController, runUpdate);
         }
 
-        public void SetDefaultOverrideController(bool runUpdate = true) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetDefaultOverrideController()");
-            SetOverrideController(overrideController, runUpdate);
-        }
-
-        public void SetOverrideController(AnimatorOverrideController animatorOverrideController, bool runUpdate = true) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetOverrideController(" + animatorOverrideController.name + ", " + runUpdate + ")");
+        public void SetOverrideController(AnimatorOverrideController animatorOverrideController/*, bool runUpdate = true*/) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetOverrideController({animatorOverrideController.GetInstanceID()}, {runUpdate})");
 
             if (animator.runtimeAnimatorController != animatorOverrideController && animatorOverrideController != null) {
                 //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetOverrideController(): setting animator override");
@@ -333,13 +312,15 @@ namespace AnyRPG {
 
                 // set animator on UMA if one exists
                 if (unitController.UnitModelController != null) {
-                    //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetOverrideController(" + animatorOverrideController.name + ") setting override controller");
+                    //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetOverrideController({animatorOverrideController.GetInstanceID()}) setting override controller");
                     unitController.UnitModelController.SetAnimatorOverrideController(animatorOverrideController);
                 }
-                //animator.updateMode = AnimatorUpdateMode.
+
+                /*
                 if (runUpdate) {
                     animator.Update(0f);
                 }
+                */
             }
         }
 
@@ -478,18 +459,26 @@ namespace AnyRPG {
         /// <param name="baseAbility"></param>
         /// <param name="targetCharacterUnit"></param>
         /// <returns></returns>
-        public void HandleAbility(AnimationClip animationClip, BaseAbilityProperties baseAbility) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterAnimator.HandleAbility(" + baseAbility.DisplayName + ")");
+        public void PerformAbilityAction(AbilityProperties baseAbility, int clipIndex) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.PerformAbilityAction({baseAbility.ResourceName})");
+
             /*
             if (animator == null) {
                 return 0f;
             }
             */
 
-            if (systemConfigurationManager != null) {
-                // override the default attack animation
-                overrideController[systemConfigurationManager.SystemAnimationProfile.AnimationProps.AttackClips[0].name] = animationClip;
+            List<AnimationClip> usedAnimationClips = baseAbility.GetAbilityActionClips(unitController);
+
+            AnimationClip animationClip = usedAnimationClips[clipIndex];
+            if (usedAnimationClips.Count > 0) {
+                if (usedAnimationClips[clipIndex] == null) {
+                    return;
+                }
             }
+
+            SetAnimationClipOverride(systemAnimations.AttackClips[0].name, animationClip);
+            unitController.UnitEventController.NotifyOnPerformAbilityActionAnimation(baseAbility, clipIndex);
 
             // save animation length for weapon damage normalization
             lastAnimationLength = animationClip.length;
@@ -497,66 +486,70 @@ namespace AnyRPG {
             // save animation number of hits for multi hit weapon damage normalization
             lastAnimationHits = GetAnimationHitCount(animationClip);
 
-            // tell the animator to play the animation
-            SetAttacking(true, true, unitController.CharacterUnit.BaseCharacter.CharacterStats.GetSpeedModifiers() / 100f);
+            //if (unitController.IsOwner) {
+                // tell the animator to play the animation
+                SetAttacking(true, true, unitController.CharacterStats.GetSpeedModifiers() / 100f);
+            //}
 
             // there were 2 pieces of code that were setting animation speed.  One was using 1f / and one was not.  Not sure which one is correct?!!!
-            //SetAttacking(true, true, 1f / (unitController.CharacterUnit.BaseCharacter.CharacterStats.GetSpeedModifiers() / 100f));
+            //SetAttacking(true, true, 1f / (unitController.CharacterStats.GetSpeedModifiers() / 100f));
 
-            //return speedNormalizedAnimationLength;
         }
 
-        // non melee ability (spell) cast
-        public void HandleCastingAbility(AnimationClip animationClip, BaseAbilityProperties baseAbility) {
-            //Debug.Log($"{gameObject.name}.CharacterAnimator.HandleCastingAbility()");
+
+        public void PerformAbilityCast(AbilityProperties baseAbility, int clipIndex) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.PerformAbilityCast({baseAbility.ResourceName}, {clipIndex})");
+
             if (animator == null) {
                 return;
             }
 
-            if (systemConfigurationManager != null) {
-                // override the casting animation
-
-                overrideController[systemConfigurationManager.SystemAnimationProfile.AnimationProps.CastClips[0].name] = animationClip;
-                float animationLength = animationClip.length;
+            List<AnimationClip> usedCastAnimationClips = baseAbility.GetAbilityCastClips(unitController);
+            if (usedCastAnimationClips.Count == 0) {
+                return;
+            }
+            if (usedCastAnimationClips[clipIndex] == null) {
+                return;
             }
 
-            if (baseAbility.GetUnitAnimationProps(unitController.CharacterUnit.BaseCharacter)?.UseRootMotion == true) {
+            SetAnimationClipOverride(systemAnimations.CastClips[0].name, usedCastAnimationClips[clipIndex]);
+            unitController.UnitEventController.NotifyOnPerformAbilityCastAnimation(baseAbility, clipIndex);
+
+            if (baseAbility.GetUnitAnimationProps(unitController)?.UseRootMotion == true) {
                 unitController.SetUseRootMotion(true);
             } else {
                 unitController.SetUseRootMotion(false);
             }
 
-            if (baseAbility.GetAbilityCastingTime(unitController.CharacterUnit.BaseCharacter) > 0f) {
-                SetCasting(true, true, (baseAbility.UseSpeedMultipliers == true ? (unitController.CharacterUnit.BaseCharacter.CharacterStats.GetSpeedModifiers() / 100f) : 1f));
-            }
+            //if (unitController.IsOwner) {
+                if (baseAbility.GetAbilityCastingTime(unitController) > 0f) {
+                    SetCasting(true, (baseAbility.UseSpeedMultipliers == true ? (unitController.CharacterStats.GetSpeedModifiers() / 100f) : 1f));
+                }
+            //}
         }
 
         // non combat action
-        public void HandleAction(AnimationClip animationClip, AnimatedActionProperties animatedActionProperties) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.HandleAction()");
+        public void PerformAnimatedAction(AnimatedAction animatedAction) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.PerformAnimatedAction({animatedAction.ResourceName})");
 
             if (animator == null) {
                 return;
             }
 
-            if (systemConfigurationManager != null) {
-                // override the default action animation
+            SetAnimationClipOverride(systemAnimations.ActionClips[0].name, animatedAction.ActionProperties.AnimationClip);
+            unitController.UnitEventController.NotifyOnPerformAnimatedActionAnimation(animatedAction);
 
-                overrideController[systemConfigurationManager.SystemAnimationProfile.AnimationProps.ActionClips[0].name] = animationClip;
-                //Debug.Log($"{gameObject.name}.CharacterAnimator.HandleCastingAbility() current casting clip: " + overrideController[systemConfigurationManager.MySystemAnimationProfile.MyCastClips[0].name].name);
-                float animationLength = animationClip.length;
-                //Debug.Log($"{gameObject.name}.CharacterAnimator.HandleCastingAbility() animationlength: " + animationLength);
-            }
+            //if (unitController.IsOwner) {
+                SetActing(true);
+            //}
+        }
 
-            /*
-            if (baseAbility.GetUnitAnimationProps(unitController.CharacterUnit.BaseCharacter).UseRootMotion == true) {
-                unitController.SetUseRootMotion(true);
-            } else {
-                unitController.SetUseRootMotion(false);
-            }
-            */
+        public void SetAnimationClipOverride(string originalClipName, AnimationClip animationClip) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetAnimationClipOverride({originalClipName}, {animationClip.name})");
 
-            SetActing(true, true);
+            unitController.UnitEventController.NotifyOnSetAnimationClipOverride(originalClipName, animationClip);
+            
+            overrideController[originalClipName] = animationClip;
         }
 
         public bool WaitingForCastOrAttackAnimation() {
@@ -570,17 +563,26 @@ namespace AnyRPG {
         }
 
         public void ClearAnimatedAbility() {
-            SetAttacking(false);
+            unitController.UnitEventController.NotifyOnAnimatorClearAbilityAction();
+            //if (unitController.IsOwner) {
+                SetAttacking(false);
+            //}
         }
 
         public void ClearAction() {
-            SetActing(false);
+            unitController.UnitEventController.NotifyOnAnimatorClearAction();
+            //if (unitController.IsOwner) {
+                SetActing(false);
+            //}
         }
 
         public void ClearCasting() {
-            //Debug.Log($"{gameObject.name}.CharacterAnimator.ClearCasting()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAnimator.ClearCasting()");
 
-            SetCasting(false);
+            unitController.UnitEventController.NotifyOnAnimatorClearAbilityCast();
+            //if (unitController.IsOwner) {
+                SetCasting(false);
+            //}
         }
 
         private bool ParameterExists(string parameterName) {
@@ -592,52 +594,56 @@ namespace AnyRPG {
             return false;
         }
 
-        public void HandleDie(CharacterStats characterStats) {
+        public void HandleDie() {
             //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.HandleDie()");
 
-            OnDeath();
-
             // add these to prevent characters from dying floating or upright
-            HandleUnLevitated(false);
-            HandleUnStunned(false);
+            HandleUnLevitated();
+            HandleUnStunned();
 
             SetAnimationSpeed(1);
-
+            SetMoving(false);
             SetJumping(0);
 
-            SetTrigger("DeathTrigger");
+            ResetTrigger("TakeDamageTrigger");
             SetBool("IsDead", true);
+            SetTrigger("DeathTrigger");
         }
 
-        public IEnumerator WaitForResurrectionAnimation(float animationLength) {
-            //Debug.Log($"{gameObject.name}.WaitForAttackAnimation(" + attackLength + ")");
-            float remainingTime = animationLength;
-            while (remainingTime > 0f) {
-                yield return null;
-                remainingTime -= Time.deltaTime;
+        public void ResetTrigger(string triggerName) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.ResetTrigger({triggerName})");
+
+            if (animator != null && ParameterExists(triggerName)) {
+                animator.ResetTrigger(triggerName);
+                unitController.UnitEventController.NotifyOnAnimatorResetTrigger(triggerName);
             }
-            //Debug.Log($"{gameObject.name}Setting waitingforhits to false after countdown down");
-            SetBool("IsDead", false);
-            if (unitController != null && unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
-                unitController.CharacterUnit.BaseCharacter.CharacterStats.ReviveComplete();
-            }
-            OnReviveComplete();
-            SetCorrectOverrideController();
-            resurrectionCoroutine = null;
         }
 
         public void HandleReviveBegin() {
-            OnStartRevive();
             SetTrigger("ReviveTrigger");
-            // add 1 to account for the transition
-            if (systemConfigurationManager != null) {
-                float animationLength = overrideController[systemConfigurationManager.SystemAnimationProfile.AnimationProps.ReviveClip.name].length + 2;
-                resurrectionCoroutine = unitController.StartCoroutine(WaitForResurrectionAnimation(animationLength));
+        }
+
+        public void HandleReviveComplete() {
+            SetBool("IsDead", false);
+        }
+
+        public float GetReviveAnimationLength() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.GetReviveAnimationLength()");
+
+            if (systemAnimations == null) {
+                //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.GetReviveAnimationLength(): systemAnimationProfile is null");
+                return 0f;
             }
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.GetReviveAnimationLength(): revive clip name: {systemAnimations.ReviveClip.name}");
+            if (overrideController[systemAnimations.ReviveClip.name] != null) {
+                return overrideController[systemAnimations.ReviveClip.name].length + 2;
+            }
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.GetReviveAnimationLength(): no revive clip found in override controller, returning 0");
+            return 0f;
         }
 
         public void HandleTakeDamage() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitAnimation.HandleTakeDamage()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimatior.HandleTakeDamage()");
 
             if (WaitingForCastOrAttackAnimation() == true) {
                 // only activate the take damage animation if not in the middle of a swing / cast
@@ -648,36 +654,30 @@ namespace AnyRPG {
 
         public void HandleLevitated() {
             //Debug.Log($"{gameObject.name}.CharacterAnimator.HandleDeath()");
-            OnStartLevitated();
             SetTrigger("LevitateTrigger");
             SetBool("Levitated", true);
         }
-        public void HandleUnLevitated(bool swapAnimator = true) {
+        public void HandleUnLevitated() {
             SetBool("Levitated", false);
-            OnEndLevitated(swapAnimator);
         }
 
         public void HandleStunned() {
             //Debug.Log($"{gameObject.name}.CharacterAnimator.HandleStunned()");
-            OnStartStunned();
             SetTrigger("StunTrigger");
             SetBool("Stunned", true);
         }
 
-        public void HandleUnStunned(bool swapAnimator = true) {
+        public void HandleUnStunned() {
             //Debug.Log($"{gameObject.name}.CharacterAnimator.HandleUnStunned()");
             SetBool("Stunned", false);
-            OnEndStunned(swapAnimator);
         }
 
-        public void SetCasting(bool varValue, bool swapAnimator = true, float castingSpeed = 1f) {
+        public void SetCasting(bool varValue, float castingSpeed = 1f) {
             //Debug.Log($"{gameObject.name}.CharacterAnimator.SetCasting(" + varValue + ")");
             if (animator == null) {
                 return;
             }
-            if (varValue == true) {
-                OnStartCasting(swapAnimator);
-            }
+
             SetAnimationSpeed(castingSpeed);
 
             if (ParameterExists("Casting")) {
@@ -689,20 +689,17 @@ namespace AnyRPG {
             }
             if (varValue == false) {
                 unitController.SetUseRootMotion(false);
-                OnEndCasting(swapAnimator);
             }
 
         }
 
-        public void SetActing(bool varValue, bool swapAnimator = true, float animationSpeed = 1f) {
+        public void SetActing(bool varValue, float animationSpeed = 1f) {
             //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetActing(" + varValue + ")");
 
             if (animator == null) {
                 return;
             }
-            if (varValue == true) {
-                OnStartActing(swapAnimator);
-            }
+
             SetAnimationSpeed(animationSpeed);
 
             if (ParameterExists("Acting")) {
@@ -712,9 +709,6 @@ namespace AnyRPG {
             if (varValue == true) {
                 SetTrigger("ActionTrigger");
             }
-            if (varValue == false) {
-                OnEndCasting(swapAnimator);
-            }
 
         }
 
@@ -723,9 +717,7 @@ namespace AnyRPG {
             if (animator == null) {
                 return;
             }
-            if (varValue == true) {
-                OnStartAttacking(swapAnimator);
-            }
+
             if (ParameterExists("Attacking")) {
                 animator.SetBool("Attacking", varValue);
             }
@@ -735,20 +727,12 @@ namespace AnyRPG {
             if (varValue == true) {
                 SetTrigger("AttackTrigger");
             }
-
-            if (varValue == false) {
-                OnEndAttacking(swapAnimator);
-            }
         }
 
         public void SetRiding(bool varValue) {
             //Debug.Log($"{gameObject.name}.SetRiding(" + varValue + ")");
             if (animator == null) {
                 return;
-            }
-            if (varValue == true) {
-                SetDefaultOverrideController();
-
             }
             if (ParameterExists("Riding")) {
                 animator.SetBool("Riding", varValue);
@@ -771,6 +755,8 @@ namespace AnyRPG {
         }
 
         public void SetMoving(bool varValue) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAnimator.SetMoving({varValue})");
+
             if (animator == null) {
                 return;
             }
@@ -782,42 +768,20 @@ namespace AnyRPG {
             }
         }
 
-        public void SetVelocity(Vector3 varValue) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterAnimator.SetVelocity(" + varValue + ")");
+        public void SetVelocityFromLocal(Vector3 varValue, bool rotateModelMode) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetVelocityFromLocal({varValue.x}, {varValue.y}, {varValue.z})");
+
             // receives velocity in LOCAL SPACE
 
             if (animator == null) {
                 return;
             }
 
-            // testing, no real need to restrict this to player.  anything should be able to rotate instead of strafe?
-            //if (unitController.UnitProfile.UnitPrefabProps.RotateModel && unitController.UnitControllerMode == UnitControllerMode.Player) {
-            if (unitController.UnitProfile.UnitPrefabProps.RotateModel || controlsManager.GamePadModeActive == true) {
-                //Debug.Log($"{gameObject.name}.CharacterAnimator.SetVelocity(" + varValue + "): rotating model");
+            if (Mathf.Abs(varValue.x) < 0.001f) varValue.x = 0f;
+            if (Mathf.Abs(varValue.y) < 0.001f) varValue.y = 0f;
+            if (Mathf.Abs(varValue.z) < 0.001f) varValue.z = 0f;
 
-                if (varValue == Vector3.zero) {
-                    if (controlsManager.GamePadModeActive == false) {
-                        animator.transform.forward = unitController.transform.forward;
-                    }
-                } else {
-                    Vector3 normalizedVector = varValue.normalized;
-                    if (normalizedVector.x != 0 || normalizedVector.z != 0) {
-                        Vector3 newDirection;
-                        //if (controlsManager.GamePadModeActive == true && unitController.UnitControllerMode == UnitControllerMode.Player) {
-                        //newDirection = Quaternion.LookRotation(new Vector3(cameraManager.ActiveMainCamera.transform.forward.x, 0f, cameraManager.ActiveMainCamera.transform.forward.z).normalized) * new Vector3(normalizedVector.x, 0, normalizedVector.z);
-                        //newDirection = cameraManager.MainCameraGameObject.transform.TransformDirection
-                        //} else {
-                        newDirection = unitController.transform.TransformDirection(new Vector3(normalizedVector.x, 0, normalizedVector.z));
-                        //}
-                        if (newDirection != Vector3.zero) {
-                            //animator.transform.forward = newDirection;
-                            unitController.transform.forward = newDirection;
-                        }
-                        //Debug.Log($"{gameObject.name}.CharacterAnimator.SetVelocity(" + varValue + "): setting forward to: " + transform.TransformDirection(new Vector3(normalizedVector.x, 0, normalizedVector.z)));
-                    }
-                    //animator.transform.forward = varValue.normalized;
-                }
-                // if model is rotated, send through the magnitude so that all movement is considered in the forward direction
+            if (rotateModelMode) {
                 SetFloat("Velocity X", 0f);
                 SetFloat("Velocity Z", Mathf.Abs(varValue.magnitude));
             } else {
@@ -849,10 +813,7 @@ namespace AnyRPG {
                 float usedBaseStrafeForwardRightAnimationSpeed;
 
 
-                if (unitController != null
-                    && unitController.CharacterUnit.BaseCharacter != null
-                    && unitController.CharacterUnit.BaseCharacter.CharacterCombat != null
-                    && unitController.CharacterUnit.BaseCharacter.CharacterCombat.GetInCombat() == true) {
+                if (unitController.CharacterCombat.GetInCombat() == true) {
                     // in combat
                     usedBaseMoveForwardAnimationSpeed = (absValue >= 2 ? baseCombatRunAnimationSpeed : baseCombatWalkAnimationSpeed);
                     usedbaseWalkBackAnimationSpeed = (absValue >= 2 ? baseCombatRunBackAnimationSpeed : baseCombatWalkBackAnimationSpeed);
@@ -875,19 +836,13 @@ namespace AnyRPG {
                 }
 
                 // if the model is being rotated, animation speed is always based on the forward animation since that is what will be playing
-                if (unitController.UnitProfile.UnitPrefabProps.RotateModel || (absXValue < (absZValue / 2) && varValue.z > 0)) {
+                if (rotateModelMode || (absXValue < (absZValue / 2) && varValue.z > 0)) {
                     // the new condition above should account for any animations with extra sideways movement because you have to pass 22.5 degrees in either direction to be considered to be going sideways
-                    //} else if (varValue.x == 0 && varValue.z > 0) {
                     // run forward
-                    //usedBaseAnimationSpeed = (absZValue <= 1 ? baseWalkAnimationSpeed : baseRunAnimationSpeed);
-                    //usedBaseAnimationSpeed = (absZValue > baseWalkAnimationSpeed ? baseRunAnimationSpeed : baseWalkAnimationSpeed);
                     // since jog forward animation is hardcoded to 2 or more in animator, switched condition below to match
                     usedBaseAnimationSpeed = usedBaseMoveForwardAnimationSpeed;
-                    //Debug.Log($"{gameObject.name}.CharacterAnimator.SetVelocity(" + varValue + "): run: " + baseRunAnimationSpeed + "; walk: " + baseWalkAnimationSpeed + "; used: " + usedBaseAnimationSpeed);
-                    //multiplier = varValue.z;
                     multiplier = (absValue / usedBaseAnimationSpeed);
                 } else if (absXValue < (absZValue / 2) && varValue.z < 0) {
-                    //} else if (varValue.x == 0 && varValue.z < 0) {
                     // run back
                     usedBaseAnimationSpeed = usedbaseWalkBackAnimationSpeed;
                     multiplier = (absValue / usedBaseAnimationSpeed);
@@ -916,19 +871,17 @@ namespace AnyRPG {
                     usedBaseAnimationSpeed = usedBaseStrafeForwardRightAnimationSpeed;
                     multiplier = (absValue / usedBaseAnimationSpeed);
                 }
-                //Debug.Log($"{unitController.gameObject.name}.CharacterAnimator.SetVelocity(" + varValue + "): used: " + usedBaseAnimationSpeed + "; walk: " + baseWalkAnimationSpeed + "; run: " + baseRunAnimationSpeed + "; multiplier: " + multiplier);
 
                 // if velocity is zero, the unit is stopping and the default animation speed of 1 should be used
                 // if the velocity is greater than zero, and animation speed sync is enabled, use the correct multiplier calculated above
                 if (varValue.magnitude != 0f && systemConfigurationManager.SyncMovementAnimationSpeed == true) {
                     animationSpeed = multiplier;
-                    //Debug.Log($"{gameObject.name}.CharacterAnimator.SetVelocityZ(" + varValue + "): animationSpeed: " + animationSpeed);
                 }
             }
 
-            //Debug.Log($"{unitController.gameObject.name}.CharacterAnimator.SetVelocity(" + varValue + "): animationSpeed: " + animationSpeed);
             SetAnimationSpeed(animationSpeed);
         }
+
 
         public void SetAnimationSpeed(float animationSpeed) {
             //Debug.Log($"{unitController.gameObject.name}.UnitAnimation.SetAnimationSpeed(" + animationSpeed + ")");
@@ -978,8 +931,12 @@ namespace AnyRPG {
         }
 
         public void SetBool(string varName, bool varValue) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetBool({varName}, {varValue})");
 
             if (animator != null) {
+                //if (animator.enabled == false) {
+                    //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetBool({varName}, {varValue}) animator is disabled");
+                //}
                 if (ParameterExists(varName)) {
                     animator.SetBool(varName, varValue);
                 }
@@ -987,7 +944,8 @@ namespace AnyRPG {
         }
 
         public void SetFloat(string varName, float varValue) {
-            //Debug.Log($"{gameObject.name}.CharacterAnimator.SetFloat(" + varName + ", " + varValue + ")");
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetFloat({varName}, {varValue})");
+
             if (animator != null && ParameterExists(varName)) {
                 animator.SetFloat(varName, varValue);
             }
@@ -1019,6 +977,7 @@ namespace AnyRPG {
         }
 
         public void SetJumping(int varValue) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetJumping({varValue})");
             if (animator == null) {
                 return;
             }
@@ -1032,8 +991,9 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetTrigger({varName})");
 
             if (animator != null && ParameterExists(varName)) {
-                animator.ResetTrigger(varName);
+                ResetTrigger(varName);
                 animator.SetTrigger(varName);
+                unitController.UnitEventController.NotifyOnAnimatorSetTrigger(varName);
             }
         }
 
@@ -1048,7 +1008,7 @@ namespace AnyRPG {
         }
         */
 
-        public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex = -1) {
+        public void HandleEquipmentChanged(InstantiatedEquipment newItem, InstantiatedEquipment oldItem, int slotIndex = -1) {
             //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.HandleEquipmentChanged(" + (newItem == null ? "null" : newItem.DisplayName) + ", " + (oldItem == null ? "null" : oldItem.DisplayName) + ")");
             if (animator == null) {
                 // this unit isn't animated
@@ -1057,18 +1017,18 @@ namespace AnyRPG {
 
             // Animate grip for weapon when an item is added or removed from hand
             if (newItem != null
-                && newItem is Weapon
-                && (newItem as Weapon).AnimationProfile != null
-                && (newItem as Weapon).AnimationProfile.AnimationProps != null) {
+                && newItem.Equipment is Weapon
+                && (newItem.Equipment as Weapon).AnimationProfile != null
+                && (newItem.Equipment as Weapon).AnimationProfile.AnimationProps != null) {
                 //Debug.Log($"{gameObject.name}.CharacterAnimator.PerformEquipmentChange: we are animating the weapon");
                 //animator.SetLayerWeight(1, 1);
                 //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.HandleEquipmentChanged() animation profile: " + (newItem as Weapon).AnimationProfile.DisplayName);
-                SetAnimationProfileOverride((newItem as Weapon).AnimationProfile.AnimationProps);
+                SetAnimationProfileOverride((newItem.Equipment as Weapon).AnimationProfile.AnimationProps);
             } else if (newItem == null
                 && oldItem != null
-                && oldItem is Weapon
-                && (oldItem as Weapon).AnimationProfile != null
-                && (oldItem as Weapon).AnimationProfile.AnimationProps != null) {
+                && oldItem.Equipment is Weapon
+                && (oldItem.Equipment as Weapon).AnimationProfile != null
+                && (oldItem.Equipment as Weapon).AnimationProfile.AnimationProps != null) {
                 //animator.SetLayerWeight(1, 0);
                 //Debug.Log($"{gameObject.name}.CharacterAnimator.PerformEquipmentChange: resetting the animation profile");
                 ResetAnimationProfile();
@@ -1089,11 +1049,13 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.ResetSettings()");
 
             // return settings to how they were when the unit was initialized in case a third party animator is used and this unit was in preview mode
+            /*
             if (systemConfigurationManager.UseThirdPartyMovementControl == true) {
                 if (thirdPartyAnimatorController != null) {
                     animator.runtimeAnimatorController = thirdPartyAnimatorController;
                 }
             }
+            */
         }
 
     }

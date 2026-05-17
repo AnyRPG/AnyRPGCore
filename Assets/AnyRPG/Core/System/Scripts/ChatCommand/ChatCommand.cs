@@ -18,14 +18,16 @@ namespace AnyRPG {
         */
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
+        protected PlayerManagerServer playerManagerServer = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+            playerManagerServer = systemGameManager.PlayerManagerServer;
         }
 
-        public virtual void ExecuteCommand(string commandParameters) {
+        public virtual void ExecuteCommand(string commandParameters, int accountId) {
             //Debug.Log("ChatCommand.ExecuteCommand(): Executing command " + ResourceName + " with parameters (" + commandParameters + ")");
         }
 

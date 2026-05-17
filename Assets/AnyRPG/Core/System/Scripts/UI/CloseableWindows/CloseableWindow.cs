@@ -141,6 +141,7 @@ namespace AnyRPG {
 
         public virtual void OpenWindow() {
             //Debug.Log($"{gameObject.name}.CloseableWindow.OpenWindow()");
+
             //InitializeWindow();
             if (IsOpen) {
                 return;
@@ -243,7 +244,7 @@ namespace AnyRPG {
 
         /*
         public void OnDisable() {
-            Debug.Log(gameObject.name + ".CloseableWindow.OnDisable()");
+            //Debug.Log(gameObject.name + ".CloseableWindow.OnDisable()");
         }
         */
 

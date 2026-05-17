@@ -116,6 +116,10 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             foreach (NavigableElement navigableElement in navigableButtons) {
+                if (navigableElement == null) {
+                    Debug.LogWarning($"UINavigationController.Configure() Null navigable button.  CHECK INSPECTOR!");
+                    continue;
+                }
                 navigableElement.Configure(systemGameManager);
                 navigableElement.SetController(this);
                 if (pruneInactiveElements == false || navigableElement.gameObject.activeSelf == true) {
@@ -137,6 +141,8 @@ namespace AnyRPG {
         }
 
         public virtual void SetCurrentIndex(int newIndex) {
+            //Debug.Log($"{gameObject.name}.UINavigationController.SetCurrentIndex({newIndex})");
+
             currentIndex = newIndex;
             currentNavigableElement = null;
             if (activeNavigableButtons.Count > currentIndex) {
@@ -145,7 +151,8 @@ namespace AnyRPG {
         }
 
         public virtual void SetCurrentButton(NavigableElement navigableElement) {
-            //Debug.Log($"{gameObject.name}.UINavigationController.SetCurrentButton(" + navigableElement.name + ")");
+            //Debug.Log($"{gameObject.name}.UINavigationController.SetCurrentButton({navigableElement.name})");
+
             for (int i = 0; i < activeNavigableButtons.Count; i++) {
                 if (activeNavigableButtons[i] == navigableElement) {
                     SetCurrentIndex(i);
@@ -204,8 +211,11 @@ namespace AnyRPG {
         /// identify and fix any mismatch between current navigable element and navigable index
         /// </summary>
         public virtual void SetCurrentButton() {
+            //Debug.Log($"{gameObject.name}.UINavigationController.SetCurrentButton() currentIndex: {currentIndex}");
+
             // list is updated, check to ensure current button and index are valid
             if (activeNavigableButtons.Count == 0) {
+                //Debug.Log($"{gameObject.name}.UINavigationController.SetCurrentButton() currentIndex: {currentIndex} no active buttons returning");
                 return;
             }
 
@@ -213,10 +223,12 @@ namespace AnyRPG {
             if (currentIndex < 0
                 || currentIndex >= activeNavigableButtons.Count
                 || activeNavigableButtons.Contains(currentNavigableElement) == false) {
+                //Debug.Log($"{gameObject.name}.UINavigationController.SetCurrentButton() resetting index to zero");
                 currentIndex = 0;
                 currentNavigableElement = null;
             }
             if (currentNavigableElement == null) {
+                //Debug.Log($"{gameObject.name}.UINavigationController.SetCurrentButton() currentIndex: {currentIndex} currentNavigableElement was null");
                 currentNavigableElement = activeNavigableButtons[currentIndex];
             }
 
@@ -265,8 +277,22 @@ namespace AnyRPG {
             }
         }
 
+        /// <summary>
+        /// this method should be called on lists where the buttons are not deleted, but are simply deactivated
+        /// </summary>
         public virtual void ClearActiveButtons() {
+            ClearActiveButtons(false);
+        }
+
+        /// <summary>
+        /// set clearCurrentNavigableElement to true if the list is made of buttons that are recycled or pooled to prevent references to recycled buttons
+        /// </summary>
+        /// <param name="clearCurrentNavigableElement"></param>
+        public virtual void ClearActiveButtons(bool clearCurrentNavigableElement) {
             activeNavigableButtons.Clear();
+            if (clearCurrentNavigableElement) {
+                currentNavigableElement = null;
+            }
         }
 
         public virtual void ClearActiveButton(NavigableElement clearButton) {
@@ -504,12 +530,14 @@ namespace AnyRPG {
 
         public virtual void Accept() {
             //Debug.Log($"{gameObject.name}.UINavigationController.Accept()");
+
             if (activeNavigableButtons.Count != 0) {
                 if (currentIndex < 0) {
                     SetCurrentIndex(0);
                     currentNavigableElement.Select();
                     return;
                 }
+                //Debug.Log($"{gameObject.name}.UINavigationController.Accept() setting currentNavigableElement to {currentIndex}");
                 currentNavigableElement = activeNavigableButtons[currentIndex];
                 currentNavigableElement.Accept();
             }

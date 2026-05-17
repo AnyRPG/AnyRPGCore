@@ -16,10 +16,12 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
-  description: 
+  description: A small town to explore with trainers, vendors, and access to harvestable
+    resources.
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
+  loadingScreenImage: {fileID: 0}
   useRegionalFile: 0
   sceneFile: FeaturesDemoZone
   dayAmbientSoundsProfile: 
@@ -47,6 +49,7 @@ MonoBehaviour:
   allowMount: 1
   suppressCharacterSpawn: 0
   suppressMainCamera: 0
+  isCutScene: 0
   autoPlayCutsceneName: 
   environmentStateNames: []
   sunRotationMode: 1
@@ -81,6 +84,7 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
+    m_ColorSpace: -1
     m_NumColorKeys: 7
     m_NumAlphaKeys: 6
   blendedSkybox: 1
@@ -92,7 +96,7 @@ MonoBehaviour:
   noWeatherWeight: 10
   weatherWeights:
   - weather: Fog
-    weight: 10
+    weight: 0
   - weather: Rain
     weight: 10
   - weather: Snow

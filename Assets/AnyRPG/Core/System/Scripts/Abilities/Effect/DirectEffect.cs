@@ -11,7 +11,7 @@ namespace AnyRPG {
     public class DirectEffect : AbilityEffect {
 
         [SerializeField]
-        private DirectEffectProperties directEffectProperties = new DirectEffectProperties();
+        public DirectEffectProperties directEffectProperties = new DirectEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => directEffectProperties; }
 

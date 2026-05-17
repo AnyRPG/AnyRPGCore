@@ -1,0 +1,117 @@
+using AnyRPG;
+using UnityEngine;
+
+namespace AnyRPG {
+    public class MainSettingsMenuPanel : WindowPanel {
+
+        [Header("MAIN BUTTONS")]
+        public HighlightButton soundButton;
+        public HighlightButton controlsButton;
+        public HighlightButton videoButton;
+        public HighlightButton keyBindingsButton;
+        public HighlightButton userInterfaceButton;
+        public HighlightButton returnButton;
+
+        [Header("Panels")]
+        [Tooltip("The UI Panel that holds the GAME window tab")]
+        public SystemSoundPanel PanelSound;
+        [Tooltip("The UI Panel that holds the CONTROLS window tab")]
+        public SystemControlsPanel PanelControls;
+        [Tooltip("The UI Panel that holds the VIDEO window tab")]
+        public SystemVideoPanel PanelVideo;
+        [Tooltip("The UI Panel that holds the KEY BINDINGS window tab")]
+        public SystemKeyBindPanel PanelKeyBindings;
+        [Tooltip("The UI Panel that holds the USER INTERFACE window tab")]
+        public SystemUIPanel PanelUserInterface;
+
+        // game manager references
+        private UIManager uIManager = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            uIManager = systemGameManager.UIManager;
+        }
+
+        public void ResetSettingsPanels() {
+            // disable all settings panels
+            PanelSound.gameObject.SetActive(false);
+            PanelControls.gameObject.SetActive(false);
+            PanelVideo.gameObject.SetActive(false);
+            PanelKeyBindings.gameObject.SetActive(false);
+            PanelUserInterface.gameObject.SetActive(false);
+        }
+
+        public void SoundPanel() {
+            ResetSettingsPanels();
+            PanelSound.gameObject.SetActive(true);
+
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(soundButton);
+            SetOpenSubPanel(PanelSound, false);
+
+            soundButton.HighlightBackground();
+            soundButton.Select();
+        }
+
+        public void VideoPanel() {
+            ResetSettingsPanels();
+            PanelVideo.gameObject.SetActive(true);
+
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(videoButton);
+            SetOpenSubPanel(PanelVideo, false);
+
+            videoButton.HighlightBackground();
+            videoButton.Select();
+        }
+
+        public void ControlsPanel() {
+            ResetSettingsPanels();
+            PanelControls.gameObject.SetActive(true);
+
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(controlsButton);
+            SetOpenSubPanel(PanelControls, false);
+
+            controlsButton.HighlightBackground();
+            controlsButton.Select();
+        }
+
+        public void KeyBindingsPanel() {
+            ResetSettingsPanels();
+            PanelKeyBindings.gameObject.SetActive(true);
+
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(keyBindingsButton);
+            SetOpenSubPanel(PanelKeyBindings, false);
+
+            keyBindingsButton.HighlightBackground();
+            keyBindingsButton.Select();
+        }
+
+
+        public void UserInterfacePanel() {
+            ResetSettingsPanels();
+            PanelUserInterface.gameObject.SetActive(true);
+
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(userInterfaceButton);
+            SetOpenSubPanel(PanelUserInterface, false);
+
+            userInterfaceButton.HighlightBackground();
+            userInterfaceButton.Select();
+        }
+
+        public void CloseMenu() {
+            //uIManager.SystemWindowManager.mainMenuWindow.OpenWindow();
+            uIManager.settingsMenuWindow.CloseWindow();
+        }
+
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("MainSettingsMenuController.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
+            foreach (CloseableWindowContents closeableWindowContents in subPanels) {
+                closeableWindowContents.ReceiveOpenWindowNotification();
+            }
+            uINavigationControllers[0].SetCurrentButton(userInterfaceButton);
+            userInterfaceButton.HighlightBackground();
+            UserInterfacePanel();
+        }
+    }
+}

@@ -27,19 +27,13 @@ namespace AnyRPG {
 
         private AbilityEffectProperties abilityEffectProperties = null;
 
-        public override bool Use() {
-            //Debug.Log(DisplayName + ".ActionEffectItem.Use()");
+        public AbilityEffectProperties AbilityEffectProperties { get => abilityEffectProperties; set => abilityEffectProperties = value; }
 
-            bool returnValue = base.Use();
-            if (returnValue == false) {
-                return false;
+        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, long itemInstanceId, Item item, ItemQuality usedItemQuality) {
+            if ((item is ActionEffectItem) == false) {
+                return null;
             }
-
-            // perform heal effect
-            abilityEffectProperties.Cast(playerManager.ActiveCharacter, playerManager.UnitController, null, null);
-
-            return returnValue;
-
+            return new InstantiatedActionEffectItem(systemGameManager, itemInstanceId, item as ActionEffectItem, usedItemQuality);
         }
 
         /*

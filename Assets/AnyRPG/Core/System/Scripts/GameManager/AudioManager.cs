@@ -10,20 +10,6 @@ namespace AnyRPG {
         [SerializeField]
         private AudioMixer audioMixer = null;
 
-        private float defaultMasterVolume = 1.0f;
-        private float defaultMusicVolume = 1.0f;
-        private float defaultAmbientVolume = 1.0f;
-        private float defaultEffectsVolume = 1.0f;
-        private float defaultUIVolume = 1.0f;
-        private float defaultVoiceVolume = 1.0f;
-
-        private string masterVolume = "MasterVolume";
-        private string musicVolume = "MusicVolume";
-        private string effectsVolume = "EffectsVolume";
-        private string uiVolume = "UIVolume";
-        private string voiceVolume = "VoiceVolume";
-        private string ambientVolume = "AmbientVolume";
-
         [SerializeField]
         private AudioSource musicAudioSource = null;
 
@@ -44,6 +30,22 @@ namespace AnyRPG {
 
         [SerializeField]
         private AudioClip uiClickSound = null;
+
+        private float defaultMasterVolume = 1.0f;
+        private float defaultMusicVolume = 1.0f;
+        private float defaultAmbientVolume = 1.0f;
+        private float defaultEffectsVolume = 1.0f;
+        private float defaultUIVolume = 1.0f;
+        private float defaultVoiceVolume = 1.0f;
+
+        private string masterVolume = "MasterVolume";
+        private string musicVolume = "MusicVolume";
+        private string effectsVolume = "EffectsVolume";
+        private string uiVolume = "UIVolume";
+        private string voiceVolume = "VoiceVolume";
+        private string ambientVolume = "AmbientVolume";
+
+        private Dictionary<string, AudioClip> audioClips = new Dictionary<string, AudioClip>();
 
         private bool musicPaused = false;
         private bool ambientPaused = false;
@@ -71,6 +73,25 @@ namespace AnyRPG {
             InitializeVolume();
             currentAmbientAudioSource = ambientAudioSource1;
             secondaryAmbientAudioSource = ambientAudioSource2;
+        }
+
+        public void RegisterAudioClip(AudioClip audioClip) {
+            //Debug.Log($"AudioManager.RegisterAudioClip({(audioClip == null ? "null" : audioClip.name)})");
+
+            if (audioClips.ContainsKey(audioClip.name) == false) {
+                audioClips.Add(audioClip.name, audioClip);
+            }
+        }
+
+        public AudioClip GetAudioClip(string audioClipName) {
+            //Debug.Log($"AudioManager.GetAudioClip({audioClipName})");
+
+            if (audioClips.ContainsKey(audioClipName)) {
+                return audioClips[audioClipName];
+            } else {
+                Debug.LogWarning($"AudioManager.GetAudioClip(): could not find audio clip: {audioClipName}");
+                return null;
+            }
         }
 
         private void InitializeVolume() {
@@ -186,7 +207,7 @@ namespace AnyRPG {
         }
 
         public void PlayAmbient(AudioClip audioClip) {
-            Debug.Log("AudioManager.PlayAmbient(" + (audioClip == null ? "null" : audioClip.name) + ")");
+            //Debug.Log($"AudioManager.PlayAmbient({(audioClip == null ? "null" : audioClip.name)})");
 
             if (currentAmbientAudioSource.clip == audioClip && ambientPaused == true) {
                 UnPauseAmbient();

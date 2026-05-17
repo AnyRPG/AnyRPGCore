@@ -1,18 +1,18 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
 
     [System.Serializable]
     public class StatusEffectProperties : LengthEffectProperties, ILearnable {
 
-        public event System.Action OnApply = delegate { };
-
         [Header("Status Effect")]
+
+        [Tooltip("Prefabs to spawn when this effect is cast")]
+        [SerializeField]
+        private List<AbilityAttachmentNode> statusEffectObjectList = new List<AbilityAttachmentNode>();
 
         [SerializeField]
         private StatusEffectAlignment statusEffectAlignment = StatusEffectAlignment.None;
@@ -190,6 +190,16 @@ namespace AnyRPG {
 
         protected List<AbilityEffectProperties> weaponHitAbilityEffectList = new List<AbilityEffectProperties>();
 
+        [Header("Death Options")]
+
+        [Tooltip("If true, the status effect will persist through death")]
+        [SerializeField]
+        protected bool keepOnDeath = false;
+
+        [Tooltip("If true, the wearer can revive themselves when dead")]
+        [SerializeField]
+        protected bool allowRevive = false;
+
         [Header("Save Options")]
 
         [Tooltip("If true, the status effect will be saved with the character is saved")]
@@ -198,8 +208,9 @@ namespace AnyRPG {
 
 
         // game manager references
-        protected LevelManager levelManager = null;
-        protected PlayerManager playerManager = null;
+        protected LevelManagerClient levelManagerClient = null;
+        protected SceneUtilityService sceneUtilityService = null;
+        protected PlayerManagerClient playerManagerClient = null;
 
         public int StatAmount { get => statAmount; }
         public float StatMultiplier { get => statMultiplier; set => statMultiplier = value; }
@@ -242,6 +253,9 @@ namespace AnyRPG {
         public StatusEffectGroup StatusEffectGroup { get => statusEffectGroup; set => statusEffectGroup = value; }
         public bool SaveEffect { get => saveEffect; set => saveEffect = value; }
         public bool RequireOutOfCombat { get => requireOutOfCombat; set => requireOutOfCombat = value; }
+        public List<AbilityAttachmentNode> StatusEffectObjectList { get => statusEffectObjectList; set => statusEffectObjectList = value; }
+        public bool KeepOnDeath { get => keepOnDeath; set => keepOnDeath = value; }
+        public bool AllowRevive { get => allowRevive; set => allowRevive = value; }
 
         /*
         public void GetStatusEffectProperties(StatusEffect effect) {
@@ -283,26 +297,29 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            levelManager = systemGameManager.LevelManager;
-            playerManager = systemGameManager.PlayerManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+            sceneUtilityService = systemGameManager.SceneUtilityService;
         }
 
-        public override void CancelEffect(BaseCharacter targetCharacter) {
+        public override void CancelEffect(UnitController targetCharacter) {
+            //Debug.Log($"{DisplayName}.StatusEffectProperties.CancelEffect({(targetCharacter == null ? "null" : targetCharacter.gameObject.name)})");
+
             base.CancelEffect(targetCharacter);
             RemoveControlEffects(targetCharacter);
             UndoMaterialChange(targetCharacter);
         }
 
-        private void UndoMaterialChange(BaseCharacter targetCharacter) {
+        private void UndoMaterialChange(UnitController targetCharacter) {
             if (effectMaterial == null) {
                 return;
             }
             
-            if (targetCharacter.UnitController == null) {
+            if (targetCharacter == null) {
                 return;
             }
 
-            targetCharacter.UnitController.UnitMaterialController.RevertTemporaryMaterialChange();
+            targetCharacter.UnitMaterialController.RevertTemporaryMaterialChange();
         }
 
         // bypass the creation of the status effect and just make its visual prefab
@@ -315,20 +332,22 @@ namespace AnyRPG {
             if (classTrait == true && sourceCharacter.AbilityManager.Level >= requiredLevel) {
                 return true;
             }
-            if (!ZoneRequirementMet()) {
+            if (!ZoneRequirementMet(target)) {
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". You are in the wrong zone");
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage($"Cannot cast {DisplayName}. You are in the wrong zone");
                 }
                 return false;
             }
             return base.CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated, performRangeCheck);
         }
 
-        public bool ZoneRequirementMet() {
+        public bool ZoneRequirementMet(Interactable target) {
             if (SceneNames.Count > 0) {
                 bool sceneFound = false;
                 foreach (string sceneName in SceneNames) {
-                    if (SystemDataUtility.PrepareStringForMatch(sceneName) == SystemDataUtility.PrepareStringForMatch(levelManager.GetActiveSceneNode().SceneName)) {
+                    SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(target.gameObject.scene.name);
+                    if (sceneName == target.gameObject.scene.name
+                        || (sceneNode != null && (sceneName == sceneNode.SceneFile || sceneName == sceneNode.ResourceName))) {
                         sceneFound = true;
                     }
                 }
@@ -341,11 +360,12 @@ namespace AnyRPG {
 
 
         public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(DisplayName + ".StatusEffect.Cast(" + source.AbilityManager.Name + ", " + (target? target.name : "null") + ")");
+            //Debug.Log($"{DisplayName}.StatusEffectProperties.Cast({source.AbilityManager.Name}, {(target? target.name : "null")})");
 
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext(source);
             }
+            abilityEffectContext.AbilityEffect = this;
 
             if (abilityEffectContext.savedEffect == false && !CanUseOn(target, source)) {
                 return null;
@@ -353,11 +373,11 @@ namespace AnyRPG {
             Dictionary<PrefabProfile, List<GameObject>> returnObjects = null;
             CharacterStats targetCharacterStats = null;
 
-            if ((classTrait || abilityEffectContext.savedEffect) && (source as BaseCharacter) is BaseCharacter) {
-                targetCharacterStats = (source as BaseCharacter).CharacterStats;
+            if ((classTrait || abilityEffectContext.savedEffect) && (source as UnitController) is UnitController) {
+                targetCharacterStats = (source as UnitController).CharacterStats;
             } else {
-                if (target.CharacterUnit != null && target.CharacterUnit.BaseCharacter != null) {
-                    targetCharacterStats = target.CharacterUnit.BaseCharacter.CharacterStats;
+                if (target.CharacterUnit != null) {
+                    targetCharacterStats = target.CharacterUnit.UnitController.CharacterStats;
                 }
             }
 
@@ -368,19 +388,14 @@ namespace AnyRPG {
             if (_statusEffectNode == null) {
                 //Debug.Log(DisplayName + ".StatusEffect.Cast(). statuseffect was null.  This could likely happen if the character already had the status effect max stack on them");
             } else {
-                returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
-                if (returnObjects != null) {
-                    // pass in the ability effect object so we can independently destroy it and let it last as long as the status effect (which could be refreshed).
-                    _statusEffectNode.PrefabObjects = returnObjects;
-                }
-                PerformMaterialChange(target);
+                base.Cast(source, target, originalTarget, abilityEffectContext);
                 PerformAbilityHit(source, target, abilityEffectContext);
 
             }
             return returnObjects;
         }
 
-        void PerformMaterialChange(Interactable target) {
+        public void PerformMaterialChange(UnitController target) {
             //Debug.Log(ResourceName + ".AbilityEffectProperties.PerformMaterialChange(" + (target == null ? "null" : target.gameObject.name) + ")");
 
             if (effectMaterial == null) {
@@ -392,7 +407,7 @@ namespace AnyRPG {
                 return;
             }
 
-            ApplyMaterialChange(target as UnitController);
+            ApplyMaterialChange(target);
         }
 
         private void ApplyMaterialChange(UnitController unitController) {
@@ -408,7 +423,7 @@ namespace AnyRPG {
         // THESE TWO EXIST IN DIRECTEFFECT ALSO BUT I COULD NOT FIND A GOOD WAY TO SHARE THEM
         public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(abilityEffectName + ".StatusEffect.CastTick()");
-            abilityEffectContext.spellDamageMultiplier = tickRate / Duration;
+            abilityEffectContext.SpellDamageMultiplier = tickRate / Duration;
             base.CastTick(source, target, abilityEffectContext);
             PerformAbilityTick(source, target, abilityEffectContext);
         }
@@ -446,8 +461,11 @@ namespace AnyRPG {
 
         public virtual void PerformAbilityReflectEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityReflectEffects(" + source.AbilityManager.UnitGameObject.name + ", " + (target == null ? "null" : target.gameObject.name) + ")");
-            abilityEffectContext.reflectDamage = true;
-            PerformAbilityEffects(source, target, abilityEffectContext, reflectAbilityEffectList);
+            AbilityEffectContext reflectContext = abilityEffectContext.GetCopy();
+            reflectContext.ReflectDamage = true;
+            // null the original ability name so the status effect name shows in the combat log instead of the original ability that caused the reflect
+            reflectContext.BaseAbility = null;
+            PerformAbilityEffects(source, target, reflectContext, reflectAbilityEffectList);
         }
 
         public override string GetDescription() {
@@ -499,8 +517,8 @@ namespace AnyRPG {
 
             if (limitedDuration == true && classTrait == false) {
                 float remainingDuration = 0f;
-                if (playerManager.MyCharacter?.CharacterStats?.HasStatusEffect(this) == true) {
-                    remainingDuration = playerManager.MyCharacter.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
+                if (playerManagerClient.UnitController?.CharacterStats?.HasStatusEffect(this) == true) {
+                    remainingDuration = playerManagerClient.UnitController.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
                 }
                 if (remainingDuration != 0f) {
                     durationLabel = "Remaining Duration: ";
@@ -517,48 +535,51 @@ namespace AnyRPG {
             return base.GetDescription() + string.Format("{0}{1}", descriptionFinal, durationString);
         }
 
-        public void ApplyControlEffects(BaseCharacter targetCharacter) {
+        public void ApplyControlEffects(UnitController unitController) {
             //Debug.Log(DisplayName + ".StatusEffect.ApplyControlEffects(" + (targetCharacter == null ? "null" : targetCharacter.CharacterName) + ")");
-            if (targetCharacter == null) {
+
+            if (unitController == null) {
                 //Debug.Log(DisplayName + ".StatusEffect.ApplyControlEffects() targetCharacter is null");
                 return;
             }
 
             if (DisableAnimator == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() disabling animator and motor (freezing)");
-                targetCharacter.UnitController.FreezeCharacter();
+                unitController.FreezeCharacter();
             }
 
             if (Stun == true) {
-                targetCharacter.UnitController.StunCharacter();
+                unitController.StunCharacter();
             }
             if (Levitate == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() levitating");
-                targetCharacter.UnitController.LevitateCharacter();
+                unitController.LevitateCharacter();
             }
-            if (canFly == true && targetCharacter.UnitController != null) {
-                targetCharacter.UnitController.CanFlyOverride = true;
+            if (canFly == true) {
+                unitController.CanFlyOverride = true;
             }
-            if (canGlide == true && targetCharacter.UnitController != null) {
-                targetCharacter.UnitController.CanGlideOverride = true;
+            if (canGlide == true) {
+                unitController.CanGlideOverride = true;
             }
             if (stealth == true) {
-                targetCharacter.CharacterStats.ActivateStealth();
+                unitController.ActivateStealth();
             }
         }
 
-        public void RemoveControlEffects(BaseCharacter targetCharacter) {
-            if (targetCharacter == null) {
+        public void RemoveControlEffects(UnitController unitController) {
+            //Debug.Log($"{ResourceName}.StatusEffect.RemoveControlEffects({(unitController == null ? "null" : unitController.gameObject.name)})");
+
+            if (unitController == null) {
                 return;
             }
             if (DisableAnimator == true) {
-                targetCharacter.UnitController.UnFreezeCharacter();
+                unitController.UnFreezeCharacter();
             }
             if (Stun == true) {
-                targetCharacter.UnitController.UnStunCharacter();
+                unitController.UnStunCharacter();
             }
             if (Levitate == true) {
-                targetCharacter.UnitController.UnLevitateCharacter();
+                unitController.UnLevitateCharacter();
             }
             /*
             if (stealth == true) {
@@ -566,10 +587,6 @@ namespace AnyRPG {
             }
             */
 
-        }
-
-        public void NotifyOnApply() {
-            OnApply();
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
@@ -636,12 +653,21 @@ namespace AnyRPG {
                 }
             }
 
+            if (statusEffectObjectList != null) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in statusEffectObjectList) {
+                    if (abilityAttachmentNode != null) {
+                        abilityAttachmentNode.SetupScriptableObjects(DisplayName, systemGameManager);
+                    }
+                }
+            }
+
+
 
         }
 
     }
 
-    public enum SecondaryStatType { MovementSpeed, Accuracy, CriticalStrike, Speed, Damage, PhysicalDamage, SpellDamage, Armor }
+    public enum SecondaryStatType { MovementSpeed, Accuracy, CriticalStrike, Speed, Damage, PhysicalDamage, SpellDamage, Armor, CarryWeight }
 
     public enum StatusEffectAlignment { None, Beneficial, Harmful }
 

@@ -1,10 +1,6 @@
-using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
@@ -190,7 +186,11 @@ namespace AnyRPG {
             if (CapitalizeText == true) {
                 text.text = text.text.ToLower();
             }
-            EventSystem.current.SetSelectedGameObject(null);
+
+            //prevent buttons updated as a result of text updates from deselecting the input field
+            if (controlsManager.TextInputActive == false) {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
         }
 
         public override void OnHoverSound() {
@@ -208,11 +208,8 @@ namespace AnyRPG {
             }
         }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log($"{gameObject.name}.HighlightButton.OnPointerClick()");
-
-            base.OnPointerClick(eventData);
-
+        protected override void HandleLeftClick() {
+            base.HandleLeftClick();
             if (mouseClickSound == true) {
                 OnClickSound();
             }

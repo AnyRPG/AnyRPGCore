@@ -1,20 +1,16 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New StatusEffect", menuName = "AnyRPG/Abilities/Effects/StatusEffect")]
-    public class StatusEffect : AbilityEffect /*, ILearnable*/ {
+    public class StatusEffect : StatusEffectBase {
 
         [SerializeField]
-        private StatusEffectProperties statusEffectProperties = new StatusEffectProperties();
+        public StatusEffectProperties statusEffectProperties = new StatusEffectProperties();
 
-        public override AbilityEffectProperties AbilityEffectProperties { get => statusEffectProperties; }
-
-        public StatusEffectProperties StatusEffectProperties { get => statusEffectProperties; }
+        public override StatusEffectProperties StatusEffectProperties { get => statusEffectProperties; }
 
     }
 

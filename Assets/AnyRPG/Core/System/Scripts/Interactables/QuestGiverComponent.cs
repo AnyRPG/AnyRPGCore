@@ -13,28 +13,34 @@ namespace AnyRPG {
         private bool questGiverInitialized = false;
 
         // game manager references
-        private QuestLog questLog = null;
-        private DialogManager dialogManager = null;
+        private DialogManagerClient dialogManagerClient = null;
+        private MessageLogClient logManager = null;
+        private CurrencyConverter currencyConverter = null;
+        private QuestGiverManagerClient questGiverManagerClient = null;
 
-        public QuestGiverProps Props { get => interactableOptionProps as QuestGiverProps; }
+        public QuestGiverProps QuestGiverProps { get => interactableOptionProps as QuestGiverProps; }
         public override int PriorityValue { get => 1; }
         public InteractableOptionComponent InteractableOptionComponent { get => this; }
 
         public QuestGiverComponent(Interactable interactable, QuestGiverProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
-            foreach (QuestNode questNode in Props.Quests) {
-                questNode.Quest.OnQuestStatusUpdated += HandlePrerequisiteUpdates;
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+                foreach (QuestNode questNode in QuestGiverProps.Quests) {
+                    questNode.Quest.OnQuestBaseStatusUpdated += HandlePrerequisiteUpdates;
+                }
             }
 
             // moved here from Init() monitor for breakage
             InitializeQuestGiver();
-            UpdateQuestStatus();
+            //UpdateQuestStatus();
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             
-            questLog = systemGameManager.QuestLog;
-            dialogManager = systemGameManager.DialogManager;
+            dialogManagerClient = systemGameManager.DialogManagerClient;
+            logManager = systemGameManager.MessageLogClient;
+            currencyConverter = systemGameManager.CurrencyConverter;
+            questGiverManagerClient = systemGameManager.QuestGiverManagerClient;
         }
 
         /*
@@ -48,15 +54,15 @@ namespace AnyRPG {
 
         public override void ProcessStatusIndicatorSourceInit() {
             base.ProcessStatusIndicatorSourceInit();
-            HandlePrerequisiteUpdates();
+            HandlePrerequisiteUpdates(playerManagerClient.UnitController);
         }
 
-        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
+        public override bool CanInteract(UnitController sourceUnitController, bool processRangeCheck, bool passedRangeCheck, bool processNonCombatCheck, bool viaSwitch = false) {
             //Debug.Log($"{gameObject.name}.QuestGiver.CanInteract()");
-            if (questLog.GetCompleteQuests(Props.Quests).Count + questLog.GetAvailableQuests(Props.Quests).Count == 0) {
+            if (sourceUnitController.CharacterQuestLog.GetCompleteQuests(QuestGiverProps.Quests).Count + sourceUnitController.CharacterQuestLog.GetAvailableQuests(QuestGiverProps.Quests).Count == 0) {
                 return false;
             }
-            return base.CanInteract(processRangeCheck, passedRangeCheck, factionValue, processNonCombatCheck);
+            return base.CanInteract(sourceUnitController, processRangeCheck, passedRangeCheck, processNonCombatCheck);
 
         }
 
@@ -66,8 +72,8 @@ namespace AnyRPG {
                 return;
             }
 
-            interactableOptionProps.InteractionPanelTitle = "Quests";
-            foreach (QuestNode questNode in Props.Quests) {
+            interactionPanelTitle = "Quests";
+            foreach (QuestNode questNode in QuestGiverProps.Quests) {
                 //Type questType = questNode.MyQuestTemplate.GetType();
                 if (questNode.Quest == null) {
                     //Debug.Log($"{gameObject.name}.InitializeQuestGiver(): questnode.MyQuestTemplate is null!!!!");
@@ -82,18 +88,18 @@ namespace AnyRPG {
             questGiverInitialized = true;
         }
 
-        public override void HandlePlayerUnitSpawn() {
+        public override void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.HandleCharacterSpawn()");
 
-            base.HandlePlayerUnitSpawn();
+            base.HandlePlayerUnitSpawn(sourceUnitController);
             InitializeQuestGiver();
-            foreach (QuestNode questNode in Props.Quests) {
+            foreach (QuestNode questNode in QuestGiverProps.Quests) {
                 //if (questNode.MyQuest.TurnedIn != true) {
-                    questNode.Quest.UpdatePrerequisites(false);
+                    questNode.Quest.UpdatePrerequisites(sourceUnitController, false);
                 //}
             }
 
-            UpdateQuestStatus();
+            UpdateQuestStatus(sourceUnitController);
             CallMiniMapStatusUpdateHandler();
 
             /*
@@ -111,33 +117,40 @@ namespace AnyRPG {
             */
         }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.Interact()");
-            base.Interact(source, optionIndex);
-            if (questLog.GetCompleteQuests(Props.Quests, true).Count + questLog.GetAvailableQuests(Props.Quests).Count > 1) {
-                interactable.OpenInteractionWindow();
-                return true;
-            } else if (questLog.GetAvailableQuests(Props.Quests).Count == 1 && questLog.GetCompleteQuests(Props.Quests).Count == 0) {
-                if (questLog.GetAvailableQuests(Props.Quests)[0].HasOpeningDialog == true && questLog.GetAvailableQuests(Props.Quests)[0].OpeningDialog.TurnedIn == false) {
-                    dialogManager.SetQuestDialog(questLog.GetAvailableQuests(Props.Quests)[0], interactable, this);
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
+            
+            return true;
+        }
+
+        public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            //Debug.Log($"{interactable.gameObject.name}.QuestGiverComponent.ClientInteraction({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
+
+            base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
+            // this is running locally
+            questGiverManagerClient.SetQuestGiver(this, componentIndex, choiceIndex, false);
+            if (sourceUnitController.CharacterQuestLog.GetCompleteQuests(QuestGiverProps.Quests, true).Count + sourceUnitController.CharacterQuestLog.GetAvailableQuests(QuestGiverProps.Quests).Count > 1) {
+                // there are multiple available or complete quests to choose from, so open the questgiver window to let the player choose
+                interactionManagerClient.OpenInteractionWindow(Interactable);
+                return;
+            } else if (sourceUnitController.CharacterQuestLog.GetAvailableQuests(QuestGiverProps.Quests).Count == 1 && sourceUnitController.CharacterQuestLog.GetCompleteQuests(QuestGiverProps.Quests).Count == 0) {
+                // there is only one available quest and no complete quests
+                if (sourceUnitController.CharacterQuestLog.GetAvailableQuests(QuestGiverProps.Quests)[0].HasOpeningDialog == true && sourceUnitController.CharacterQuestLog.GetAvailableQuests(QuestGiverProps.Quests)[0].OpeningDialog.TurnedIn(sourceUnitController) == false) {
+                    dialogManagerClient.SetQuestDialog(sourceUnitController.CharacterQuestLog.GetAvailableQuests(QuestGiverProps.Quests)[0], Interactable, this, componentIndex, choiceIndex);
                     uIManager.dialogWindow.OpenWindow();
-                    return true;
+                    return;
                 } else {
                     // do nothing will skip to below and open questlog to the available quest
-                    /*
-                    interactable.OpenInteractionWindow();
-                    return true;
-                    */
                 }
             }
             // we got here: we only have a single complete quest, or a single available quest with the opening dialog competed already
             if (!uIManager.questGiverWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
-                //uIManager.questGiverWindow.OpenWindow();
-                questLog.ShowQuestGiverDescription(questLog.GetAvailableQuests(Props.Quests).Union(questLog.GetCompleteQuests(Props.Quests)).ToList()[0], this);
-                return true;
+                sourceUnitController.CharacterQuestLog.ShowQuestGiverDescription(sourceUnitController.CharacterQuestLog.GetAvailableQuests(QuestGiverProps.Quests).Union(sourceUnitController.CharacterQuestLog.GetCompleteQuests(QuestGiverProps.Quests)).ToList()[0], this);
+                return;
             }
-            return false;
+
         }
 
         public override void StopInteract() {
@@ -147,9 +160,9 @@ namespace AnyRPG {
             uIManager.questGiverWindow.CloseWindow();
         }
 
-        public void UpdateQuestStatus() {
+        public void UpdateQuestStatus(UnitController sourceUnitController) {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.UpdateQuestStatus()");
-            if (playerManager.MyCharacter == null) {
+            if (playerManagerClient.UnitController == null) {
                 //Debug.Log($"{gameObject.name}.QuestGiver.UpdateQuestStatus(): player has no character");
                 return;
             }
@@ -158,7 +171,7 @@ namespace AnyRPG {
                 return;
             }
 
-            string indicatorType = GetIndicatorType();
+            string indicatorType = GetIndicatorType(sourceUnitController);
 
             if (indicatorType == string.Empty) {
                 interactable.ProcessHideQuestIndicator();
@@ -167,16 +180,16 @@ namespace AnyRPG {
             }
         }
 
-        public string GetIndicatorType() {
+        public string GetIndicatorType(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.QuestGiver.GetIndicatorType()");
 
-            if (playerManager.MyCharacter == null) {
-                //Debug.Log($"{gameObject.name}.QuestGiver.GetIndicatorType(): playerManager.MyCharacter is null. returning empty");
+            if (playerManagerClient.UnitController == null) {
+                //Debug.Log($"{gameObject.name}.QuestGiver.GetIndicatorType(): playerManager.UnitController is null. returning empty");
                 return string.Empty;
             }
 
-            float relationValue = interactable.PerformFactionCheck(playerManager.MyCharacter);
-            if (CanInteract(false, false, relationValue) == false) {
+            float relationValue = interactable.PerformFactionCheck(playerManagerClient.UnitController);
+            if (CanInteract(playerManagerClient.UnitController, false, false, true) == false) {
                 //Debug.Log($"{gameObject.name}.QuestGiver.GetIndicatorType(): Cannot interact.  Return empty string");
                 return string.Empty;
             }
@@ -186,19 +199,19 @@ namespace AnyRPG {
             int inProgressCount = 0;
             int availableCount = 0;
             //Debug.Log($"{gameObject.name}QuestGiver.GetIndicatorType(): quests.length: " + quests.Length);
-            foreach (QuestNode questNode in Props.Quests) {
+            foreach (QuestNode questNode in QuestGiverProps.Quests) {
                 if (questNode != null && questNode.Quest != null) {
-                    if (questLog.HasQuest(questNode.Quest.ResourceName)) {
-                        if (questNode.Quest.IsComplete && !questNode.Quest.TurnedIn && questNode.EndQuest) {
+                    if (playerManagerClient.UnitController.CharacterQuestLog.HasQuest(questNode.Quest.ResourceName)) {
+                        if (questNode.Quest.IsComplete(sourceUnitController) && !questNode.Quest.TurnedIn(sourceUnitController) && questNode.EndQuest) {
                             //Debug.Log($"{gameObject.name}: There is a complete quest to turn in.  Incrementing inProgressCount.");
                             completeCount++;
-                        } else if (!questNode.Quest.IsComplete && questNode.EndQuest) {
+                        } else if (!questNode.Quest.IsComplete(sourceUnitController) && questNode.EndQuest) {
                             //Debug.Log($"{gameObject.name}: A quest is in progress.  Incrementing inProgressCount.");
                             inProgressCount++;
                         } else {
                             //Debug.Log($"{gameObject.name}: This quest must have been turned in already or we are not responsible for ending it.  doing nothing.");
                         }
-                    } else if ((questNode.Quest.TurnedIn == false || (questNode.Quest.RepeatableQuest == true && questLog.HasQuest(questNode.Quest.ResourceName) == false)) && questNode.StartQuest && questNode.Quest.PrerequisitesMet == true) {
+                    } else if ((questNode.Quest.TurnedIn(sourceUnitController) == false || (questNode.Quest.RepeatableQuest == true && playerManagerClient.UnitController.CharacterQuestLog.HasQuest(questNode.Quest.ResourceName) == false)) && questNode.StartQuest && questNode.Quest.PrerequisitesMet(playerManagerClient.UnitController) == true) {
                         availableCount++;
                         //Debug.Log($"{gameObject.name}: The quest is not in the log and hasn't been turned in yet.  Incrementing available count");
                     }
@@ -261,16 +274,16 @@ namespace AnyRPG {
                 text.color = new Color32(0, 0, 0, 0);
                 return false;
             }
-            SetIndicatorText(GetIndicatorType(), text);
+            SetIndicatorText(GetIndicatorType(playerManagerClient.UnitController), text);
             return true;
         }
 
-        public override int GetCurrentOptionCount() {
+        public override int GetCurrentOptionCount(UnitController sourceUnitController) {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.GetCurrentOptionCount()");
             if (interactable.CombatOnly) {
                 return 0;
             }
-            return questLog.GetCompleteQuests(Props.Quests).Count + questLog.GetAvailableQuests(Props.Quests).Count;
+            return sourceUnitController.CharacterQuestLog.GetCompleteQuests(QuestGiverProps.Quests).Count + sourceUnitController.CharacterQuestLog.GetAvailableQuests(QuestGiverProps.Quests).Count;
         }
 
         public void HandleAcceptQuest() {
@@ -281,16 +294,16 @@ namespace AnyRPG {
             // do nothing for now - used in questStartItem
         }
 
-        public override void HandlePrerequisiteUpdates() {
+        public override void HandlePrerequisiteUpdates(UnitController sourceUnitController) {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.HandlePrerequisiteUpdates()");
             // testing put this before the base since base calls minimap update
-            UpdateQuestStatus();
-            base.HandlePrerequisiteUpdates();
+            UpdateQuestStatus(sourceUnitController);
+            base.HandlePrerequisiteUpdates(sourceUnitController);
             //UpdateQuestStatus();
         }
 
         public bool EndsQuest(string questName) {
-            foreach (QuestNode questNode in Props.Quests) {
+            foreach (QuestNode questNode in QuestGiverProps.Quests) {
                 if (SystemDataUtility.MatchResource(questNode.Quest.ResourceName, questName)) {
                     if (questNode.EndQuest == true) {
                         return true;
@@ -306,12 +319,36 @@ namespace AnyRPG {
         //    return true;
         //}
 
+        public void AcceptQuest(UnitController sourceUnitController, Quest quest) {
+            sourceUnitController.CharacterQuestLog.AcceptQuest(quest);
+
+            NotifyOnConfirmAction(sourceUnitController);
+        }
 
         public override void CleanupScriptableObjects() {
             base.CleanupScriptableObjects();
-            foreach (QuestNode questNode in Props.Quests) {
-                questNode.Quest.OnQuestStatusUpdated -= HandlePrerequisiteUpdates;
+
+            foreach (QuestNode questNode in QuestGiverProps.Quests) {
+                questNode.Quest.OnQuestBaseStatusUpdated -= HandlePrerequisiteUpdates;
             }
+        }
+
+        public void CompleteQuest(UnitController sourceUnitController, Quest quest, QuestRewardChoices questRewardChoices) {
+            //Debug.Log("QuestGiverUI.CompleteQuest()");
+            if (!quest.IsComplete(sourceUnitController)) {
+                Debug.LogWarning("QuestGiverManager.CompleteQuest(): currentQuest is not complete, exiting!");
+                return;
+            }
+
+            quest.CompleteQuest(sourceUnitController, questRewardChoices);
+        }
+
+        public void RequestAcceptQuest(UnitController unitController, Quest currentQuest) {
+            questGiverManagerClient.RequestAcceptQuest(playerManagerClient.UnitController, currentQuest);
+        }
+
+        public void RequestCompleteQuest(UnitController unitController, Quest currentQuest, QuestRewardChoices questRewardChoices) {
+            questGiverManagerClient.RequestCompleteQuest(playerManagerClient.UnitController, currentQuest, questRewardChoices);
         }
     }
 

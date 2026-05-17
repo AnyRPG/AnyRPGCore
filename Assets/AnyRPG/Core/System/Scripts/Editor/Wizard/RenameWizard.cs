@@ -7,6 +7,7 @@ namespace AnyRPG {
 
         public string findString = string.Empty;
         public string replaceString = string.Empty;
+        public ReplaceMode replaceMode = ReplaceMode.Replace;
 
         public List<Object> fileList = new List<Object>();
 
@@ -37,10 +38,17 @@ namespace AnyRPG {
                     if (fileObject == null) {
                         continue;
                     }
+                    string newName = fileObject.name;
+                    if (replaceMode == ReplaceMode.Replace) {
+                        newName = fileObject.name.Replace(findString, replaceString);
+                    } else if (replaceMode == ReplaceMode.Append) {
+                        newName = newName + replaceString;
+                    } else if (replaceMode == ReplaceMode.Prepend) {
+                        newName = replaceString + newName;
+                    }
+                    Debug.Log($"Renaming {AssetDatabase.GetAssetPath(fileObject)} to {newName}");
 
-                    Debug.Log($"Renaming {AssetDatabase.GetAssetPath(fileObject)} to {fileObject.name.Replace(findString, replaceString)}");
-
-                    AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(fileObject), fileObject.name.Replace(findString, replaceString));
+                    AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(fileObject), newName);
                 }
             } catch {
                 EditorUtility.DisplayDialog("Rename Wizard", "Error Encountered!", "OK");
@@ -68,8 +76,11 @@ namespace AnyRPG {
 
         string Validate() {
 
-            if (findString == string.Empty) {
+            if (findString == string.Empty && replaceMode == ReplaceMode.Replace) {
                 return "Find String must not be empty";
+            }
+            if (replaceString == string.Empty && replaceMode != ReplaceMode.Replace) {
+                return "Replace String must not be empty for Append or Prepend";
             }
 
             return null;
@@ -80,5 +91,7 @@ namespace AnyRPG {
         }
        
     }
+
+    public enum ReplaceMode { Replace, Append, Prepend }
 
 }

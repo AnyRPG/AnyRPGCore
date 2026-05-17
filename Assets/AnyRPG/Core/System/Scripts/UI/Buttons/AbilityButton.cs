@@ -7,12 +7,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class AbilityButton : TransparencyButton {
+    public class AbilityButton : TransparencyButton, IMoveableOwner {
 
         [Header("Ability Button")]
 
         //[SerializeField]
-        protected BaseAbilityProperties ability = null;
+        protected AbilityProperties ability = null;
 
         [SerializeField]
         protected Image icon = null;
@@ -24,17 +24,19 @@ namespace AnyRPG {
         protected TextMeshProUGUI description = null;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected ActionBarManager actionBarManager = null;
+
+        public IMoveable Moveable => ability;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             actionBarManager = systemGameManager.UIManager.ActionBarManager;
         }
 
-        public void AddAbility(BaseAbilityProperties ability) {
+        public void AddAbility(AbilityProperties ability) {
             this.ability = ability;
             icon.sprite = ability.Icon;
             icon.color = Color.white;
@@ -50,17 +52,14 @@ namespace AnyRPG {
             description.text = string.Empty;
         }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log("AbilityButton.OnPointerClick()");
-            base.OnPointerClick(eventData);
-            if (eventData.button == PointerEventData.InputButton.Left) {
-                //Debug.Log("AbilityButton.OnPointerClick(): left click");
-                uIManager.HandScript.TakeMoveable(ability);
-            }
-            if (eventData.button == PointerEventData.InputButton.Right) {
-                //Debug.Log("AbilityButton.OnPointerClick(): right click");
-                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
-            }
+        protected override void HandleLeftClick() {
+            base.HandleLeftClick();
+            uIManager.HandScript.TakeMoveable(this);
+        }
+
+        protected override void HandleRightClick() {
+            base.HandleRightClick();
+            playerManagerClient.UnitController.CharacterAbilityManager.BeginAbility(ability);
         }
 
         public override void Select() {
@@ -82,8 +81,8 @@ namespace AnyRPG {
         public override void Accept() {
             //Debug.Log("AbilityButton.Accept()");
             base.Accept();
-            if (ability.CanCast(playerManager.MyCharacter, true)) {
-                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
+            if (ability.CanCast(playerManagerClient.UnitController, true)) {
+                playerManagerClient.UnitController.CharacterAbilityManager.BeginAbility(ability);
             }
         }
 
@@ -94,6 +93,9 @@ namespace AnyRPG {
             uIManager.assignToActionBarsWindow.OpenWindow();
         }
 
+        public void CancelHandscriptMove() {
+            //Debug.Log("AbilityButton.CancelHandscriptMove()");
+        }
     }
 
 }

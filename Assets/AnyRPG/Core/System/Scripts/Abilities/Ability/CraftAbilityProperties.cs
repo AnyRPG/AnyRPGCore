@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [System.Serializable]
-    public class CraftAbilityProperties : DirectAbilityProperties {
+    public class CraftAbilityProperties : AbilityProperties {
 
         // game manager references
         protected CraftingManager craftingManager = null;
@@ -18,12 +18,14 @@ namespace AnyRPG {
         }
 
         public override List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {
-            if (craftingManager.CraftingQueue.Count > 0) {
+            //Debug.Log($"CraftAbilityProperties.GetHoldableObjectList({abilityCaster.gameObject.name})");
+
+            if (abilityCaster.AbilityManager.GetCharacterUnit().UnitController.CharacterCraftingManager.CraftingQueue.Count > 0) {
                 List<AbilityAttachmentNode> returnList = new List<AbilityAttachmentNode>();
-                foreach (AbilityAttachmentNode prefabProfile in base.GetHoldableObjectList(abilityCaster)) {
-                    returnList.Add(prefabProfile);
+                foreach (AbilityAttachmentNode abilityAttachmentNode in base.GetHoldableObjectList(abilityCaster)) {
+                    returnList.Add(abilityAttachmentNode);
                 }
-                foreach (AbilityAttachmentNode abilityAttachmentNode in craftingManager.CraftingQueue[0].HoldableObjectList) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in abilityCaster.AbilityManager.GetCharacterUnit().UnitController.CharacterCraftingManager.CraftingQueue[0].HoldableObjectList) {
                     returnList.Add(abilityAttachmentNode);
                 }
                 return returnList;
@@ -32,30 +34,35 @@ namespace AnyRPG {
         }
 
         public override bool Cast(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log("CraftAbility.Cast(" + (target ? target.name : "null") + ")");
+            //Debug.Log($"CraftAbility.Cast({source.gameObject.name}, {(target ? target.name : "null")})");
+
             bool returnResult = base.Cast(source, target, abilityEffectContext);
             if (returnResult == true) {
-                craftingManager.CraftNextItemWait();
+                source.AbilityManager.GetCharacterUnit().UnitController.CharacterCraftingManager.CraftNextItemWait();
             }
             return returnResult;
         }
 
         public override bool CanUseOn(Interactable target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeChecks = true) {
+            //Debug.Log($"CraftAbility.CanUseOn({source.gameObject.name}, {(target ? target.gameObject.name : "null")})");
 
             if (!base.CanUseOn(target, source, performCooldownChecks, abilityEffectContext, playerInitiated, performRangeChecks)) {
+                //Debug.Log($"CraftAbility.CanUseOn({source.gameObject.name}, {(target ? target.gameObject.name : "null")}) base.CanUseOn failed");
                 return false;
             }
 
             // to prevent casting this ability on a valid crafting target from action bars with no recipe to make, it is not possible to cast if there is nothing in the queue
-            if (craftingManager.CraftingQueue.Count == 0) {
+            if (source.AbilityManager.GetCharacterUnit().UnitController.CharacterCraftingManager.CraftingQueue.Count == 0) {
+                //Debug.Log($"CraftAbility.CanUseOn({source.gameObject.name}, {(target ? target.gameObject.name : "null")}) crafting queue is empty");
                 return false;
             }
 
             List<CraftingNodeComponent> craftingNodeComponents = CraftingNodeComponent.GetCraftingNodeComponents(target);
             if (craftingNodeComponents == null || craftingNodeComponents.Count == 0) {
                 if (playerInitiated) {
-                    source.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". This ability must target a crafting node");
+                    source.AbilityManager.ReceiveCombatMessage($"Cannot cast {DisplayName}. This ability must target a crafting node");
                 }
+                //Debug.Log($"CraftAbility.CanUseOn({source.gameObject.name}, {(target ? target.gameObject.name : "null")}) target does not have a crafting node component");
                 return false;
             }
 
@@ -65,9 +72,9 @@ namespace AnyRPG {
                 }
             }
 
-            //Debug.Log(target.name + " requires ability: " + _gatheringNode.MyAbility);
             if (playerInitiated) {
-                source.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". Target is not valid for this type of crafting");
+                //Debug.Log($"CraftAbility.CanUseOn({source.gameObject.name}, {(target ? target.gameObject.name : "null")}) target does not require this ability");
+                source.AbilityManager.ReceiveCombatMessage($"Cannot cast {DisplayName}. Target is not valid for this type of crafting");
             }
             return false;
         }

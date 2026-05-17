@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class RainEffect : AbilityEffect {
 
         [SerializeField]
-        private RainEffectProperties rainEffectProperties = new RainEffectProperties();
+        public RainEffectProperties rainEffectProperties = new RainEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => rainEffectProperties; }
 

@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: 512c1195baf95c2499f42a11e126cbc0, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: very gold
+  description: very iron
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 2.5
+  itemPickupPrefabProfileName: Plate Shoulders Iron
   equipmentSlotType: Pauldrons
   equipmentSetName: 
-  umaRecipeProfileName: Iron Plate Pauldrons
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Iron Plate Pauldrons

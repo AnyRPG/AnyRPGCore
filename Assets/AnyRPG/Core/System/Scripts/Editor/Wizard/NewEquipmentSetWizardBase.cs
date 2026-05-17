@@ -198,7 +198,7 @@ namespace AnyRPG {
             // nothing here for now
         }
 
-        void OnWizardCreate() {
+        protected void OnWizardCreate() {
 
             EditorUtility.DisplayProgressBar("New Equipment Set Wizard", "Checking parameters...", 0.1f);
 

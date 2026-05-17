@@ -29,6 +29,10 @@ namespace AnyRPG {
             get {
                 List<InteractableOptionComponent> returnList = new List<InteractableOptionComponent>();
                 foreach (InteractableOption interactableOption in controlObjects) {
+                    if (interactableOption == null) {
+                        Debug.LogWarning($"ControlSwitchProps.ControlObjects: controlObjects list contains a null value.  CHECK INSPECTOR.");
+                        continue;
+                    }
                     if (interactableOption.InteractableOptionComponent != null) {
                         returnList.Add(interactableOption.InteractableOptionComponent);
                     }

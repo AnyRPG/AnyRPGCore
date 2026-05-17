@@ -10,15 +10,11 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New MountEffect", menuName = "AnyRPG/Abilities/Effects/MountEffect")]
-    public class MountEffect : AbilityEffect {
+    public class MountEffect : StatusEffectBase {
 
         [SerializeField]
-        private MountEffectProperties mountEffectProperties = new MountEffectProperties();
+        public MountEffectProperties mountEffectProperties = new MountEffectProperties();
 
-        public override AbilityEffectProperties AbilityEffectProperties { get => mountEffectProperties; }
-
-
-
-
+        public override StatusEffectProperties StatusEffectProperties { get => mountEffectProperties; }
     }
 }

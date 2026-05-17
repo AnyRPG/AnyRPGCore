@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 2
+  itemPickupPrefabProfileName: 'Plate Belt Blue '
   equipmentSlotType: Belt
   equipmentSetName: 
-  umaRecipeProfileName: Blue Plate Girdle
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Blue Plate Girdle

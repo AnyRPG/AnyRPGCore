@@ -32,13 +32,12 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 1
+      unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 0
       lineOfSightSourceLocation: 0
       targetRangeSourceLocation: 0
     chanceToCast: 100
-    effectMaterialName: 
-    materialChangeDuration: 2
     onHitAudioProfileNames: []
     randomAudioProfiles: 0
     hitAbilityEffectNames: []
@@ -59,14 +58,20 @@ MonoBehaviour:
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
+    statusEffectObjectList:
+    - holdableObjectName: Blood Shield
+      useUniversalAttachment: 0
+      attachmentName: 
     statusEffectAlignment: 0
     statusEffectTypeName: 
     statusEffectGroupName: 
+    effectMaterialName: 
     classTrait: 0
     requiredLevel: 1
     sceneNames: []
     requireOutOfCombat: 0
     limitedDuration: 0
+    refreshableDuration: 1
     duration: 0
     maxStacks: 1
     statBuffTypeNames: []

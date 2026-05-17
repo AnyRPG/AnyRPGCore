@@ -8,21 +8,15 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class GatheringNodeComponent : LootableNodeComponent {
 
+        //private bool available = true;
+
         public GatheringNodeProps GatheringNodeProps { get => interactableOptionProps as GatheringNodeProps; }
 
         public GatheringNodeComponent(Interactable interactable, GatheringNodeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
-        public override bool PrerequisitesMet {
-            get {
-                /*
-                 * moved this option to getValidOptions because this should spawn even if the character doesn't have the ability
-                if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == false) {
-                    return false;
-                }
-                */
-                return base.PrerequisitesMet;
-            }
+        public override bool PrerequisitesMet(UnitController sourceUnitController) {
+                return base.PrerequisitesMet(sourceUnitController);
         }
 
         public override void ProcessCreateEventSubscriptions() {
@@ -41,9 +35,9 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleAbilityListChange(BaseAbilityProperties baseAbility) {
+        public void HandleAbilityListChange(UnitController sourceUnitController, AbilityProperties baseAbility) {
             //Debug.Log($"{gameObject.name}.GatheringNode.HandleAbilityListChange(" + baseAbility.DisplayName + ")");
-            HandlePrerequisiteUpdates();
+            HandlePrerequisiteUpdates(sourceUnitController);
         }
 
         public static GatheringNodeComponent GetGatheringNodeComponent(Interactable searchInteractable) {
@@ -53,57 +47,133 @@ namespace AnyRPG {
             return searchInteractable.GetFirstInteractableOption(typeof(GatheringNodeComponent)) as GatheringNodeComponent;
         }
 
+        public override string GetSummary(UnitController sourceUnitController) {
+            string returnValue = base.GetSummary(sourceUnitController);
+            string colorstring  = "#ffff00ff";
+            if (GatheringNodeProps.Skill != null && GatheringNodeProps.RequiredSkillLevel > sourceUnitController.CharacterSkillManager.GetSkillLevel(GatheringNodeProps.Skill)) {
+                colorstring = "#ff0000";
+                returnValue += $"\n<color={colorstring}>Requires Skill Level {GatheringNodeProps.RequiredSkillLevel} skill</color>";
+            }
+            return returnValue;
+        }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log($"{gameObject.name}.GatheringNode.Interact(" + source.name + ")");
+        public override string GetInteractionButtonText(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            return (GatheringNodeProps.BaseAbility != null ? GatheringNodeProps.BaseAbility.DisplayName : base.GetInteractionButtonText(sourceUnitController, componentIndex, choiceIndex));
+        }
+
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            //Debug.Log($"{interactable.gameObject.name}.GatheringNode.ProcessInteract({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
+
             if (Props.LootTables == null) {
-                //Debug.Log($"{gameObject.name}.GatheringNode.Interact(" + source.name + "): lootTable was null!");
+                Debug.LogWarning($"{interactable.gameObject.name}.GatheringNode.ProcessInteract({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex}) loot table was null");
                 return true;
             }
             // base.Interact() will drop loot automatically so we will intentionally not call it because the loot drop in this class is activated by the gatherability
-            /*
-            int lootCount = 0;
-            base.Interact(source);
-
-            foreach (LootTable lootTable in lootTables) {
-                if (lootTable.MyDroppedItems.Count > 0) {
-                    lootCount += lootTable.MyDroppedItems.Count;
-                }
-            }
-            */
-            //if (lootCount > 0) {
             if (lootDropped == true) {
                 // this call is safe, it will internally check if loot is already dropped and just pickup instead
-                Gather(optionIndex);
+                Gather(sourceUnitController, componentIndex);
             } else {
-                source.BaseCharacter.CharacterAbilityManager.BeginAbility(GatheringNodeProps.BaseAbility.AbilityProperties, interactable);
+                // attempt physics sync on server in case character was moving
+                if (networkManagerServer.ServerModeActive == true) {
+                    //Debug.Log($"{interactable.gameObject.name}.GatheringNode.ProcessInteract() calling Physics.SyncTransforms()");
+                    Physics.SyncTransforms();
+                }
+                sourceUnitController.CharacterAbilityManager.BeginAbility(GatheringNodeProps.BaseAbility.AbilityProperties, interactable);
             }
-            uIManager.interactionWindow.CloseWindow();
             return true;
-            //return PickUp();
         }
 
-        public void Gather(int optionIndex = 0) {
-            //Debug.Log($"{gameObject.name}.GatheringNode.DropLoot()");
-            if (playerManager.ActiveUnitController != null) {
-                base.Interact(playerManager.ActiveUnitController.CharacterUnit, optionIndex);
+        public override void ProcessClientNotifications(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            // do not send to base class, we'll do this later
+        }
+
+        public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
+        }
+
+        public void Gather(UnitController sourceUnitController, int componentIndex = 0, int choiceIndex = 0) {
+            //Debug.Log($"{interactable.gameObject.name}.GatheringNode.Gather({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
+
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
+            base.ProcessClientNotifications(sourceUnitController, componentIndex, choiceIndex);
+        }
+
+        public override void DropLoot(UnitController sourceUnitController) {
+            //Debug.Log($"{interactable.gameObject.name}.GatheringNode.DropLoot({sourceUnitController.gameObject.name})");
+
+            bool lootWasDropped = lootDropped;
+            base.DropLoot(sourceUnitController);
+            if (lootWasDropped == true) {
+                return;
+            }
+            AttemptToGiveExperience(sourceUnitController);
+        }
+
+        private void AttemptToGiveExperience(UnitController sourceUnitController) {
+            //Debug.Log($"{interactable.gameObject.name}.GatheringNode.AttemptToGiveExperience({sourceUnitController.gameObject.name})");
+
+            if (GatheringNodeProps.Skill == null || GatheringNodeProps.Skill.UseSkillLevels == false) {
+                return;
+            }
+
+            if (GatheringNodeProps.Skill.UseSkillLevels == true) {
+                AttemptToGiveSkillExperience(sourceUnitController);
+            }
+            if (GatheringNodeProps.Skill.GiveCharacterExperience == true) {
+                AttemptToGiveCharacterExperience(sourceUnitController);
             }
         }
 
-        /*
-        public override void DropLoot() {
-            Debug.Log(gameObject.name + ".GatheringNode.DropLoot()");
-            base.Interact(playerManager.MyCharacter.CharacterUnit);
-            //base.DropLoot();
-            //PickUp();
-        }
-        */
+        private void AttemptToGiveSkillExperience(UnitController sourceUnitController) {
+            //Debug.Log($"{interactable.gameObject.name}.GatheringNode.AttemptToGiveSkillExperience({sourceUnitController.gameObject.name})");
 
-        public override int GetCurrentOptionCount() {
+            if (sourceUnitController.CharacterSkillManager.GetSkillLevel(GatheringNodeProps.Skill) > GatheringNodeProps.MaxSkillExperienceLevel && GatheringNodeProps.MaxSkillExperienceLevel > 0) {
+                //Debug.Log($"{interactable.gameObject.name}.GatheringNode.AttemptToGiveSkillExperience() character skill level is above max skill experience level, not giving experience");
+                return;
+            }
+            if (GatheringNodeProps.Skill.UseSkillExperience == true) {
+                // experience based calculation
+                if (GatheringNodeProps.SkillExperienceReward > 0) {
+                    sourceUnitController.CharacterSkillManager.AddSkillExperience(GatheringNodeProps.Skill, GatheringNodeProps.SkillExperienceReward);
+                }
+            } else {
+                // chance based calculation
+                float randomValue = UnityEngine.Random.Range(0f, 1f);
+                //Debug.Log($"{interactable.gameObject.name}.GatheringNode.AttemptToGiveSkillExperience() randomValue: {randomValue} chanceToGainLevel: {GatheringNodeProps.ChanceToGainLevel}");
+                if (GatheringNodeProps.ChanceToGainLevel >= randomValue) {
+                    sourceUnitController.CharacterSkillManager.AddSkillLevel(GatheringNodeProps.Skill, 1);
+                }
+            }
+        }
+
+        private void AttemptToGiveCharacterExperience(UnitController sourceUnitController) {
+            //Debug.Log($"{interactable.gameObject.name}.GatheringNode.AttemptToGiveCharacterExperience({sourceUnitController.gameObject.name})");
+
+            if (sourceUnitController.CharacterStats.Level > GatheringNodeProps.MaxCharacterExperienceLevel && GatheringNodeProps.MaxCharacterExperienceLevel > 0) {
+                return;
+            }
+            if (GatheringNodeProps.CharacterExperienceReward <= 0) {
+                return;
+            }
+            sourceUnitController.CharacterStats.GainExperience(GatheringNodeProps.CharacterExperienceReward);
+        }
+
+        public override int GetCurrentOptionCount(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.GatheringNode.GetCurrentOptionCount()");
-            return ((playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == true
-                && interactable.SpawnReference != null
-                && currentTimer <= 0f) ? 1 : 0);
+
+            if (Props.SpawnObject == null) {
+                return 0;
+            }
+            if (Props.SpawnObject.activeInHierarchy == false) {
+                return 0;
+            }
+            if (GatheringNodeProps.Skill != null && sourceUnitController.CharacterSkillManager.HasSkill(GatheringNodeProps.Skill) == false) {
+                return 0;
+            }
+            if (sourceUnitController.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == false) {
+                return 0;
+            }
+            return 1;
         }
 
         /*

@@ -10,7 +10,7 @@ namespace AnyRPG {
     public class UseAbilityObjective : QuestObjective {
 
         [SerializeField]
-        [ResourceSelector(resourceType = typeof(BaseAbility))]
+        [ResourceSelector(resourceType = typeof(Ability))]
         protected string abilityName = null;
 
         public override string ObjectiveName { get => abilityName; }
@@ -21,39 +21,47 @@ namespace AnyRPG {
             }
         }
 
-        private BaseAbilityProperties baseAbility;
+        private AbilityProperties baseAbility;
 
-        public void UpdateCastCount() {
-            bool completeBefore = IsComplete;
-                CurrentAmount++;
-            questBase.CheckCompletion();
-                if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages) {
-                    messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount, Amount));
-                }
-                if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages) {
-                    messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.DisplayName));
-                }
+
+
+        public void UpdateCastCount(UnitController sourceUnitController) {
+            bool completeBefore = IsComplete(sourceUnitController);
+            SetCurrentAmount(sourceUnitController, CurrentAmount(sourceUnitController) + 1);
+            if (CurrentAmount(sourceUnitController) <= Amount && questBase.PrintObjectiveCompletionMessages) {
+                sourceUnitController.WriteMessageFeedMessage(string.Format("Use {0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount(sourceUnitController), Amount));
+            }
+            if (completeBefore == false && IsComplete(sourceUnitController) && questBase.PrintObjectiveCompletionMessages) {
+                sourceUnitController.WriteMessageFeedMessage(string.Format("Use {0}: Objective Complete", baseAbility.DisplayName));
+            }
+            questBase.CheckCompletion(sourceUnitController);
         }
 
-        public override void OnAcceptQuest(QuestBase quest, bool printMessages = true) {
-            base.OnAcceptQuest(quest, printMessages);
-            baseAbility.OnAbilityUsed += UpdateCastCount;
+        private void HandlePerformAbility(UnitController sourceUnitController, AbilityProperties properties) {
+            if (properties == baseAbility) {
+                UpdateCastCount(sourceUnitController);
+            }
         }
 
-        public override void OnAbandonQuest() {
-            base.OnAbandonQuest();
-            baseAbility.OnAbilityUsed -= UpdateCastCount;
+        public override void OnAcceptQuest(UnitController sourceUnitController, QuestBase quest, bool printMessages = true) {
+            base.OnAcceptQuest(sourceUnitController, quest, printMessages);
+            sourceUnitController.UnitEventController.OnPerformAbility += HandlePerformAbility;
         }
 
-        public override string GetUnformattedStatus() {
-            return "Use " + DisplayName + ": " + Mathf.Clamp(CurrentAmount, 0, Amount) + "/" + Amount;
+        public override void OnAbandonQuest(UnitController sourceUnitController) {
+            base.OnAbandonQuest(sourceUnitController);
+            sourceUnitController.UnitEventController.OnPerformAbility -= HandlePerformAbility;
+        }
+
+        public override string GetUnformattedStatus(UnitController sourceUnitController) {
+            return "Use " + DisplayName + ": " + Mathf.Clamp(CurrentAmount(sourceUnitController), 0, Amount) + "/" + Amount;
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager, QuestBase quest) {
             base.SetupScriptableObjects(systemGameManager, quest);
             
             if (abilityName != null && abilityName != string.Empty) {
-                BaseAbility tmpAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
+                Ability tmpAbility = systemDataFactory.GetResource<Ability>(abilityName);
                 if (tmpAbility != null) {
                     baseAbility = tmpAbility.AbilityProperties;
                 } else {

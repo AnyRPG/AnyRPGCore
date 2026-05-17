@@ -51,7 +51,7 @@ namespace AnyRPG.EditorTools {
                 missingCount += findMissingScriptableReferences(paths[i], scriptableObject);
             }
 
-            Debug.Log($"Found {scriptableObjectCount} ScriptableObjects");
+            Debug.LogWarning($"Found {scriptableObjectCount} ScriptableObjects");
 
             onFinished.Invoke();
             return missingCount;

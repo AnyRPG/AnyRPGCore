@@ -36,7 +36,7 @@ namespace AnyRPG {
         public override void Select() {
             base.Select();
 
-            uIManager.ShowGamepadTooltip(toolTipTransform, transform, describable, "");
+            uIManager.ShowGamepadTooltip(toolTipTransform, transform, describable);
         }
 
         public override void DeSelect() {

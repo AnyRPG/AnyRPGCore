@@ -42,7 +42,7 @@ namespace AnyRPG {
         protected abstract float GetPower(IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext);
 
         protected float GetAbilityPower(IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
-            return sourceCharacter.AbilityManager.GetSpellPower() * abilityEffectContext.spellDamageMultiplier;
+            return sourceCharacter.AbilityManager.GetSpellPower() * abilityEffectContext.SpellDamageMultiplier;
         }
 
         protected virtual float GetBaseAmount(IAbilityCaster sourceCharacter) {
@@ -51,8 +51,8 @@ namespace AnyRPG {
         }
 
         private float GetTimeMultiplier(IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
-            if (abilityEffectContext.baseAbility != null) {
-                return abilityEffectContext.baseAbility.GetTimeMultiplier(sourceCharacter, abilityEffectContext);
+            if (abilityEffectContext.BaseAbility != null) {
+                return abilityEffectContext.BaseAbility.GetTimeMultiplier(sourceCharacter, abilityEffectContext);
             }
 
             // this amount effect could have been triggered by a status effect, in which case there should be no base ability
@@ -86,9 +86,9 @@ namespace AnyRPG {
             }
 
             // reflected damage can only have critical strike and base power added. It should not be getting a boost from weapon damage, status effects, cast time multipliers etc
-            if (abilityEffectContext.reflectDamage == false) {
+            if (abilityEffectContext.ReflectDamage == false) {
                 amountAddModifier += GetBaseAmount(sourceCharacter);
-                if (abilityEffectContext.weaponHitHasCast == false && resourceAmountNode.IgnoreCastTime == false) {
+                if (abilityEffectContext.WeaponHitHasCast == false && resourceAmountNode.IgnoreCastTime == false) {
                     // the first attack effect cast from an ability is considered the primary hit
                     // everything after is an onHit effect and should not be multiplied by animation time
 
@@ -118,8 +118,8 @@ namespace AnyRPG {
             }
 
             // check ability context ?  if base ability was animated, then no need to check because we already checked
-            if (ignoreAccuracy == false && !((abilityEffectContext.baseAbility as AnimatedAbilityProperties) is AnimatedAbilityProperties)) {
-                if (!source.AbilityManager.AbilityHit(target, abilityEffectContext)) {
+            if (ignoreAccuracy == false) {
+                if (!source.AbilityManager.DidAbilityHit(target, abilityEffectContext)) {
                     return;
                 }
             }

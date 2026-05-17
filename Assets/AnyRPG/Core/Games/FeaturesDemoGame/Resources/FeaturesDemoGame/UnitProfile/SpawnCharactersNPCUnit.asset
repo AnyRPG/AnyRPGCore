@@ -20,13 +20,19 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
+  suppressNameplateFaction: 1
   automaticPrefabProfile: 0
   prefabProfileName: 
   useInlinePrefabProps: 1
   unitPrefabProps:
-    unitPrefab: {fileID: 3544550570938047708, guid: 8c54d1fd144385b4d82be245ec64219d,
+    unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 0}
+    networkUnitPrefab: {fileID: 0}
+    modelPrefab: {fileID: 6307183516646880328, guid: d000c5c25fdbc114696a5e9443f6ac45,
+      type: 3}
+    networkModelPrefab: {fileID: 0}
+    modelProvider:
+      rid: -2
     animationProfileName: 
     useInlineAnimationProps: 0
     animationProps:
@@ -113,10 +119,9 @@ MonoBehaviour:
       swimMoveClip: {fileID: 0}
       flyIdleClip: {fileID: 0}
       flyMoveClip: {fileID: 0}
-    rotateModel: 0
+    forceRotateModelMode: 0
     namePlateProps:
       displayName: 
-      suppressNamePlate: 0
       suppressFaction: 1
       overrideNameplatePosition: 0
       namePlatePosition: {x: 0, y: 0, z: 0}
@@ -124,6 +129,15 @@ MonoBehaviour:
       unitFrameTarget: head
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
       unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+      unitPreviewTarget: 
+      unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
+      unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
+    unitFrameProps:
+      useSnapShot: 0
+      unitFrameTarget: head
+      unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+      unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+    unitPreviewProps:
       unitPreviewTarget: 
       unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
       unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
@@ -136,7 +150,6 @@ MonoBehaviour:
     floatHeight: 1.4
     addFloatHeightToTransform: 0
     floatTransform: Spine1
-  isUMAUnit: 0
   isPet: 0
   flightCapable: 0
   glideCapable: 0
@@ -205,14 +218,17 @@ MonoBehaviour:
   interactableOptions: []
   inlineInteractableOptions:
   - rid: 0
+  - rid: 8367098255002304567
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 6f871381-f6c9-4e3e-bf2d-c2f97d764998
+  m_UUID: 7ddc97d4-de97-42a1-b9e7-c7c7d498d586
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 0
       type: {class: QuestGiverProps, ns: AnyRPG, asm: Assembly-CSharp}
       data:
@@ -225,3 +241,43 @@ MonoBehaviour:
           endQuest: 1
           questName: Use Interactable
         questGiverProfileNames: []
+    - rid: 8367098255002304567
+      type: {class: UnitSpawnControllerProps, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        interactionPanelTitle: 
+        interactionPanelImage: {fileID: 0}
+        namePlateImage: {fileID: 0}
+        prerequisiteConditions: []
+        unitProfileNames:
+        - Red Warrior
+        - Red Knight
+        - Red Blood Knight
+        - Red Priest
+        - Red Mage
+        - Red Ice Mage
+        - Red Fire Mage
+        - Red Necromancer
+        - Red Archer
+        - Red Ranger
+        - Red Marksman
+        - Red Thief
+        - Red Fighter
+        - Red Boss
+        - Blue Warrior
+        - Blue Knight
+        - Blue Blood Knight
+        - Blue Priest
+        - Blue Mage
+        - Blue Ice Mage
+        - Blue Fire Mage
+        - Blue Necromancer
+        - Blue Archer
+        - Blue Ranger
+        - Blue Marksman
+        - Blue Thief
+        - Blue Fighter
+        - Blue Boss
+        - Dragon
+        unitSpawnNodeList: []
+        unitSpawnNodeTagList:
+        - UnitSpawn1

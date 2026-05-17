@@ -26,9 +26,6 @@ namespace AnyRPG {
 
         protected bool tooltipEnabled = true;
 
-        // game manager references
-        //protected UIManager uIManager = null;
-
         public Image Icon { get => icon; set => icon = value; }
         public TextMeshProUGUI StackSizeText { get => stackSize; }
         public IDescribable Describable { get => describable; set => describable = value; }
@@ -37,7 +34,9 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            uIManager = systemGameManager.UIManager;
+            if (toolTipTransform == null) {
+                toolTipTransform = rectTransform;
+            }
         }
 
         public void DisableTooltip() {
@@ -65,7 +64,7 @@ namespace AnyRPG {
             this.Describable = describable;
             UpdateVisual();
 
-            if (UIManager.MouseInRect(Icon.rectTransform)) {
+            if (gameObject.activeInHierarchy && UIManager.MouseInRect(Icon.rectTransform)) {
                 ProcessMouseEnter();
             }
 
@@ -112,7 +111,8 @@ namespace AnyRPG {
         }
 
         public override void OnPointerEnter(PointerEventData eventData) {
-            //Debug.Log("DescribableIcon.OnPointerEnter()");
+            //Debug.Log($"{gameObject.name}.DescribableIcon.OnPointerEnter()");
+
             base.OnPointerEnter(eventData);
             ProcessMouseEnter();
         }
@@ -140,8 +140,10 @@ namespace AnyRPG {
             if (tooltipEnabled == false) {
                 return;
             }
-            uIManager.ShowGamepadTooltip(toolTipTransform, transform, describable, "");
+            uIManager.ShowGamepadTooltip(toolTipTransform, transform, describable);
         }
+
+
 
         /*
         public virtual void ShowToolTip(IDescribable describable) {

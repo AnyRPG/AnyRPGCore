@@ -1,6 +1,7 @@
 using AnyRPG;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ namespace AnyRPG {
     public class CharacterCreatorComponent : InteractableOptionComponent {
 
         private CharacterCreatorManager characterCreatorManager = null;
-        private CharacterCreatorInteractableManager characterCreatorInteractableManager = null;
+        private CharacterAppearanceManagerClient characterCreatorInteractableManager = null;
 
         public CharacterCreatorProps Props { get => interactableOptionProps as CharacterCreatorProps; }
 
@@ -20,17 +21,24 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
-            characterCreatorInteractableManager = systemGameManager.CharacterCreatorInteractableManager;
+            characterCreatorInteractableManager = systemGameManager.CharacterAppearanceManagerClient;
         }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
             // was there a reason why we didn't have base.Interact here before or just an oversight?
-            base.Interact(source, optionIndex);
-            // moved to coroutine because UMA will crash here due to its use of DestroyImmediate in the case where an UMAData was attached to the model.
-            characterCreatorInteractableManager.SetCharacterCreator(this);
-            interactable.StartCoroutine(OpenWindowWait());
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
             
             return true;
+        }
+
+        public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            //Debug.Log($"{interactable.gameObject.name}.CharacterCreatorComponent.ClientInteraction()");
+
+            base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
+
+            // moved to coroutine because UMA will crash here due to its use of DestroyImmediate in the case where an UMAData was attached to the model.
+            characterCreatorInteractableManager.SetCharacterCreator(this, componentIndex, choiceIndex);
+            interactable.StartCoroutine(OpenWindowWait());
         }
 
         public IEnumerator OpenWindowWait() {
@@ -39,19 +47,31 @@ namespace AnyRPG {
         }
 
         public void OpenWindow() {
+            //Debug.Log($"{interactable.gameObject.name}.CharacterCreatorComponent.OpenWindow()");
+
             uIManager.characterCreatorWindow.OpenWindow();
         }
 
         public override void StopInteract() {
+            //Debug.Log($"{interactable.gameObject.name}.CharacterCreatorComponent.StopInteract()");
+
             base.StopInteract();
             uIManager.characterCreatorWindow.CloseWindow();
         }
 
-        public override int GetCurrentOptionCount() {
-            //Debug.Log($"{gameObject.name}.CharacterCreatorInteractable.GetCurrentOptionCount()");
-            return GetValidOptionCount();
+        public override int GetCurrentOptionCount(UnitController sourceUnitController) {
+            //Debug.Log($"{gameObject.name}.CharacterCreatorComponent.GetCurrentOptionCount()");
+            return GetValidOptionCount(sourceUnitController);
         }
 
+        public void UpdatePlayerAppearance(UnitController sourceUnitController, int accountId, string unitProfileName, string appearanceString, List<SwappableMeshSaveData> swappableMeshSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.CharacterCreatorComponent.UpdatePlayerAppearance({sourceUnitController.gameObject.name}, {accountId}, {unitProfileName})");
+
+            // notify first because unit controller might no longer exist after update
+            NotifyOnConfirmAction(sourceUnitController);
+
+            playerManagerServer.UpdatePlayerAppearance(accountId, unitProfileName, appearanceString, swappableMeshSaveData);
+        }
     }
 
 }

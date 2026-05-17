@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace AnyRPG {
 
-    public class WindowManager : ConfiguredMonoBehaviour {
+    public class WindowManager : ConfiguredClass {
 
         private List<CloseableWindowContents> windowStack = new List<CloseableWindowContents>();
         //private List<UINavigationController> navigationStack = new List<UINavigationController>();
@@ -18,6 +18,8 @@ namespace AnyRPG {
         protected InputManager inputManager = null;
         protected ControlsManager controlsManager = null;
         protected UIManager uIManager = null;
+        protected SystemEventManager systemEventManager = null;
+        protected LevelManagerClient levelManagerClient = null;
 
         public List<CloseableWindowContents> WindowStack { get => windowStack; }
         public bool NavigatingInterface { get => navigatingInterface; }
@@ -30,11 +32,10 @@ namespace AnyRPG {
             }
         }
 
-
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
         }
 
         public override void SetGameManagerReferences() {
@@ -43,13 +44,15 @@ namespace AnyRPG {
             inputManager = systemGameManager.InputManager;
             controlsManager = systemGameManager.ControlsManager;
             uIManager = systemGameManager.UIManager;
+            systemEventManager = systemGameManager.SystemEventManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public void OnDestroy() {
-            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+            levelManagerClient.OnLevelUnload -= HandleLevelUnload;
         }
 
-        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+        public void HandleLevelUnload(int sceneHandle, string sceneName) {
             //Debug.Log("WindowManager.HandleLevelUnload()");
             windowStack.Clear();
             //navigationStack.Clear();

@@ -1,4 +1,3 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class PatrolState : IState {
 
-        private UnitController baseController;
+        private UnitController unitController;
 
         private Vector3 currentDestination = Vector3.zero;
 
@@ -15,20 +14,21 @@ namespace AnyRPG {
 
         private float originalMovementSpeed = 0f;
 
-        public void Enter(UnitController baseController) {
-            //Debug.Log(baseController.gameObject.name + ".PatrolState.Enter() position: " + baseController.transform.position);
-            this.baseController = baseController;
-            if (baseController.PatrolController.CurrentPatrolSaveState.PatrolComplete() == false) {
-                originalMovementSpeed = this.baseController.UnitMotor.MovementSpeed;
+        public void Enter(UnitController unitController) {
+            //Debug.Log($"{unitController.gameObject.name}.PatrolState.Enter()");
+
+            this.unitController = unitController;
+            if (unitController.PatrolController.CurrentPatrolSaveState.PatrolComplete() == false) {
+                originalMovementSpeed = this.unitController.UnitMotor.MovementSpeed;
                 SetMovementSpeed();
 
                 // set destination
-                Vector3 tmpDestination = baseController.PatrolController.CurrentPatrolSaveState.GetDestination(false);
+                Vector3 tmpDestination = unitController.PatrolController.CurrentPatrolSaveState.GetDestination(false);
                 if (tmpDestination != Vector3.zero) {
-                    currentDestination = this.baseController.SetDestination(tmpDestination);
+                    currentDestination = this.unitController.SetDestination(tmpDestination);
                 }
             } else {
-                baseController.ChangeState(new IdleState());
+                unitController.ChangeState(new IdleState());
                 return;
             }
             //Debug.Log(aiController.gameObject.name + ".PatrolState.Enter() setting new Destination: " + newDestination);
@@ -37,17 +37,17 @@ namespace AnyRPG {
         public void Exit() {
             //Debug.Log(baseController.gameObject.name + ".PatrolState.Exit()");
             if (pauseCoroutine != null) {
-                baseController.StopCoroutine(pauseCoroutine);
+                unitController.StopCoroutine(pauseCoroutine);
             }
-            this.baseController.UnitMotor.MovementSpeed = originalMovementSpeed;
+            this.unitController.UnitMotor.MovementSpeed = originalMovementSpeed;
         }
 
         public void SetMovementSpeed() {
             //Debug.Log(baseController.gameObject.name + ".PatrolState.SetMovementSpeed() patrol: " + baseController.PatrolController.CurrentPatrol.MovementSpeed + " motor: " + this.baseController.UnitMotor.MovementSpeed + "; " + "; aicontroller: " + this.baseController.MovementSpeed);
-            if (baseController.PatrolController.CurrentPatrol.MovementSpeed == 0) {
-                this.baseController.UnitMotor.MovementSpeed = this.baseController.MovementSpeed;
+            if (unitController.PatrolController.CurrentPatrol.MovementSpeed == 0) {
+                this.unitController.UnitMotor.MovementSpeed = this.unitController.MovementSpeed;
             } else {
-                this.baseController.UnitMotor.MovementSpeed = baseController.PatrolController.CurrentPatrol.MovementSpeed;
+                this.unitController.UnitMotor.MovementSpeed = unitController.PatrolController.CurrentPatrol.MovementSpeed;
             }
         }
 
@@ -55,16 +55,16 @@ namespace AnyRPG {
             //Debug.Log(baseController.gameObject.name + ": PatrolState.Update() at location: " + baseController.transform.position);
 
             // if this was an AI and was captured as a pet, stop any in progress patrol
-            if (baseController.UnitControllerMode != UnitControllerMode.AI) {
-                baseController.ChangeState(new IdleState());
+            if (unitController.UnitControllerMode != UnitControllerMode.AI) {
+                unitController.ChangeState(new IdleState());
                 return;
             }
 
             // give a chance to switch to attack mode
-            baseController.UpdateTarget();
-            if (baseController.Target != null && baseController.AggroEnabled() == true) {
-                baseController.LeashPosition = baseController.transform.position;
-                baseController.ChangeState(new FollowState());
+            unitController.UpdateTarget();
+            if (unitController.Target != null && unitController.AggroEnabled == true) {
+                unitController.LeashPosition = unitController.transform.position;
+                unitController.ChangeState(new FollowState());
                 return;
             }
 
@@ -78,19 +78,20 @@ namespace AnyRPG {
                 //Debug.Log(baseController.gameObject.name + ".PatrolState.Update(): getNewDestination: destination was vector3.zero");
                 GetNewDestination();
                 return;
-            } else if (Vector3.Distance(baseController.transform.position, currentDestination) <= baseController.NavMeshAgent.stoppingDistance + baseController.UnitMotor.NavMeshDistancePadding) {
-                //Debug.Log(baseController.gameObject.name + ".PatrolState.Update(): Destination Reached!");
-
+            } else if (Vector3.Distance(unitController.transform.position, currentDestination) <= unitController.NavMeshAgent.stoppingDistance + unitController.UnitMotor.NavMeshDistancePadding) {
                 // destination reached
-                if (baseController.PatrolController.CurrentPatrolSaveState.PatrolComplete()) {
-                    if (baseController.PatrolController.CurrentPatrol.DespawnOnCompletion) {
-                        if (baseController.CharacterUnit != null) {
-                            baseController.CharacterUnit.Despawn(0, false, true);
-                            return;
-                        }
+                //Debug.Log($"{unitController.gameObject.name}.PatrolState.Update(): Destination Reached!  setting HasDestinationPosition to false");
+
+                // we need to set this manually, or the next fixedUpdate that runs will clear our pending destination.
+                //unitController.UnitMotor.HasDestinationPosition = false;
+                
+                if (unitController.PatrolController.CurrentPatrolSaveState.PatrolComplete()) {
+                    if (unitController.PatrolController.CurrentPatrol.DespawnOnCompletion) {
+                        unitController.Despawn(0, false, true);
+                        return;
                     } else {
                         TrySavePersistentData();
-                        baseController.ChangeState(new IdleState());
+                        unitController.ChangeState(new IdleState());
                         return;
                     }
                 } else {
@@ -99,29 +100,33 @@ namespace AnyRPG {
                     return;
                 }
             }
-
-            //pathstatus: " + animatedUnit.MyAgent.pathStatus
-            if (baseController.NavMeshAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathInvalid) {
-                // this message means things are working properly and the unit just prevented itself from getting stuck or stalling
-                //Debug.Log(baseController.gameObject.name + ".PatrolState.Update(): getNewDestination: invalid path");
-                GetNewDestination();
+            if (unitController.UnitMotor.SetMoveDestination == true) {
                 return;
             }
+            if (unitController.NavMeshAgent.pathPending == false) {
+                if (unitController.NavMeshAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathInvalid) {
+                    // this message means things are working properly and the unit just prevented itself from getting stuck or stalling
+                    //Debug.Log(baseController.gameObject.name + ".PatrolState.Update(): getNewDestination: invalid path");
+                    GetNewDestination();
+                    return;
+                }
 
-            if (baseController.NavMeshAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathPartial) {
-                // this message means things are working properly and the unit just prevented itself from getting stuck or stalling
-                //Debug.Log(baseController.gameObject.name + ".PatrolState.Update(): getNewDestination: partial path");
-                GetNewDestination();
-                return;
+                if (unitController.NavMeshAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathPartial) {
+                    // this message means things are working properly and the unit just prevented itself from getting stuck or stalling
+                    //Debug.Log(baseController.gameObject.name + ".PatrolState.Update(): getNewDestination: partial path");
+                    GetNewDestination();
+                    return;
+                }
             }
 
             //Debug.Log(baseController.gameObject.name + ".PatrolState.Update(): end of update and no action taken");
         }
 
         private void GetNewDestination() {
-            //Debug.Log(baseController.gameObject.name + ".PatrolState.GetNewDestination() patrol: " + (baseController?.PatrolController?.CurrentPatrol == null ? "null" : "valid"));
+            //Debug.Log($"{unitController.gameObject.name}.PatrolState.GetNewDestination()");
+
             TrySavePersistentData();
-            Vector3 tmpDestination = baseController.PatrolController.CurrentPatrolSaveState.GetDestination(true);
+            Vector3 tmpDestination = unitController.PatrolController.CurrentPatrolSaveState.GetDestination(true);
             if (tmpDestination == Vector3.zero) {
                 //Debug.Log(baseController.gameObject.name + ".PatrolState.Update(): GOT ZERO DESTINATION, SKIPPING TO NEXT UPDATE");
                 return;
@@ -130,28 +135,28 @@ namespace AnyRPG {
             currentDestination = tmpDestination;
 
             SetMovementSpeed();
-            pauseCoroutine = baseController.StartCoroutine(PauseForNextDestination(currentDestination));
+            pauseCoroutine = unitController.StartCoroutine(PauseForNextDestination(currentDestination));
         }
 
         public void TrySavePersistentData() {
             //Debug.Log(aiController.gameObject.name + ".PatrolState.TrySavePersistentData()");
-            if (baseController?.PatrolController?.CurrentPatrol != null && baseController.PatrolController.CurrentPatrol.SavePositionAtDestination) {
-                if (baseController.PersistentObjectComponent != null) {
-                    baseController.PersistentObjectComponent.SaveProperties();
+            if (unitController?.PatrolController?.CurrentPatrol != null && unitController.PatrolController.CurrentPatrol.SavePositionAtDestination) {
+                if (unitController.PersistentObjectComponent != null) {
+                    unitController.PersistentObjectComponent.SaveProperties(false);
                 }
             }
         }
 
         public IEnumerator PauseForNextDestination(Vector3 nextDestination) {
-            //Debug.Log(baseController.gameObject.name + ".PatrolState.PauseForNextDestination(" + nextDestination + ")");
+            //Debug.Log($"{unitController.gameObject.name}.PatrolState.PauseForNextDestination({nextDestination})");
 
-            float remainingPauseTime = baseController.PatrolController.CurrentPatrol.DestinationPauseTime;
+            float remainingPauseTime = unitController.PatrolController.CurrentPatrol.DestinationPauseTime;
             while (remainingPauseTime > 0f) {
                 yield return null;
                 remainingPauseTime -= Time.deltaTime;
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.PauseForNextDestination(" + nextDestination + "): remainingPauseTime: " + remainingPauseTime);
             }
-            currentDestination = this.baseController.SetDestination(nextDestination);
+            currentDestination = this.unitController.SetDestination(nextDestination);
             pauseCoroutine = null;
         }
     }

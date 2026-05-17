@@ -1,8 +1,5 @@
-using AnyRPG;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace AnyRPG {
 
@@ -15,7 +12,7 @@ namespace AnyRPG {
 
 
         // track the equipment that is equipped
-        protected Dictionary<EquipmentSlotProfile, Equipment> equippedEquipment = new Dictionary<EquipmentSlotProfile, Equipment>();
+        protected Dictionary<EquipmentSlotProfile, InstantiatedEquipment> equippedEquipment = new Dictionary<EquipmentSlotProfile, InstantiatedEquipment>();
 
         // game manager references
         protected SaveManager saveManager = null;
@@ -33,8 +30,8 @@ namespace AnyRPG {
         }
 
         public abstract T GetModelAppearanceController<T>() where T : ModelAppearanceController;
-        public abstract void SaveAppearanceSettings(ISaveDataOwner saveDataOwner, AnyRPGSaveData saveData);
-        public abstract void SetInitialSavedAppearance(AnyRPGSaveData saveData);
+        public abstract void SaveAppearanceSettings(CharacterSaveData saveData);
+        public abstract void SetInitialSavedAppearance(CharacterAppearanceData characterAppearanceData);
         public abstract void BuildModelAppearance();
         public abstract bool IsBuilding();
         public abstract void ResetSettings();
@@ -55,16 +52,16 @@ namespace AnyRPG {
             }
         }
 
-        protected virtual Equipment GetEquipmentForSlot(EquipmentSlotProfile equipmentSlotProfile) {
+        protected virtual InstantiatedEquipment GetEquipmentForSlot(EquipmentSlotProfile equipmentSlotProfile) {
 
             if (unitModelController.SuppressEquipment == true) {
                 return null;
             }
 
-            return characterEquipmentManager.CurrentEquipment[equipmentSlotProfile];
+            return characterEquipmentManager.CurrentEquipment[equipmentSlotProfile].InstantiatedEquipment;
         }
 
-        private int RebuildSlotAppearance(EquipmentSlotProfile equipmentSlotProfile, Equipment equipment) {
+        private int RebuildSlotAppearance(EquipmentSlotProfile equipmentSlotProfile, InstantiatedEquipment equipment) {
             if (equipment == equippedEquipment[equipmentSlotProfile]) {
                 // equipment spawned is the same as what is the character equipment manager, nothing to do
                 return 0;
@@ -83,7 +80,7 @@ namespace AnyRPG {
             equippedEquipment[equipmentSlotProfile] = null;
         }
 
-        public virtual void EquipItemModels(EquipmentSlotProfile equipmentSlotProfile, Equipment equipment) {
+        public virtual void EquipItemModels(EquipmentSlotProfile equipmentSlotProfile, InstantiatedEquipment equipment) {
             equippedEquipment[equipmentSlotProfile] = equipment;
         }
 
@@ -107,6 +104,15 @@ namespace AnyRPG {
 
         public virtual void SetAnimatorOverrideController(AnimatorOverrideController animatorOverrideController) {
             // nothing to do here.  This is really only necessary for UMA
+        }
+
+        public virtual void ActivateFirstPersonView() {
+            //Debug.Log($"{unitController.gameObject.name}.ModelAppearanceController.ActivateFirstPersonView()");
+            // overwrite in child classes that need to do something when first person view is activated
+        }
+
+        public virtual void DeactivateFirstPersonView() {
+            // overwrite in child classes that need to do something when first person view is deactivated
         }
     }
 

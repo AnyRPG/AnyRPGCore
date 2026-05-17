@@ -16,7 +16,7 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(EquipmentSlotType))]
         protected string equipmentSlotType;
 
-        private EquipmentSlotType realEquipmentSlotType;
+        private EquipmentSlotType equipmentSlotTypeRef;
 
         [Tooltip("The name of the equipment set this item belongs to, if any")]
         [SerializeField]
@@ -43,6 +43,8 @@ namespace AnyRPG {
         [SerializeField]
         [ResourceSelector(resourceType = typeof(EquipmentModelProfile))]
         private string sharedEquipmentModels = string.Empty;
+
+        private List<EquipmentModel> equipmentModels = new List<EquipmentModel>();
 
         [Header("Base Armor")]
 
@@ -89,20 +91,39 @@ namespace AnyRPG {
 
         [Tooltip("These abilities will be learned when the item is equipped")]
         [SerializeField]
-        [ResourceSelector(resourceType = typeof(BaseAbility))]
+        [ResourceSelector(resourceType = typeof(Ability))]
         private List<string> learnedAbilityNames = new List<string>();
 
-        private List<int> randomStatIndexes = new List<int>();
-
-        private List<ItemSecondaryStatNode> chosenSecondaryStats = new List<ItemSecondaryStatNode>();
-
         //[SerializeField]
-        private List<BaseAbilityProperties> learnedAbilities = new List<BaseAbilityProperties>();
+        private List<AbilityProperties> learnedAbilities = new List<AbilityProperties>();
 
         private Dictionary<Type, EquipmentModel> equipmentModelDictionary = new Dictionary<Type, EquipmentModel>();
 
+        public EquipmentSlotType EquipmentSlotType { get => equipmentSlotTypeRef; }
+        public StatusEffect OnEquipAbilityEffect { get => onEquipStatusEffectRef; set => onEquipStatusEffectRef = value; }
+        public virtual List<AbilityProperties> LearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
+        public bool ManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
+        public string EquipmentSlotTypeName { get => equipmentSlotType; set => equipmentSlotType = value; }
+        public List<HoldableObjectAttachment> DeprecatedHoldableObjectList { get => deprecatedHoldableObjectList; set => deprecatedHoldableObjectList = value; }
+        public EquipmentSet EquipmentSet { get => equipmentSet; set => equipmentSet = value; }
+        public List<ItemPrimaryStatNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
+        public bool RandomSecondaryStats { get => randomSecondaryStats; set => randomSecondaryStats = value; }
+        public List<ItemSecondaryStatNode> SecondaryStats {
+            get {
+                return secondaryStats;
+            }
+            set {
+                secondaryStats = value;
+            }
+        }
+
+        public string EquipmentSetName { get => equipmentSetName; set => equipmentSetName = value; }
+        public bool UseArmorModifier { get => useArmorModifier; set => useArmorModifier = value; }
+        public string SharedEquipmentModels { get => sharedEquipmentModels; set => sharedEquipmentModels = value; }
+        public EquipmentModelProperties InlineEquipmentModels { get => inlineEquipmentModels; set => inlineEquipmentModels = value; }
+
         public float GetArmorModifier(int characterLevel) {
-            return GetArmorModifier(characterLevel, realItemQuality);
+            return GetArmorModifier(characterLevel, itemQualityRef);
         }
 
         public virtual float GetArmorModifier(int characterLevel, ItemQuality usedItemQuality) {
@@ -124,7 +145,7 @@ namespace AnyRPG {
         }
 
         public float GetPrimaryStatModifier(string statName, int currentLevel, BaseCharacter baseCharacter) {
-            return GetPrimaryStatModifier(statName, currentLevel, baseCharacter, realItemQuality);
+            return GetPrimaryStatModifier(statName, currentLevel, baseCharacter, itemQualityRef);
         }
 
         public virtual float GetPrimaryStatModifier(string statName, int currentLevel, BaseCharacter baseCharacter, ItemQuality usedItemQuality) {
@@ -143,8 +164,8 @@ namespace AnyRPG {
             return 0f;
         }
 
-        public virtual float GetSecondaryStatAddModifier(SecondaryStatType secondaryStatType, int characterLevel) {
-            foreach (ItemSecondaryStatNode itemSecondaryStatNode in secondaryStats) {
+        public virtual float GetSecondaryStatAddModifier(List<ItemSecondaryStatNode> usedSecondaryStats, SecondaryStatType secondaryStatType, int characterLevel) {
+            foreach (ItemSecondaryStatNode itemSecondaryStatNode in usedSecondaryStats) {
                 if (secondaryStatType == itemSecondaryStatNode.SecondaryStat) {
                     return itemSecondaryStatNode.BaseAmount + (itemSecondaryStatNode.AmountPerLevel * GetItemLevel(characterLevel));
                 }
@@ -152,43 +173,14 @@ namespace AnyRPG {
             return 0f;
         }
 
-        public virtual float GetSecondaryStatMultiplyModifier(SecondaryStatType secondaryStatType) {
-            foreach (ItemSecondaryStatNode itemSecondaryStatNode in secondaryStats) {
+        public virtual float GetSecondaryStatMultiplyModifier(List<ItemSecondaryStatNode> usedSecondaryStats, SecondaryStatType secondaryStatType) {
+            foreach (ItemSecondaryStatNode itemSecondaryStatNode in usedSecondaryStats) {
                 if (secondaryStatType == itemSecondaryStatNode.SecondaryStat) {
                     return itemSecondaryStatNode.BaseMultiplier;
                 }
             }
             return 0;
         }
-
-        public StatusEffect OnEquipAbilityEffect { get => onEquipStatusEffectRef; set => onEquipStatusEffectRef = value; }
-        public virtual List<BaseAbilityProperties> LearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
-        public bool ManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
-        public string EquipmentSlotTypeName { get => equipmentSlotType; set => equipmentSlotType = value; }
-        public EquipmentSlotType EquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
-        public List<HoldableObjectAttachment> DeprecatedHoldableObjectList { get => deprecatedHoldableObjectList; set => deprecatedHoldableObjectList = value; }
-        public EquipmentSet EquipmentSet { get => equipmentSet; set => equipmentSet = value; }
-        public List<ItemPrimaryStatNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
-        public bool RandomSecondaryStats { get => randomSecondaryStats; set => randomSecondaryStats = value; }
-        public List<ItemSecondaryStatNode> SecondaryStats {
-            get {
-                if (randomSecondaryStats == true) {
-                    return chosenSecondaryStats;
-                }
-                return secondaryStats;
-            }
-            set {
-                secondaryStats = value;
-            }
-        }
-
-        public List<ItemSecondaryStatNode> ChosenSecondaryStats { get => chosenSecondaryStats; set => chosenSecondaryStats = value; }
-        public List<int> RandomStatIndexes { get => randomStatIndexes; set => randomStatIndexes = value; }
-        public string EquipmentSetName { get => equipmentSetName; set => equipmentSetName = value; }
-        public bool UseArmorModifier { get => useArmorModifier; set => useArmorModifier = value; }
-        public string SharedEquipmentModels { get => sharedEquipmentModels; set => sharedEquipmentModels = value; }
-        public EquipmentModelProperties InlineEquipmentModels { get => inlineEquipmentModels; set => inlineEquipmentModels = value; }
-
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
             foreach (EquipmentSlotProfile equipmentSlotProfile in systemDataFactory.GetResourceList<EquipmentSlotProfile>()) {
@@ -209,34 +201,18 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override bool Use() {
-            if (playerManager.MyCharacter?.CharacterEquipmentManager != null) {
-                bool returnValue = base.Use();
-                if (returnValue == false) {
-                    return false;
-                }
-                if (playerManager.MyCharacter.CharacterEquipmentManager.Equip(this) == true) {
-                    playerManager.UnitController.UnitModelController.RebuildModelAppearance();
-                    Remove();
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            return false;
-        }
 
-        public virtual bool CanEquip(BaseCharacter baseCharacter) {
+        public virtual bool CanEquip(int usedItemLevel, UnitController unitController) {
             //Debug.Log(DisplayName + ".Equipment.CanEquip(" + baseCharacter.gameObject.name + ")");
-            if (!CharacterClassRequirementIsMet(baseCharacter)) {
+            if (!CharacterClassRequirementIsMet(unitController.BaseCharacter)) {
                 //Debug.Log(baseCharacter.gameObject.name + "." + DisplayName + ".Equipment.CanEquip(): not the right character class");
                 return false;
             }
-            if (!CapabilityConsumerSupported(baseCharacter)) {
+            if (!CapabilityConsumerSupported(unitController.BaseCharacter)) {
                 //Debug.Log(baseCharacter.gameObject.name + "." + DisplayName + ".Equipment.CanEquip(): CapabilityConsumer unsupported");
                 return false;
             }
-            if (GetItemLevel(baseCharacter.CharacterStats.Level) > baseCharacter.CharacterStats.Level) {
+            if (usedItemLevel > unitController.CharacterStats.Level) {
                 //Debug.Log(baseCharacter.gameObject.name + "." + DisplayName + ".Equipment.CanEquip(): character level too low (" + baseCharacter.CharacterStats.Level + ")");
                 return false;
             }
@@ -286,9 +262,14 @@ namespace AnyRPG {
             return true;
         }
 
-        public override string GetDescription(ItemQuality usedItemQuality) {
+        public override string GetDescription(ItemQuality usedItemQuality, int usedItemLevel) {
             //Debug.Log(DisplayName + ".Equipment.GetSummary()");
-            //string stats = string.Empty;
+            
+            string summaryLines = GetEquipmentDescription(usedItemQuality, usedItemLevel, secondaryStats);
+            return base.GetDescription(usedItemQuality, usedItemLevel) + "\n\n" + summaryLines;
+        }
+
+        public string GetEquipmentDescription(ItemQuality usedItemQuality, int usedItemLevel, List<ItemSecondaryStatNode> usedSecondaryStats) {
             List<string> summaryLines = new List<string>();
 
             string itemRange = "";
@@ -297,21 +278,21 @@ namespace AnyRPG {
             if (dynamicLevel == true && freezeDropLevel == false) {
                 itemRange = " (1 - " + (levelCap > 0 ? levelCap : systemConfigurationManager.MaxLevel) + ")";
             }
-            if (GetItemLevel(playerManager.MyCharacter.CharacterStats.Level) > playerManager.MyCharacter.CharacterStats.Level) {
+            if (GetItemLevel(playerManagerClient.UnitController.CharacterStats.Level) > playerManagerClient.UnitController.CharacterStats.Level) {
                 colorstring = "red";
             } else {
                 colorstring = "white";
             }
-            summaryLines.Add(string.Format("<color={0}>Item Level: {1}{2}</color>", colorstring, GetItemLevel(playerManager.MyCharacter.CharacterStats.Level), itemRange));
+            summaryLines.Add(string.Format("<color={0}>Item Level: {1}{2}</color>", colorstring, GetItemLevel(playerManagerClient.UnitController.CharacterStats.Level), itemRange));
 
             // armor
             if (useArmorModifier) {
-                summaryLines.Add(string.Format(" +{0} Armor", GetArmorModifier(playerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
+                summaryLines.Add(string.Format(" +{0} Armor", GetArmorModifier(playerManagerClient.UnitController.CharacterStats.Level, usedItemQuality)));
             }
 
             // primary stats
             foreach (ItemPrimaryStatNode itemPrimaryStatNode in primaryStats) {
-                float primaryStatModifier = GetPrimaryStatModifier(itemPrimaryStatNode.StatName, playerManager.MyCharacter.CharacterStats.Level, playerManager.MyCharacter, usedItemQuality);
+                float primaryStatModifier = GetPrimaryStatModifier(itemPrimaryStatNode.StatName, playerManagerClient.UnitController.CharacterStats.Level, playerManagerClient.UnitController.BaseCharacter, usedItemQuality);
                 if (primaryStatModifier > 0f) {
                     summaryLines.Add(string.Format(" +{0} {1}",
                         primaryStatModifier,
@@ -320,9 +301,9 @@ namespace AnyRPG {
             }
 
             // secondary stats
-            foreach (ItemSecondaryStatNode itemSecondaryStatNode in SecondaryStats) {
+            foreach (ItemSecondaryStatNode itemSecondaryStatNode in usedSecondaryStats) {
                 summaryLines.Add(string.Format("<color=green> +{0} {1}</color>",
-                                   GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, playerManager.MyCharacter.CharacterStats.Level),
+                                   GetSecondaryStatAddModifier(usedSecondaryStats, itemSecondaryStatNode.SecondaryStat, playerManagerClient.UnitController.CharacterStats.Level),
                                    itemSecondaryStatNode.SecondaryStat.ToString()));
             }
 
@@ -330,16 +311,16 @@ namespace AnyRPG {
             if (onEquipStatusEffectRef != null) {
                 summaryLines.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipStatusEffectRef.DisplayName));
             }
-            foreach (BaseAbilityProperties learnedAbility in LearnedAbilities) {
+            foreach (AbilityProperties learnedAbility in LearnedAbilities) {
                 summaryLines.Add(string.Format("<color=green>Learn On Equip: {0}</color>", learnedAbility.DisplayName));
             }
 
             if (equipmentSet != null) {
-                int equipmentCount = playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
+                int equipmentCount = playerManagerClient.UnitController.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
                 summaryLines.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.DisplayName, equipmentCount, equipmentSet.EquipmentList.Count));
                 foreach (Equipment equipment in equipmentSet.EquipmentList) {
                     string colorName = "#888888";
-                    if (playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.ResourceName)) {
+                    if (playerManagerClient.UnitController.CharacterEquipmentManager.HasEquipment(equipment.ResourceName)) {
                         colorName = "yellow";
                     }
                     summaryLines.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.DisplayName));
@@ -351,7 +332,7 @@ namespace AnyRPG {
                         if (equipmentCount > i) {
                             colorName = "green";
                         }
-                        summaryLines.Add(string.Format("<color={0}>({1}) {2}</color>", colorName, i+1, equipmentSet.TraitList[i].GetDescription()));
+                        summaryLines.Add(string.Format("<color={0}>({1}) {2}</color>", colorName, i + 1, equipmentSet.TraitList[i].GetDescription()));
                     }
                 }
                 if (equipmentSet.TraitList.Count > 0) {
@@ -359,7 +340,27 @@ namespace AnyRPG {
                 }
             }
 
-            return base.GetDescription(usedItemQuality) + "\n\n" + string.Join("\n", summaryLines);
+            return string.Join("\n", summaryLines);
+        }
+
+        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, long itemId, Item item, ItemQuality usedItemQuality) {
+            if ((item is Equipment) == false) {
+                return null;
+            }
+            return new InstantiatedEquipment(systemGameManager, itemId, item as Equipment, usedItemQuality);
+        }
+
+        public void AddEquipmentModel(EquipmentModel equipmentModel) {
+            if (equipmentModel == null) {
+                return;
+            }
+            if (equipmentModelDictionary.ContainsKey(equipmentModel.GetType())) {
+                Debug.LogWarning($"Equipment.AddEquipmentModel(): Equipment model of type {equipmentModel.GetType()} already exists on equipment {ResourceName}.  Cannot add duplicate.  CHECK INSPECTOR");
+                return;
+            }
+            //Debug.Log($"Adding equipment model of type {equipmentModel.GetType()} to equipment {ResourceName}");
+            equipmentModels.Add(equipmentModel);
+            equipmentModelDictionary.Add(equipmentModel.GetType(), equipmentModel);
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
@@ -374,10 +375,10 @@ namespace AnyRPG {
                 }
             }
 
-            learnedAbilities = new List<BaseAbilityProperties>();
+            learnedAbilities = new List<AbilityProperties>();
             if (learnedAbilityNames != null) {
                 foreach (string baseAbilityName in learnedAbilityNames) {
-                    BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(baseAbilityName);
+                    Ability baseAbility = systemDataFactory.GetResource<Ability>(baseAbilityName);
                     if (baseAbility != null) {
                         learnedAbilities.Add(baseAbility.AbilityProperties);
                     } else {
@@ -387,11 +388,11 @@ namespace AnyRPG {
             }
             
             
-            realEquipmentSlotType = null;
+            equipmentSlotTypeRef = null;
             if (equipmentSlotType != null && equipmentSlotType != string.Empty) {
                 EquipmentSlotType tmpEquipmentSlotType = systemDataFactory.GetResource<EquipmentSlotType>(equipmentSlotType);
                 if (tmpEquipmentSlotType != null) {
-                    realEquipmentSlotType = tmpEquipmentSlotType;
+                    equipmentSlotTypeRef = tmpEquipmentSlotType;
                 } else {
                     Debug.LogError("Equipment.SetupScriptableObjects(): Could not find equipment slot type : " + equipmentSlotType + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
@@ -409,110 +410,32 @@ namespace AnyRPG {
                 }
             }
 
-            if (sharedEquipmentModels != string.Empty) {
-                EquipmentModelProfile tmpEquipmentModelProfile = systemDataFactory.GetResource<EquipmentModelProfile>(sharedEquipmentModels);
-                if (tmpEquipmentModelProfile != null) {
-                    inlineEquipmentModels = tmpEquipmentModelProfile.Properties;
-                } else {
-                    Debug.LogError($"Equipment.SetupScriptableObjects(): Could not find equipment model profile : {sharedEquipmentModels} while inititalizing {ResourceName}.  CHECK INSPECTOR");
-                }
-            }
-
             foreach (EquipmentModel equipmentModel in inlineEquipmentModels.EquipmentModels) {
                 if (equipmentModel != null) {
                     equipmentModel.Configure(systemGameManager);
                     equipmentModel.SetupScriptableObjects(this);
-                    //Debug.Log($"Equipment.SetupScriptableObjects(): adding type {equipmentModel.GetType().Name} for {ResourceName}");
+                    equipmentModels.Add(equipmentModel);
+                }
+            }
+            if (sharedEquipmentModels != string.Empty) {
+                EquipmentModelProfile tmpEquipmentModelProfile = systemDataFactory.GetResource<EquipmentModelProfile>(sharedEquipmentModels);
+                if (tmpEquipmentModelProfile != null) {
+                    foreach (EquipmentModel equipmentModel in tmpEquipmentModelProfile.Properties.EquipmentModels) {
+                        if (equipmentModel != null) {
+                            equipmentModels.Add(equipmentModel);
+                        }
+                    }
+                } else {
+                    Debug.LogError($"Equipment.SetupScriptableObjects(): Could not find equipment model profile : {sharedEquipmentModels} while inititalizing {ResourceName}.  CHECK INSPECTOR");
+                }
+            }
+            foreach (EquipmentModel equipmentModel in equipmentModels) {
+                if (equipmentModel != null && equipmentModelDictionary.ContainsKey(equipmentModel.GetType()) == false)  {
+                    //Debug.Log($"Adding equipment model of type {equipmentModel.GetType()} to equipment {ResourceName}");
                     equipmentModelDictionary.Add(equipmentModel.GetType(), equipmentModel);
                 }
             }
         }
 
-        public override void InitializeNewItem(ItemQuality itemQuality = null) {
-            base.InitializeNewItem(itemQuality);
-
-            if (randomSecondaryStats == false) {
-                return;
-            }
-            if (realItemQuality == null) {
-                return;
-            }
-            if (realItemQuality.RandomStatCount == 0) {
-                return;
-            }
-            // get the max number, and cycling through the list and adding them to our current list and index
-            int maxCount = Mathf.Min(secondaryStats.Count, realItemQuality.RandomStatCount);
-            while (RandomStatIndexes.Count < maxCount) {
-                int randomNumber = UnityEngine.Random.Range(0, secondaryStats.Count);
-                if (!RandomStatIndexes.Contains(randomNumber)) {
-                    RandomStatIndexes.Add(randomNumber);
-                }
-            }
-            InitializeRandomStatsFromIndex();
-        }
-
-        public void InitializeRandomStatsFromIndex() {
-            chosenSecondaryStats.Clear();
-            foreach (int randomIndex in RandomStatIndexes) {
-                chosenSecondaryStats.Add(secondaryStats[randomIndex]);
-            }
-        }
-
     }
-
-    [System.Serializable]
-    public class ItemPrimaryStatNode {
-
-        [Tooltip("The primary stat to increase when this item is equipped.  By default, this stat will be automatically set based on the item level")]
-        [SerializeField]
-        [ResourceSelector(resourceType = typeof(CharacterStat))]
-        private string statName = string.Empty;
-
-        [Tooltip("If true, the stat value entered in the manual modifier value field will be used instead of the automatically scaled value")]
-        [SerializeField]
-        private bool useManualValue = false;
-
-        [Tooltip("If use manual value is true, the value in this field will be used instead of the automatically scaled value")]
-        [SerializeField]
-        private float manualModifierValue = 0;
-
-        public string StatName { get => statName; set => statName = value; }
-        public float ManualModifierValue { get => manualModifierValue; set => manualModifierValue = value; }
-        public bool UseManualValue { get => useManualValue; set => useManualValue = value; }
-    }
-
-    [System.Serializable]
-    public class ItemSecondaryStatNode {
-
-        [Tooltip("The secondary stat to increase when this item is equipped.")]
-        [SerializeField]
-        private SecondaryStatType secondaryStat;
-
-        [Tooltip("This value is constant, and does not scale with level")]
-        [SerializeField]
-        private float baseAmount = 0;
-
-        [Tooltip("The value will be multiplied by the item level of the equipment")]
-        [SerializeField]
-        private float amountPerLevel = 0;
-
-        [Tooltip("After amount values are added together, they will be multiplied by this number")]
-        [SerializeField]
-        private float baseMultiplier = 1f;
-
-        public SecondaryStatType SecondaryStat { get => secondaryStat; set => secondaryStat = value; }
-        public float BaseAmount { get => baseAmount; set => baseAmount = value; }
-        public float AmountPerLevel { get => amountPerLevel; set => amountPerLevel = value; }
-        public float BaseMultiplier {
-            get {
-                if (baseMultiplier == 0f) {
-                    // equipment should not be able to reduce stats to zero, so ignore zero values
-                    return 1f;
-                }
-                return baseMultiplier;
-            }
-            set => baseMultiplier = value;
-        }
-    }
-
 }

@@ -7,7 +7,7 @@ namespace AnyRPG {
     [System.Serializable]
     public class DialogPrerequisite : ConfiguredClass, IPrerequisite {
 
-        public event System.Action OnStatusUpdated = delegate { };
+        public event System.Action<UnitController> OnStatusUpdated = delegate { };
 
 
         [SerializeField]
@@ -20,26 +20,30 @@ namespace AnyRPG {
 
         private Dialog prerequisiteDialog = null;
 
-        public void UpdateStatus(bool notify = true) {
+        public void UpdateStatus(UnitController sourceUnitController, bool notify = true) {
+            //Debug.Log($"{ownerName}.DialogPrerequisite.UpdateStatus()");
+
             bool originalResult = prerequisiteMet;
             //bool checkResult = (prerequisiteDialog.TurnedIn == true);
             // updated to prevent repeatable dialogs from trigger prerequisites in cutscenes and doing things before they should.
-            bool checkResult = (prerequisiteDialog.TurnedIn == true && prerequisiteDialog.Repeatable == false);
+            bool checkResult = (prerequisiteDialog.TurnedIn(sourceUnitController) == true && prerequisiteDialog.Repeatable == false);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
                 if (notify == true) {
-                    OnStatusUpdated();
+                    OnStatusUpdated(sourceUnitController);
                 }
             }
         }
 
 
-        public void HandleDialogCompleted() {
+        public void HandleDialogCompleted(UnitController unitController) {
+            //Debug.Log($"{ownerName}.DialogPrerequisite.HandleDialogCompleted({unitController.gameObject.name})");
+
             prerequisiteMet = true;
-            OnStatusUpdated();
+            OnStatusUpdated(unitController);
         }
 
-        public virtual bool IsMet(BaseCharacter baseCharacter) {
+        public virtual bool IsMet(UnitController sourceUnitController) {
             return prerequisiteMet;
         }
 

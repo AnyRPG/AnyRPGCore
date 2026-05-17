@@ -25,6 +25,7 @@ namespace AnyRPG {
         // game manager references
 
         private SystemDataFactory systemDataFactory = null;
+        private NetworkManagerServer networkManagerServer = null;
 
         public AudioProfile MovementLoopProfile { get => movementLoopProfile; set => movementLoopProfile = value; }
         public AudioProfile MovementHitProfile { get => movementHitProfile; set => movementHitProfile = value; }
@@ -39,10 +40,21 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             systemDataFactory = systemGameManager.SystemDataFactory;
+            networkManagerServer = systemGameManager.NetworkManagerServer;
         }
 
         public void OnTriggerEnter(Collider other) {
             //Debug.Log($"{gameObject.name}.MovementSoundArea.OnTriggerEnter()");
+
+            if (configureCount == 0) {
+                return;
+            }
+
+            if (networkManagerServer.ServerModeActive == true) {
+                // no sounds should be played on the server
+                return;
+            }
+
             UnitController unitController = other.gameObject.GetComponent<UnitController>();
             // stop playing sound in case movement sounds will change
             if (unitController != null) {
@@ -52,6 +64,17 @@ namespace AnyRPG {
         }
 
         public void OnTriggerExit(Collider other) {
+            //Debug.Log($"{gameObject.name}.MovementSoundArea.OnTriggerExit()");
+
+            if (configureCount == 0) {
+                return;
+            }
+
+            if (networkManagerServer.ServerModeActive == true) {
+                // no sounds should be played on the server
+                return;
+            }
+
             UnitController unitController = other.gameObject.GetComponent<UnitController>();
             if (unitController != null) {
                 // stop playing sound in case movement sounds will change

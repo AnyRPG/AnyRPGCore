@@ -30,7 +30,7 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public TextMeshProUGUI Timer { get => timer; }
         public TextMeshProUGUI StackCount { get => stackCount; set => stackCount = value; }
@@ -49,29 +49,20 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log("StatusEffectNodeScript.OnPointerClick()");
-            base.OnPointerClick(eventData);
-            if (eventData.button == PointerEventData.InputButton.Right) {
-                HandleRightClick();
-            }
-        }
-
-        public void HandleRightClick() {
+        protected override void HandleRightClick() {
             //Debug.Log("StatusEffectNodeScript.HandleRightClick()");
-            CancelStatusEffect();
+
+            base.HandleRightClick();
+            RequestCancelStatusEffect();
             uIManager.HideToolTip();
         }
 
-        private void CancelStatusEffect() {
-            if (target == playerManager.UnitController?.CharacterUnit) {
-                if (statusEffectNode != null && statusEffectNode.StatusEffect.StatusEffectAlignment != StatusEffectAlignment.Harmful) {
-                    //Debug.Log("StatusEffectNodeScript.HandleRightClick(): statusEffect is not null, destroying");
-                    statusEffectNode.CancelStatusEffect();
-                }
+        private void RequestCancelStatusEffect() {
+            if (target == playerManagerClient.UnitController?.CharacterUnit) {
+                target.UnitController.CharacterStats.RequestCancelStatusEffect(statusEffectNode);
             }
         }
 
@@ -139,7 +130,7 @@ namespace AnyRPG {
 
         public void ShowGamepadTooltip() {
             //Debug.Log("StatusEffectNodeScript.ShowGamepadTooltip()");
-            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, statusEffectNode.StatusEffect, "");
+            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, statusEffectNode.StatusEffect);
         }
 
         public override void DeSelect() {
@@ -154,7 +145,7 @@ namespace AnyRPG {
         public override void JoystickButton2() {
             //Debug.Log("StatusEffectNodeScript.JoystickButton2()");
             base.JoystickButton2();
-            CancelStatusEffect();
+            RequestCancelStatusEffect();
         }
 
 

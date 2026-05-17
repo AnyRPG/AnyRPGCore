@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace AnyRPG {
 
     /// <summary>
     /// store and retrieve all scriptable objects from the Resources folders defined in the GameManager
     /// </summary>
-    public class SystemDataFactory : ConfiguredMonoBehaviour {
+    public class SystemDataFactory : ConfiguredClass {
 
         private Dictionary<Type, FactoryDataAccess> dataDictionary = new Dictionary<Type, FactoryDataAccess>();
 
@@ -30,7 +31,7 @@ namespace AnyRPG {
             SetupFactoryDataAccess<ArmorClass>();
             SetupFactoryDataAccess<AttachmentProfile>();
             SetupFactoryDataAccess<AudioProfile>();
-            SetupFactoryDataAccess<BaseAbility>();
+            SetupFactoryDataAccess<Ability>();
             SetupFactoryDataAccess<BehaviorProfile>();
             SetupFactoryDataAccess<ChatCommand>();
             SetupFactoryDataAccess<CharacterClass>();
@@ -49,6 +50,7 @@ namespace AnyRPG {
             SetupFactoryDataAccess<EquipmentSlotProfile>();
             SetupFactoryDataAccess<EquipmentSlotType>();
             SetupFactoryDataAccess<Faction>();
+            SetupFactoryDataAccess<GameExtension>();
             SetupFactoryDataAccess<InteractableOptionConfig>();
             SetupFactoryDataAccess<Item>();
             SetupFactoryDataAccess<ItemQuality>();
@@ -94,6 +96,16 @@ namespace AnyRPG {
             FactoryDataAccess factoryDataAccess = new FactoryDataAccess();
             factoryDataAccess.Setup<TDataType>(systemGameManager);
             dataDictionary.Add(typeof(TDataType), factoryDataAccess);
+        }
+
+        public void AddResource<TDataType>(TDataType resourceProfile) where TDataType : ResourceProfile {
+            //Debug.Log($"SystemDataFactory.AddResource({resourceProfile.ResourceName}) : {typeof(TDataType).Name}");
+
+            if (resourceProfile != null) {
+                if (dataDictionary.ContainsKey(typeof(TDataType))) {
+                    dataDictionary[typeof(TDataType)].AddResource(resourceProfile);
+                }
+            }
         }
 
         /// <summary>

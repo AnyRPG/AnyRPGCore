@@ -13,18 +13,24 @@ namespace AnyRPG {
         */
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public void OnTriggerEnter(Collider other) {
             //Debug.Log($"{gameObject.name}.MovementSoundArea.OnTriggerEnter()");
-            if (other.gameObject == playerManager.ActiveUnitController.gameObject) {
-                playerManager.RespawnPlayer();
+
+            // TO DO : FIX ME this will not work in multiplayer
+
+            if (playerManagerClient.ActiveUnitController == null) {
+                return;
+            }
+            if (other.gameObject == playerManagerClient.ActiveUnitController.gameObject) {
+                playerManagerClient.RequestRespawnPlayer();
             }
         }
 

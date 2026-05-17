@@ -36,21 +36,22 @@ namespace AnyRPG {
         private KeyBindManager keyBindManager = null;
         private UIManager uIManager = null;
         private NamePlateManager namePlateManager = null;
+        private LevelManagerClient levelManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            levelManagerClient.OnLevelLoad += HandleLevelLoad;
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             keyBindManager = systemGameManager.KeyBindManager;
             uIManager = systemGameManager.UIManager;
             namePlateManager = uIManager.NamePlateManager;
-
-            SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
-        public void OnDestroy() {
-            SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
-        }
-
-        public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
+        public void HandleLevelLoad() {
             ResetAllInput();
         }
 
@@ -83,7 +84,7 @@ namespace AnyRPG {
         public void RegisterInput() {
             if (keyBindManager.BindName != string.Empty) {
                 // we are binding a key.  discard all input
-                Debug.Log("Key Binding in progress.  returning.");
+                //Debug.Log("Key Binding in progress.  returning.");
                 foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
                     keyBindNode.UnRegisterKeyPress(true);
                     keyBindNode.UnRegisterKeyHeld();
@@ -100,7 +101,7 @@ namespace AnyRPG {
         public void RegisterKeyPresses() {
             if (lastRegisteredFrame >= Time.frameCount) {
                 // we have already registered keypresses this frame
-                Debug.Log("keypresses already registered this frame");
+                //Debug.Log("keypresses already registered this frame");
                 return;
             }
             lastRegisteredFrame = Time.frameCount;
@@ -215,14 +216,10 @@ namespace AnyRPG {
 
             // track left mouse button up and down events to determine difference in click vs drag
             if (Input.GetMouseButtonUp(0)) {
-                if (!Input.GetMouseButton(1) && !Input.GetMouseButtonDown(1)) {
-                    SystemEventManager.TriggerEvent("OnDisallowMouseMovement", eventParam);
-                }
-                SystemEventManager.TriggerEvent("OnLeftMouseButtonUp", eventParam);
                 if (leftMouseButtonDown) {
                     leftMouseButtonUpPosition = Input.mousePosition;
                     leftMouseButtonUp = true;
-                    //Debug.Log("down mouse position: " + leftMouseButtonDownPosition.ToString() + " up mouse position: " + leftMouseButtonUpPosition.ToString());
+                    //Debug.Log($"down mouse position: {leftMouseButtonDownPosition.ToString()} up mouse position: {leftMouseButtonUpPosition.ToString()}");
                     if (leftMouseButtonUpPosition == leftMouseButtonDownPosition) {
                         leftMouseButtonClicked = true;
                     }
@@ -236,13 +233,10 @@ namespace AnyRPG {
             // track right mouse button up and down events to determine difference in click vs drag
             if (Input.GetMouseButtonUp(1)) {
                 SystemEventManager.TriggerEvent("OnRightMouseButtonUp", eventParam);
-                if (!Input.GetMouseButton(0) && !Input.GetMouseButtonDown(0)) {
-                    SystemEventManager.TriggerEvent("OnDisallowMouseMovement", eventParam);
-                }
                 if (rightMouseButtonDown) {
                     rightMouseButtonUpPosition = Input.mousePosition;
                     rightMouseButtonUp = true;
-                    //Debug.Log("down mouse position: " + rightMouseButtonDownPosition.ToString() + " up mouse position: " + rightMouseButtonUpPosition.ToString());
+                    //Debug.Log($"down mouse position: {rightMouseButtonDownPosition.ToString()} up mouse position: {rightMouseButtonUpPosition.ToString()}");
                     if (rightMouseButtonUpPosition == rightMouseButtonDownPosition) {
                         rightMouseButtonClicked = true;
                     }
@@ -258,7 +252,7 @@ namespace AnyRPG {
             if (Input.GetMouseButtonUp(2) && middleMouseButtonDown) {
                 middleMouseButtonUpPosition = Input.mousePosition;
                 middleMouseButtonUp = true;
-                //Debug.Log("down mouse position: " + rightMouseButtonDownPosition.ToString() + " up mouse position: " + rightMouseButtonUpPosition.ToString());
+                //Debug.Log($"down mouse position: {rightMouseButtonDownPosition.ToString()} up mouse position: {rightMouseButtonUpPosition.ToString()}");
                 if (middleMouseButtonUpPosition == middleMouseButtonDownPosition) {
                     middleMouseButtonClicked = true;
                 }
@@ -281,11 +275,6 @@ namespace AnyRPG {
                 if (EventSystem.current.IsPointerOverGameObject() && (namePlateManager != null ? !namePlateManager.MouseOverNamePlate() : true)) {
                     rightMouseButtonClickedOverUI = true;
                 }
-                if (!rightMouseButtonClickedOverUI) {
-                    SystemEventManager.TriggerEvent("OnAllowMouseMovement", eventParam);
-                }
-                SystemEventManager.TriggerEvent("OnRightMouseButtonDown", eventParam);
-
             }
 
             // track left mouse button up and down events to determine difference in click vs drag
@@ -295,10 +284,6 @@ namespace AnyRPG {
                 if (EventSystem.current.IsPointerOverGameObject() && (namePlateManager != null ? !namePlateManager.MouseOverNamePlate() : true)) {
                     leftMouseButtonClickedOverUI = true;
                 }
-                if (!leftMouseButtonClickedOverUI) {
-                    SystemEventManager.TriggerEvent("OnAllowMouseMovement", eventParam);
-                }
-                SystemEventManager.TriggerEvent("OnLeftMouseButtonDown", eventParam);
             }
 
             if (Input.GetMouseButtonDown(2)) {
@@ -311,6 +296,7 @@ namespace AnyRPG {
 
             float mouseWheel = Input.GetAxis("Mouse ScrollWheel");
             if (mouseWheel != 0) {
+                //Debug.Log($"Mouse scrolled: {mouseWheel}");
                 mouseScrolled = true;
             }
 

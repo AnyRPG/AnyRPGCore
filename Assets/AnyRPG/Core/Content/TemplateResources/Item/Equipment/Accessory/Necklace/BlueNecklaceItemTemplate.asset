@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 1
   characterClassRequirementList: []
+  weight: 0.05
+  itemPickupPrefabProfileName: Necklace
   equipmentSlotType: Necklace
   equipmentSetName: 
-  umaRecipeProfileName: Leather Necklace
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Leather Necklace

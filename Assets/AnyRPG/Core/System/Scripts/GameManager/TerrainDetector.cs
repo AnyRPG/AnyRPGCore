@@ -15,6 +15,7 @@ namespace AnyRPG {
                 ClearSceneSettings();
                 return;
             }
+            //mainMapCameraController.targetTerrain = Terrain.activeTerrain;
             terrainData = Terrain.activeTerrain.terrainData;
             alphamapWidth = terrainData.alphamapWidth;
             alphamapHeight = terrainData.alphamapHeight;

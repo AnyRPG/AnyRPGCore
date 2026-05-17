@@ -48,7 +48,7 @@ namespace AnyRPG {
             if (windowContents != null) {
                 pagedWindowContents.OnPageCountUpdate += UpdateNavigationArea;
             } else {
-                Debug.Log(gameObject.name + ".PagedWindow.Awake(): Could not find window contents.  Check inspector.");
+                Debug.LogWarning($"{gameObject.name}.PagedWindow.Awake(): Could not find window contents.  Check inspector.");
             }
         }
 
@@ -75,7 +75,7 @@ namespace AnyRPG {
             // do this first because openwindow will update the page count
             //pageIndex = 0;
 
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 leftTriggerHint.SetActive(true);
                 rightTriggerHint.SetActive(true);
             } else {

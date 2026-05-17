@@ -1,10 +1,6 @@
-using AnyRPG;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     public abstract class LootableNodeComponent : InteractableOptionComponent, ILootHolder {
@@ -25,26 +21,34 @@ namespace AnyRPG {
         // game manager references
         protected LootManager lootManager = null;
 
-        public override bool PrerequisitesMet {
+        public override bool BlockTooltip {
             get {
-                bool returnResult = base.PrerequisitesMet;
-                if (returnResult == false) {
-                    return returnResult;
-                }
-                if (spawnCoroutine != null) {
+                if (Props.SpawnObject == null) {
                     return false;
                 }
-                if (Props.SpawnTimer == -1 && pickupCount > 0) {
-                    return false;
-                }
+                return (Props.SpawnObject.activeSelf == false);
+            }
+        }
+
+        public override bool PrerequisitesMet(UnitController sourceUnitController) {
+            bool returnResult = base.PrerequisitesMet(sourceUnitController);
+            if (returnResult == false) {
                 return returnResult;
             }
+            if (spawnCoroutine != null) {
+                return false;
+            }
+            if (Props.SpawnTimer == -1 && pickupCount > 0) {
+                return false;
+            }
+            return returnResult;
         }
 
         public LootHolder LootHolder { get => lootHolder; set => lootHolder = value; }
 
         public LootableNodeComponent(Interactable interactable, LootableNodeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             // initialize loot tables and states
+            // why was this commented out?
             InitializeLootTableStates();
         }
 
@@ -53,23 +57,46 @@ namespace AnyRPG {
             lootManager = systemGameManager.LootManager;
         }
 
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            lootHolder.Configure(systemGameManager);
+            SubscribeToLootHolderEvents();
+        }
+
+        public void SubscribeToLootHolderEvents() {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                lootHolder.OnRemoveDroppedItem += HandleRemoveDroppedItem;
+            }
+        }
+
+        private void HandleRemoveDroppedItem(LootDrop drop, int accountId) {
+            CheckDropListSize();
+        }
+
         public override void Cleanup() {
             base.Cleanup();
             ClearLootTables();
         }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex = 0) {
             //Debug.Log($"{gameObject.name}.LootableNode.Interact(" + source.name + ")");
             if (Props.LootTables == null) {
                 //Debug.Log($"{gameObject.name}.GatheringNode.Interact(" + source.name + "): lootTable was null!");
                 return true;
             }
-            base.Interact(source, optionIndex);
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
-            DropLoot();
-            PickUp();
-            uIManager.interactionWindow.CloseWindow();
+            DropLoot(sourceUnitController);
+            //PickUp();
             return true;
+        }
+
+        public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            //Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.ClientInteraction({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
+
+            base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
+            uIManager.interactionWindow.CloseWindow();
+            OpenLootWindow();
         }
 
         protected IEnumerator StartSpawnCountdown() {
@@ -88,15 +115,21 @@ namespace AnyRPG {
             spawnCoroutine = null;
 
             //Debug.Log($"{gameObject.name}.LootableNode.StartSpawnCountdown(): countdown complete");
-            //interactable.Spawn();
+            Spawn();
 
             // ENABLE MINIMAP ICON AFTER SPAWN
-            HandlePrerequisiteUpdates();
+            HandleOptionStateChange();
         }
 
+        public void Spawn() {
+            if (Props.SpawnObject != null && Props.SpawnObject.activeSelf == false) {
+                Props.SpawnObject.SetActive(true);
+                interactable.InteractableEventController.NotifyOnLootableNodeSpawnObjectSetActive(true);
+            }
+        }
 
-        public virtual void DropLoot() {
-            //Debug.Log($"{gameObject.name}.LootableNode.DropLoot()");
+        public virtual void DropLoot(UnitController sourceUnitController) {
+            //Debug.Log($"{interactable.gameObject.name}.LootableNode.DropLoot()");
 
             // is the below code necessary?  it was causing stuff that was already dropped but not picked up to not pop a window again and just remain unlootable
             /*
@@ -108,50 +141,19 @@ namespace AnyRPG {
 
             List<LootDrop> lootDrops = new List<LootDrop>();
             foreach (LootTable lootTable in Props.LootTables) {
-                lootDrops.AddRange(lootHolder.LootTableStates[lootTable].GetLoot(lootTable));
+                lootDrops.AddRange(lootHolder.GetLoot(sourceUnitController, lootTable, true));
             }
             //lootManager.CreatePages(lootDrops);
-            lootManager.AddLoot(lootDrops);
+            lootManager.AddAvailableLoot(sourceUnitController, lootDrops);
             lootDropped = true;
         }
 
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
-        public void PickUp() {
-            //Debug.Log($"{gameObject.name}.LootableNode.Pickup()");
-            CreateWindowEventSubscriptions();
-            uIManager.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
+        public void OpenLootWindow() {
+            //Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.OpenLootWindow()");
+
+            //CreateWindowEventSubscriptions();
+            //uIManager.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
             uIManager.lootWindow.OpenWindow();
-        }
-
-        //public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
-        public void ClearTakeLootHandler(CloseableWindowContents windowContents) {
-            //Debug.Log($"{gameObject.name}.LootableNode.ClearTakeLootHandler()");
-            CleanupWindowEventSubscriptions();
-        }
-
-        public void CreateWindowEventSubscriptions() {
-            //Debug.Log($"{gameObject.name}.LootableNode.CreateWindowEventSubscriptions()");
-            SystemEventManager.StartListening("OnTakeLoot", HandleTakeLoot);
-        }
-
-        public void CleanupWindowEventSubscriptions() {
-            //Debug.Log($"{gameObject.name}.LootableNode.CleanupWindowEventSubscriptions()");
-            SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
-            if (uIManager?.lootWindow?.CloseableWindowContents != null) {
-                uIManager.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
-            }
-        }
-
-        public override void ProcessCleanupEventSubscriptions() {
-            //Debug.Log("GatheringNode.CleanupEventSubscriptions()");
-            base.ProcessCleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
-        }
-
-        public void HandleTakeLoot(string eventName, EventParamProperties eventParamProperties) {
-            CheckDropListSize();
         }
 
         public void ClearLootTables() {
@@ -159,10 +161,13 @@ namespace AnyRPG {
         }
 
         public void CheckDropListSize() {
-            //Debug.Log($"{gameObject.name}.LootableNode.CheckDropListSize()");
+            //Debug.Log($"{interactable.gameObject.name}.LootableNode.CheckDropListSize()");
+
             int lootCount = 0;
-            foreach (LootTable lootTable in Props.LootTables) {
-                lootCount += lootHolder.LootTableStates[lootTable].DroppedItems.Count;
+            foreach (Dictionary<int, LootTableState> lootTableStateDict in lootHolder.LootTableStates.Values) {
+                foreach (LootTableState lootTableState in lootTableStateDict.Values) {
+                    lootCount += lootTableState.DroppedItems.Count;
+                }
             }
             if (lootCount == 0) {
                 // since this method is only called on take loot, we can consider everything picked up if there is no loot left
@@ -175,7 +180,7 @@ namespace AnyRPG {
 
 
                 // testing : monitor if this affects pickup nodes.  Theoretically the HandlePrerequisiteUpdates() call should trigger a despawn anyway
-                //interactable.DestroySpawn();
+                Despawn();
 
                 InitializeLootTableStates();
 
@@ -188,14 +193,26 @@ namespace AnyRPG {
                 // loot being gone is a type of prerequisite for a lootable node
                 // DISABLE MINIMAP ICON WHILE ITEM IS NOT SPAWNED
 
-                HandlePrerequisiteUpdates();
+                HandleOptionStateChange();
             }
         }
 
+        public void Despawn() {
+            //Debug.Log($"{interactable.gameObject.name}.LootableNode.Despawn()");
+
+            if (Props.SpawnObject != null && Props.SpawnObject.activeSelf == true) {
+                Props.SpawnObject.SetActive(false);
+                interactable.InteractableEventController.NotifyOnLootableNodeSpawnObjectSetActive(false);
+            }
+        }
+
+
         private void InitializeLootTableStates() {
+            //Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.InitializeLootTableStates()");
+
             lootHolder.InitializeLootTableStates();
             foreach (LootTable lootTable in Props.LootTables) {
-                lootHolder.AddLootTableState(lootTable, new LootTableState(systemGameManager));
+                lootHolder.AddLootTableState(lootTable);
             }
         }
 
@@ -205,16 +222,57 @@ namespace AnyRPG {
             uIManager.lootWindow.CloseWindow();
         }
 
-        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
+        public override bool CanInteract(UnitController sourceUnitController, bool processRangeCheck, bool passedRangeCheck, bool processNonCombatCheck, bool viaSwitch = false) {
             //Debug.Log(interactable.gameObject.name + ".LootableNode.CanInteract()");
-            bool returnValue = base.CanInteract(processRangeCheck, passedRangeCheck, factionValue, processNonCombatCheck);
+
+            bool returnValue = base.CanInteract(sourceUnitController, processRangeCheck, passedRangeCheck, processNonCombatCheck);
             if (returnValue == false) {
                 return false;
             }
             if (spawnCoroutine != null) {
                 return false;
             }
-            return (GetCurrentOptionCount() == 0 ? false : true);
+            return (GetCurrentOptionCount(sourceUnitController) == 0 ? false : true);
+        }
+
+        public override void SetSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.SetSaveData() lootDropped: {lootDropped} pickupCount: {pickupCount}");
+
+            base.SetSaveData(interactableSaveData);
+            LootableNodeSaveData lootableNodeSaveData = new LootableNodeSaveData() {
+                    LootDropped = lootDropped,
+                    PickupCount = pickupCount,
+                    SpawnObjectActive = (Props.SpawnObject != null ? Props.SpawnObject.activeSelf : false),
+                    LootHolderSerializedData = lootHolder.GetSerializedData()
+            };
+            if (interactableSaveData.LootableNodeSaveData.Count == 0) {
+                interactableSaveData.LootableNodeSaveData.Add(lootableNodeSaveData);
+            } else {
+                interactableSaveData.LootableNodeSaveData[0] = lootableNodeSaveData;
+            }
+        }
+
+        public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.LoadFromSaveData() lootDropped: {interactableSaveData.LootableNodeSaveData.LootDropped} SpawnObjectActive: {interactableSaveData.LootableNodeSaveData.SpawnObjectActive}");
+
+            base.LoadFromSaveData(interactableSaveData);
+            if (interactableSaveData.LootableNodeSaveData.Count == 0) {
+                return;
+            }
+            lootDropped = interactableSaveData.LootableNodeSaveData[0].LootDropped;
+            pickupCount = interactableSaveData.LootableNodeSaveData[0].PickupCount;
+            if (Props.SpawnObject != null) {
+                Props.SpawnObject.SetActive(interactableSaveData.LootableNodeSaveData[0].SpawnObjectActive);
+                if (interactableSaveData.LootableNodeSaveData[0].SpawnObjectActive == false) {
+                    if (spawnCoroutine == null && Props.SpawnTimer >= 0f) {
+                        spawnCoroutine = interactable.StartCoroutine(StartSpawnCountdown());
+                    }
+                }
+            }
+
+            if (lootDropped == true) {
+                lootHolder.LoadFromSerializedData(interactableSaveData.LootableNodeSaveData[0].LootHolderSerializedData);
+            }
         }
     }
 

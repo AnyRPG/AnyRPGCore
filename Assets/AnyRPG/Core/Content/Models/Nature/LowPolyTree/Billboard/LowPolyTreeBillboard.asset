@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!226 &22600000
+BillboardAsset:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LowPolyTreeBillboard
+  serializedVersion: 2
+  width: 17.563442
+  bottom: 0
+  height: 17.563442
+  imageTexCoords:
+  - {x: 0.5, y: 0.5, z: 0.25, w: 0.5}
+  - {x: 0.75, y: 0.5, z: 0.25, w: 0.5}
+  - {x: 0, y: 0, z: 0.25, w: 0.5}
+  - {x: 0.25, y: 0, z: 0.25, w: 0.5}
+  - {x: 0.5, y: 0, z: 0.25, w: 0.5}
+  - {x: 0.75, y: 0, z: 0.25, w: 0.5}
+  - {x: 0, y: 0.5, z: 0.25, w: 0.5}
+  - {x: 0.25, y: 0.5, z: 0.25, w: 0.5}
+  vertices:
+  - {x: 0, y: 0}
+  - {x: 0, y: 1}
+  - {x: 1, y: 0}
+  - {x: 1, y: 1}
+  indices: 000001000200010003000200
+  material: {fileID: 2100000, guid: 8bd99ef1224a8e243b723dda85eeb8ff, type: 2}

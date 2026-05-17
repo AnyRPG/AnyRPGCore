@@ -1,7 +1,9 @@
 using AnyRPG;
-using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace AnyRPG {
 
@@ -35,7 +37,11 @@ namespace AnyRPG {
                     stealthMaterials[i] = new Material(originalMaterials[renderer][i]);
                     ToFadeMode(stealthMaterials[i]);
                     Color materialColor = stealthMaterials[i].color;
-                    materialColor.a = 0.25f;
+                    if (unitController.IsOwner == true) {
+                        materialColor.a = 0.25f;
+                    } else {
+                        materialColor.a = 0f;
+                    }
                     stealthMaterials[i].color = materialColor;
                 }
                 renderer.materials = stealthMaterials;
@@ -49,14 +55,28 @@ namespace AnyRPG {
         }
 
         public void ToFadeMode(Material material) {
-            material.SetOverrideTag("RenderType", "Transparent");
-            material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            // 1. Surface Type: 0 = Opaque, 1 = Transparent
+            material.SetFloat("_Surface", 1f);
+
+            // 2. Blend Mode: 0 = Alpha, 1 = Premultiply, 2 = Additive, 3 = Multiply
+            material.SetFloat("_Blend", 0f);
+
+            // 3. Manual override of blend factors & Z-write
+            material.SetInt("_SrcBlend", (int)BlendMode.SrcAlpha);
+            material.SetInt("_DstBlend", (int)BlendMode.OneMinusSrcAlpha);
             material.SetInt("_ZWrite", 0);
-            material.DisableKeyword("_ALPHATEST_ON");
-            material.EnableKeyword("_ALPHABLEND_ON");
-            material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-            material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+
+            // 4. URP Shader Keywords
+            material.DisableKeyword("_SURFACE_TYPE_OPAQUE");
+            material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+
+            material.DisableKeyword("_BLENDMODE_PREMULTIPLY");
+            material.DisableKeyword("_BLENDMODE_ADD");
+            material.DisableKeyword("_BLENDMODE_MULTIPLY");
+            material.EnableKeyword("_BLENDMODE_ALPHA");
+
+            // 5. Render Queue (optional—URP often handles this automatically)
+            material.renderQueue = (int)RenderQueue.Transparent;
         }
 
         public void ApplyTemporaryMaterialChange(Material temporaryMaterial) {
@@ -107,6 +127,17 @@ namespace AnyRPG {
 
         }
 
+        public void ProcessSetModelReady() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitMaterialController.ProcessSetModelReady()");
+
+            if (unitController.IsStealth) {
+                DeactivateStealth();
+                PopulateOriginalMaterials();
+                ActivateStealth();
+            } else {
+                PopulateOriginalMaterials();
+            }
+        }
     }
 
 }

@@ -8,31 +8,39 @@ namespace AnyRPG {
     public class SkillTrainerComponent : InteractableOptionComponent {
 
         // game manager references
-        private SkillTrainerManager skillTrainerManager = null;
+        private SkillTrainerManagerClient skillTrainerManager = null;
 
         public SkillTrainerProps Props { get => interactableOptionProps as SkillTrainerProps; }
 
         public SkillTrainerComponent(Interactable interactable, SkillTrainerProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
-            if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
-                interactableOptionProps.InteractionPanelTitle = "Train Me";
+            if (interactionPanelTitle == string.Empty) {
+                interactionPanelTitle = "Train Me";
             }
-            systemEventManager.OnSkillListChanged += HandleSkillListChanged;
+            if (systemGameManager.GameMode == GameMode.Local || systemGameManager.NetworkManagerServer.ServerModeActive == false) {
+                systemEventManager.OnLearnSkill += HandleSkillListChanged;
+                systemEventManager.OnUnLearnSkill += HandleSkillListChanged;
+            }
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            skillTrainerManager = systemGameManager.SkillTrainerManager;
+            skillTrainerManager = systemGameManager.SkillTrainerManagerClient;
         }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex = 0) {
             //Debug.Log($"{gameObject.name}.SkillTrainer.Interact(" + source + ")");
-            base.Interact(source, optionIndex);
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
+
+            //interactionManager.InteractWithSkillTrainerComponent(sourceUnitController, this, optionIndex);
+
+            return true;
+        }
+
+        public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
             if (!uIManager.skillTrainerWindow.IsOpen) {
-                skillTrainerManager.SetSkillTrainer(this);
+                skillTrainerManager.SetSkillTrainer(this, componentIndex, choiceIndex);
                 uIManager.skillTrainerWindow.OpenWindow();
-                return true;
             }
-            return false;
         }
 
         public override void StopInteract() {
@@ -45,32 +53,33 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.SkillTrainer.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
             if (systemEventManager != null) {
-                systemEventManager.OnSkillListChanged -= HandleSkillListChanged;
+                systemEventManager.OnLearnSkill -= HandleSkillListChanged;
+                systemEventManager.OnUnLearnSkill -= HandleSkillListChanged;
             }
         }
 
-        public void HandleSkillListChanged(Skill skill) {
+        public void HandleSkillListChanged(UnitController sourceUnitController, Skill skill) {
             // this is a special case.  since skill is not a prerequisites, we need to subscribe directly to the event to get notified things have changed
             if (Props.Skills.Contains(skill)) {
-                HandlePrerequisiteUpdates();
+                HandlePrerequisiteUpdates(sourceUnitController);
             }
         }
 
-        public override int GetValidOptionCount() {
-            if (base.GetValidOptionCount() == 0) {
+        public override int GetValidOptionCount(UnitController sourceUnitController) {
+            if (base.GetValidOptionCount(sourceUnitController) == 0) {
                 return 0;
             }
-            return GetCurrentOptionCount();
+            return GetCurrentOptionCount(sourceUnitController);
         }
 
-        public override int GetCurrentOptionCount() {
+        public override int GetCurrentOptionCount(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.SkillTrainerInteractable.GetCurrentOptionCount()");
             if (interactable.CombatOnly) {
                 return 0;
             }
             int optionCount = 0;
             foreach (Skill skill in Props.Skills) {
-                if (!playerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
+                if (!sourceUnitController.CharacterSkillManager.HasSkill(skill)) {
                     optionCount++;
                 }
             }
@@ -80,16 +89,40 @@ namespace AnyRPG {
             return (optionCount == 0 ? 0 : 1);
         }
 
-        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
+        public override bool CanInteract(UnitController sourceUnitController, bool processRangeCheck, bool passedRangeCheck, bool processNonCombatCheck, bool viaSwitch = false) {
             //Debug.Log($"{gameObject.name}.SkillTrainer.CanInteract()");
-            bool returnValue = ((GetCurrentOptionCount() > 0 && base.CanInteract(processRangeCheck, passedRangeCheck, factionValue, processNonCombatCheck)) ? true : false);
+            bool returnValue = ((GetCurrentOptionCount(sourceUnitController) > 0 && base.CanInteract(sourceUnitController, processRangeCheck, passedRangeCheck, processNonCombatCheck)) ? true : false);
             //Debug.Log($"{gameObject.name}.SkillTrainer.CanInteract(): return: " + returnValue);
             return returnValue;
         }
 
-        public override bool CanShowMiniMapIcon() {
-            float relationValue = interactable.PerformFactionCheck(playerManager.MyCharacter);
-            return CanInteract(false, false, relationValue);
+        public override bool CanShowMiniMapIcon(UnitController sourceUnitController) {
+            float relationValue = interactable.PerformFactionCheck(sourceUnitController);
+            return CanInteract(sourceUnitController, false, false, true);
+        }
+
+        public Dictionary<int, Skill> GetAvailableSkillList(UnitController sourceUnitController) {
+            Dictionary<int, Skill> returnList = new Dictionary<int, Skill>();
+
+            int counter = 0;
+            foreach (Skill skill in Props.Skills) {
+                if (!sourceUnitController.CharacterSkillManager.HasSkill(skill)) {
+                    returnList.Add(counter, skill);
+                }
+                counter++;
+            }
+
+            return returnList;
+        }
+
+        public void LearnSkill(UnitController sourceUnitController, int skillId) {
+            Dictionary<int, Skill> skillList = GetAvailableSkillList(sourceUnitController);
+            if (!skillList.ContainsKey(skillId)) {
+                //Debug.Log($"{gameObject.name}.SkillTrainerComponent.LearnSkill(): player does not have skill {skillId}");
+                return;
+            }
+            sourceUnitController.CharacterSkillManager.LearnSkill(skillList[skillId]);
+            NotifyOnConfirmAction(sourceUnitController);
         }
 
         //public override bool PlayInteractionSound() {

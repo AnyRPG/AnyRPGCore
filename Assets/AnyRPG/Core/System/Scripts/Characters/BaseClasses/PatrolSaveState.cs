@@ -27,7 +27,8 @@ namespace AnyRPG {
         }
 
         public Vector3 GetDestination(bool destinationReached) {
-            //Debug.Log("PatrolSaveState.GetDestination(" + destinationReached + ")");
+            //Debug.Log($"PatrolSaveState.GetDestination({destinationReached})");
+
             Vector3 returnValue = Vector3.zero;
 
             if (destinationReached || destinationRetrievedCount == 0) {
@@ -115,7 +116,8 @@ namespace AnyRPG {
         /// <param name="listIndex"></param>
         /// <returns></returns>
         public Vector3 GetDestinationByIndex(int listIndex) {
-            //Debug.Log("PatrolProfile.GetLinearDestination(): destinationIndex: " + destinationIndex);
+            //Debug.Log($"PatrolSaveState.GetLinearDestination(listIndex: {listIndex}): destinationIndex: {destinationIndex}");
+
             Vector3 returnValue = Vector3.zero;
             if (patrolProperties.UseTags == false) {
                 returnValue = patrolProperties.DestinationList[listIndex];
@@ -136,7 +138,7 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         public Vector3 GetLinearDestination() {
-            //Debug.Log("AIPatrol.GetLinearDestination(): destinationIndex: " + destinationIndex);
+
             Vector3 returnValue = GetDestinationByIndex(destinationIndex);
             destinationIndex++;
             if (destinationIndex >= patrolProperties.DestinationCount) {

@@ -57,7 +57,7 @@ namespace AnyRPG {
                 //Debug.Log("KeyBindNode.SetKeyboardKeyCode: " + value);
                 keyCode = value;
                 if (ActionButton != null) {
-                    Debug.Log("KeyBindNode.SetKeyboardKeyCode : actionbutton is not null");
+                    //Debug.Log("KeyBindNode.SetKeyboardKeyCode : actionbutton is not null");
                     ActionButton.KeyBindText.text = FormatActionButtonLabel();
                 }
                 if (KeyBindSlotScript != null) {
@@ -130,6 +130,8 @@ namespace AnyRPG {
         public string ReplaceSpecialCharacters(string inputString) {
             inputString = inputString.Replace("Alpha", "");
             inputString = inputString.Replace("Period", ".");
+            inputString = inputString.Replace("Minus", "-");
+            inputString = inputString.Replace("Equals", "=");
             return inputString;
         }
 
@@ -138,7 +140,8 @@ namespace AnyRPG {
         }
 
         public void UpdateKeyCode(InputDeviceType inputDeviceType, KeyCode keyCode, bool control, bool shift) {
-            Debug.Log("KeyBindNode.UpdateKeyCode(" + inputDeviceType + ", " + keyCode + ", " + control + ", " + shift + ")");
+            //Debug.Log("KeyBindNode.UpdateKeyCode(" + inputDeviceType + ", " + keyCode + ", " + control + ", " + shift + ")");
+
             if (inputDeviceType == InputDeviceType.Keyboard) {
                 this.KeyboardKeyCode = keyCode;
                 this.controlModifier = control;

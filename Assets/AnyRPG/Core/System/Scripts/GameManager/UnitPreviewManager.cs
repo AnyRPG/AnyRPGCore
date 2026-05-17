@@ -11,7 +11,7 @@ namespace AnyRPG {
         */
 
         public void HandleOpenWindow(UnitSpawnControlPanel unitSpawnControlPanel) {
-            //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
+            //Debug.Log("UnitPreviewManager.HandleOpenWindow()");
 
             //cloneSource = GetCloneSource();
             unitProfile = unitSpawnControlPanel.SelectedUnitSpawnButton.UnitProfile;
@@ -19,7 +19,13 @@ namespace AnyRPG {
                 return;
             }
 
-            SpawnUnit();
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
+            SpawnUnit(characterConfigurationRequest);
+        }
+
+        public void HandleOpenWindow(CharacterConfigurationRequest characterConfigurationRequest) {
+            //Debug.Log("UnitPreviewManager.HandleOpenWindow()");
+            SpawnUnit(characterConfigurationRequest);
         }
 
 

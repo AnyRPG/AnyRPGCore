@@ -22,50 +22,54 @@ namespace AnyRPG {
         }
         private Skill skill;
 
-        public virtual bool IsMet() {
+        public virtual bool IsMet(UnitController sourceUnitController) {
             //Debug.Log("TradeSkillObjective.IsMet()");
-            if (playerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
+            if (sourceUnitController.CharacterSkillManager.HasSkill(skill)) {
                 return true;
             }
             return false;
         }
 
-        public void UpdateCompletionCount(Skill skill) {
+        public void UpdateCompletionCount(UnitController sourceUnitController, Skill skill) {
             if (!SystemDataUtility.MatchResource(skill.ResourceName, skillName)) {
                 // some other skill than this one was learned.  no need to check.
                 return;
             }
-            UpdateCompletionCount();
+            UpdateCompletionCount(sourceUnitController);
         }
 
-        public override void UpdateCompletionCount(bool printMessages = true) {
+        public override void UpdateCompletionCount(UnitController sourceUnitController, bool printMessages = true) {
             //Debug.Log("TradeSkillObjective.UpdateCompletionCount()");
-            bool completeBefore = IsComplete;
+            bool completeBefore = IsComplete(sourceUnitController);
             if (completeBefore) {
                 return;
             }
-            if (playerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
-                CurrentAmount++;
-                questBase.CheckCompletion(true, printMessages);
+            if (sourceUnitController.CharacterSkillManager.HasSkill(skill)) {
+                SetCurrentAmount(sourceUnitController, CurrentAmount(sourceUnitController) + 1);
             }
-            if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && printMessages == true && CurrentAmount != 0) {
-                messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", skill.DisplayName, Mathf.Clamp(CurrentAmount, 0, Amount), Amount));
+            if (CurrentAmount(sourceUnitController) <= Amount && questBase.PrintObjectiveCompletionMessages && printMessages == true && CurrentAmount(sourceUnitController) != 0) {
+                sourceUnitController.WriteMessageFeedMessage(string.Format("Learn {0}: {1}/{2}", skill.DisplayName, Mathf.Clamp(CurrentAmount(sourceUnitController), 0, Amount), Amount));
             }
-            if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages && printMessages == true) {
-                messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, skill.DisplayName));
+            if (completeBefore == false && IsComplete(sourceUnitController) && questBase.PrintObjectiveCompletionMessages && printMessages == true) {
+                sourceUnitController.WriteMessageFeedMessage(string.Format("Learn {0}: Objective Complete", skill.DisplayName));
             }
-            base.UpdateCompletionCount(printMessages);
+            if (sourceUnitController.CharacterSkillManager.HasSkill(skill)) {
+                questBase.CheckCompletion(sourceUnitController, true, printMessages);
+            }
+            base.UpdateCompletionCount(sourceUnitController, printMessages);
         }
 
-        public override void OnAcceptQuest(QuestBase quest, bool printMessages = true) {
-            base.OnAcceptQuest(quest, printMessages);
-            systemEventManager.OnSkillListChanged += UpdateCompletionCount;
-            UpdateCompletionCount(printMessages);
+        public override void OnAcceptQuest(UnitController sourceUnitController, QuestBase quest, bool printMessages = true) {
+            base.OnAcceptQuest(sourceUnitController, quest, printMessages);
+            sourceUnitController.UnitEventController.OnLearnSkill += UpdateCompletionCount;
+            sourceUnitController.UnitEventController.OnUnLearnSkill += UpdateCompletionCount;
+            UpdateCompletionCount(sourceUnitController, printMessages);
         }
 
-        public override void OnAbandonQuest() {
-            base.OnAbandonQuest();
-            systemEventManager.OnSkillListChanged -= UpdateCompletionCount;
+        public override void OnAbandonQuest(UnitController sourceUnitController) {
+            base.OnAbandonQuest(sourceUnitController);
+            sourceUnitController.UnitEventController.OnLearnSkill -= UpdateCompletionCount;
+            sourceUnitController.UnitEventController.OnUnLearnSkill -= UpdateCompletionCount;
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager, QuestBase quest) {

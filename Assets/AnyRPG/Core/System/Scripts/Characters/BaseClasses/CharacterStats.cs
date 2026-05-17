@@ -1,4 +1,3 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,28 +6,12 @@ using UnityEngine;
 namespace AnyRPG {
     public class CharacterStats : ConfiguredClass {
 
-        public event System.Action<int, int> OnPrimaryResourceAmountChanged = delegate { };
-        public event System.Action<PowerResource, int, int> OnResourceAmountChanged = delegate { };
-        public event System.Action<CharacterStats> OnDie = delegate { };
-        public event System.Action<CharacterStats> BeforeDie = delegate { };
-        public event System.Action OnReviveBegin = delegate { };
-        public event System.Action OnReviveComplete = delegate { };
-        public event System.Action<StatusEffectNode> OnStatusEffectAdd = delegate { };
-        public event System.Action OnStatChanged = delegate { };
-        public event System.Action OnEnterStealth = delegate { };
-        public event System.Action OnLeaveStealth = delegate { };
-        public event System.Action<int> OnLevelChanged = delegate { };
-        public event System.Action<AbilityEffectContext> OnImmuneToEffect = delegate { };
-        public event System.Action<int> OnGainXP = delegate { };
-        public event System.Action<PowerResource, int> OnRecoverResource = delegate { };
-        public event System.Action<float, float, float, float> OnCalculateRunSpeed = delegate { };
-
-        private int level = 1;
+        //private int level = 1;
 
         protected float sprintSpeedModifier = 1.5f;
 
         // keep track of current level
-        private int currentLevel;
+        private int currentLevel = 0;
 
         // primary stat names for this character, and their values
         protected Dictionary<string, Stat> primaryStats = new Dictionary<string, Stat>();
@@ -60,7 +43,7 @@ namespace AnyRPG {
         protected float currentGlideFallSpeed = 2f;
 
         protected Dictionary<string, StatusEffectNode> statusEffects = new Dictionary<string, StatusEffectNode>();
-        protected BaseCharacter baseCharacter = null;
+        protected UnitController unitController = null;
 
         private bool isReviving = false;
         private bool isAlive = true;
@@ -70,9 +53,11 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        private Coroutine resurrectionCoroutine = null;
+
         // game manager references
-        protected LevelManager levelManager = null;
-        protected PlayerManager playerManager = null;
+        protected LevelManagerClient levelManagerClient = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected CombatTextManager combatTextManager = null;
 
         public float WalkSpeed { get => walkSpeed; }
@@ -83,7 +68,7 @@ namespace AnyRPG {
         public float GlideSpeed { get => currentGlideSpeed; }
         public float GlideFallSpeed { get => currentGlideFallSpeed; }
         public bool IsAlive { get => isAlive; }
-        public BaseCharacter BaseCharacter { get => baseCharacter; set => baseCharacter = value; }
+        //public BaseCharacter BaseCharacter { get => unitController; set => unitController = value; }
 
         public int Level { get => currentLevel; }
         public int CurrentXP { get => currentXP; set => currentXP = value; }
@@ -112,6 +97,8 @@ namespace AnyRPG {
                         }
                     }
                 }
+                // this is normal in characters with no actual health resource, such as spirits
+                //Debug.LogWarning($"{unitController.gameObject.name}.CharacterStats.HasHealthResource(): no health resource found for character");
                 return false;
             }
         }
@@ -159,14 +146,6 @@ namespace AnyRPG {
         }
 
         public Dictionary<string, StatusEffectNode> StatusEffects { get => statusEffects; }
-        public UnitToughness Toughness {
-            get {
-                if (baseCharacter != null) {
-                    return baseCharacter.UnitToughness;
-                }
-                return null;
-            }
-        }
         public bool IsReviving { get => isReviving; set => isReviving = value; }
         public bool IsStealthed {
             get {
@@ -181,10 +160,11 @@ namespace AnyRPG {
         public Dictionary<PowerResource, PowerResourceNode> PowerResourceDictionary { get => powerResourceDictionary; set => powerResourceDictionary = value; }
         public Dictionary<string, Stat> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public Dictionary<SecondaryStatType, Stat> SecondaryStats { get => secondaryStats; set => secondaryStats = value; }
+        public UnitController UnitController { get => unitController; set => unitController = value; }
 
-        public CharacterStats(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
+        public CharacterStats(UnitController unitController, SystemGameManager systemGameManager) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats()");
-            this.baseCharacter = baseCharacter;
+            this.unitController = unitController;
             Configure(systemGameManager);
             SetPrimaryStatModifiers();
             InitializeSecondaryStats();
@@ -203,14 +183,9 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            levelManager = systemGameManager.LevelManager;
-            playerManager = systemGameManager.PlayerManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             combatTextManager = systemGameManager.UIManager.CombatTextManager;
-        }
-
-        public void Init() {
-            SetLevel(level);
-            //TrySpawnDead();
         }
 
         /*
@@ -219,6 +194,10 @@ namespace AnyRPG {
                }
                */
 
+        // this code only needs to be run if baseCharacters are persistent between scene loads
+        // if the character is unloaded and then re-spawned on level load, this should not be necessary
+        // because the status effects would be re-applied, and likely fail to apply due to scene restrictions
+        /*
         public void ProcessLevelLoad() {
             // remove scene specific status effects that are not valid in this scene
             List<StatusEffectNode> removeNodes = new List<StatusEffectNode>();
@@ -226,7 +205,7 @@ namespace AnyRPG {
                 if (statusEffectNode.StatusEffect.SceneNames.Count > 0) {
                     bool sceneFound = false;
                     foreach (string sceneName in statusEffectNode.StatusEffect.SceneNames) {
-                        if (SystemDataUtility.PrepareStringForMatch(sceneName) == SystemDataUtility.PrepareStringForMatch(levelManager.GetActiveSceneNode().ResourceName)) {
+                        if (SystemDataUtility.PrepareStringForMatch(sceneName) == levelManager.GetActiveSceneNode().ResourceName) {
                             sceneFound = true;
                         }
                     }
@@ -239,8 +218,14 @@ namespace AnyRPG {
                 statusEffectNode.CancelStatusEffect();
             }
         }
+        */
+
+        public void SetSpawnDead() {
+            isAlive = false;
+        }
 
         public void UpdatePowerResourceList() {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.UpdatePowerResourceList()");
 
             // since this is just a list and contains no values, it is safe to overwrite
             powerResourceList = new List<PowerResource>();
@@ -248,14 +233,15 @@ namespace AnyRPG {
             // add from system
             powerResourceList.AddRange(systemConfigurationManager.PowerResourceList);
 
-            if (baseCharacter == null || baseCharacter.StatProviders == null) {
+            if (unitController.BaseCharacter.StatProviders == null) {
                 return;
             }
 
-            foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
+            foreach (IStatProvider statProvider in unitController.BaseCharacter.StatProviders) {
                 if (statProvider != null) {
                     foreach (PowerResource powerResource in statProvider.PowerResourceList) {
                         if (!powerResourceList.Contains(powerResource)) {
+                            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.UpdatePowerResourceList(): adding resource: {powerResource.DisplayName}");
                             powerResourceList.Add(powerResource);
                         }
                     }
@@ -305,7 +291,7 @@ namespace AnyRPG {
             }
 
             // loop through all stat providers
-            foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
+            foreach (IStatProvider statProvider in unitController.BaseCharacter.StatProviders) {
 
                 if (statProvider != null && statProvider.PrimaryStats != null) {
 
@@ -345,7 +331,7 @@ namespace AnyRPG {
 
             // update base values
             foreach (SecondaryStatType secondaryStatType in secondaryStats.Keys) {
-                secondaryStats[secondaryStatType].BaseValue = (int)LevelEquations.GetBaseSecondaryStatForCharacter(secondaryStatType, this);
+                secondaryStats[secondaryStatType].BaseValue = (int)LevelEquations.GetBaseSecondaryStatForCharacter(secondaryStatType, unitController);
             }
 
             // calculate values that include base values plus modifiers
@@ -354,7 +340,7 @@ namespace AnyRPG {
             }
         }
 
-        public bool PerformPowerResourceCheck(BaseAbilityProperties ability, float resourceCost) {
+        public bool PerformPowerResourceCheck(AbilityProperties ability, float resourceCost) {
             //Debug.Log($"{gameObject.name}.CharacterStats.PerformPowerResourceCheck(" + (ability == null ? "null" : ability.DisplayName) + ", " + resourceCost + ")");
             if (resourceCost == 0f || (ability != null & ability.PowerResource == null)) {
                 return true;
@@ -368,11 +354,20 @@ namespace AnyRPG {
             return false;
         }
 
+        /// <summary>
+        /// spawn the physical prefabs associated with any status effects on this character
+        /// </summary>
         public void HandleCharacterUnitSpawn() {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.HandleCharacterUnitSpawn()");
+
+            SpawnStatusEffectPrefabs();
+        }
+
+        public void SpawnStatusEffectPrefabs() {
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
-                if (statusEffectNode.StatusEffect.GetPrefabProfileList(baseCharacter).Count > 0
+                if (statusEffectNode.StatusEffect.StatusEffectObjectList.Count > 0
                     && (statusEffectNode.PrefabObjects == null || statusEffectNode.PrefabObjects.Count == 0)) {
-                    statusEffectNode.PrefabObjects = statusEffectNode.StatusEffect.RawCast(baseCharacter, baseCharacter.UnitController, baseCharacter.UnitController, new AbilityEffectContext(baseCharacter));
+                    unitController.UnitModelController.ProcessAddStatusEffect(statusEffectNode, statusEffectNode.StatusEffect, statusEffectNode.AbilityEffectContext);
                 }
             }
         }
@@ -436,8 +431,8 @@ namespace AnyRPG {
             // setup the primary stats dictionary with system defined stats
             AddPrimaryStatModifiers(systemConfigurationManager.PrimaryStats, false);
 
-            if (baseCharacter != null && baseCharacter.StatProviders != null) {
-                foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
+            if (unitController.BaseCharacter.StatProviders != null) {
+                foreach (IStatProvider statProvider in unitController.BaseCharacter.StatProviders) {
                     if (statProvider != null && statProvider.PrimaryStats != null) {
                         AddPrimaryStatModifiers(statProvider.PrimaryStats, false);
                     }
@@ -472,15 +467,18 @@ namespace AnyRPG {
         */
 
         public void CalculateRunSpeed() {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.CalculateRunSpeed() current: " + currentRunSpeed);
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.CalculateRunSpeed()");
+
             float oldRunSpeed = currentRunSpeed;
             float oldSprintSpeed = currentSprintSpeed;
-            currentRunSpeed = (runSpeed + GetSecondaryAddModifiers(SecondaryStatType.MovementSpeed)) * GetSecondaryMultiplyModifiers(SecondaryStatType.MovementSpeed);
-            currentSprintSpeed = currentRunSpeed * sprintSpeedModifier;
-            OnCalculateRunSpeed(oldRunSpeed, currentRunSpeed, oldSprintSpeed, currentSprintSpeed);
-            if (baseCharacter?.UnitController != null) {
-                baseCharacter.UnitController.HandleMovementSpeedUpdate();
+            float usedRunSpeed = runSpeed;
+            if (unitController.RiderUnitController != null) {
+                usedRunSpeed = unitController.RiderUnitController.CharacterStats.RunSpeed;
             }
+            currentRunSpeed = (usedRunSpeed + GetSecondaryAddModifiers(SecondaryStatType.MovementSpeed)) * GetSecondaryMultiplyModifiers(SecondaryStatType.MovementSpeed);
+            currentSprintSpeed = currentRunSpeed * sprintSpeedModifier;
+            //unitController.UnitEventController.NotifyOnCalculateRunSpeed(oldRunSpeed, currentRunSpeed, oldSprintSpeed, currentSprintSpeed);
+            unitController.HandleMovementSpeedUpdate();
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.CalculateRunSpeed(): runSpeed: " + runSpeed + "; current: " + currentRunSpeed + "; old: " + oldRunSpeed);
         }
 
@@ -498,12 +496,12 @@ namespace AnyRPG {
             // check if the stat that was just updated contributes to any resource in any way
             // if it does, throw out a resource changed notification handler
 
-            if (baseCharacter != null && baseCharacter.StatProviders != null) {
+            if (unitController.BaseCharacter.StatProviders != null) {
 
                 // make a list since each provider could contribute and we want to avoid multiple notifications for the same resource
                 List<PowerResource> affectedResources = new List<PowerResource>();
 
-                foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
+                foreach (IStatProvider statProvider in unitController.BaseCharacter.StatProviders) {
                     if (statProvider != null && statProvider.PrimaryStats != null) {
                         foreach (StatScalingNode statScalingNode in statProvider.PrimaryStats) {
                             foreach (CharacterStatToResourceNode characterStatToResourceNode in statScalingNode.PrimaryToResourceConversion) {
@@ -534,48 +532,48 @@ namespace AnyRPG {
             NotifyResourceAmountsChanged(statName);
         }
 
-        private void CalculateEquipmentChanged(Equipment newItem, Equipment oldItem) {
+        private void CalculateEquipmentChanged(InstantiatedEquipment newInstantiatedEquipment, InstantiatedEquipment oldInstantiatedEquipment) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.CalculateEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ", " + recalculate + ")");
 
             // add modifiers for new item
-            if (newItem != null) {
+            if (newInstantiatedEquipment != null) {
 
-                foreach (ItemPrimaryStatNode itemPrimaryStatNode in newItem.PrimaryStats) {
+                foreach (ItemPrimaryStatNode itemPrimaryStatNode in newInstantiatedEquipment.Equipment.PrimaryStats) {
                     if (primaryStats.ContainsKey(itemPrimaryStatNode.StatName)) {
-                        primaryStats[itemPrimaryStatNode.StatName].AddModifier(newItem.GetPrimaryStatModifier(itemPrimaryStatNode.StatName, Level, baseCharacter));
+                        primaryStats[itemPrimaryStatNode.StatName].AddModifier(newInstantiatedEquipment.Equipment.GetPrimaryStatModifier(itemPrimaryStatNode.StatName, Level, unitController.BaseCharacter));
                     }
                 }
 
                 // armor is special because it can come from a base value and from secondary stats
                 // here we add the base value
-                secondaryStats[SecondaryStatType.Armor].AddModifier(newItem.GetArmorModifier(Level));
+                secondaryStats[SecondaryStatType.Armor].AddModifier(newInstantiatedEquipment.Equipment.GetArmorModifier(Level));
 
-                foreach (ItemSecondaryStatNode itemSecondaryStatNode in newItem.SecondaryStats) {
-                    secondaryStats[itemSecondaryStatNode.SecondaryStat].AddModifier(newItem.GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, Level));
-                    secondaryStats[itemSecondaryStatNode.SecondaryStat].AddMultiplyModifier(newItem.GetSecondaryStatMultiplyModifier(itemSecondaryStatNode.SecondaryStat));
+                foreach (ItemSecondaryStatNode itemSecondaryStatNode in newInstantiatedEquipment.SecondaryStats) {
+                    secondaryStats[itemSecondaryStatNode.SecondaryStat].AddModifier(newInstantiatedEquipment.Equipment.GetSecondaryStatAddModifier(newInstantiatedEquipment.SecondaryStats, itemSecondaryStatNode.SecondaryStat, Level));
+                    secondaryStats[itemSecondaryStatNode.SecondaryStat].AddMultiplyModifier(newInstantiatedEquipment.Equipment.GetSecondaryStatMultiplyModifier(newInstantiatedEquipment.SecondaryStats, itemSecondaryStatNode.SecondaryStat));
                 }
 
             }
 
             // remove modifiers for old item
-            if (oldItem != null) {
-                secondaryStats[SecondaryStatType.Armor].RemoveModifier(oldItem.GetArmorModifier(Level));
+            if (oldInstantiatedEquipment != null) {
+                secondaryStats[SecondaryStatType.Armor].RemoveModifier(oldInstantiatedEquipment.Equipment.GetArmorModifier(Level));
 
-                foreach (ItemSecondaryStatNode itemSecondaryStatNode in oldItem.SecondaryStats) {
-                    secondaryStats[itemSecondaryStatNode.SecondaryStat].RemoveModifier(oldItem.GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, Level));
-                    secondaryStats[itemSecondaryStatNode.SecondaryStat].RemoveMultiplyModifier(oldItem.GetSecondaryStatMultiplyModifier(itemSecondaryStatNode.SecondaryStat));
+                foreach (ItemSecondaryStatNode itemSecondaryStatNode in oldInstantiatedEquipment.SecondaryStats) {
+                    secondaryStats[itemSecondaryStatNode.SecondaryStat].RemoveModifier(oldInstantiatedEquipment.Equipment.GetSecondaryStatAddModifier(oldInstantiatedEquipment.SecondaryStats, itemSecondaryStatNode.SecondaryStat, Level));
+                    secondaryStats[itemSecondaryStatNode.SecondaryStat].RemoveMultiplyModifier(oldInstantiatedEquipment.Equipment.GetSecondaryStatMultiplyModifier(oldInstantiatedEquipment.SecondaryStats, itemSecondaryStatNode.SecondaryStat));
                 }
 
-                foreach (ItemPrimaryStatNode itemPrimaryStatNode in oldItem.PrimaryStats) {
+                foreach (ItemPrimaryStatNode itemPrimaryStatNode in oldInstantiatedEquipment.Equipment.PrimaryStats) {
                     if (primaryStats.ContainsKey(itemPrimaryStatNode.StatName)) {
-                        primaryStats[itemPrimaryStatNode.StatName].RemoveModifier(oldItem.GetPrimaryStatModifier(itemPrimaryStatNode.StatName, Level, baseCharacter));
+                        primaryStats[itemPrimaryStatNode.StatName].RemoveModifier(oldInstantiatedEquipment.Equipment.GetPrimaryStatModifier(itemPrimaryStatNode.StatName, Level, unitController.BaseCharacter));
                     }
                 }
             }
 
         }
 
-        public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
+        public void HandleEquipmentChanged(InstantiatedEquipment newItem, InstantiatedEquipment oldItem, int slotIndex) {
             //Debug.Log($"{gameObject.name}.CharacterStats.OnEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ")");
 
             CalculateEquipmentChanged(newItem, oldItem);
@@ -598,6 +596,9 @@ namespace AnyRPG {
 
             if (secondaryStats.ContainsKey(secondaryStatType)) {
                 secondaryStats[secondaryStatType].CurrentValue = (int)((secondaryStats[secondaryStatType].BaseValue + GetSecondaryAddModifiers(secondaryStatType)) * GetSecondaryMultiplyModifiers(secondaryStatType));
+            }
+            if (secondaryStatType == SecondaryStatType.CarryWeight) {
+                unitController.CharacterInventoryManager.CalculateEncumbered();
             }
         }
 
@@ -789,14 +790,15 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="sourceCharacter"></param>
         /// <param name="target"></param>
-        public void AttemptAgro(IAbilityCaster sourceCharacter, CharacterUnit target) {
-            if (target != null && (sourceCharacter.AbilityManager as CharacterAbilityManager) is CharacterAbilityManager) {
-                if (target.BaseCharacter != null) {
-                    if (Faction.RelationWith(target.BaseCharacter, (sourceCharacter.AbilityManager as CharacterAbilityManager).BaseCharacter) <= -1) {
-                        if (target.BaseCharacter.CharacterCombat != null) {
-                            // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
-                            target.BaseCharacter.UnitController.Aggro((sourceCharacter.AbilityManager as CharacterAbilityManager).BaseCharacter.UnitController.CharacterUnit);
-                        }
+        public void AttemptAgro(IAbilityCaster sourceCharacter, UnitController targetUnitController) {
+            if (targetUnitController == null) {
+                return;
+            }
+            if ((sourceCharacter.AbilityManager as CharacterAbilityManager) is CharacterAbilityManager) {
+                if (Faction.RelationWith(targetUnitController, (sourceCharacter.AbilityManager as CharacterAbilityManager).UnitController) <= -1) {
+                    if (targetUnitController.CharacterCombat != null) {
+                        // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
+                        targetUnitController.Aggro((sourceCharacter as UnitController));
                     }
                 }
             }
@@ -804,21 +806,25 @@ namespace AnyRPG {
 
         public bool WasImmuneToDamageType(PowerResource powerResource, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             if (!powerResourceDictionary.ContainsKey(powerResource)) {
-                if (sourceCharacter == (playerManager.MyCharacter as IAbilityCaster)) {
-                    combatTextManager.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+                if (sourceCharacter.gameObject != unitController.gameObject) {
+                    sourceCharacter.AbilityManager.ReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
-                OnImmuneToEffect(abilityEffectContext);
+                unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+
+                //unitController.UnitEventController.NotifyOnImmuneToEffect(abilityEffectContext);
                 return true;
             }
             return false;
         }
 
         public bool WasImmuneToFreeze(StatusEffectProperties statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
-            if (statusEffect.DisableAnimator == true && baseCharacter.CharacterStats.HasFreezeImmunity()) {
-                if (sourceCharacter == (playerManager.MyCharacter as IAbilityCaster)) {
-                    combatTextManager.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+            if (statusEffect.DisableAnimator == true && unitController.CharacterStats.HasFreezeImmunity()) {
+                if (sourceCharacter.gameObject != unitController.gameObject) {
+                    sourceCharacter.AbilityManager.ReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
-                OnImmuneToEffect(abilityEffectContext);
+                unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+
+                //unitController.UnitEventController.NotifyOnImmuneToEffect(abilityEffectContext);
                 return true;
             }
             return false;
@@ -826,11 +832,13 @@ namespace AnyRPG {
 
         public bool WasImmuneToStun(StatusEffectProperties statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             // check for stun
-            if (statusEffect.Stun == true && baseCharacter.CharacterStats.HasStunImmunity()) {
-                if (sourceCharacter == (playerManager.MyCharacter as IAbilityCaster)) {
-                    combatTextManager.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+            if (statusEffect.Stun == true && unitController.CharacterStats.HasStunImmunity()) {
+                if (sourceCharacter.gameObject != unitController.gameObject) {
+                    sourceCharacter.AbilityManager.ReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
-                OnImmuneToEffect(abilityEffectContext);
+                unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+
+                //unitController.UnitEventController.NotifyOnImmuneToEffect(abilityEffectContext);
                 return true;
             }
             return false;
@@ -838,31 +846,42 @@ namespace AnyRPG {
 
         public bool WasImmuneToLevitate(StatusEffectProperties statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             // check for levitate
-            if (statusEffect.Levitate == true && baseCharacter.CharacterStats.HasLevitateImmunity()) {
-                if (sourceCharacter == (playerManager.MyCharacter as IAbilityCaster)) {
-                    combatTextManager.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+            if (statusEffect.Levitate == true && unitController.CharacterStats.HasLevitateImmunity()) {
+                if (sourceCharacter.gameObject != unitController.gameObject) {
+                    sourceCharacter.AbilityManager.ReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
-                OnImmuneToEffect(abilityEffectContext);
+                unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+
+                //unitController.UnitEventController.NotifyOnImmuneToEffect(abilityEffectContext);
                 return true;
             }
             return false;
         }
 
         public StatusEffectNode ApplyStatusEffect(StatusEffectProperties statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.ApplyStatusEffect(" + statusEffect.DisplayName + ", " + sourceCharacter.AbilityManager.Name + ")");
-            if (IsAlive == false && statusEffect.GetTargetOptions(sourceCharacter).RequireLiveTarget == true && statusEffect.GetTargetOptions(sourceCharacter).RequireDeadTarget == false) {
-                //Debug.Log("Cannot apply status effect to dead character. return null.");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.ApplyStatusEffect({statusEffect.ResourceName}, {sourceCharacter.AbilityManager.Name})");
+
+            // add to effect list since it was not in there
+            if (statusEffect == null) {
+                Debug.LogError("CharacterStats.ApplyStatusEffect(): Could not get status effect " + statusEffect.DisplayName);
                 return null;
+            }
+
+            if (IsAlive == false
+                && statusEffect.GetTargetOptions(sourceCharacter).RequireLiveTarget == true
+                && statusEffect.GetTargetOptions(sourceCharacter).RequireDeadTarget == false
+                && statusEffect.KeepOnDeath == false
+                && abilityEffectContext.savedEffect == false) {
+                    //Debug.Log("Cannot apply status effect to dead character. return null.");
+                    return null;
             }
             if (IsAlive == true && statusEffect.GetTargetOptions(sourceCharacter).RequireDeadTarget == true && statusEffect.GetTargetOptions(sourceCharacter).RequireLiveTarget == false) {
                 //Debug.Log("Cannot apply status effect to dead character. return null.");
                 return null;
             }
 
-            if (baseCharacter.UnitController != null) {
-                // no need to agro if this is being applied from a character load
-                AttemptAgro(sourceCharacter, baseCharacter.UnitController.CharacterUnit);
-            }
+            // no need to agro if this is being applied from a character load
+            AttemptAgro(sourceCharacter, unitController);
 
             // check for frozen
             if (WasImmuneToFreeze(statusEffect, sourceCharacter, abilityEffectContext)) {
@@ -882,7 +901,7 @@ namespace AnyRPG {
             //Debug.Log("statuseffects count: " + statusEffects.Count);
 
             // check if another effect from the same status effect group already exists on the target
-            if (statusEffect.StatusEffectGroup != null) {
+            if (statusEffects.ContainsKey(statusEffect.ResourceName) == false && statusEffect.StatusEffectGroup != null) {
 
                 // keep a list of status effects to overwrite
                 List<StatusEffectNode> removeNodes = new List<StatusEffectNode>();
@@ -907,88 +926,103 @@ namespace AnyRPG {
                 }
             }
 
+            // attempt to add a stack to an existing effect
+            if (AddStatusEffectStack(statusEffect)) { 
+                return null;
+            }
+
+            StatusEffectNode _statusEffectNode = AddNewStatusEffect(statusEffect, sourceCharacter, abilityEffectContext);
+            return _statusEffectNode;
+        }
+
+        public StatusEffectNode AddNewStatusEffect(StatusEffectProperties statusEffectProperties, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.AddNewStatusEffect({statusEffectProperties.ResourceName}, {sourceCharacter.AbilityManager.Name})");
+
+            StatusEffectNode newStatusEffectNode = new StatusEffectNode(systemGameManager);
+            statusEffects.Add(statusEffectProperties.ResourceName, newStatusEffectNode);
+
+            // set base ability to null so that all damage taken by a status effect tick is considered ability damage for combat text purposes
+            abilityEffectContext.BaseAbility = null;
+
+            newStatusEffectNode.Setup(unitController, statusEffectProperties, abilityEffectContext);
+            Coroutine newCoroutine = unitController.StartCoroutine(Tick(sourceCharacter, abilityEffectContext, statusEffectProperties, newStatusEffectNode));
+            newStatusEffectNode.MonitorCoroutine = newCoroutine;
+            //newStatusEffectNode.Setup(this, _statusEffect, newCoroutine);
+
+            HandleAddNotifications(newStatusEffectNode);
+
+            if (newStatusEffectNode.StatusEffect.ControlTarget == true) {
+                sourceCharacter.AbilityManager.AddTemporaryPet(unitController.UnitProfile, unitController);
+
+                // any control effect will add the pet to the pet journal if this is used.  This is already done in capture pet effect so should not be needed
+                // see if leaving it commented out breaks anything
+                //sourceCharacter.AbilityManager.AddPet(baseCharacter.CharacterUnit);
+
+            }
+
+            if (newStatusEffectNode != null) {
+                unitController.UnitModelController.ProcessAddStatusEffect(newStatusEffectNode, statusEffectProperties, abilityEffectContext);
+            }
+
+            return newStatusEffectNode;
+        }
+
+        public bool AddStatusEffectStack(StatusEffectProperties statusEffect) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.AddStatusEffectStack({statusEffect.ResourceName})");
 
             // check if status effect already exists on target
             StatusEffectProperties comparedStatusEffect = null;
-            string peparedString = SystemDataUtility.PrepareStringForMatch(statusEffect.DisplayName);
-            if (statusEffects.ContainsKey(peparedString)) {
-                comparedStatusEffect = statusEffects[peparedString].StatusEffect;
+            if (statusEffects.ContainsKey(statusEffect.ResourceName)) {
+                comparedStatusEffect = statusEffects[statusEffect.ResourceName].StatusEffect;
             }
 
             //Debug.Log("comparedStatusEffect: " + comparedStatusEffect);
             if (comparedStatusEffect != null) {
-                if (!statusEffects[peparedString].AddStack()) {
+                if (!statusEffects[statusEffect.ResourceName].AddStack()) {
                     //Debug.Log("Could not apply " + statusEffect.MyAbilityEffectName + ".  Max stack reached");
                 } else {
                     //AddStatusEffectModifiers(statusEffect);
                     ProcessStatusEffectChanges(comparedStatusEffect);
                 }
-                return null;
-            } else {
-
-                // add to effect list since it was not in there
-                if (statusEffect == null) {
-                    Debug.LogError("CharacterStats.ApplyStatusEffect(): Could not get status effect " + statusEffect.DisplayName);
-                    return null;
-                }
-                StatusEffectNode newStatusEffectNode = new StatusEffectNode(systemGameManager);
-                statusEffects.Add(SystemDataUtility.PrepareStringForMatch(statusEffect.DisplayName), newStatusEffectNode);
-
-                // set base ability to null so that all damage taken by a status effect tick is considered ability damage for combat text purposes
-                abilityEffectContext.baseAbility = null;
-
-                newStatusEffectNode.Setup(this, statusEffect, abilityEffectContext);
-                Coroutine newCoroutine = baseCharacter.StartCoroutine(Tick(sourceCharacter, abilityEffectContext, statusEffect, newStatusEffectNode));
-                newStatusEffectNode.MyMonitorCoroutine = newCoroutine;
-                //newStatusEffectNode.Setup(this, _statusEffect, newCoroutine);
-
-                HandleAddNotifications(newStatusEffectNode);
-
-                if (newStatusEffectNode.StatusEffect.ControlTarget == true) {
-                    if (baseCharacter.UnitController != null) {
-                        // control effects really shouldn't be on saved characters, but just in case, check if no unit is spawned yet
-                        sourceCharacter.AbilityManager.AddTemporaryPet(baseCharacter.UnitProfile, baseCharacter.UnitController);
-                    }
-
-                    // any control effect will add the pet to the pet journal if this is used.  This is already done in capture pet effect so should not be needed
-                    // see if leaving it commented out breaks anything
-                    //sourceCharacter.AbilityManager.AddPet(baseCharacter.CharacterUnit);
-
-                }
-
-                return newStatusEffectNode;
+                return true;
             }
+
+            return false;
         }
 
         public bool HasStatusEffect(StatusEffectProperties statusEffect) {
-            return HasStatusEffect(statusEffect.DisplayName);
+            return HasStatusEffect(statusEffect.ResourceName);
         }
 
         public bool HasStatusEffect(string statusEffectName) {
-            if (statusEffects.ContainsKey(SystemDataUtility.PrepareStringForMatch(statusEffectName))) {
+            if (statusEffects.ContainsKey(statusEffectName)) {
                 return true;
             }
             return false;
         }
 
         public StatusEffectNode GetStatusEffectNode(StatusEffectProperties statusEffect) {
-            if (statusEffects.ContainsKey(SystemDataUtility.PrepareStringForMatch(statusEffect.DisplayName))) {
-                return StatusEffects[SystemDataUtility.PrepareStringForMatch(statusEffect.DisplayName)];
+            if (statusEffects.ContainsKey(statusEffect.DisplayName)) {
+                return StatusEffects[statusEffect.DisplayName];
             }
             return null;
         }
 
         private void HandleAddNotifications(StatusEffectNode statusEffectNode) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.HandleChangedNotifications(" + statusEffectNode.StatusEffect.DisplayName + "): NOTIFYING STATUS EFFECT UPDATE");
-            OnStatusEffectAdd(statusEffectNode);
             ProcessStatusEffectChanges(statusEffectNode.StatusEffect);
-            if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.UnitEventController.NotifyOnStatusEffectAdd(statusEffectNode);
+            unitController.UnitEventController.NotifyOnStatusEffectAdd(statusEffectNode);
+
+            if (statusEffectNode.StatusEffect.ClassTrait == false
+                && statusEffectNode.AbilityEffectContext.savedEffect == false
+                && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true)) {
+                unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, 0, CombatTextType.gainBuff, CombatMagnitude.normal, statusEffectNode.AbilityEffectContext);
             }
+
         }
 
         public void ProcessStatusEffectChanges(StatusEffectProperties statusEffect) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.HandleChangedNotifications(" + (statusEffect == null ? "null" : statusEffect.DisplayName) + ")");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.ProcessStatusEffectChanges({statusEffect.ResourceName})");
 
             //statusEffect.StatBuffTypeNames
             if (statusEffect.StatBuffTypeNames.Count > 0) {
@@ -1016,70 +1050,82 @@ namespace AnyRPG {
 
             if (statusEffect.CanFly == true) {
                 if (HasFlight() == false) {
-                    if (baseCharacter.UnitController != null) {
-                        baseCharacter.UnitController.CanFlyOverride = false;
-                    }
+                    unitController.CanFlyOverride = false;
                 }
             }
             if (statusEffect.CanGlide == true) {
                 if (HasGlide() == false) {
-                    if (baseCharacter.UnitController != null) {
-                        baseCharacter.UnitController.CanGlideOverride = false;
-                    }
+                    unitController.CanGlideOverride = false;
                 }
             }
 
             if (statusEffect.Stealth == true) {
                 if (IsStealthed == false) {
-                    DeactivateStealth();
+                    unitController.DeactivateStealth();
                 }
             }
 
 
             if (statusEffect.FactionModifiers.Count > 0) {
-                SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
+                unitController.UnitEventController.NotifyOnReputationChange();
             }
         }
 
         public void HandleStatusEffectRemoval(StatusEffectProperties statusEffect) {
-            //Debug.Log("CharacterStats.HandleStatusEffectRemoval(" + statusEffect.name + ")");
-            string preparedString = SystemDataUtility.PrepareStringForMatch(statusEffect.DisplayName);
-            if (statusEffects.ContainsKey(preparedString)) {
-                if (statusEffects[preparedString].MyMonitorCoroutine != null) {
-                    baseCharacter.StopCoroutine(statusEffects[preparedString].MyMonitorCoroutine);
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.HandleStatusEffectRemoval({statusEffect.ResourceName})");
+
+            if (statusEffects.ContainsKey(statusEffect.ResourceName)) {
+                if (statusEffects[statusEffect.ResourceName].MonitorCoroutine != null) {
+                    unitController.StopCoroutine(statusEffects[statusEffect.ResourceName].MonitorCoroutine);
                 }
-                statusEffects.Remove(preparedString);
+                //Debug.Log($"{unitController.gameObject.name}.CharacterStats.HandleStatusEffectRemoval(): removing status effect: {statusEffect.DisplayName}");
+                statusEffects.Remove(statusEffect.ResourceName);
             }
 
             // should reset resources back down after buff expires
             ProcessStatusEffectChanges(statusEffect);
         }
 
-        public void GainXP(int xp) {
-            //Debug.Log($"{gameObject.name}: GainXP(" + xp + ")");
+        public void GainExperience(int xp) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.GainXP({xp})");
             currentXP += xp;
             int overflowXP = 0;
-            while (currentXP - LevelEquations.GetXPNeededForLevel(currentLevel, systemConfigurationManager) >= 0) {
-                overflowXP = currentXP - LevelEquations.GetXPNeededForLevel(currentLevel, systemConfigurationManager);
-                GainLevel();
+            int initialLevel = currentLevel;
+            int levelGains = 0;
+            //adjust current xp before sending notification
+            while (currentXP - LevelEquations.GetXPNeededForLevel(initialLevel + levelGains, systemConfigurationManager) >= 0) {
+                overflowXP = currentXP - LevelEquations.GetXPNeededForLevel(initialLevel + levelGains, systemConfigurationManager);
+                levelGains++;
                 currentXP = overflowXP;
             }
-            OnGainXP(xp);
+            unitController.UnitEventController.NotifyOnGainXP(xp, currentXP);
+            while (levelGains > 0) {
+                GainLevel();
+                levelGains--;
+            }
+        }
+
+        public void SetXP(int xp) {
+            currentXP = xp;
         }
 
         public void GainLevel() {
             // make gain level sound and graphic
-            SetLevel(currentLevel + 1);
-            OnLevelChanged(currentLevel);
-            baseCharacter.CharacterSkillManager.UpdateSkillList(currentLevel);
-            baseCharacter.CharacterAbilityManager.UpdateAbilityList(currentLevel);
-            baseCharacter.CharacterRecipeManager.UpdateRecipeList(currentLevel);
-            if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.UnitEventController.NotifyOnLevelChanged(currentLevel);
-            }
+            SetLevelInternal(currentLevel + 1);
+            unitController.UnitEventController.NotifyOnLevelChanged(currentLevel);
+            SetResourceAmountsToMaximum();
         }
 
         public void SetLevel(int newLevel) {
+            SetLevelInternal(newLevel);
+            unitController.UnitEventController.NotifyOnLevelChanged(currentLevel);
+        }
+
+        public void LoadLevel(int level) {
+            currentLevel = level;
+        }
+
+        public void SetLevelInternal(int newLevel) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.SetLevel(" + newLevel + ")");
 
             Dictionary<string, float> multiplierValues = new Dictionary<string, float>();
@@ -1088,20 +1134,27 @@ namespace AnyRPG {
             }
 
             currentLevel = newLevel;
-            float primaryStatMultiplier = 1;
-            if (baseCharacter?.UnitToughness != null) {
-                primaryStatMultiplier = baseCharacter.UnitToughness.DefaultPrimaryStatMultiplier;
 
-                foreach (PrimaryStatMultiplierNode primaryStatMultiplierNode in baseCharacter.UnitToughness.PrimaryStatMultipliers) {
+            unitController.CharacterSkillManager.UpdateSkillList(currentLevel);
+            unitController.CharacterAbilityManager.UpdateAbilityList(currentLevel);
+            unitController.CharacterAbilityManager.UpdateTraitList(currentLevel);
+            unitController.CharacterRecipeManager.UpdateRecipeList(currentLevel);
+            unitController.CharacterPetManager.UpdatePetList(currentLevel);
+
+            float primaryStatMultiplier = 1;
+            if (unitController.BaseCharacter.UnitToughness != null) {
+                primaryStatMultiplier = unitController.BaseCharacter.UnitToughness.DefaultPrimaryStatMultiplier;
+
+                foreach (PrimaryStatMultiplierNode primaryStatMultiplierNode in unitController.BaseCharacter.UnitToughness.PrimaryStatMultipliers) {
                     multiplierValues[primaryStatMultiplierNode.StatName] = primaryStatMultiplierNode.StatMultiplier;
                 }
                 resourceMultipliers = new Dictionary<string, float>();
-                if (baseCharacter.UnitToughness.DefaultResourceMultiplier != 1f) {
+                if (unitController.BaseCharacter.UnitToughness.DefaultResourceMultiplier != 1f) {
                     foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
-                        resourceMultipliers.Add(powerResource.ResourceName, baseCharacter.UnitToughness.DefaultResourceMultiplier);
+                        resourceMultipliers.Add(powerResource.ResourceName, unitController.BaseCharacter.UnitToughness.DefaultResourceMultiplier);
                     }
                 }
-                foreach (ResourceMultiplierNode resourceMultiplierNode in baseCharacter.UnitToughness.ResourceMultipliers) {
+                foreach (ResourceMultiplierNode resourceMultiplierNode in unitController.BaseCharacter.UnitToughness.ResourceMultipliers) {
                     if (resourceMultipliers.ContainsKey(resourceMultiplierNode.ResourceName) == false) {
                         resourceMultipliers.Add(resourceMultiplierNode.ResourceName, resourceMultiplierNode.ValueMultiplier);
                     } else {
@@ -1113,7 +1166,7 @@ namespace AnyRPG {
 
             // calculate base values independent of any modifiers
             foreach (string statName in primaryStats.Keys) {
-                primaryStats[statName].BaseValue = (int)(currentLevel * LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter, systemConfigurationManager) * multiplierValues[statName] * primaryStatMultiplier);
+                primaryStats[statName].BaseValue = (int)(currentLevel * LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, unitController.BaseCharacter, systemConfigurationManager) * multiplierValues[statName] * primaryStatMultiplier);
             }
 
             // reset any amounts from equipment to deal with item level scaling before performing the calculations that include those equipment stat values
@@ -1121,8 +1174,6 @@ namespace AnyRPG {
 
             // calculate current values that include modifiers
             CalculatePrimaryStats();
-
-            SetResourceAmountsToMaximum();
         }
 
         public void CalculateEquipmentStats() {
@@ -1139,10 +1190,10 @@ namespace AnyRPG {
                 stat.ClearMultiplyModifiers();
             }
 
-            if (baseCharacter.CharacterEquipmentManager != null) {
-                foreach (Equipment equipment in baseCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
+            if (unitController.CharacterEquipmentManager != null) {
+                foreach (EquipmentInventorySlot equipmentInventorySlot in unitController.CharacterEquipmentManager.CurrentEquipment.Values) {
                     //CalculateEquipmentChanged(equipment, null, false);
-                    CalculateEquipmentChanged(equipment, null);
+                    CalculateEquipmentChanged(equipmentInventorySlot.InstantiatedEquipment, null);
                 }
             }
         }
@@ -1152,15 +1203,23 @@ namespace AnyRPG {
         }
 
         public void TakeFallDamage(float damagePercent) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.TakeFallDamage({damagePercent})");
+
+            int damageAmount = 0;
             foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
                 if (powerResource.IsHealth == true) {
-                    ReducePowerResource(powerResource, (int)((damagePercent / 100f) * GetPowerResourceMaxAmount(powerResource)));
+                    damageAmount = (int)((damagePercent / 100f) * GetPowerResourceMaxAmount(powerResource));
+                    ReducePowerResource(powerResource, damageAmount);
                 }
             }
-            baseCharacter.UnitController?.UnitEventController.NotifyOnTakeFallDamage();
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, damageAmount, CombatTextType.normal, CombatMagnitude.normal, new AbilityEffectContext());
+
+            unitController.UnitEventController.NotifyOnTakeFallDamage(damageAmount);
         }
 
         public void PerformDeathCheck() {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.PerformDeathCheck()");
+
             bool shouldLive = false;
             foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
                 if (powerResourceDictionary[powerResource].currentValue > 0f && powerResource.IsHealth == true) {
@@ -1186,11 +1245,7 @@ namespace AnyRPG {
 
         public void NotifyOnResourceAmountChanged(PowerResource powerResource, int maxValue, int currentValue) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.NotifyOnResourceAmountChanged(" + powerResource.DisplayName + ", " + maxValue + ", " + currentValue + ")");
-            OnResourceAmountChanged(powerResource, maxValue, currentValue);
-            if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.UnitEventController.NotifyOnResourceAmountChanged(powerResource, maxValue, currentValue);
-            }
-
+            unitController.UnitEventController.NotifyOnResourceAmountChanged(powerResource, maxValue, currentValue);
         }
 
         public void SetResourceAmount(string resourceName, float newAmount) {
@@ -1199,6 +1254,7 @@ namespace AnyRPG {
             PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(resourceName);
 
             if (tmpPowerResource != null && powerResourceDictionary.ContainsKey(tmpPowerResource)) {
+                int oldAmount = (int)powerResourceDictionary[tmpPowerResource].currentValue;
                 powerResourceDictionary[tmpPowerResource].currentValue = newAmount;
                 powerResourceDictionary[tmpPowerResource].currentValue = Mathf.Clamp(
                     powerResourceDictionary[tmpPowerResource].currentValue,
@@ -1209,45 +1265,77 @@ namespace AnyRPG {
             }
         }
 
+        public void LoadResourceAmount(string resourceName, float newAmount) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
+            newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
+            PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(resourceName);
+
+            if (tmpPowerResource != null && powerResourceDictionary.ContainsKey(tmpPowerResource)) {
+                powerResourceDictionary[tmpPowerResource].currentValue = newAmount;
+            }
+        }
+
+        /*
         /// <summary>
         /// return true if resource could be added, false if not
         /// </summary>
         /// <param name="resourceName"></param>
         /// <param name="newAmount"></param>
         /// <returns></returns>
-        public bool AddResourceAmount(string resourceName, float newAmount) {
+        public (bool, int) AddResourceAmount(string resourceName, float newAmount) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.AddResourceAmount(" + resourceName + ", " + newAmount + ")");
             newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
             PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(resourceName);
 
-            bool returnValue = false;
-            if (tmpPowerResource != null && powerResourceDictionary.ContainsKey(tmpPowerResource)) {
-                powerResourceDictionary[tmpPowerResource].currentValue += newAmount;
-                powerResourceDictionary[tmpPowerResource].currentValue = Mathf.Clamp(
-                    powerResourceDictionary[tmpPowerResource].currentValue,
-                    0,
-                    (int)GetPowerResourceMaxAmount(tmpPowerResource));
-                NotifyOnResourceAmountChanged(tmpPowerResource, (int)GetPowerResourceMaxAmount(tmpPowerResource), (int)powerResourceDictionary[tmpPowerResource].currentValue);
-                returnValue = true;
-                //Debug.Log($"{gameObject.name}.CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
+            if (tmpPowerResource == null) {
+                return (false, 0);
             }
-            return returnValue;
+
+            return AddResourceAmount(tmpPowerResource, newAmount);
+        }
+        */
+
+        public (bool, int) AddResourceAmount(PowerResource powerResource, float newAmount) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.AddResourceAmount(" + resourceName + ", " + newAmount + ")");
+            newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
+
+            if (powerResource == null) {
+                return (false, 0);
+            }
+
+            if (powerResourceDictionary.ContainsKey(powerResource) == false) {
+                return (false, 0);
+            }
+
+            int actualAmount = 0;
+            int maxAmount = (int)GetPowerResourceMaxAmount(powerResource);
+            // determine the actual amount of resource to be recovered based on the difference between current and max values and the requested amount to be added
+            if (powerResourceDictionary[powerResource].currentValue + newAmount > maxAmount) {
+                actualAmount = (int)(maxAmount - powerResourceDictionary[powerResource].currentValue);
+            } else {
+                actualAmount = (int)newAmount;
+            }
+            powerResourceDictionary[powerResource].currentValue += actualAmount;
+            //powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(powerResourceDictionary[powerResource].currentValue, 0, maxAmount);
+            NotifyOnResourceAmountChanged(powerResource, maxAmount, (int)powerResourceDictionary[powerResource].currentValue);
+
+            return (true, actualAmount);
         }
 
-        public bool RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.RecoverResource(" + powerResource.DisplayName + ", " + amount + ")");
+        public bool RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.RecoverResource({powerResource.ResourceName}, {amount}, {combatMagnitude})");
 
-            bool returnValue = AddResourceAmount(powerResource.ResourceName, amount);
-            if (returnValue == false) {
+            (bool returnValue, int actualAmount) = AddResourceAmount(powerResource, amount);
+            if (returnValue == false || actualAmount == 0) {
+                // for now we will not spam logs and combat text with zero value resource gains if the health was already full
                 return false;
             }
-            if (playerManager.PlayerUnitSpawned == true
-                && showCombatText
-                && (baseCharacter.UnitController.gameObject == playerManager.UnitController.gameObject || source.AbilityManager.UnitGameObject == playerManager.UnitController.gameObject)) {
-                // spawn text over the player
-                combatTextManager.SpawnCombatText(baseCharacter.UnitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
+            if (source.gameObject != unitController.gameObject) {
+                source.AbilityManager.ReceiveCombatTextEvent(unitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
             }
-            OnRecoverResource(powerResource, amount);
+            //unitController.UnitEventController.NotifyOnRecoverResource(powerResource, amount, combatMagnitude, abilityEffectContext);
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
+
             return true;
         }
 
@@ -1270,35 +1358,19 @@ namespace AnyRPG {
 
             if (PrimaryResource != null && powerResourceDictionary.ContainsKey(PrimaryResource)) {
                 powerResourceDictionary[PrimaryResource].currentValue = Mathf.Clamp(powerResourceDictionary[PrimaryResource].currentValue, 0, MaxPrimaryResource);
-                OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
+                unitController.UnitEventController.NotifyOnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
             }
         }
 
-        public void ActivateStealth() {
-            baseCharacter.UnitController.UnitMaterialController.ActivateStealth();
-            OnEnterStealth();
-        }
-
-        public void DeactivateStealth() {
-            //Debug.Log(baseCharacter.gameObject.name + "CharacterStats.DeactivateStealth()");
-
-            baseCharacter.UnitController.UnitMaterialController.DeactivateStealth();
-            OnLeaveStealth();
-
-            // to ensure the character gets agrod if close to enemies, the collider must be cycled
-            baseCharacter.UnitController.CharacterUnit.DisableCollider();
-            baseCharacter.UnitController.CharacterUnit.EnableCollider();
-        }
-
         public void StatChangedNotificationHandler() {
-            OnStatChanged();
+            unitController.UnitEventController.NotifyOnStatChanged();
         }
 
         /// <summary>
         /// Set resources to maximum
         /// </summary>
         public void SetResourceAmountsToMaximum() {
-            //Debug.Log($"{gameObject.name}.CharacterStats.ResetResourceAmounts()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.SetResourceAmountsToMaximum()");
 
             if (PowerResourceList == null) {
                 return;
@@ -1309,17 +1381,37 @@ namespace AnyRPG {
                 if (_powerResource != null && powerResourceDictionary.ContainsKey(_powerResource)) {
                     if (_powerResource.FillOnReset == true) {
                         powerResourceDictionary[_powerResource].currentValue = GetPowerResourceMaxAmount(_powerResource);
+                        //Debug.Log($"{unitController.gameObject.name}.CharacterStats.SetResourceAmountsToMaximum(): Setting {_powerResource.ResourceName} to {GetPowerResourceMaxAmount(_powerResource)}");
                     }
                 }
                 NotifyOnResourceAmountChanged(_powerResource, (int)GetPowerResourceMaxAmount(_powerResource), (int)PowerResourceDictionary[_powerResource].currentValue);
             }
-
-
         }
 
+        public void ClipResourceAmounts() {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.ClipResourceAmounts()");
+
+            if (PowerResourceList == null) {
+                return;
+            }
+
+            // loop through and update the resources.
+            foreach (PowerResource _powerResource in PowerResourceList) {
+                if (_powerResource != null && powerResourceDictionary.ContainsKey(_powerResource)) {
+                    if (powerResourceDictionary[_powerResource].currentValue > GetPowerResourceMaxAmount(_powerResource)) {
+                        //Debug.Log($"{unitController.gameObject.name}.CharacterStats.SetResourceAmountsToMaximum(): Lowering {_powerResource.ResourceName} from {powerResourceDictionary[_powerResource].currentValue} to {GetPowerResourceMaxAmount(_powerResource)}");
+                        powerResourceDictionary[_powerResource].currentValue = GetPowerResourceMaxAmount(_powerResource);
+                    }
+                }
+                NotifyOnResourceAmountChanged(_powerResource, (int)GetPowerResourceMaxAmount(_powerResource), (int)PowerResourceDictionary[_powerResource].currentValue);
+            }
+        }
+
+
+        /*
         public void TrySpawnDead() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.TrySpawnDead()");
-            if (baseCharacter != null && baseCharacter.SpawnDead == true) {
+            if (unitController.BaseCharacter.SpawnDead == true) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.TrySpawnDead(): spawning with no health");
                 isAlive = false;
 
@@ -1329,59 +1421,145 @@ namespace AnyRPG {
                 NotifyOnResourceAmountChanged(PrimaryResource, MaxPrimaryResource, CurrentPrimaryResource);
             }
         }
+        */
 
         public void Die() {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.Die()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.Die()");
+
             if (isAlive) {
                 isAlive = false;
-                ClearStatusEffects(false);
-                ClearPowerAmounts();
-                BeforeDie(this);
-                baseCharacter.UnitController.UnitEventController.NotifyOnBeforeDie(this);
-                OnDie(this);
-                baseCharacter.CharacterPetManager.HandleDie();
-                baseCharacter.CharacterCombat.HandleDie();
-                baseCharacter.CharacterAbilityManager.HandleDie(this);
-                baseCharacter.UnitController.FreezePositionXZ();
-                baseCharacter.UnitController.UnitAnimator.HandleDie(this);
-                baseCharacter.UnitController.RemoveNamePlate();
-                baseCharacter.UnitController.CharacterUnit.HandleDie(this);
-                baseCharacter.UnitController.UnitEventController.NotifyOnAfterDie(this);
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManagerClient.IsCutscene()) {
+                    // should only be done on server
+                    ClearStatusEffects(false);
+                    // should only be done on server
+                    ClearPowerAmounts();
+                    // should only be done on server
+                    unitController.CharacterAbilityManager.HandleDie(this);
+                }
+
+                // because this results in loot roll, it needs to be done after status effects are cleared, but before aggro table is cleared
+                unitController.UnitEventController.NotifyOnBeforeDie(unitController);
+
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManagerClient.IsCutscene()) {
+                    // should only be done on server
+                    unitController.CharacterPetManager.HandleDie();
+                    // should only be done on server
+                    unitController.CharacterCombat.HandleDie();
+                }
+                if (unitController.UnitMovementController != null) {
+                    unitController.UnitMovementController.intendedLocalMoveVelocity = new Vector3(0, 0, 0);
+                    unitController.UnitMovementController.intendedWorldMoveVelocity = new Vector3(0, 0, 0);
+                }
+                if (systemGameManager.GameMode == GameMode.Local
+                    || networkManagerServer.ServerModeActive
+                    || unitController.IsOwner
+                    || levelManagerClient.IsCutscene()) { 
+                    // should only be done on server or authoritative client
+                    unitController.FreezePositionXZ();
+                    // should only be done on server or authoritative client
+                    unitController.UnitAnimator.HandleDie();
+                }
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false || levelManagerClient.IsCutscene()) {
+                    // should be done on client
+                    unitController.RemoveNamePlate();
+                    // should be done on client
+                    unitController.CharacterUnit.HandleDie(this);
+                }
+
+                unitController.UnitEventController.NotifyOnAfterDie(this);
             }
         }
 
+        public void StatusEffectRevive() {
+            bool canRevive = false;
+            List<StatusEffectNode> cancelNodes = new List<StatusEffectNode>();
+            foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
+                // find the first matching status effect that allows revive and cancel it before reviving
+                if (statusEffectNode.StatusEffect.AllowRevive == true) {
+                    statusEffectNode.CancelStatusEffect();
+                    canRevive = true;
+                    break;
+                }
+            }
+            if (canRevive == false) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.StatusEffectRevive(): no status effects allow revive");
+                return;
+            }
+            Revive();
+
+        }
+
         public void Revive() {
-            //Debug.Log(BaseCharacter.MyCharacterName + "Triggering Revive Animation");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.Revive()");
+
             if (isReviving) {
                 //Debug.Log(BaseCharacter.MyCharacterName + " is already reviving.  Doing nothing");
                 return;
             }
-            if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitAnimator != null) {
-                baseCharacter.UnitController.UnitAnimator.EnableAnimator();
-            }
+            unitController.UnitAnimator.EnableAnimator();
             isReviving = true;
-            baseCharacter.UnitController?.CharacterUnit?.CancelDespawnDelay();
-            //baseCharacter.MyCharacterUnit.DisableCollider();
-            OnReviveBegin();
-            baseCharacter.UnitController.UnitAnimator.HandleReviveBegin();
-
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManagerClient.IsCutscene()) {
+                // should only be done on server
+                unitController.CancelDespawnDelay();
+            }
+            float reviveTime = unitController.UnitAnimator.GetReviveAnimationLength();
+            unitController.UnitEventController.NotifyOnReviveBegin(reviveTime);
+            if (systemGameManager.GameMode == GameMode.Local
+                || unitController.IsOwner
+                || (networkManagerServer.ServerModeActive && unitController.UnitControllerMode != UnitControllerMode.Player)
+                || levelManagerClient.IsCutscene()) {
+                unitController.UnitAnimator.HandleReviveBegin();
+            }
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
+                resurrectionCoroutine = unitController.StartCoroutine(WaitForResurrection(reviveTime));
+            }
         }
 
-        public void ReviveComplete() {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.ReviveComplete() Recieved Revive Complete Signal. Resetting Character Stats.");
-            ReviveRaw();
-            OnReviveComplete();
-            if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.UnitEventController.NotifyOnReviveComplete();
+        public IEnumerator WaitForResurrection(float animationLength) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.WaitForResurrection({animationLength})");
+
+            float remainingTime = animationLength;
+            while (remainingTime > 0f) {
+                yield return null;
+                remainingTime -= Time.deltaTime;
             }
+            //Debug.Log($"{gameObject.name}Setting waitingforhits to false after countdown down");
+            unitController.CharacterStats.ReviveComplete();
+            resurrectionCoroutine = null;
+        }
+
+
+        public void ReviveComplete() {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.ReviveComplete()");
+
+            if (systemGameManager.GameMode == GameMode.Local
+                || unitController.IsOwner
+                || (networkManagerServer.ServerModeActive && unitController.UnitControllerMode != UnitControllerMode.Player)
+                || levelManagerClient.IsCutscene()) {
+                // should only be done on server or authoritative client
+                unitController.UnitAnimator.HandleReviveComplete();
+            }
+            isReviving = false;
+            isAlive = true;
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
+                // should only be done on server
+                ReviveRaw();
+            }
+            unitController.FreezeRotation();
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false || levelManagerClient.IsCutscene()) {
+                // should be done on client
+                unitController.InitializeNamePlate();
+                // minimap updates
+                unitController.CharacterUnit.HandleReviveComplete();
+            }
+            unitController.UnitEventController.NotifyOnReviveComplete();
         }
 
         public void ReviveRaw() {
-            //Debug.Log(BaseCharacter.gameObject.name + ".CharacterStats.ReviveRaw()");
-            isReviving = false;
-            baseCharacter.UnitController.CharacterUnit.DisableCollider();
-            baseCharacter.UnitController.CharacterUnit.EnableCollider();
-            isAlive = true;
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.ReviveRaw()");
+
+            unitController.DisableCollider();
+            unitController.EnableCollider();
             ClearInvalidStatusEffects();
 
             SetResourceAmountsToMaximum();
@@ -1405,13 +1583,13 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.CharacterStatus.ClearStatusEffects()");
             List<StatusEffectNode> statusEffectNodes = new List<StatusEffectNode>();
             foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
-                if (clearAll == true || statusEffectNode.StatusEffect.ClassTrait == false) {
+                if (clearAll == true || (statusEffectNode.StatusEffect.ClassTrait == false && statusEffectNode.StatusEffect.KeepOnDeath == false)) {
                     statusEffectNodes.Add(statusEffectNode);
                 }
             }
             foreach (StatusEffectNode statusEffectNode in statusEffectNodes) {
                 statusEffectNode.CancelStatusEffect();
-                statusEffects.Remove(SystemDataUtility.PrepareStringForMatch(statusEffectNode.StatusEffect.DisplayName));
+                statusEffects.Remove(statusEffectNode.StatusEffect.ResourceName);
             }
             //statusEffects.Clear();
         }
@@ -1422,7 +1600,7 @@ namespace AnyRPG {
             List<StatusEffectNode> statusEffectNodes = new List<StatusEffectNode>();
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 // TODO : pass in the original source caster of the status effect for more accurate character based check
-                if (statusEffectNode.StatusEffect.GetTargetOptions(baseCharacter).RequireDeadTarget == true && statusEffectNode.StatusEffect.GetTargetOptions(baseCharacter).RequireLiveTarget == false) {
+                if (statusEffectNode.StatusEffect.GetTargetOptions(unitController).RequireDeadTarget == true && statusEffectNode.StatusEffect.GetTargetOptions(unitController).RequireLiveTarget == false) {
                     statusEffectNodes.Add(statusEffectNode);
                 }
             }
@@ -1433,48 +1611,54 @@ namespace AnyRPG {
         }
 
         public IEnumerator Tick(IAbilityCaster characterSource, AbilityEffectContext abilityEffectContext, StatusEffectProperties statusEffect, StatusEffectNode statusEffectNode) {
-            //Debug.Log($"{gameObject.name}.StatusEffect.Tick() start");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.Tick({statusEffect.ResourceName})");
+
             float elapsedTime = 0f;
 
-            statusEffect.ApplyControlEffects(baseCharacter);
+            statusEffect.ApplyControlEffects(unitController);
             if (abilityEffectContext.overrideDuration != 0) {
                 statusEffectNode.SetRemainingDuration(abilityEffectContext.overrideDuration);
             } else {
                 statusEffectNode.SetRemainingDuration(statusEffect.Duration);
             }
             if (statusEffect.CastZeroTick) {
-                if (baseCharacter != null && baseCharacter.UnitController != null && characterSource != null) {
-                    statusEffect.CastTick(characterSource, baseCharacter.UnitController, abilityEffectContext);
+                if (characterSource?.AbilityManager != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManagerClient.IsCutscene())) {
+                    statusEffect.CastTick(characterSource, unitController, abilityEffectContext);
                 }
             }
 
-            while ((statusEffect.LimitedDuration == false || statusEffect.ClassTrait == true || statusEffectNode.GetRemainingDuration() > 0f) && baseCharacter != null) {
+            while ((statusEffect.LimitedDuration == false || statusEffect.ClassTrait == true || statusEffectNode.GetRemainingDuration() > 0f) && unitController != null && characterSource?.AbilityManager != null) {
                 yield return null;
-                statusEffectNode.SetRemainingDuration(statusEffectNode.GetRemainingDuration() - Time.deltaTime);
+                if (statusEffect.LimitedDuration == true && statusEffect.ClassTrait == false) {
+                    statusEffectNode.SetRemainingDuration(statusEffectNode.GetRemainingDuration() - Time.deltaTime);
+                    unitController.CharacterSaveManager.SaveStatusEffectData();
+                }
                 elapsedTime += Time.deltaTime;
                 // check for tick first so we can do final tick;
 
                 if (elapsedTime >= statusEffect.TickRate && statusEffect.TickRate != 0) {
-                    if (baseCharacter != null && baseCharacter.UnitController != null && characterSource != null) {
-                        statusEffect.CastTick(characterSource, baseCharacter.UnitController, abilityEffectContext);
-                        elapsedTime -= statusEffect.TickRate;
+                    if (characterSource?.AbilityManager != null) {
+                        if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManagerClient.IsCutscene()) {
+                            statusEffect.CastTick(characterSource, unitController, abilityEffectContext);
+                        }
                     }
+                    elapsedTime -= statusEffect.TickRate;
                 }
                 statusEffectNode.UpdateStatusNode();
             }
-            if (baseCharacter != null) {
-                if (characterSource != null & baseCharacter.UnitController != null) {
-                    statusEffect.CastComplete(characterSource, baseCharacter.UnitController, abilityEffectContext);
-                }
+            if (characterSource?.AbilityManager != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManagerClient.IsCutscene())) {
+                statusEffect.CastComplete(characterSource, unitController, abilityEffectContext);
             }
 
-            if (statusEffects.ContainsKey(SystemDataUtility.PrepareStringForMatch(statusEffect.DisplayName))) {
-                statusEffects[SystemDataUtility.PrepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
+            if (statusEffects.ContainsKey(statusEffect.ResourceName) && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManagerClient.IsCutscene())) {
+                statusEffects[statusEffect.ResourceName].CancelStatusEffect();
             }
         }
 
         public void Update() {
-            PerformResourceRegen();
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
+                PerformResourceRegen();
+            }
         }
 
         public float GetPowerResourceAmount(PowerResource powerResource) {
@@ -1510,7 +1694,7 @@ namespace AnyRPG {
         public float GetPowerResourceMaxAmount(PowerResource powerResource) {
             float returnValue = 0f;
             if (powerResourceDictionary.ContainsKey(powerResource)) {
-                if (baseCharacter != null) {
+                if (unitController != null) {
                     returnValue += powerResource.MaximumAmount;
 
                     // add base power resource
@@ -1519,7 +1703,7 @@ namespace AnyRPG {
                     // add level scaled amount
                     returnValue += powerResource.AmountPerLevel * currentLevel;
 
-                    foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
+                    foreach (IStatProvider statProvider in unitController.BaseCharacter.StatProviders) {
                         if (statProvider != null) {
                             returnValue += GetResourceMaximum(powerResource, statProvider);
                         }
@@ -1540,7 +1724,7 @@ namespace AnyRPG {
 
         protected void PerformResourceRegen() {
             //Debug.Log("CharacterStats.PerformResourceRegen()");
-            if (baseCharacter == null || baseCharacter.UnitController == null || isAlive == false) {
+            if (isAlive == false) {
                 // if the character is not spawned, we should not be regenerating their resources.
                 //Debug.Log("CharacterStats.PerformResourceRegen(): NULL! baseCharacter: " + (baseCharacter == null ? "null" : baseCharacter.gameObject.name) + "; characterunit: " + (baseCharacter.UnitController == null ? "null" : baseCharacter.UnitController.DisplayName));
                 return;
@@ -1567,7 +1751,7 @@ namespace AnyRPG {
                         && (powerResourceDictionary[powerResource].currentValue > 0f))
                        ) {
                         float usedRegenAmount = 0f;
-                        if (baseCharacter?.CharacterCombat != null && baseCharacter.CharacterCombat.GetInCombat() == true) {
+                        if (unitController?.CharacterCombat != null && unitController.CharacterCombat.GetInCombat() == true) {
                             // perform combat regen
                             usedRegenAmount += GetPowerResourceMaxAmount(powerResource) * (powerResourceRegenDictionary[powerResource.ResourceName].CombatPercentPerTick / 100f);
                             usedRegenAmount += powerResourceRegenDictionary[powerResource.ResourceName].CombatAmountPerTick;
@@ -1591,6 +1775,35 @@ namespace AnyRPG {
                     }
                 }
             }
+        }
+
+        public void CancelStatusEffect(StatusEffectProperties statusEffect) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.CancelStatusEffect({statusEffect.ResourceName})");
+
+            if (statusEffects.ContainsKey(statusEffect.ResourceName)) {
+                statusEffects[statusEffect.ResourceName].CancelStatusEffect();
+            }
+        }
+
+        public void RequestCancelStatusEffect(StatusEffectNode statusEffectNode) {
+            if (statusEffectNode.StatusEffect.StatusEffectAlignment == StatusEffectAlignment.Harmful) {
+                return;
+            }
+            if (systemGameManager.GameMode == GameMode.Local) {
+                CancelStatusEffect(statusEffectNode.StatusEffect);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestCancelStatusEffect(statusEffectNode.StatusEffect);
+            }
+        }
+
+        public bool CanRevive() {
+            // check status effects for revive property
+            foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
+                if (statusEffectNode.StatusEffect.AllowRevive == true) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 

@@ -7,48 +7,40 @@ namespace AnyRPG {
     [System.Serializable]
     public class AbilityPrerequisite : ConfiguredClass, IPrerequisite {
 
-        public event System.Action OnStatusUpdated = delegate { };
+        public event System.Action<UnitController> OnStatusUpdated = delegate { };
 
         [SerializeField]
-        [ResourceSelector(resourceType = typeof(BaseAbility))]
+        [ResourceSelector(resourceType = typeof(Ability))]
         private string prerequisiteName = string.Empty;
 
         private bool prerequisiteMet = false;
 
-        private BaseAbilityProperties prerequisiteAbility = null;
+        private AbilityProperties prerequisiteAbility = null;
 
         private string ownerName = null;
 
-        // game manager references
-        private PlayerManager playerManager = null;
-
-        public void HandleAbilityListChanged() {
+        public void HandleAbilityListChanged(UnitController unitController) {
             //Debug.Log("AbilityPrerequisite.HandleAbilityListChanged()");
             bool originalResult = prerequisiteMet;
             prerequisiteMet = true;
             if (prerequisiteMet != originalResult) {
-                OnStatusUpdated();
+                OnStatusUpdated(unitController);
             }
         }
 
-        public void UpdateStatus(bool notify = true) {
+        public void UpdateStatus(UnitController sourceUnitController, bool notify = true) {
             bool originalResult = prerequisiteMet;
-            prerequisiteMet = playerManager.MyCharacter.CharacterAbilityManager.HasAbility(prerequisiteAbility);
+            prerequisiteMet = sourceUnitController.CharacterAbilityManager.HasAbility(prerequisiteAbility);
             if (prerequisiteMet != originalResult) {
                 if (notify == true) {
-                    OnStatusUpdated();
+                    OnStatusUpdated(sourceUnitController);
                 }
             }
         }
 
-        public virtual bool IsMet(BaseCharacter baseCharacter) {
+        public virtual bool IsMet(UnitController sourceUnitController) {
             //Debug.Log("AbilityPrerequisite.IsMet()");
             return prerequisiteMet;
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager, string ownerName) {
@@ -56,7 +48,7 @@ namespace AnyRPG {
             Configure(systemGameManager);
             prerequisiteAbility = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                prerequisiteAbility = systemDataFactory.GetResource<BaseAbility>(prerequisiteName).AbilityProperties;
+                prerequisiteAbility = systemDataFactory.GetResource<Ability>(prerequisiteName).AbilityProperties;
                 if (prerequisiteAbility != null) {
                     prerequisiteAbility.OnAbilityLearn += HandleAbilityListChanged;
                 }

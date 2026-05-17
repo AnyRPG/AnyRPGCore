@@ -13,7 +13,7 @@ namespace AnyRPG {
 
         [Tooltip("The ability to cast in order to craft with this node")]
         [SerializeField]
-        [ResourceSelector(resourceType = typeof(BaseAbility))]
+        [ResourceSelector(resourceType = typeof(Ability))]
         private string abilityName = string.Empty;
 
         private CraftAbilityProperties ability;
@@ -32,10 +32,6 @@ namespace AnyRPG {
             }
         }
 
-        public override string GetInteractionPanelTitle(int optionIndex = 0) {
-            return (Ability != null ? Ability.DisplayName : base.GetInteractionPanelTitle(optionIndex));
-        }
-
         public CraftAbilityProperties Ability { get => ability; set => ability = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
@@ -45,7 +41,7 @@ namespace AnyRPG {
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
             if (abilityName != null && abilityName != string.Empty) {
-                BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
+                Ability baseAbility = systemDataFactory.GetResource<Ability>(abilityName);
                 if (baseAbility != null && (baseAbility.AbilityProperties is CraftAbilityProperties)) {
                     ability = baseAbility.AbilityProperties as CraftAbilityProperties;
                 } else {

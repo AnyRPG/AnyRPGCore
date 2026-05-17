@@ -10,6 +10,13 @@ namespace AnyRPG {
         private VoiceProps voiceProps = new VoiceProps();
 
         public VoiceProps VoiceProps { get => voiceProps; set => voiceProps = value; }
+
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
+            if (voiceProps != null) {
+                voiceProps.Configure(systemGameManager);
+            }
+        }
     }
 
 }

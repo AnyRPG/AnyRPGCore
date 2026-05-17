@@ -1,4 +1,3 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +7,8 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class HandScript : ConfiguredMonoBehaviour {
 
-        public IMoveable Moveable { get; set; }
+        //public IMoveable Moveable { get; set; }
+        public IMoveableOwner MoveableOwner { get; set; }
 
         [SerializeField]
         private Vector3 offset = Vector3.zero;
@@ -26,9 +26,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private ActionBarManager actionBarManager = null;
         private InputManager inputManager = null;
-        //InventoryManager inventoryManager = null;
-        private PlayerManager playerManager = null;
-        private LogManager logManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private ControlsManager controlsManager = null;
 
 
@@ -37,9 +35,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             actionBarManager = uIManager.ActionBarManager;
             inputManager = systemGameManager.InputManager;
-            //inventoryManager = systemGameManager.InventoryManager;
-            playerManager = systemGameManager.PlayerManager;
-            logManager = systemGameManager.LogManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             controlsManager = systemGameManager.ControlsManager;
         }
 
@@ -47,38 +43,42 @@ namespace AnyRPG {
             transform.position = position;
         }
 
-        // Update is called once per frame
+        // called once per frame
         public void ProcessInput() {
-            if (controlsManager.GamePadModeActive == false) {
+            //Debug.Log("HandScript.ProcessInput()");
+
+            if (controlsManager.GamepadModeActive == false) {
                 transform.position = Input.mousePosition + offset;
-                if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && Moveable != null) {
-                    if (Moveable is Item) {
+                if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && MoveableOwner?.Moveable != null) {
+                    if (MoveableOwner.Moveable is InstantiatedItem) {
                         uIManager.confirmDestroyMenuWindow.OpenWindow();
-                    } else if (Moveable is BaseAbility) {
+                    } else if (MoveableOwner.Moveable is Ability) {
                         // DROP ABILITY SAFELY
                         if (actionBarManager.FromButton != null) {
-                            actionBarManager.FromButton.ClearUseable();
+                            //actionBarManager.FromButton.ClearUseable();
+                            actionBarManager.RequestClearMouseUseable(actionBarManager.FromButton.ActionButtonIndex);
                         }
-                        Drop();
+                        CompleteMove();
                     }
                 }
             }
             if (inputManager.KeyBindWasPressed("CANCELALL")) {
-                Drop();
+                CancelMove();
             }
         }
 
-        public void TakeMoveable(IMoveable moveable) {
-            //Debug.Log("HandScript.TakeMoveable(" + moveable.ToString() + ")");
-            this.Moveable = moveable;
+        public void TakeMoveable(IMoveableOwner moveableOwner) {
+            //Debug.Log($"HandScript.TakeMoveable({moveable.DisplayName})");
 
-            moveable.AssignToHandScript(backgroundImage);
+            this.MoveableOwner = moveableOwner;
 
-            icon.sprite = moveable.Icon;
+            moveableOwner.Moveable.AssignToHandScript(backgroundImage);
+
+            icon.sprite = moveableOwner.Moveable.Icon;
             icon.color = Color.white;
 
 
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 rectTransform.pivot = new Vector2(0, 1);
             } else {
                 rectTransform.pivot = new Vector2(0.5f, 0.5f);
@@ -86,27 +86,28 @@ namespace AnyRPG {
 
         }
 
-        public IMoveable Put() {
-            //Debug.Log("HandScript.Put().  Putting " + MyMoveable.ToString());
-            IMoveable tmp = Moveable;
-            ClearMoveable();
+        public void CancelMove() {
+            //Debug.Log("HandScript.CancelMove()");
 
-            return tmp;
+            if (MoveableOwner == null) {
+                return;
+            }
+            MoveableOwner.CancelHandscriptMove();
+            ClearMoveable();
         }
 
-        public void Drop() {
-            //Debug.Log("HandScript.Drop()");
+        public void CompleteMove() {
+            //Debug.Log("HandScript.CompleteMove()");
+
             ClearMoveable();
-            playerManager.MyCharacter.CharacterInventoryManager.FromSlot = null;
-            actionBarManager.FromButton = null;
         }
 
         private void ClearMoveable() {
             //Debug.Log("HandScript.ClearMoveable()");
-            if (playerManager.MyCharacter.CharacterInventoryManager.FromSlot?.InventorySlot != null) {
-                playerManager.MyCharacter.CharacterInventoryManager.FromSlot.PutItemBack();
-            }
-            Moveable = null;
+
+            playerManagerClient.UnitController.CharacterInventoryManager.FromSlot = null;
+            actionBarManager.FromButton = null;
+            MoveableOwner = null;
 
             // clear background image
             backgroundImage.color = new Color32(0, 0, 0, 0);
@@ -125,25 +126,10 @@ namespace AnyRPG {
 
         public void DeleteItem() {
             //Debug.Log("HandScript.DeleteItem()");
-            if (Moveable is Item) {
-                Item item = (Item)Moveable;
-                if (item.Slot != null) {
-                    item.Slot.Clear();
-                } else {
-                    // first we want to get this items equipment slot
-                    // next we want to query the equipmentmanager on the charcter to see if he has an item in this items slot, and if it is the item we are dropping
-                    // if it is, then we will unequip it, and then destroy it
-                    if (item is Equipment) {
-                        playerManager.MyCharacter.CharacterEquipmentManager.Unequip(item as Equipment);
-                        if (item.Slot != null) {
-                            item.Slot.Clear();
-                        }
-                        playerManager.UnitController.UnitModelController.RebuildModelAppearance();
-                    }
-                }
+            if (MoveableOwner?.Moveable is InstantiatedItem) {
+                playerManagerClient.UnitController.CharacterInventoryManager.RequestDeleteItem((InstantiatedItem)MoveableOwner.Moveable);
             }
-            logManager.WriteSystemMessage("Destroyed " + Moveable.DisplayName);
-            Drop();
+            CancelMove();
         }
     }
 

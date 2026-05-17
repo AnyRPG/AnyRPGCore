@@ -8,13 +8,15 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     public interface IQuestGiver {
-        QuestGiverProps Props { get; }
-        void UpdateQuestStatus();
+        QuestGiverProps QuestGiverProps { get; }
+        void UpdateQuestStatus(UnitController sourceUnitController);
         Interactable Interactable { get; }
         InteractableOptionComponent InteractableOptionComponent { get; }
-        bool Interact(CharacterUnit source, int optionIndex = 0);
+        bool Interact(UnitController source, int componentIndex = 0, int choiceIndex = 0);
         void HandleCompleteQuest();
         void HandleAcceptQuest();
         bool EndsQuest(string questName);
+        void RequestAcceptQuest(UnitController unitController, Quest currentQuest);
+        void RequestCompleteQuest(UnitController unitController, Quest currentQuest, QuestRewardChoices questRewardChoices);
     }
 }

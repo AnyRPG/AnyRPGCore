@@ -20,14 +20,19 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
+  suppressNameplateFaction: 1
   automaticPrefabProfile: 0
   prefabProfileName: 
   useInlinePrefabProps: 1
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
+    networkUnitPrefab: {fileID: 0}
     modelPrefab: {fileID: 6954704190252621995, guid: a904f4abd36f62d4f915f4ecbb5d7c2d,
       type: 3}
+    networkModelPrefab: {fileID: 0}
+    modelProvider:
+      rid: -2
     animationProfileName: 
     useInlineAnimationProps: 0
     animationProps:
@@ -36,6 +41,7 @@ MonoBehaviour:
       attackClips: []
       castClips: []
       takeDamageClips: []
+      actionClips: []
       idleClip: {fileID: 0}
       jumpClip: {fileID: 0}
       fallClip: {fileID: 0}
@@ -113,16 +119,25 @@ MonoBehaviour:
       swimMoveClip: {fileID: 0}
       flyIdleClip: {fileID: 0}
       flyMoveClip: {fileID: 0}
-    rotateModel: 0
+    forceRotateModelMode: 0
     namePlateProps:
       displayName: 
-      suppressNamePlate: 0
       suppressFaction: 1
       overrideNameplatePosition: 0
       namePlatePosition: {x: 0, y: 0, z: 0}
+      useSnapShot: 1
       unitFrameTarget: head
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
       unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+      unitPreviewTarget: 
+      unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
+      unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
+    unitFrameProps:
+      useSnapShot: 1
+      unitFrameTarget: head
+      unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+      unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+    unitPreviewProps:
       unitPreviewTarget: 
       unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
       unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
@@ -135,7 +150,6 @@ MonoBehaviour:
     floatHeight: 1.4
     addFloatHeightToTransform: 0
     floatTransform: Spine1
-  isUMAUnit: 0
   isPet: 0
   flightCapable: 0
   glideCapable: 0
@@ -153,28 +167,34 @@ MonoBehaviour:
   useInlineVoiceProps: 0
   voiceProps:
     aggro: []
+    attack: []
     damage: []
     jump: []
     fallDamage: []
     death: []
     victory: []
     startInteract: []
+    startVendorInteract: []
     stopInteract: []
+    stopVendorInteract: []
   capabilities:
     abilityNames: []
     traitNames: []
     armorClassList: []
     weaponSkills: []
-  isAggressive: 1
-  aggroRadius: 25
-  automaticCombatStrategy: 0
-  combatStrategyName: 
+    validPetTypes: []
+    startingPets: []
   primaryStats: []
   powerResources: []
   useProviderEquipment: 1
   equipmentNameList: []
-  faceInteractionTarget: 1
+  isAggressive: 1
+  aggroRadius: 25
+  automaticCombatStrategy: 0
+  combatStrategyName: 
+  defaultHitEffects: []
   isMobile: 1
+  footstepType: 3
   playOnFootstep: 1
   movementAudioProfileNames:
   - Default Footstep Hits
@@ -193,6 +213,7 @@ MonoBehaviour:
     movementSpeed: 0
     savePositionAtDestination: 0
   patrolNames: []
+  faceInteractionTarget: 1
   interactionMaxRange: 3
   interactableOptions: []
   inlineInteractableOptions: []
@@ -200,7 +221,9 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 4cc938fa-3a28-4b63-a570-101dda7dbac2
+  m_UUID: 33f15515-de7b-4675-8c15-848f4b99b07c
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

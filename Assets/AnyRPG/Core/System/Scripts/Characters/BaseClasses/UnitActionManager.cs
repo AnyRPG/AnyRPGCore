@@ -7,9 +7,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class UnitActionManager : ConfiguredClass {
 
-        //public event System.Action<BaseCharacter> OnCastCancel = delegate { };
-        //public event System.Action<AnimatedAction> OnCombatCheckFail = delegate { };
-        //public event System.Action<AnimatedAbility> OnAnimatedAbilityCheckFail = delegate { };
         public event System.Action<string> OnCombatMessage = delegate { };
 
         private UnitController unitController = null;
@@ -18,6 +15,7 @@ namespace AnyRPG {
         // the coroutine will exit without actually setting the coroutine variable, because it doesn't get set until the first yield statement executes
         protected bool isPerformingAction = false;
         private Coroutine currentActionCoroutine = null;
+        private Vector3 actionStartPosition = Vector3.zero;
 
         //private AnimatedActionProperties currentAction = null;
 
@@ -27,6 +25,7 @@ namespace AnyRPG {
         // game manager references
         //private PlayerManager playerManager = null;
         protected ObjectPooler objectPooler = null;
+        protected LevelManagerClient levelManagerClient = null;
 
         public bool ControlLocked {
             get {
@@ -39,7 +38,7 @@ namespace AnyRPG {
 
         public bool IsDead {
             get {
-                if (unitController.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == false) {
+                if (unitController.CharacterStats.IsAlive == false) {
                     return true;
                 }
                 return false;
@@ -55,6 +54,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             //playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public AttachmentPointNode GetHeldAttachmentPointNode(AbilityAttachmentNode attachmentNode) {
@@ -68,9 +68,9 @@ namespace AnyRPG {
                 return attachmentPointNode;
             } else {
                 // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node
-                if (unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile != null) {
-                    if (unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.AttachmentName)) {
-                        return unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.AttachmentName];
+                if (unitController.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile != null) {
+                    if (unitController.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.AttachmentName)) {
+                        return unitController.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.AttachmentName];
                     }
                 }
             }
@@ -98,7 +98,7 @@ namespace AnyRPG {
                         go.transform.localEulerAngles = attachmentPointNode.Rotation;
                     }
                 } else {
-                    Debug.Log("CharacterAbilityManager.HoldObject(): Unable to find target bone : " + attachmentPointNode.TargetBone);
+                    Debug.LogWarning($"CharacterAbilityManager.HoldObject(): Unable to find target bone : {attachmentPointNode.TargetBone}");
                 }
             } else {
                 // this code appears to have been copied from equipmentmanager (now in mecanimModelController) so the below line is false ?
@@ -107,6 +107,15 @@ namespace AnyRPG {
                 // testing because this is ability manager, if no attachment point node or target bone was found, set rotation to match parent
                 go.transform.rotation = searchObject.transform.rotation;
             }
+        }
+
+        public void SpawnActionObjectsInternal(AnimatedAction animatedAction) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.SpawnActionObjectsInternal({animatedAction.ResourceName})");
+
+            SpawnActionObjects(animatedAction.ActionProperties.HoldableObjectList);
+
+            unitController.UnitEventController.NotifyOnSpawnActionObjects(animatedAction);
+
         }
 
         public void SpawnActionObjects(List<AbilityAttachmentNode> abilityAttachmentNodes) {
@@ -136,7 +145,7 @@ namespace AnyRPG {
                                 newEquipmentPrefab.transform.localScale = abilityAttachmentNode.HoldableObject.Scale;
                                 HoldObject(newEquipmentPrefab, abilityAttachmentNode, unitController.gameObject);
                             } else {
-                                Debug.Log("CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " while spawning " + abilityAttachmentNode.HoldableObject.ResourceName);
+                                //Debug.Log($"CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone {attachmentPointNode.TargetBone} while spawning {abilityAttachmentNode.HoldableObject.ResourceName}");
                             }
                         }
                     }
@@ -160,7 +169,7 @@ namespace AnyRPG {
         }
 
         public void DespawnActionObjects() {
-            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.DespawnAbilityObjects()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.DespawnActionObjects()");
 
             if (actionObjects == null || actionObjects.Count == 0) {
                 return;
@@ -176,12 +185,14 @@ namespace AnyRPG {
                 }
             }
             actionObjects.Clear();
+
+            unitController.UnitEventController.NotifyOnDespawnActionObjects();
         }
 
         public AnimationProps GetUnitAnimationProps() {
             //Debug.Log($"{gameObject.name}.GetDefaultAttackAnimations()");
-            if (unitController.CharacterUnit.BaseCharacter.UnitProfile?.UnitPrefabProps?.AnimationProps != null) {
-                return unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AnimationProps;
+            if (unitController.BaseCharacter.UnitProfile?.UnitPrefabProps?.AnimationProps != null) {
+                return unitController.BaseCharacter.UnitProfile.UnitPrefabProps.AnimationProps;
             }
             if (systemConfigurationManager.DefaultAnimationProfile != null) {
                 return systemConfigurationManager.DefaultAnimationProfile.AnimationProps;
@@ -199,14 +210,14 @@ namespace AnyRPG {
         }
         */
 
-        public void PerformActionAnimation(AnimationClip animationClip, AnimatedActionProperties animatedActionProperties) {
-            //Debug.Log($"{unitController.gameObject.name}.PerformActionAnimation(" + (animationClip == null ? "null" : animationClip.name) + ")");
+        public void PerformActionAnimation(AnimatedAction animatedAction) {
+            //Debug.Log($"{unitController.gameObject.name}.PerformActionAnimation({animatedAction.ResourceName})");
 
-            if (animationClip == null) {
+            if (animatedAction.ActionProperties.AnimationClip == null) {
                 return;
             }
 
-            unitController.UnitAnimator.HandleAction(animationClip, animatedActionProperties);
+            unitController.UnitAnimator.PerformAnimatedAction(animatedAction);
         }
 
         /*
@@ -230,22 +241,28 @@ namespace AnyRPG {
         /// <param name="animatedAction"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public IEnumerator PerformActionCast(AnimatedActionProperties animatedActionProperties, Interactable target) {
+        public IEnumerator PerformActionCast(AnimatedAction animatedAction, Interactable target) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.PerformActionCast({animatedAction.ResourceName})");
+            
             float startTime = Time.time;
             isPerformingAction = true;
+            actionStartPosition = unitController.RigidBody.position;
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.PerformActionCast() startPosition: ({actionStartPosition.x}, {actionStartPosition.y}, {actionStartPosition.z})");
+
+            AnimatedActionProperties animatedActionProperties = animatedAction.ActionProperties;
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + ", " + (target == null ? "null" : target.name) + ") Enter Ienumerator with tag: " + startTime);
 
-            PerformActionAnimation(animatedActionProperties.AnimationClip, animatedActionProperties);
+            PerformActionAnimation(animatedAction);
 
             float currentCastPercent = 0f;
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastPercent: " + currentCastPercent + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
 
             if (animatedActionProperties.HoldableObjectList.Count != 0) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(" + ability.DisplayName + "): spawning ability objects");
-                SpawnActionObjects(animatedActionProperties.HoldableObjectList);
+                SpawnActionObjectsInternal(animatedAction);
             }
             if (animatedActionProperties.CastingAudioClip != null) {
-                unitController.UnitComponentController.PlayCastSound(animatedActionProperties.CastingAudioClip);
+                unitController.InteractableEventController.NotifyOnPlayCastSound(animatedActionProperties.CastingAudioClip, false);
             }
 
             if (animatedActionProperties.ActionCastingTime > 0f) {
@@ -263,7 +280,7 @@ namespace AnyRPG {
         public void EndActionCleanup() {
             //Debug.Log(abilityCaster.gameObject.name + ".CharacterAbilitymanager.EndCastCleanup()");
             if (unitController != null) {
-                unitController.UnitComponentController.StopCastSound();
+                unitController.InteractableEventController.NotifyOnStopCastSound();
             }
         }
 
@@ -271,57 +288,61 @@ namespace AnyRPG {
         /// This is the entrypoint for character behavior calls and should not be used for anything else due to the runtime ability lookup that happens
         /// </summary>
         /// <param name="actionName"></param>
-        public bool BeginAction(string actionName) {
-            //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (abilityName == null ? "null" : abilityName) + ")");
+        public void BeginAction(string actionName) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.BeginAction({actionName})");
+
             AnimatedAction animatedAction = systemDataFactory.GetResource<AnimatedAction>(actionName);
             if (animatedAction != null) {
                 //return BeginAction(animatedAction);
-                return BeginAction(animatedAction);
+                BeginAction(animatedAction);
             }
-            return false;
         }
 
         /// <summary>
         /// Call an action directly, checking if the action is known
         /// </summary>
         /// <returns></returns>
-        public bool BeginAction(AnimatedAction animatedAction) {
-            return BeginAction(animatedAction.ActionProperties);
+        public void BeginAction(AnimatedAction animatedAction, bool playerInitiated = false) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.BeginAction({(animatedAction == null ? "null" : animatedAction.DisplayName)}, {playerInitiated})");
+            
+            unitController.UnitEventController.NotifyOnBeginAction(animatedAction.ResourceName, playerInitiated);
+            
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
+                BeginActionInternal(animatedAction, playerInitiated);
+            }
         }
 
         /// <summary>
         /// The entrypoint to Casting a spell.  handles all logic such as instant/timed cast, current cast in progress, enough mana, target being alive etc
         /// </summary>
         /// <param name="animatedAction"></param>
-        public bool BeginAction(AnimatedActionProperties animatedActionProperties, bool playerInitiated = false) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.BeginAction(" + (animatedActionProperties == null ? "null" : animatedActionProperties.DisplayName) + ")");
+        public void BeginActionInternal(AnimatedAction animatedAction, bool playerInitiated) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.BeginAction({(animatedAction == null ? "null" : animatedAction.ResourceName)})");
 
-            if (animatedActionProperties == null) {
-                //Debug.Log("CharacterAbilityManager.BeginAbility(): ability is null! Exiting!");
-                return false;
-            }
-            return BeginActionCommon(animatedActionProperties, unitController.Target, playerInitiated);
+            BeginActionCommon(animatedAction, unitController.Target, playerInitiated);
         }
 
-        public bool BeginAction(AnimatedActionProperties animatedActionProperties, Interactable target) {
+        /*
+        public void BeginAction(AnimatedAction animatedAction, Interactable target) {
             //Debug.Log($"{gameObject.name}.CharacterAbilityManager.BeginAbility(" + ability.DisplayName + ")");
-            return BeginActionCommon(animatedActionProperties, target);
+            BeginActionCommon(animatedAction, target);
         }
+        */
 
-        protected bool BeginActionCommon(AnimatedActionProperties animatedActionProperties, Interactable target, bool playerInitiated = false) {
+        protected void BeginActionCommon(AnimatedAction animatedAction, Interactable target, bool playerInitiated = false) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.gameObject.name) + ")");
 
             if (unitController != null) {
                 if (unitController.ControlLocked == true) {
-                    return false;
+                    return;
                 }
             }
 
-            if (!CanPerformAction(animatedActionProperties, playerInitiated)) {
+            if (!CanPerformAction(animatedAction.ActionProperties, playerInitiated)) {
                 if (playerInitiated) {
                     //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + ability.DisplayName + ", " + (target != null ? target.name : "null") + ") cannot cast");
                 }
-                return false;
+                return;
             }
 
             /*
@@ -341,13 +362,13 @@ namespace AnyRPG {
 
                 // currentAction must be set before starting the coroutine because for animated events, the cast time is zero and the variable will be cleared in the coroutine
                 //currentAction = animatedAction;
-                currentActionCoroutine = unitController.StartCoroutine(PerformActionCast(animatedActionProperties, target));
+                currentActionCoroutine = unitController.StartCoroutine(PerformActionCast(animatedAction, target));
             } else {
                 // return false so that items in the inventory don't get used if this came from a castable item
-                return false;
+                return;
             }
 
-            return true;
+            return;
         }
 
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
@@ -400,21 +421,21 @@ namespace AnyRPG {
         }
 
         private bool NotMounted() {
-            if (unitController.Mounted == true) {
+            if (unitController.IsMounted == true) {
                 return false;
             }
             return true;
         }
 
         private bool NotCasting() {
-            if (unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.PerformingAnyAbility() == true) {
+            if (unitController.CharacterAbilityManager.PerformingAnyAbility() == true) {
                 return false;
             }
             return true;
         }
 
         private bool NotDead() {
-            if (!unitController.CharacterUnit.BaseCharacter.CharacterStats.IsAlive) {
+            if (!unitController.CharacterStats.IsAlive) {
                 return false;
             }
             return true;
@@ -434,10 +455,7 @@ namespace AnyRPG {
         /*
         public bool PerformLearnedCheck(AnimatedAction animatedAction) {
 
-            
-            //string keyName = SystemDataUtility.PrepareStringForMatch(animatedAction.DisplayName);
-            
-            //if (!animatedAction.UseableWithoutLearning && !AbilityList.ContainsKey(keyName)) {
+            //if (!animatedAction.UseableWithoutLearning && !AbilityList.ContainsKey(animatedAction.ResourceName)) {
               //  OnLearnedCheckFail(animatedAction);
                // return false;
             //}
@@ -446,16 +464,23 @@ namespace AnyRPG {
         }
         */
 
+        public void HandleApparentMovement() {
+            // exit if rigidbody constraints x and z are are both freeze and we haven't moved more than 10 centimeters since we stopped
+            if ((unitController.RigidBody.constraints & RigidbodyConstraints.FreezePositionX) == RigidbodyConstraints.FreezePositionX
+                && (unitController.RigidBody.constraints & RigidbodyConstraints.FreezePositionZ) == RigidbodyConstraints.FreezePositionZ
+                && (Mathf.Abs(actionStartPosition.y - unitController.RigidBody.position.y) < 0.1f)) {
+                return;
+            }
+
+            HandleManualMovement();
+        }
+
+
         /// <summary>
         /// Stop casting if the character is manually moved with the movement keys
         /// </summary>
         public void HandleManualMovement() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleManualMovement()");
-
-            // require some movement distance to prevent gravity while standing still from triggering this
-            if (unitController.ApparentVelocity <= 0.1f) {
-                return;
-            }
 
             TryToStopAction();
         }

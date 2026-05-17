@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: e2852820e840cb04f87e4ed27c6cddeb, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: very gold
+  description: very iron
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 1
+  itemPickupPrefabProfileName: Plate Gloves Iron
   equipmentSlotType: Gloves
   equipmentSetName: 
-  umaRecipeProfileName: Iron Plate Gloves
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Iron Plate Gloves

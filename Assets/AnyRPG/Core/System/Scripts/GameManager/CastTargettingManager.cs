@@ -19,7 +19,8 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
+        private LevelManagerClient levelManagerClient = null;
 
         public Color CircleColor { get => circleColor; set => circleColor = value; }
         public CastTargetController CastTargetController { get => castTargetController; }
@@ -36,7 +37,8 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         private void CreateEventSubscriptions() {
@@ -44,7 +46,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
             eventSubscriptionsInitialized = true;
         }
 
@@ -53,7 +55,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+            levelManagerClient.OnLevelUnload -= HandleLevelUnload;
             eventSubscriptionsInitialized = false;
         }
 
@@ -65,7 +67,7 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
-        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+        public void HandleLevelUnload(int sceneHandle, string sceneName) {
             ProcessLevelUnload();
         }
 
@@ -85,11 +87,11 @@ namespace AnyRPG {
             castTargetController.gameObject.SetActive(false);
         }
 
-        public void EnableProjector(BaseAbilityProperties baseAbility) {
+        public void EnableProjector(AbilityProperties baseAbility) {
             //Debug.Log("CastTargettingmanager.EnableProjector()");
             castTargetController.gameObject.SetActive(true);
-            castTargetController.SetCircleColor((baseAbility.GetTargetOptions(playerManager.MyCharacter) as AbilityTargetProps).GroundTargetColor);
-            castTargetController.SetCircleRadius((baseAbility.GetTargetOptions(playerManager.MyCharacter) as AbilityTargetProps).GroundTargetRadius);
+            castTargetController.SetCircleColor((baseAbility.GetTargetOptions(playerManagerClient.UnitController) as AbilityTargetProps).GroundTargetColor);
+            castTargetController.SetCircleRadius((baseAbility.GetTargetOptions(playerManagerClient.UnitController) as AbilityTargetProps).GroundTargetRadius);
         }
 
         public bool ProjectorIsActive() {

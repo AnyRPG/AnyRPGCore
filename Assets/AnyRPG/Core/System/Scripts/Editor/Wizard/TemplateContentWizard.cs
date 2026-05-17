@@ -232,6 +232,10 @@ namespace AnyRPG {
                         if (returnList.Contains(describableResource) == false) {
                             returnList.Add(describableResource);
                         }
+                        // check if describable resource contains the name "package" and warn if it does
+                        if (describableResource.name.Contains("TemplatePackage")) {
+                            Debug.LogWarning($"Processing: {scriptableContentTemplate.ResourceName} Resource {describableResource.ResourceName} contains the word 'TemplatePackage' in its name. Template packages should go in the dependencies section.");
+                        }
                     } else {
                         Debug.LogWarning("Null resource found in list for " + scriptableContentTemplate.ResourceName);
                     }
@@ -264,7 +268,6 @@ namespace AnyRPG {
 
             //List<ScriptableContentTemplate> returnList = new List<ScriptableContentTemplate>();
             foreach (ScriptableContentTemplate dependency in dependencyMaster) {
-                
                 // create a list of items that is not already in the return list, and crawl them for more dependencies
                 List<ScriptableContentTemplate> crawlList = new List<ScriptableContentTemplate>();
                 foreach (ScriptableContentTemplate scriptableContentTemplate in dependency.Dependencies) {

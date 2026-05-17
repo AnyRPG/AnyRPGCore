@@ -12,7 +12,7 @@ namespace AnyRPG {
     public class KnockBackEffect : AbilityEffect {
 
         [SerializeField]
-        private KnockBackEffectProperties knockBackEffectProperties = new KnockBackEffectProperties();
+        public KnockBackEffectProperties knockBackEffectProperties = new KnockBackEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => knockBackEffectProperties; }
 

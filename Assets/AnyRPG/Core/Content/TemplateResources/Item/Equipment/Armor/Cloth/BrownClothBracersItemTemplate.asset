@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0.1
+  itemPickupPrefabProfileName: Cloth Wristbands Brown
   equipmentSlotType: Bracers
   equipmentSetName: 
-  umaRecipeProfileName: Brown Cloth Bracers
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Brown Cloth Bracers

@@ -13,11 +13,13 @@ namespace AnyRPG {
         private SystemPlayableDirectorManager systemPlayableDirectorManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
+            //Debug.Log($"{gameObject.name}.PlayableDirectorController.Configure()");
+
             base.Configure(systemGameManager);
 
             playableDirector = GetComponent<PlayableDirector>();
             if (playableDirector != null) {
-                //Debug.Log("SystemGameManager.Awake(): playableDirector.playableAsset.name: " + playableDirector.playableAsset.name);
+                //Debug.Log($"{gameObject.name}.PlayableDirectorController.Configure(): playableDirector.playableAsset.name: {playableDirector.playableAsset.name}");
                 systemPlayableDirectorManager.PlayableDirectorDictionary[playableDirector.playableAsset.name] = playableDirector;
             }
         }

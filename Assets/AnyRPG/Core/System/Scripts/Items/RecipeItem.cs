@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "RecipeItem", menuName = "AnyRPG/Inventory/Items/RecipeItem", order = 1)]
-    public class RecipeItem : Item, IUseable {
+    public class RecipeItem : Item {
 
         [Header("Recipe Item")]
 
@@ -16,43 +16,51 @@ namespace AnyRPG {
 
         private Recipe recipe = null;
 
-        public override bool Use() {
-            //Debug.Log(MyDisplayName + ".RecipeItem.Use()");
-            if (!playerManager.MyCharacter.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
-                //Debug.Log(MyDisplayName + ".RecipeItem.Use(): Player does not have the recipe: " + recipe.MyDisplayName);
-                bool returnValue = base.Use();
-                if (returnValue == false) {
-                    return false;
-                }
-                // learn recipe if the character has the right skill
-                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
-                    playerManager.MyCharacter.CharacterRecipeManager.LearnRecipe(recipe);
-                    messageFeedManager.WriteMessage("You learned the recipe " + recipe.DisplayName);
-                    Remove();
-                } else {
-                    messageFeedManager.WriteMessage("To learn this recipe, you must know " + recipe.CraftAbility.DisplayName + "!");
-                }
-                return returnValue;
-            } else {
-                messageFeedManager.WriteMessage("You already know this recipe!");
-                return false;
+        public Recipe Recipe { get => recipe; }
+
+        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, long itemInstanceId, Item item, ItemQuality usedItemQuality) {
+            if ((item is RecipeItem) == false) {
+                return null;
             }
+            return new InstantiatedRecipeItem(systemGameManager, itemInstanceId, item as RecipeItem, usedItemQuality);
         }
 
-        public override string GetDescription(ItemQuality usedItemQuality) {
-            string returnString = base.GetDescription(usedItemQuality);
+
+        public override string GetDescription(ItemQuality usedItemQuality, int usedItemLevel) {
+            //Debug.Log($"CurrencyItem.GetDescription({(usedItemQuality == null ? "null" : usedItemQuality.ResourceName)}, {usedItemLevel});");
+
+            return base.GetDescription(usedItemQuality, usedItemLevel) + GetRecipeItemDescription();
+        }
+
+        public string GetRecipeItemDescription() {
+            string returnString = string.Empty;
             if (recipe != null) {
                 string alreadyKnownString = string.Empty;
-                if (playerManager.MyCharacter.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
+                if (playerManagerClient.UnitController.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
                     alreadyKnownString = "<color=red>already known</color>\n";
                 }
                 string abilityKnownString = string.Empty;
-                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
-                    abilityKnownString = "<color=white>Requires: " + recipe.CraftAbility.DisplayName  + "</color>\n";
+                if (playerManagerClient.UnitController.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
+                    abilityKnownString = $"<color=white>Requires: {recipe.CraftAbility.DisplayName}</color>\n";
                 } else {
-                    abilityKnownString = "<color=red>Requires: " + recipe.CraftAbility.DisplayName + "</color>\n";
+                    abilityKnownString = $"<color=red>Requires: {recipe.CraftAbility.DisplayName}</color>\n";
                 }
-                returnString += string.Format("\n<color=green>Recipe</color>\n{0}{1}{2}", alreadyKnownString, abilityKnownString, recipe.Output.GetDescription());
+                // add string for required skill level if there is a required skill
+                string skillLevelString = string.Empty;
+                if (recipe.Skill != null) {
+                    if (playerManagerClient.UnitController.CharacterSkillManager.HasSkill(recipe.Skill) && playerManagerClient.UnitController.CharacterSkillManager.GetSkillLevel(recipe.Skill) > recipe.RequiredSkillLevel) {
+                        skillLevelString = $"<color=white>Requires: {recipe.Skill.DisplayName} level {recipe.RequiredLevel}</color>\n";
+                    } else {
+                        skillLevelString = $"<color=red>Requires: {recipe.Skill.DisplayName} level {recipe.RequiredLevel}</color>\n";
+                    }
+                }
+                string characterLevelString = string.Empty;
+                if (playerManagerClient.UnitController.CharacterStats.Level >= recipe.RequiredLevel) {
+                    characterLevelString = $"<color=white>Requires Character Level {recipe.RequiredLevel}</color>\n";
+                } else {
+                    characterLevelString = $"<color=red>Requires Character Level {recipe.RequiredLevel}</color>\n";
+                }
+                returnString += $"\n<color=green>Recipe</color>\n{alreadyKnownString}{characterLevelString}{abilityKnownString}{skillLevelString}{recipe.Output.GetDescription()}";
             }
             return returnString;
         }

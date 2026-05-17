@@ -165,7 +165,7 @@ namespace AnyRPG {
         public bool UseWeaponTypeObjects { get => useWeaponTypeObjects; set => useWeaponTypeObjects = value; }
 
         public float GetDamagePerSecond(int characterLevel) {
-            return GetDamagePerSecond(characterLevel, realItemQuality);
+            return GetDamagePerSecond(characterLevel, itemQualityRef);
         }
 
         public float GetDamagePerSecond(int characterLevel, ItemQuality usedItemQuality) {
@@ -180,12 +180,12 @@ namespace AnyRPG {
             return baseDamagePerSecond;
         }
 
-        public override string GetDescription(ItemQuality usedItemQuality) {
+        public override string GetDescription(ItemQuality usedItemQuality, int usedItemLevel) {
 
             List<string> abilitiesList = new List<string>();
 
             if (addScaledDamagePerSecond) {
-                abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(playerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
+                abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(playerManagerClient.UnitController.CharacterStats.Level, usedItemQuality)));
             }
             if (onHitEffectList != null) {
                 foreach (AbilityEffectProperties abilityEffect in onHitEffectList) {
@@ -199,12 +199,12 @@ namespace AnyRPG {
 
             if (weaponSkill != null && requireWeaponSkill == true) {
                 string colorString = "white";
-                if (!CanEquip(playerManager.ActiveCharacter)) {
+                if (!CanEquip(usedItemLevel, playerManagerClient.UnitController)) {
                     colorString = "red";
                 }
                 abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, weaponSkill.DisplayName);
             }
-            return base.GetDescription(usedItemQuality) + abilitiesString;
+            return base.GetDescription(usedItemQuality, usedItemLevel) + abilitiesString;
         }
 
         /*
@@ -320,6 +320,12 @@ namespace AnyRPG {
                     animationProfile = tmpAnimationProfile;
                 } else {
                     Debug.LogError("Weapon.SetupScriptableObjects(): Could not find attack animation profile : " + animationProfileName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            foreach (AudioClip audioClip in defaultHitSoundEffects) {
+                if (audioClip != null) {
+                    systemGameManager.AudioManager.RegisterAudioClip(audioClip);
                 }
             }
 

@@ -1,4 +1,5 @@
 using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,9 +35,8 @@ namespace AnyRPG {
 
         //protected List<List<IUseable>> actionBarSet = new List<List<IUseable>>();
         //protected List<IUseable> actionButtons = new List<IUseable>(70);
-        protected List<ActionButtonNode> gamepadActionButtons = new List<ActionButtonNode>();
-
-        private bool abilityBarsPopulated = false;
+        protected List<ActionButton> mouseActionButtons = new List<ActionButton>();
+        protected List<ActionButton> gamepadActionButtons = new List<ActionButton>();
 
         private ActionButton fromButton = null;
 
@@ -49,9 +49,8 @@ namespace AnyRPG {
         // the action bar target for range checks
         private Interactable target = null;
 
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected KeyBindManager keyBindManager = null;
-        protected SystemEventManager systemEventManager = null;
         protected ControlsManager controlsManager = null;
         protected InputManager inputManager = null;
         protected UIManager uIManager = null;
@@ -62,40 +61,41 @@ namespace AnyRPG {
         public List<GamepadActionBarController> GamepadActionBarControllers { get => gamepadActionBarControllers; set => gamepadActionBarControllers = value; }
         public SystemBarController SystemBarController { get => systemBarController; }
         public IUseable AssigningUseable { get => assigningUseable; }
-        public List<ActionButtonNode> GamepadActionButtons { get => gamepadActionButtons; }
+        public List<ActionButton> GamepadActionButtons { get => gamepadActionButtons; }
         public int CurrentActionBarSet { get => currentActionBarSet; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             keyBindManager = systemGameManager.KeyBindManager;
-            systemEventManager = systemGameManager.SystemEventManager;
             controlsManager = systemGameManager.ControlsManager;
             inputManager = systemGameManager.InputManager;
             uIManager = systemGameManager.UIManager;
 
             systemBarController.Configure(systemGameManager);
 
-            InitializeGamepadActionButtonNodes();
             InitializeActionbars();
+            InitializeMouseActionButtons();
+            InitializeGamepadActionButtons();
 
             AssociateActionBarKeyBinds();
             CreateEventSubscriptions();
 
         }
 
-        private void InitializeGamepadActionButtonNodes() {
+        private void InitializeMouseActionButtons() {
             //Debug.Log("ActionBarManager.InitializeGamepadActionButtonNodes()");
-            for (int i = 0; i < gamepadActionButtonCount; i++) {
-                gamepadActionButtons.Add(new ActionButtonNode());
+            mouseActionButtons.AddRange(GetMouseActionButtons());
+            int counter = 0;
+            foreach (ActionButton actionButton in mouseActionButtons) {
+                actionButton.SetIndex(counter, false);
+                counter++;
             }
         }
 
-        private void ClearGamepadActionButtonNodes() {
-            //Debug.Log("ActionBarManager.ClearGamepadActionButtonNodes()");
-            for (int i = 0; i < gamepadActionButtonCount; i++) {
-                gamepadActionButtons[i] = new ActionButtonNode();
-            }
+        private void InitializeGamepadActionButtons() {
+            //Debug.Log("ActionBarManager.InitializeGamepadActionButtonNodes()");
+            gamepadActionButtons.AddRange(GetGamepadActionButtons());
         }
 
         private void CreateEventSubscriptions() {
@@ -103,11 +103,36 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
+            systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            systemEventManager.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
             SystemEventManager.StartListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
-            systemEventManager.OnEquipmentChanged += HandleEquipmentChange;
+            systemEventManager.OnAddEquipment += HandleAddEquipment;
+            systemEventManager.OnRemoveEquipment += HandleRemoveEquipment;
+            systemEventManager.OnSetMouseActionButton += HandleSetMouseActionButton;
+            systemEventManager.OnUnsetMouseActionButton += HandleUnsetMouseActionButton;
+            systemEventManager.OnSetGamepadActionButton += HandleSetGamepadActionButton;
+            systemEventManager.OnUnsetGamepadActionButton += HandleUnsetGamepadActionButton;
             eventSubscriptionsInitialized = true;
+        }
+
+        public void HandleUnsetGamepadActionButton(int buttonIndex) {
+            if (buttonIndex >= (currentActionBarSet * 16) && buttonIndex < ((currentActionBarSet * 16) + 16)) {
+                gamepadActionButtons[buttonIndex].ClearUseable();
+            }
+        }
+
+        public void HandleSetGamepadActionButton(IUseable useable, int buttonIndex) {
+            if (buttonIndex >= (currentActionBarSet * 16) && buttonIndex < ((currentActionBarSet * 16) + 16)) {
+                gamepadActionButtons[buttonIndex].SetUseable(useable);
+            }
+        }
+
+        public void HandleSetMouseActionButton(IUseable useable, int buttonIndex) {
+            mouseActionButtons[buttonIndex].SetUseable(useable);
+        }
+
+        public void HandleUnsetMouseActionButton(int buttonIndex) {
+            mouseActionButtons[buttonIndex].ClearUseable();
         }
 
         private void CleanupEventSubscriptions() {
@@ -115,10 +140,11 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
+            systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+            systemEventManager.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
             SystemEventManager.StopListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
-            systemEventManager.OnEquipmentChanged -= HandleEquipmentChange;
+            systemEventManager.OnAddEquipment -= HandleAddEquipment;
+            systemEventManager.OnRemoveEquipment -= HandleRemoveEquipment;
             eventSubscriptionsInitialized = false;
         }
 
@@ -130,46 +156,50 @@ namespace AnyRPG {
         }
 
         public void ClearUseableAssignment() {
+            //Debug.Log("ActionBarManager.ClearUseableAssignment()");
+
             moveIndex = -1;
             assigningUseable = null;
         }
 
-        public void AssignUseableByIndex(int index) {
-            //Debug.Log("ActionBarManager.AssignUseableByIndex(" + index + ")");
-            int controllerIndex = Mathf.FloorToInt((float)index / 8f);
-            int buttonIndex = index % 8;
-
-            IUseable oldUseable = null;
-            if (moveIndex > -1) {
-                oldUseable = gamepadActionButtons[(currentActionBarSet * 16) + index].Useable;
-            }
-
-            gamepadActionButtons[(currentActionBarSet * 16) + index].Useable = assigningUseable;
-            gamepadActionBarControllers[controllerIndex].ActionButtons[buttonIndex].SetUseable(assigningUseable);
+        public void RequestAssignUseableByIndex(int index) {
+            //Debug.Log($"ActionBarManager.AssignUseableByIndex({index})");
 
             if (moveIndex > -1) {
-                //Debug.Log("moveIndex : " + moveIndex);
-                if (oldUseable == null) {
-                    // the spot where the useable was placed was empty, clear the original slot
-                    ClearUseableByIndex(moveIndex);
-                } else {
-                    // the spot where the useable was placed was not empty, put the replaced useable in the old position (swap)
-                    controllerIndex = Mathf.FloorToInt((float)moveIndex / 8f);
-                    buttonIndex = moveIndex % 8;
-                    gamepadActionButtons[(currentActionBarSet * 16) + moveIndex].Useable = oldUseable;
-                    gamepadActionBarControllers[controllerIndex].ActionButtons[buttonIndex].SetUseable(oldUseable);
-                }
-                moveIndex = -1;
+                RequestMoveGamepadUseable((currentActionBarSet * 16) + moveIndex, (currentActionBarSet * 16) + index);
+            } else {
+                RequestAssignGamepadUseable(assigningUseable, (currentActionBarSet * 16) + index);
             }
         }
 
-        public void ClearUseableByIndex(int index) {
-            //Debug.Log("ActionBarManager.AssignUseableByIndex(" + index + ")");
-            int controllerIndex = Mathf.FloorToInt((float)index / 8f);
-            int buttonIndex = index % 8;
-            gamepadActionButtons[(currentActionBarSet * 16) + index].Useable = null;
-            gamepadActionBarControllers[controllerIndex].ActionButtons[buttonIndex].ClearUseable(); ;
+        public void RequestMoveGamepadUseable(int oldIndex, int newIndex) {
+            playerManagerClient.UnitController.CharacterActionBarManager.RequestMoveGamepadUseable(oldIndex, newIndex);
         }
+
+        public void RequestAssignGamepadUseable(IUseable useable, int buttonIndex) {
+            playerManagerClient.UnitController.CharacterActionBarManager.RequestAssignGamepadUseable(useable, buttonIndex);
+        }
+
+        public void RequestClearGamepadUseable(int index) {
+            //Debug.Log($"ActionBarManager.RequestClearGamepadUseable({index})");
+
+            playerManagerClient.UnitController.CharacterActionBarManager.RequestClearGamepadUseable((currentActionBarSet * 16) + index);
+        }
+
+        public void RequestMoveMouseUseable(int oldIndex, int newIndex) {
+            playerManagerClient.UnitController.CharacterActionBarManager.RequestMoveMouseUseable(oldIndex, newIndex);
+        }
+
+        public void RequestAssignMouseUseable(IUseable useable, int actionButtonIndex) {
+            playerManagerClient.UnitController.CharacterActionBarManager.RequestAssignMouseUseable(useable, actionButtonIndex);
+        }
+
+        public void RequestClearMouseUseable(int index) {
+            //Debug.Log($"ActionBarManager.RequestClearGamepadUseable({index})");
+
+            playerManagerClient.UnitController.CharacterActionBarManager.RequestClearMouseUseable(index);
+        }
+
 
         public void ProcessGamepadInput() {
             if (controlsManager.LeftTriggerDown) {
@@ -239,8 +269,9 @@ namespace AnyRPG {
             ClearActionBars(true);
         }
 
-        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log($"{gameObject.name}.InanimateUnit.HandlePlayerUnitSpawn()");
+        public void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
+            //Debug.Log($"ActionBarManager.HandlePlayerUnitSpawn({sourceUnitController.gameObject.name})");
+
             ProcessPlayerUnitSpawn();
         }
 
@@ -254,19 +285,22 @@ namespace AnyRPG {
         }
 
         public void ProcessPlayerUnitSpawn() {
-            //Debug.Log("ActionBarmanager.HandlePlayerUnitSpawn()");
-            playerManager.UnitController.UnitEventController.OnSetTarget += HandleSetTarget;
-            playerManager.UnitController.UnitEventController.OnClearTarget += HandleClearTarget;
+            //Debug.Log("ActionBarmanager.ProcessPlayerUnitSpawn()");
+
+            playerManagerClient.UnitController.UnitEventController.OnSetTarget += HandleSetTarget;
+            playerManagerClient.UnitController.UnitEventController.OnClearTarget += HandleClearTarget;
         }
 
-        public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
+        public void HandlePlayerUnitDespawn(UnitController unitController) {
             //Debug.Log("ActionBarmanager.HandlePlayerUnitDespawn()");
+
+            ClearActionBars(true);
 
             // this needs to be called manually here because if the character controller processes the player unit despawn after us, we will miss the event
             HandleClearTarget(null);
 
-            playerManager.UnitController.UnitEventController.OnSetTarget -= HandleSetTarget;
-            playerManager.UnitController.UnitEventController.OnClearTarget -= HandleClearTarget;
+            playerManagerClient.UnitController.UnitEventController.OnSetTarget -= HandleSetTarget;
+            playerManagerClient.UnitController.UnitEventController.OnClearTarget -= HandleClearTarget;
         }
 
         public void HandleSetTarget(Interactable target) {
@@ -313,25 +347,12 @@ namespace AnyRPG {
             //Debug.Log("ActionBarmanager.UpdateTargetRange()");
             //float distanceToTarget = 0f;
             while (HasTarget()) {
-                if (playerManager.MyCharacter == null || playerManager.ActiveUnitController == null) {
+                if (playerManagerClient.UnitController == null || playerManagerClient.ActiveUnitController == null) {
                     break;
                 }
                 //Debug.Log("ActionBarmanager.UpdateTargetRange(): still have target at distance: " + distanceToTarget);
                 foreach (ActionButton actionButton in GetCurrentActionButtons()) {
                     actionButton.Useable?.UpdateTargetRange(this, actionButton);
-                    //if ((actionButton.Useable as BaseAbility) is BaseAbility) {
-                    //} else {
-                        /*
-                        if (actionButton.KeyBindText.color != Color.white) {
-                            actionButton.KeyBindText.color = Color.white;
-                        }
-                        */
-                        /*
-                        if (actionButton.RangeIndicator.color != Color.white && actionButton.Useable != null) {
-                            actionButton.RangeIndicator.color = Color.white;
-                        }
-                        */
-                    //}
                 }
                 yield return null;
             }
@@ -339,42 +360,28 @@ namespace AnyRPG {
             targetRangeRoutine = null;
         }
 
-        public void UpdateAbilityTargetRange(BaseAbilityProperties baseAbilityProperties, ActionButton actionButton) {
+        public void UpdateAbilityTargetRange(AbilityProperties baseAbilityProperties, ActionButton actionButton) {
+            //Debug.Log($"ActionBarmanager.UpdateAbilityTargetRange({baseAbilityProperties.DisplayName})");
 
-            Interactable finalTarget = baseAbilityProperties.ReturnTarget(playerManager.MyCharacter, target, false);
+            Interactable finalTarget = baseAbilityProperties.ReturnTarget(playerManagerClient.UnitController, target, false);
 
-            if (finalTarget == null || playerManager.MyCharacter.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbilityProperties) == false) {
-                /*
-                if (actionButton.KeyBindText.color != Color.red) {
-                    actionButton.KeyBindText.color = Color.red;
-                }
-                */
+            if (finalTarget == null || playerManagerClient.UnitController.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbilityProperties) == false) {
+                //Debug.Log($"ActionBarmanager.UpdateAbilityTargetRange({baseAbilityProperties.DisplayName}) finalTarget: {(finalTarget == null ? "null" : finalTarget.gameObject.name)}");
                 if (actionButton.RangeIndicator.color != Color.red && actionButton.Useable != null) {
                     actionButton.RangeIndicator.color = Color.red;
                 }
 
             } else {
-                /*
-                if (actionButton.KeyBindText.color != Color.white) {
-                    actionButton.KeyBindText.color = Color.white;
-                }
-                */
-                /*
-                if (actionButton.RangeIndicator.color != Color.white && actionButton.Useable != null) {
-                    actionButton.RangeIndicator.color = Color.white;
-                }
-                */
+                //Debug.Log($"ActionBarmanager.UpdateAbilityTargetRange({baseAbilityProperties.DisplayName}) hiding range indicator");
                 if (actionButton.RangeIndicator.color != hiddenColor) {
-                    //actionButton.RangeIndicator.color = hiddenColor;
                     actionButton.HideRangeIndicator();
                 }
-
             }
 
         }
 
         public List<ActionButton> GetCurrentActionButtons() {
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 return GetActionButtons(gamepadActionBarControllers.Cast<ActionBarController>().ToList());
             } else {
                 return GetActionButtons(actionBarControllers);
@@ -383,6 +390,7 @@ namespace AnyRPG {
 
         public List<ActionButton> GetActionButtons(List<ActionBarController> barControllers) {
             //Debug.Log("ActionBarManager.GetActionButtons()");
+
             List<ActionButton> actionButtons = new List<ActionButton>();
             int count = 0;
             foreach (ActionBarController actionBarController in barControllers) {
@@ -393,17 +401,18 @@ namespace AnyRPG {
                 }
                 //actionButtons.AddRange(actionBarController.MyActionButtons);
             }
+            //Debug.Log($"ActionBarManager.GetActionButtons(): returning {actionButtons.Count} action buttons.");
             return actionButtons;
         }
 
         public List<ActionButton> GetMouseActionButtons() {
-            //Debug.Log("ActionBarManager.GetActionButtons()");
+            //Debug.Log("ActionBarManager.GetMouseActionButtons()");
 
             return GetActionButtons(actionBarControllers);
         }
 
         public List<ActionButton> GetGamepadActionButtons() {
-            //Debug.Log("ActionBarManager.GetActionButtons()");
+            //Debug.Log("ActionBarManager.GetGamepadActionButtons()");
 
             return GetActionButtons(GamepadActionBarControllers.Cast<ActionBarController>().ToList());
         }
@@ -428,111 +437,9 @@ namespace AnyRPG {
             }
         }
 
-        public bool AddGamepadSavedAbility(BaseAbilityProperties newAbility) {
-            //Debug.Log("AbilityBarController.AddNewAbility(" + newAbility + ")");
-            for (int i = 0; i < 16; i++) {
-                if (gamepadActionButtons[i + (currentActionBarSet * 16)].Useable == null
-                    && gamepadActionButtons[i + (currentActionBarSet * 16)].SavedUseable != null
-                    && gamepadActionButtons[i + (currentActionBarSet * 16)].SavedUseable.DisplayName == newAbility.DisplayName) {
-                    //Debug.Log("Adding ability: " + newAbility + " to empty action button " + i);
-                    //gamepadActionButtons[i + (currentActionBarSet * 16)].SetUseable(newAbility);
-                    assigningUseable = newAbility;
-                    AssignUseableByIndex(i);
-                    return true;
-                } else if (gamepadActionButtons[i + (currentActionBarSet * 16)].Useable == (newAbility as IUseable)) {
-                    //Debug.Log("Ability exists on bars already!");
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public bool AddGamepadNewAbility(BaseAbilityProperties newAbility) {
-            //Debug.Log("ActionBarManager.AddGamepadNewAbility(" + newAbility + ")");
-            for (int i = 0; i < 16; i++) {
-                if (gamepadActionButtons[i + (currentActionBarSet * 16)].Useable == null) {
-                    //Debug.Log("Adding ability: " + newAbility + " to empty action button " + i);
-                    //gamepadActionButtons[i + (currentActionBarSet * 16)].SetUseable(newAbility);
-                    assigningUseable = newAbility;
-                    AssignUseableByIndex(i);
-                    return true;
-                } else if (gamepadActionButtons[i + (currentActionBarSet * 16)].Useable == (newAbility as IUseable)) {
-                    //Debug.Log("Ability exists on bars already!");
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public bool AddNewAbility(BaseAbilityProperties newAbility) {
-            //Debug.Log("ActionBarManager.AddNewAbility(" + newAbility + ")");
-            bool returnValue = false;
-            bool foundSlot = false;
-            if (AddGamepadSavedAbility(newAbility)) {
-                if (controlsManager.GamePadModeActive) {
-                    returnValue = true;
-                }
-                foundSlot = true;
-            }
-            /*
-            foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
-                //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
-                if (actionBarController.AddSavedAbility(newAbility)) {
-                    if (controlsManager.GamePadModeActive) {
-                        returnValue = true;
-                    }
-                    foundSlot = true;
-                    break;
-                }
-            }
-            */
-            if (foundSlot != true) {
-                if (AddGamepadNewAbility(newAbility)) {
-                    if (controlsManager.GamePadModeActive) {
-                        returnValue = true;
-                    }
-                }
-                /*
-                foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
-                    if (actionBarController.AddNewAbility(newAbility)) {
-                        //Debug.Log("ActionBarManager.AddNewAbility(): we were able to add " + newAbility.name);
-                        if (controlsManager.GamePadModeActive) {
-                            returnValue = true;
-                        }
-                        break;
-                    }
-                }
-                */
-            }
-
-            foundSlot = false;
-            foreach (ActionBarController actionBarController in actionBarControllers) {
-                //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
-                if (actionBarController.AddSavedAbility(newAbility)) {
-                    if (controlsManager.GamePadModeActive == false) {
-                        returnValue = true;
-                    }
-                    foundSlot = true;
-                    break;
-                }
-            }
-            if (foundSlot == false) {
-                foreach (ActionBarController actionBarController in actionBarControllers) {
-                    if (actionBarController.AddNewAbility(newAbility)) {
-                        //Debug.Log("ActionBarManager.AddNewAbility(): we were able to add " + newAbility.name);
-                        if (controlsManager.GamePadModeActive == false) {
-                            returnValue = true;
-                        }
-                        break;
-                    }
-                }
-            }
-
-            return returnValue;
-        }
-
         public void ClearActionBars(bool clearSavedUseables = false) {
-            //Debug.Log("ActionBarManager.ClearActionBars()");
+            //Debug.Log($"ActionBarManager.ClearActionBars({clearSavedUseables})");
+
             foreach (ActionBarController actionBarController in actionBarControllers) {
                 //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
                 actionBarController.ClearActionBar(clearSavedUseables);
@@ -541,35 +448,11 @@ namespace AnyRPG {
                 //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
                 actionBarController.ClearActionBar(clearSavedUseables);
             }
-            ClearGamepadActionButtonNodes();
-
-        }
-
-
-        /*
-        public bool AbilityIsOnBars() {
-
-        }
-        */
-
-
-        public void PopulateAbilityBars() {
-            //Debug.Log("ActionBarmanager.PopulateAbilityBars()");
-            if (abilityBarsPopulated) {
-                //Debug.Log("ActionBarmanager.PopulateAbilityBars(): bars are already populated.  Doing nothing!");
-                return;
-            }
-            // TODO: set maximum size of loop to less of abilitylist count or button count
-            int abilityListCount = playerManager.MyCharacter.CharacterAbilityManager.AbilityList.Count;
-            //Debug.Log("Updating ability bar with " + abilityListCount.ToString() + " abilities");
-            foreach (BaseAbilityProperties newAbility in playerManager.MyCharacter.CharacterAbilityManager.AbilityList.Values) {
-                AddNewAbility(newAbility);
-            }
-            abilityBarsPopulated = true;
         }
 
         public void SetGamepadActionButtonSet(int actionButtonSet, bool updateVisuals = true) {
-            //Debug.Log("ActionBarmanager.SetGamepadActionButtonSet(" + actionButtonSet + ")");
+            //Debug.Log($"ActionBarmanager.SetGamepadActionButtonSet({actionButtonSet}, {updateVisuals})");
+
             currentActionBarSet = actionButtonSet;
             gamepadPanel.SetGamepadActionButtonSet(actionButtonSet);
             UpdateGamepadActionButtons(actionButtonSet, GetGamepadActionButtons());
@@ -579,7 +462,8 @@ namespace AnyRPG {
         }
 
         private void UpdateGamepadActionButtons(int actionButtonSet, List<ActionButton> actionButtons) {
-            //Debug.Log("ActionBarmanager.UpdateGamepadActionButtons(" + actionButtonSet + ")");
+            //Debug.Log($"ActionBarmanager.UpdateGamepadActionButtons({actionButtonSet})");
+
             for (int i = 0; i < 16; i++) {
                 //Debug.Log("ActionBarmanager.UpdateGamepadActionButtons(" + actionButtonSet + ") checking: " + (i + (actionButtonSet * 16)));
                 if (gamepadActionButtons[i + (actionButtonSet * 16)].Useable == null) {
@@ -591,8 +475,9 @@ namespace AnyRPG {
         }
 
         public void UpdateVisuals() {
-            //Debug.Log("ActionBarmanager.UpdateVisuals(" + removeStaleActions + ")");
-            if (controlsManager.GamePadModeActive == true) {
+            //Debug.Log("ActionBarmanager.UpdateVisuals()");
+
+            if (controlsManager.GamepadModeActive == true) {
                 foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
                     //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
                     actionBarController.UpdateVisuals();
@@ -605,22 +490,16 @@ namespace AnyRPG {
             }
         }
 
+        /*
         private void RemoveStaleGamepadActions() {
 
             foreach (ActionButtonNode actionButtonNode in gamepadActionButtons) {
-                if (actionButtonNode.Useable != null && actionButtonNode.Useable.IsUseableStale()) {
+                if (actionButtonNode.Useable != null && actionButtonNode.Useable.IsUseableStale(playerManager.UnitController)) {
                     actionButtonNode.SavedUseable = actionButtonNode.Useable;
                     actionButtonNode.Useable = null;
                 }
             }
             UpdateGamepadActionButtons(currentActionBarSet, GetGamepadActionButtons());
-
-            /*
-            foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
-                //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
-                actionBarController.UpdateVisuals();
-            }
-            */
         }
 
         public void RemoveStaleActions() {
@@ -632,8 +511,13 @@ namespace AnyRPG {
                 actionBarController.RemoveStaleActions();
             }
         }
+        */
 
-        public void HandleEquipmentChange(Equipment newEquipment, Equipment oldEquipment) {
+        private void HandleAddEquipment(EquipmentSlotProfile profile, InstantiatedEquipment equipment) {
+            UpdateVisuals();
+        }
+
+        private void HandleRemoveEquipment(EquipmentSlotProfile profile, InstantiatedEquipment equipment) {
             UpdateVisuals();
         }
 
@@ -752,7 +636,7 @@ namespace AnyRPG {
         public void ActivateCorrectActionBars() {
             //Debug.Log("ActionBarmanager.ActivateCorrectActionBars()");
 
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 ActivateGamepadActionBars();
             } else {
                 ActivateMouseActionBars();

@@ -41,12 +41,12 @@ namespace AnyRPG {
             //systemItemManager = systemGameManager.SystemItemManager;
         }
 
-        public override void ExecuteCommand(string commandParameters) {
+        public override void ExecuteCommand(string commandParameters, int accountId) {
             //Debug.Log("GainCurrencyCommand.ExecuteCommand() Executing command " + DisplayName + " with parameters (" + commandParameters + ")");
 
             // add a fixed item
             if (fixedCurrency == true && fixedAmount == true) {
-                AddCurrency(currency, currencyAmount);
+                AddCurrency(currency, currencyAmount, accountId);
                 return;
             }
 
@@ -61,7 +61,7 @@ namespace AnyRPG {
                 int i = 0;
                 bool result = int.TryParse(commandParameters, out i);
                 if (result == true) {
-                    AddCurrency(currency, i);
+                    AddCurrency(currency, i, accountId);
                 }
             }
 
@@ -90,7 +90,7 @@ namespace AnyRPG {
                     // get the currency from the factory and add the amount found
                     currency = systemDataFactory.GetResource<Currency>(currencyName);
                     if (currency != null) {
-                        AddCurrency(currency, currencyAmount);
+                        AddCurrency(currency, currencyAmount, accountId);
                     }
                 }
 
@@ -98,10 +98,9 @@ namespace AnyRPG {
 
         }
 
-        private void AddCurrency(Currency currency, int amount) {
+        private void AddCurrency(Currency currency, int amount, int accountId) {
             //Debug.Log("GainCurrencyCommand.AddCurrency(" + currency.DisplayName + ", " + amount + ")");
-
-            playerManager.ActiveCharacter.CharacterCurrencyManager.AddCurrency(currency, amount);
+            playerManagerServer.AddCurrency(currency, amount, accountId);
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {

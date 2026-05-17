@@ -22,21 +22,10 @@ MonoBehaviour:
   optionalOverride: 0
   properties:
     equipmentModels:
-    - rid: 5705935833309905230
     - rid: 5705935843888463877
   references:
     version: 2
     RefIds:
-    - rid: 5705935833309905230
-      type: {class: UMAEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        properties:
-          uMARecipes:
-          - {fileID: 11400000, guid: 11de76457c1583a4488f2ce67fbed54a, type: 2}
-          - {fileID: 11400000, guid: a78aabc8efb2d462da981b0f7864bbcb, type: 2}
-          sharedColors:
-          - sharedColorname: Chest Equipment Color 1
-            color: {r: 0, g: 0.65882355, b: 0, a: 1}
     - rid: 5705935843888463877
       type: {class: SwappableMeshEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
       data:

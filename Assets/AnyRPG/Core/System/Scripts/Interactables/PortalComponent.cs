@@ -9,7 +9,7 @@ namespace AnyRPG {
     public abstract class PortalComponent : InteractableOptionComponent {
 
         // game manager references
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
 
         public PortalProps Props { get => interactableOptionProps as PortalProps; }
 
@@ -18,35 +18,44 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log($"{gameObject.name}.PortalInteractable.Interact()");
-            base.Interact(source, optionIndex);
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex = 0) {
+            //Debug.Log($"{interactable.gameObject.name}.PortalComponent.Interact({sourceUnitController.gameObject.name})");
+
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
             //Debug.Log($"{gameObject.name}.PortalInteractable.Interact(): about to close interaction window");
-            uIManager.interactionWindow.CloseWindow();
             //Debug.Log($"{gameObject.name}.PortalInteractable.Interact(): window should now be closed!!!!!!!!!!!!!!!!!");
+            SpawnPlayerRequest loadSceneRequest = new SpawnPlayerRequest();
             if (Props.OverrideSpawnDirection == true) {
-                levelManager.SetSpawnRotationOverride(Props.SpawnForwardDirection);
+                loadSceneRequest.overrideSpawnDirection = true;
+                loadSceneRequest.spawnForwardDirection = Props.SpawnForwardDirection;
             }
             if (Props.OverrideSpawnLocation == true) {
-                levelManager.SetSpawnLocationOverride(Props.SpawnLocation);
+                loadSceneRequest.overrideSpawnLocation = true;
+                loadSceneRequest.spawnLocation = Props.SpawnLocation;
             } else {
                 if (Props.LocationTag != null && Props.LocationTag != string.Empty) {
-                    levelManager.OverrideSpawnLocationTag = Props.LocationTag;
+                    loadSceneRequest.locationTag = Props.LocationTag;
                 }
             }
+            playerManagerServer.AddSpawnRequest(sourceUnitController, loadSceneRequest);
             return true;
+        }
+
+        public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
+            uIManager.interactionWindow.CloseWindow();
         }
 
         public override void StopInteract() {
             base.StopInteract();
         }
 
-        public override int GetCurrentOptionCount() {
+        public override int GetCurrentOptionCount(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.PortalInteractable.GetCurrentOptionCount()");
-            return GetValidOptionCount();
+            return GetValidOptionCount(sourceUnitController);
         }
 
     }

@@ -7,21 +7,21 @@ namespace AnyRPG {
     public abstract class ResourceProfile : ConfiguredScriptableObject, IDescribable {
 
         [SerializeField]
-        protected string resourceName;
+        public string resourceName;
 
         [SerializeField]
-        protected string displayName = string.Empty;
+        public string displayName = string.Empty;
 
         [SerializeField]
-        protected Sprite icon;
+        public Sprite icon;
 
         [Tooltip("The image that appears behind the items when viewed in equipment manager and bags")]
         [SerializeField]
-        protected Sprite iconBackgroundImage;
+        public Sprite iconBackgroundImage;
 
         [SerializeField]
         [TextArea(10, 20)]
-        protected string description;
+        public string description;
 
         public virtual Sprite Icon { get => icon; set => icon = value; }
 
@@ -85,6 +85,9 @@ namespace AnyRPG {
         /// <returns></returns>
         public virtual string GetDescription() {
             return string.Format("{0}", description);
+        }
+
+        public void ProcessShowTooltip(TooltipController tooltipController) {
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ namespace AnyRPG {
     public class ResurrectEffect : AbilityEffect {
 
         [SerializeField]
-        private ResurrectEffectProperties resurrectEffectProperties = new ResurrectEffectProperties();
+        public ResurrectEffectProperties resurrectEffectProperties = new ResurrectEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => resurrectEffectProperties; }
 

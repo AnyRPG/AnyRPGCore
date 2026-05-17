@@ -20,12 +20,12 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  prefab: {fileID: 5319069474142785129, guid: 53c75b3890ebc9e448a8f3786a3b3c9a, type: 3}
-  position: {x: -0.1048, y: -0.0068, z: -0.0275}
+  prefab: {fileID: 4007616867448248508, guid: 8e6bcf987965bd042ab5d79b9096945c, type: 3}
+  position: {x: 0, y: 0, z: 0}
   rotationIsGlobal: 0
-  rotation: {x: 356.0335, y: 261.4799, z: 176.2771}
+  rotation: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
-  targetBone: LeftHand
+  targetBone: 
   unsheathAudioProfileName: 
   sheathedPosition: {x: 0, y: 0, z: 0}
   sheathedRotation: {x: 0, y: 0, z: 0}

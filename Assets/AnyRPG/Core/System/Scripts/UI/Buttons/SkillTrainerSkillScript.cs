@@ -10,18 +10,21 @@ namespace AnyRPG {
     public class SkillTrainerSkillScript : HighlightButton {
 
         protected Skill skill;
+        protected int skillId = 0;
 
         protected string skillName;
 
-        protected SkillTrainerUI skillTrainerUI = null;
+        protected SkillTrainerPanel skillTrainerUI = null;
 
         public Skill Skill { get => skill; }
+        public int SkillId { get => skillId; }
 
-        public void SetSkill(SkillTrainerUI skillTrainerUI, Skill newSkill) {
+        public void SetSkill(SkillTrainerPanel skillTrainerUI, KeyValuePair<int, Skill> newSkillPair) {
             this.skillTrainerUI = skillTrainerUI;
-            if (newSkill != null) {
-                this.skill = newSkill;
+            if (newSkillPair.Value != null) {
+                this.skill = newSkillPair.Value;
             }
+            this.skillId = newSkillPair.Key;
         }
 
         public override void Select() {

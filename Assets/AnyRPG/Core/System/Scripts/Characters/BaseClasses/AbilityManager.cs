@@ -5,23 +5,22 @@ using UnityEngine;
 namespace AnyRPG {
     public class AbilityManager : ConfiguredClass, IAbilityManager {
 
-        protected BaseAbilityProperties currentCastAbility = null;
+        protected AbilityProperties currentCastAbility = null;
 
         protected Coroutine globalCoolDownCoroutine = null;
         protected Coroutine currentCastCoroutine = null;
         protected Coroutine abilityHitDelayCoroutine = null;
-        protected Coroutine destroyAbilityEffectObjectCoroutine = null;
-        protected List<Coroutine> destroyAbilityEffectObjectCoroutines = new List<Coroutine>();
 
         protected bool eventSubscriptionsInitialized = false;
 
-        protected List<GameObject> abilityEffectGameObjects = new List<GameObject>();
         protected Dictionary<string, AbilityCoolDownNode> abilityCoolDownDictionary = new Dictionary<string, AbilityCoolDownNode>();
 
-        protected MonoBehaviour abilityCaster = null;
+        protected IAbilityCaster abilityCaster = null;
+        protected MonoBehaviour abilityCasterMonoBehaviour = null;
 
         // game manager references
         protected ObjectPooler objectPooler = null;
+        protected LevelManagerClient levelManagerClient = null;
 
         public virtual bool ControlLocked {
             get {
@@ -37,10 +36,14 @@ namespace AnyRPG {
             // do nothing
         }
 
+        public virtual void AddAbilityEffectObject(AbilityAttachmentNode abilityAttachmentNode, GameObject go) {
+            // do nothing
+        }
+
         public virtual GameObject UnitGameObject {
             get {
-                if (abilityCaster != null) {
-                    return abilityCaster.gameObject;
+                if (abilityCasterMonoBehaviour != null) {
+                    return abilityCasterMonoBehaviour.gameObject;
                 }
                 return null;
             }
@@ -65,41 +68,35 @@ namespace AnyRPG {
             }
         }
 
-        public virtual Dictionary<string, BaseAbilityProperties> RawAbilityList {
-            get => new Dictionary<string, BaseAbilityProperties>();
+        public virtual Dictionary<string, AbilityProperties> RawAbilityList {
+            get => new Dictionary<string, AbilityProperties>();
         }
 
-        public List<GameObject> AbilityEffectGameObjects { get => abilityEffectGameObjects; set => abilityEffectGameObjects = value; }
-        public Coroutine DestroyAbilityEffectObjectCoroutine { get => destroyAbilityEffectObjectCoroutine; set => destroyAbilityEffectObjectCoroutine = value; }
-        public List<Coroutine> DestroyAbilityEffectObjectCoroutines { get => destroyAbilityEffectObjectCoroutines; set => destroyAbilityEffectObjectCoroutines = value; }
-        public BaseAbilityProperties CurrentCastAbility { get => currentCastAbility; }
+        public AbilityProperties CurrentCastAbility { get => currentCastAbility; }
 
-        public AbilityManager(MonoBehaviour abilityCaster, SystemGameManager systemGameManager) {
+        public AbilityManager(IAbilityCaster abilityCaster, SystemGameManager systemGameManager) {
             this.abilityCaster = abilityCaster;
+            this.abilityCasterMonoBehaviour = abilityCaster.MonoBehaviour;
             Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public virtual CharacterUnit GetCharacterUnit() {
             return null;
         }
 
-        public virtual void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
+        public virtual void SummonMount(UnitProfile mountUnitProfile) {
             // nothing here for now
         }
 
         public virtual void AddTemporaryPet(UnitProfile unitProfile, UnitController unitController) {
             // nothing here for now
         }
-
-        public virtual void AddDestroyAbilityEffectObjectCoroutine(Coroutine coroutine) {
-            destroyAbilityEffectObjectCoroutines.Add(coroutine);
-        }
-
 
         public virtual AttachmentPointNode GetHeldAttachmentPointNode(AbilityAttachmentNode attachmentNode) {
             if (attachmentNode.UseUniversalAttachment == false) {
@@ -128,13 +125,13 @@ namespace AnyRPG {
 
 
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
-        public virtual bool CanCastAbility(BaseAbilityProperties ability, bool playerInitiated = false) {
+        public virtual bool CanCastAbility(AbilityProperties ability, bool playerInitiated = false) {
             //Debug.Log($"{gameObject.name}.CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + ")");
 
             return true;
         }
 
-        public virtual void GeneratePower(BaseAbilityProperties ability) {
+        public virtual void GeneratePower(AbilityProperties ability) {
             // do nothing
         }
 
@@ -162,7 +159,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool HasAbility(BaseAbilityProperties baseAbility) {
+        public virtual bool HasAbility(AbilityProperties baseAbility) {
             
             return false;
         }
@@ -177,7 +174,7 @@ namespace AnyRPG {
         }
 
         public void BeginPerformAbilityHitDelay(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, ChanneledEffectProperties channeledEffect) {
-            abilityHitDelayCoroutine = abilityCaster.StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput, channeledEffect));
+            abilityHitDelayCoroutine = abilityCasterMonoBehaviour.StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput, channeledEffect));
         }
 
         public IEnumerator PerformAbilityHitDelay(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, ChanneledEffectProperties channeledEffect) {
@@ -211,7 +208,7 @@ namespace AnyRPG {
             // do nothing.  environment effects cannot have pets
         }
 
-        public virtual void PerformCastingAnimation(AnimationClip animationClip, BaseAbilityProperties baseAbility) {
+        public virtual void PerformCastingAnimation(AbilityProperties baseAbility) {
             // do nothing.  environmental effects have no animations for now
         }
 
@@ -223,11 +220,11 @@ namespace AnyRPG {
             // do nothing
         }
 
-        public virtual void BeginAbilityCoolDown(BaseAbilityProperties baseAbility, float coolDownLength = -1f) {
+        public virtual void BeginAbilityCoolDown(AbilityProperties baseAbility, float coolDownLength = -1f) {
             // do nothing
         }
 
-        public virtual void BeginActionCoolDown(IUseable useable, float coolDownLength = -1f) {
+        public virtual void BeginActionCoolDown(InstantiatedActionItem actionItem, float coolDownLength = -1f) {
             // do nothing
         }
 
@@ -241,7 +238,7 @@ namespace AnyRPG {
         }
 
 
-        public virtual void ProcessAbilityCoolDowns(AnimatedAbilityProperties baseAbility, float animationLength, float abilityCoolDown) {
+        public virtual void ProcessAbilityCoolDowns(AbilityProperties baseAbility, float animationLength, float abilityCoolDown) {
             // do nothing
         }
 
@@ -250,35 +247,33 @@ namespace AnyRPG {
             // do nothing, we can't have pets
         }
 
-
+        /*
         public virtual void CleanupAbilityEffectGameObjects() {
-            foreach (GameObject go in abilityEffectGameObjects) {
-                if (go != null) {
-                    objectPooler.ReturnObjectToPool(go);
+            foreach (List<GameObject> goList in abilityEffectGameObjects.Values) {
+                foreach (GameObject go in goList) {
+                    if (go != null) {
+                        objectPooler.ReturnObjectToPool(go);
+                    }
                 }
             }
             abilityEffectGameObjects.Clear();
         }
+        */
 
         public virtual void CleanupCoroutines() {
             //Debug.Log(abilityCaster.gameObject.name + ".Abilitymanager.CleanupCoroutines()");
             if (currentCastCoroutine != null) {
-                abilityCaster.StopCoroutine(currentCastCoroutine);
+                abilityCasterMonoBehaviour.StopCoroutine(currentCastCoroutine);
                 EndCastCleanup();
             }
             if (abilityHitDelayCoroutine != null) {
-                abilityCaster.StopCoroutine(abilityHitDelayCoroutine);
+                abilityCasterMonoBehaviour.StopCoroutine(abilityHitDelayCoroutine);
                 abilityHitDelayCoroutine = null;
-            }
-
-            if (destroyAbilityEffectObjectCoroutine != null) {
-                abilityCaster.StopCoroutine(destroyAbilityEffectObjectCoroutine);
-                destroyAbilityEffectObjectCoroutine = null;
             }
             CleanupCoolDownRoutines();
 
             if (globalCoolDownCoroutine != null) {
-                abilityCaster.StopCoroutine(globalCoolDownCoroutine);
+                abilityCasterMonoBehaviour.StopCoroutine(globalCoolDownCoroutine);
                 globalCoolDownCoroutine = null;
             }
         }
@@ -292,7 +287,7 @@ namespace AnyRPG {
         public void CleanupCoolDownRoutines() {
             foreach (AbilityCoolDownNode abilityCoolDownNode in abilityCoolDownDictionary.Values) {
                 if (abilityCoolDownNode.Coroutine != null) {
-                    abilityCaster.StopCoroutine(abilityCoolDownNode.Coroutine);
+                    abilityCasterMonoBehaviour.StopCoroutine(abilityCoolDownNode.Coroutine);
                 }
             }
             abilityCoolDownDictionary.Clear();
@@ -305,7 +300,7 @@ namespace AnyRPG {
             }
             CleanupEventSubscriptions();
             CleanupCoroutines();
-            CleanupAbilityEffectGameObjects();
+            //CleanupAbilityEffectGameObjects();
         }
 
         public virtual void CleanupEventSubscriptions() {
@@ -379,11 +374,11 @@ namespace AnyRPG {
         }
         */
 
-        public virtual bool PerformWeaponAffinityCheck(BaseAbilityProperties baseAbility, bool playerInitiated = false) {
+        public virtual bool PerformWeaponAffinityCheck(AbilityProperties baseAbility, bool playerInitiated = false) {
             return true;
         }
 
-        public virtual bool PerformAnimatedAbilityCheck(AnimatedAbilityProperties animatedAbility) {
+        public virtual bool PerformAbilityActionCheck(AbilityProperties baseAbility) {
             return true;
         }
 
@@ -404,13 +399,13 @@ namespace AnyRPG {
         */
 
 
-        public virtual float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbilityProperties animatedAbility, BaseCharacter targetBaseCharacter, AbilityEffectContext abilityEffectContext) {
+        public virtual float PerformAbilityAction(AbilityProperties baseAbility, AnimationClip animationClip, int clipIndex, UnitController targetUnitController, AbilityEffectContext abilityEffectContext) {
 
             // do nothing for now
             return 0f;
         }
 
-        public virtual bool AbilityHit(Interactable target, AbilityEffectContext abilityEffectContext) {
+        public virtual bool DidAbilityHit(Interactable target, AbilityEffectContext abilityEffectContext) {
             return true;
         }
 
@@ -424,6 +419,253 @@ namespace AnyRPG {
             return;
         }
 
+        public virtual Dictionary<PrefabProfile, List<GameObject>> SpawnAbilityEffectPrefabs(Interactable target, Interactable originalTarget, FixedLengthEffectProperties fixedLengthEffectProperties, AbilityEffectContext abilityEffectContext) {
+            return ProcessSpawnAbilityEffectPrefabs(target, originalTarget, fixedLengthEffectProperties, abilityEffectContext);
+        }
 
+        public virtual Dictionary<PrefabProfile, List<GameObject>> ProcessSpawnAbilityEffectPrefabs(Interactable target, Interactable originalTarget, FixedLengthEffectProperties fixedLengthEffectProperties, AbilityEffectContext abilityEffectInput) {
+            //Debug.Log($"{abilityCaster.gameObject.name}.AbilityManager.ProcessSpawnAbilityEffectPrefabs({target}, {(originalTarget == null ? "null" : originalTarget.name)}, {fixedLengthEffectProperties.ResourceName})");
+
+            Dictionary<PrefabProfile, List<GameObject>> prefabObjects = new Dictionary<PrefabProfile, List<GameObject>>();
+
+            if (fixedLengthEffectProperties.GetPrefabProfileList(abilityCaster) != null) {
+                List<AbilityAttachmentNode> usedAbilityAttachmentNodeList = new List<AbilityAttachmentNode>();
+                if (fixedLengthEffectProperties.RandomPrefabs == false) {
+                    usedAbilityAttachmentNodeList = fixedLengthEffectProperties.GetPrefabProfileList(abilityCaster);
+                } else {
+                    //PrefabProfile copyProfile = prefabProfileList[UnityEngine.Random.Range(0, prefabProfileList.Count -1)];
+                    usedAbilityAttachmentNodeList.Add(fixedLengthEffectProperties.GetPrefabProfileList(abilityCaster)[UnityEngine.Random.Range(0, fixedLengthEffectProperties.GetPrefabProfileList(abilityCaster).Count)]);
+                }
+                foreach (AbilityAttachmentNode abilityAttachmentNode in usedAbilityAttachmentNodeList) {
+                    if (abilityAttachmentNode.HoldableObject != null && abilityAttachmentNode.HoldableObject.Prefab != null) {
+                        Vector3 spawnLocation = Vector3.zero;
+                        Transform prefabParent = null;
+                        Vector3 nodePosition = abilityAttachmentNode.HoldableObject.Position;
+                        Vector3 nodeRotation = abilityAttachmentNode.HoldableObject.Rotation;
+                        Vector3 nodeScale = abilityAttachmentNode.HoldableObject.Scale;
+                        if (fixedLengthEffectProperties.PrefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
+                            spawnLocation = abilityEffectInput.GroundTargetLocation;
+                            prefabParent = null;
+                        }
+                        if (fixedLengthEffectProperties.PrefabSpawnLocation == PrefabSpawnLocation.TargetPoint && target != null) {
+                            spawnLocation = target.transform.position;
+                            prefabParent = null;
+                        }
+                        if ((fixedLengthEffectProperties.PrefabSpawnLocation == PrefabSpawnLocation.Caster || fixedLengthEffectProperties.PrefabSpawnLocation == PrefabSpawnLocation.CasterPoint) && (target != null || fixedLengthEffectProperties.GetTargetOptions(abilityCaster).RequireTarget == false)) {
+                            //Debug.Log(DisplayName + ".LengthEffect.Cast(): PrefabSpawnLocation is Caster");
+                            AttachmentPointNode attachmentPointNode = GetHeldAttachmentPointNode(abilityAttachmentNode);
+                            nodeRotation = attachmentPointNode.Rotation;
+                            nodeScale = attachmentPointNode.Scale;
+                            spawnLocation = UnitGameObject.transform.position;
+                            if (fixedLengthEffectProperties.PrefabSpawnLocation == PrefabSpawnLocation.CasterPoint) {
+                                // transform node position here to ensure that the position is not calculated later on with world coordinates
+                                nodePosition = UnitGameObject.transform.TransformDirection(attachmentPointNode.Position);
+                                prefabParent = null;
+                            } else {
+                                nodePosition = attachmentPointNode.Position;
+                                prefabParent = UnitGameObject.transform;
+                                Transform usedPrefabSourceBone = null;
+                                if (attachmentPointNode.TargetBone != null && attachmentPointNode.TargetBone != string.Empty) {
+                                    usedPrefabSourceBone = prefabParent.FindChildByRecursive(attachmentPointNode.TargetBone);
+                                }
+                                if (usedPrefabSourceBone != null) {
+                                    prefabParent = usedPrefabSourceBone;
+                                }
+                            }
+                        }
+                        if (fixedLengthEffectProperties.PrefabSpawnLocation == PrefabSpawnLocation.Target && target != null) {
+                            //spawnLocation = target.GetComponent<Collider>().bounds.center;
+                            spawnLocation = target.transform.position;
+                            prefabParent = target.transform;
+                        }
+                        if (fixedLengthEffectProperties.PrefabSpawnLocation == PrefabSpawnLocation.OriginalTarget && target != null) {
+                            //spawnLocation = target.GetComponent<Collider>().bounds.center;
+                            spawnLocation = originalTarget.transform.position;
+                            prefabParent = originalTarget.transform;
+                        }
+                        if (fixedLengthEffectProperties.PrefabSpawnLocation != PrefabSpawnLocation.None &&
+                            (target != null || fixedLengthEffectProperties.PrefabSpawnLocation == PrefabSpawnLocation.GroundTarget || fixedLengthEffectProperties.GetTargetOptions(abilityCaster).RequireTarget == false)) {
+                            float finalX = (prefabParent == null ? spawnLocation.x + nodePosition.x : prefabParent.TransformPoint(nodePosition).x);
+                            float finalY = (prefabParent == null ? spawnLocation.y + nodePosition.y : prefabParent.TransformPoint(nodePosition).y);
+                            float finalZ = (prefabParent == null ? spawnLocation.z + nodePosition.z : prefabParent.TransformPoint(nodePosition).z);
+                            //Vector3 finalSpawnLocation = new Vector3(spawnLocation.x + finalX, spawnLocation.y + prefabOffset.y, spawnLocation.z + finalZ);
+                            Vector3 finalSpawnLocation = new Vector3(finalX, finalY, finalZ);
+                            //Debug.Log("Instantiating Ability Effect Prefab for: " + DisplayName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + ";");
+                            Vector3 usedForwardDirection = Vector3.forward;
+                            if (UnitGameObject != null) {
+                                usedForwardDirection = UnitGameObject.transform.forward;
+                            }
+                            if (prefabParent != null) {
+                                usedForwardDirection = prefabParent.transform.forward;
+                            }
+                            GameObject prefabObject = objectPooler.GetPooledObject(abilityAttachmentNode.HoldableObject.Prefab,
+                                finalSpawnLocation,
+                                Quaternion.LookRotation(usedForwardDirection) * Quaternion.Euler(nodeRotation),
+                                prefabParent);
+                            prefabObject.transform.localScale = nodeScale;
+                            if (prefabObjects.ContainsKey(abilityAttachmentNode.HoldableObject) == false) {
+                                prefabObjects[abilityAttachmentNode.HoldableObject] = new List<GameObject>();
+                            }
+                            prefabObjects[abilityAttachmentNode.HoldableObject].Add(prefabObject);
+                            if (fixedLengthEffectProperties.DestroyOnEndCast) {
+                                AddAbilityEffectObject(abilityAttachmentNode, prefabObject);
+                            }
+                        }
+                    }
+                }
+                abilityEffectInput.PrefabObjects = prefabObjects;
+                fixedLengthEffectProperties.BeginMonitoring(prefabObjects, abilityCaster, target, abilityEffectInput);
+            }
+            return prefabObjects;
+        }
+
+        public virtual Dictionary<PrefabProfile, List<GameObject>> SpawnStatusEffectPrefabs(Interactable target, StatusEffectProperties statusEffectProperties, AbilityEffectContext abilityEffectContext) {
+
+            Dictionary<PrefabProfile, List<GameObject>> prefabObjects = new Dictionary<PrefabProfile, List<GameObject>>();
+            foreach (AbilityAttachmentNode abilityAttachmentNode in statusEffectProperties.StatusEffectObjectList) {
+                if (abilityAttachmentNode.HoldableObject != null && abilityAttachmentNode.HoldableObject.Prefab != null) {
+                    Transform prefabParent = null;
+                    Vector3 nodePosition = abilityAttachmentNode.HoldableObject.Position;
+                    Vector3 nodeRotation = abilityAttachmentNode.HoldableObject.Rotation;
+                    Vector3 nodeScale = abilityAttachmentNode.HoldableObject.Scale;
+                    if (target != null) {
+                        AttachmentPointNode attachmentPointNode = GetHeldAttachmentPointNode(abilityAttachmentNode);
+                        nodeRotation = attachmentPointNode.Rotation;
+                        nodeScale = attachmentPointNode.Scale;
+                        nodePosition = attachmentPointNode.Position;
+                        prefabParent = target.transform;
+                        Transform usedPrefabSourceBone = null;
+                        if (attachmentPointNode.TargetBone != null && attachmentPointNode.TargetBone != string.Empty) {
+                            usedPrefabSourceBone = prefabParent.FindChildByRecursive(attachmentPointNode.TargetBone);
+                        }
+                        if (usedPrefabSourceBone != null) {
+                            prefabParent = usedPrefabSourceBone;
+                        }
+                        float finalX = (prefabParent.TransformPoint(nodePosition).x);
+                        float finalY = (prefabParent.TransformPoint(nodePosition).y);
+                        float finalZ = (prefabParent.TransformPoint(nodePosition).z);
+                        Vector3 finalSpawnLocation = new Vector3(finalX, finalY, finalZ);
+                        //Debug.Log("Instantiating Ability Effect Prefab for: " + DisplayName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + ";");
+                        Vector3 usedForwardDirection = prefabParent.transform.forward;
+                        GameObject prefabObject = objectPooler.GetPooledObject(abilityAttachmentNode.HoldableObject.Prefab,
+                            finalSpawnLocation,
+                            Quaternion.LookRotation(usedForwardDirection) * Quaternion.Euler(nodeRotation),
+                            prefabParent);
+                        prefabObject.transform.localScale = nodeScale;
+                        if (prefabObjects.ContainsKey(abilityAttachmentNode.HoldableObject) == false) {
+                            prefabObjects[abilityAttachmentNode.HoldableObject] = new List<GameObject>();
+                        }
+                        prefabObjects[abilityAttachmentNode.HoldableObject].Add(prefabObject);
+                    }
+                }
+            }
+            abilityEffectContext.PrefabObjects = prefabObjects;
+            statusEffectProperties.BeginMonitoring(prefabObjects, abilityCaster, target, abilityEffectContext);
+            return prefabObjects;
+        }
+
+        public virtual Dictionary<PrefabProfile, List<GameObject>> SpawnProjectileEffectPrefabs(Interactable target, Interactable originalTarget, ProjectileEffectProperties projectileEffectProperties, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log($"{abilityCaster.gameObject.name}.AbilityManager.SpawnProjectileEffectPrefabs({target}, {(originalTarget == null ? "null" : originalTarget.name)}, {projectileEffectProperties.ResourceName})");
+
+            Dictionary<PrefabProfile, List<GameObject>> prefabObjects = ProcessSpawnAbilityEffectPrefabs(target, originalTarget, projectileEffectProperties, abilityEffectContext);
+            
+            if (prefabObjects != null) {
+                foreach (List<GameObject> gameObjectList in prefabObjects.Values) {
+                    foreach (GameObject go in gameObjectList) {
+                        //Debug.Log($"{abilityCaster.gameObject.name}.AbilityManager.SpawnProjectileEffectPrefabs(): found gameobject: " + go.name);
+                        //go.transform.parent = playerManager.EffectPrefabParent.transform;
+                        go.transform.parent = null;
+                        ProjectileScript projectileScript = go.GetComponentInChildren<ProjectileScript>();
+                        if (projectileScript != null) {
+                            //Debug.Log(DisplayName + ".ProjectileEffect.Cast(): found gameobject: " + go.name + " and it has projectile script");
+                            abilityEffectContext = projectileEffectProperties.ApplyInputMultiplier(abilityEffectContext);
+                            projectileScript.Initialize(systemGameManager, projectileEffectProperties, abilityCaster, target, new Vector3(0, 1, 0), go, abilityEffectContext);
+                            if (networkManagerServer.ServerModeActive == false) { 
+                                if (projectileEffectProperties.FlightAudioProfiles != null && projectileEffectProperties.FlightAudioProfiles.Count > 0) {
+                                    projectileScript.PlayFlightAudio(projectileEffectProperties.FlightAudioProfiles, projectileEffectProperties.RandomFlightAudioProfiles);
+                                }
+                            }
+                            projectileScript.OnCollission += HandleProjectileCollision;
+                            projectileScript.OnFlightTimeout += HandleFlightTimeout;
+                        }
+                    }
+                }
+            }
+            
+            return prefabObjects;
+        }
+
+        public virtual Dictionary<PrefabProfile, List<GameObject>> SpawnChanneledEffectPrefabs(Interactable target, Interactable originalTarget, ChanneledEffectProperties channeledEffectProperties, AbilityEffectContext abilityEffectContext) {
+            Dictionary<PrefabProfile, List<GameObject>> prefabObjects = ProcessSpawnAbilityEffectPrefabs(target, originalTarget, channeledEffectProperties, abilityEffectContext);
+
+            if (prefabObjects != null) {
+                //Debug.Log(DisplayName + "ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ") PREFABOBJECTS WAS NOT NULL");
+
+                foreach (PrefabProfile prefabProfile in prefabObjects.Keys) {
+                    foreach (GameObject go in prefabObjects[prefabProfile]) {
+                        // recently added code will properly spawn the object based on universal attachments
+                        // get references to the parent and rotation to pass them onto the channeled object script
+                        // since this object will switch parents to avoid moving/rotating with the character body
+                        GameObject prefabParent = go.transform.parent.gameObject;
+                        Vector3 sourcePosition = go.transform.localPosition;
+
+                        //go.transform.parent = playerManager.EffectPrefabParent.transform;
+                        go.transform.parent = null;
+                        IChanneledObject channeledObjectScript = go.GetComponent<IChanneledObject>();
+                        if (channeledObjectScript != null) {
+                            Vector3 endPosition = Vector3.zero;
+                            Interactable usedTarget = target;
+                            if (abilityEffectContext.BaseAbility != null && abilityEffectContext.BaseAbility.GetTargetOptions(abilityCaster).RequiresGroundTarget == true) {
+                                endPosition = abilityEffectContext.GroundTargetLocation;
+                                usedTarget = null;
+                                //Debug.Log(DisplayName + "ChanneledEffect.Cast() abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
+                            } else {
+                                endPosition = target.GetComponent<Collider>().bounds.center - target.transform.position;
+                            }
+
+                            channeledObjectScript.Setup(prefabParent, sourcePosition, usedTarget?.gameObject, endPosition, systemGameManager);
+                        } else {
+                            Debug.LogError($"{abilityCaster.gameObject.name}.AbilityManager.SpawnChanneledEffectPrefabs.(): CHECK INSPECTOR, IChanneledObject NOT FOUND");
+                        }
+                    }
+
+                }
+
+                // delayed damage
+                if (networkManagerServer.ServerModeActive == true || systemGameManager.GameMode == GameMode.Local || levelManagerClient.IsCutscene()) {
+                    BeginPerformAbilityHitDelay(abilityCaster, target, abilityEffectContext, channeledEffectProperties);
+                }
+            } else {
+                //Debug.Log(DisplayName + ".ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ") PREFABOBJECTS WAS NULL");
+
+            }
+
+            return prefabObjects;
+        }
+
+        public void HandleProjectileCollision(IAbilityCaster source, Interactable target, GameObject abilityEffectObject, AbilityEffectContext abilityEffectInput, ProjectileScript projectileScript) {
+            //Debug.Log($"{abilityCaster.gameObject.name}.AbilityManager.HandleProjectileCollision({source.AbilityManager.Name}, {(target == null ? "null" : target.gameObject.name)}, {abilityEffectObject.name}, {projectileScript.ProjectileEffectProperties.ResourceName})");
+
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
+                projectileScript.ProjectileEffectProperties.PerformAbilityHit(source, target, abilityEffectInput);
+            }
+            projectileScript.OnCollission -= HandleProjectileCollision;
+            projectileScript.OnFlightTimeout -= HandleFlightTimeout;
+            objectPooler.ReturnObjectToPool(abilityEffectObject);
+        }
+
+        public void HandleFlightTimeout(ProjectileScript projectileScript) {
+            //Debug.Log($"{abilityCaster.gameObject.name}.AbilityManager.HandleFlightTimeout({projectileScript.gameObject.name})");
+
+            projectileScript.OnFlightTimeout -= HandleFlightTimeout;
+            projectileScript.OnCollission -= HandleProjectileCollision;
+        }
+
+        public virtual void ReceiveCombatTextEvent(UnitController unitController, int damage, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+        }
+
+        public virtual void ProcessAbilityEffectPooled(GameObject go) {
+            // nothing here
+        }
     }
 }

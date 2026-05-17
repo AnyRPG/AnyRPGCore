@@ -130,11 +130,11 @@ namespace AnyRPG.EditorTools {
                 if (clipInfoProperties != null) {
                     // this should never be null because we actually got the name of the animation clip from a serialized property in the first place
                     animationEvents = clipInfoProperties.GetEvents();
-                    Debug.Log("Event array for the animation clip named " + animationClip.name + " has " + animationEvents.Length + " events");
+                    Debug.Log($"Event array for the animation clip named {animationClip.name} has {animationEvents.Length} events");
                     foreach (AnimationEvent animationEvent in animationEvents) {
                         if (animationEvent.functionName == "Hit") {
                             hitEventExists = true;
-                            Debug.Log("Hit() event exists on animation clip named " + animationClip.name + " at " + animationEvent.time);
+                            Debug.Log($"Hit() event exists on animation clip named {animationClip.name} at {animationEvent.time}");
                             break;
                         }
                     }

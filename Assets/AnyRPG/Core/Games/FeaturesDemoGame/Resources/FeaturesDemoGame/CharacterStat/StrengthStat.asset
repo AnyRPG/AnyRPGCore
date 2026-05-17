@@ -19,10 +19,15 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   globalStat: 1
   budgetPerLevel: 5
   primaryToSecondaryConversion:
   - secondaryStatType: 5
     conversionRatio: 0.5
     ratedConversion: 0
+  - secondaryStatType: 8
+    conversionRatio: 10
+    ratedConversion: 0
   primaryToResourceConversion: []
+  regen: []

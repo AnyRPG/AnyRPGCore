@@ -29,7 +29,7 @@ namespace AnyRPG {
         private Dictionary<EquipmentSlotProfile, Dictionary<AttachmentNode, GameObject>> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlotProfile, Dictionary<AttachmentNode, GameObject>>();
 
         // track the equipment that is equipped
-        private Dictionary<EquipmentSlotProfile, Equipment> equippedEquipment = new Dictionary<EquipmentSlotProfile, Equipment>();
+        private Dictionary<EquipmentSlotProfile, InstantiatedEquipment> equippedEquipment = new Dictionary<EquipmentSlotProfile, InstantiatedEquipment>();
 
         public MecanimModelController(UnitController unitController, UnitModelController unitModelController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
@@ -42,7 +42,8 @@ namespace AnyRPG {
 
             int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
             int raycastmask = 1 << LayerMask.NameToLayer("Ignore Raycast");
-            setLayerIgnoreMask = (spellMask | raycastmask);
+            //int equipmentMask = 1 << equipmentLayer;
+            setLayerIgnoreMask = (spellMask | raycastmask /*| equipmentMask*/);
         }
 
         public override void SetGameManagerReferences() {
@@ -51,6 +52,11 @@ namespace AnyRPG {
         }
 
         public void Initialize() {
+            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.Initialize()");
+
+            if (unitModelController.CharacterEquipmentManager == null) {
+                Debug.LogWarning($"{unitController.gameObject.name}.MecanimModelController.Initialize() characterEquipmentManager is null");
+            }
             characterEquipmentManager = unitModelController.CharacterEquipmentManager;
         }
 
@@ -58,8 +64,8 @@ namespace AnyRPG {
             this.attachmentProfile = attachmentProfile;
         }
 
-        private void EquipItemModels(EquipmentSlotProfile equipmentSlotProfile, Equipment equipment) {
-            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.EquipItemModels(" + equipmentSlotProfile.DisplayName + ", " + (equipment == null ? "null" : equipment.DisplayName) +")");
+        private void EquipItemModels(EquipmentSlotProfile equipmentSlotProfile, InstantiatedEquipment equipment) {
+            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.EquipItemModels({equipmentSlotProfile.DisplayName}, {(equipment == null ? "null" : equipment.DisplayName)})");
 
             SpawnEquipmentObjects(equipmentSlotProfile, equipment);
 
@@ -68,18 +74,18 @@ namespace AnyRPG {
             }
         }
 
-        private void SpawnEquipmentObjects(EquipmentSlotProfile equipmentSlotProfile, Equipment newEquipment) {
+        private void SpawnEquipmentObjects(EquipmentSlotProfile equipmentSlotProfile, InstantiatedEquipment newEquipment) {
             //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.SpawnEquipmentObjects({equipmentSlotProfile.DisplayName}, {(newEquipment == null ? "null" : newEquipment.DisplayName)})");
 
             if (newEquipment == null || equipmentSlotProfile == null) {
                 return;
             }
 
-            SpawnEquipmentObjects(equipmentSlotProfile, newEquipment, newEquipment.GetEquipmentModel<PrefabEquipmentModel>());
+            SpawnEquipmentObjects(equipmentSlotProfile, newEquipment, newEquipment.Equipment.GetEquipmentModel<PrefabEquipmentModel>());
             equippedEquipment[equipmentSlotProfile] = newEquipment;
         }
 
-        private void SpawnEquipmentObjects(EquipmentSlotProfile equipmentSlotProfile, Equipment newEquipment, PrefabEquipmentModel prefabEquipmentModel) {
+        private void SpawnEquipmentObjects(EquipmentSlotProfile equipmentSlotProfile, InstantiatedEquipment newEquipment, PrefabEquipmentModel prefabEquipmentModel) {
             if (prefabEquipmentModel == null) {
                 // no prefab model for this equipment
                 return;
@@ -97,7 +103,7 @@ namespace AnyRPG {
             }
         }
 
-        private Dictionary<AttachmentNode, GameObject> SpawnHoldableObjects(EquipmentSlotProfile equipmentSlotProfile, Equipment newEquipment, PrefabEquipmentModel prefabEquipmentModel) {
+        private Dictionary<AttachmentNode, GameObject> SpawnHoldableObjects(EquipmentSlotProfile equipmentSlotProfile, InstantiatedEquipment newEquipment, PrefabEquipmentModel prefabEquipmentModel) {
 
             Dictionary<AttachmentNode, GameObject> holdableObjects = new Dictionary<AttachmentNode, GameObject>();
 
@@ -139,19 +145,21 @@ namespace AnyRPG {
                         GameObject newEquipmentPrefab = objectPooler.GetPooledObject(attachmentNode.HoldableObject.Prefab, targetBone);
                         holdableObjects.Add(attachmentNode, newEquipmentPrefab);
 
-                        if (unitController.UnitControllerMode == UnitControllerMode.Preview) {
-                            LayerUtility.SetMeshRendererLayerRecursive(newEquipmentPrefab, unitPreviewLayer, setLayerIgnoreMask);
-                        } else {
+                        // this was resulting in pooled objects that were re-used for abilities appearing on the wrong layer, so we will leave everything on equipment
+                        // fow now to avoid this
+                        //if (unitController.UnitControllerMode == UnitControllerMode.Preview) {
+                        //    LayerUtility.SetMeshRendererLayerRecursive(newEquipmentPrefab, unitPreviewLayer, setLayerIgnoreMask);
+                        //} else {
                             LayerUtility.SetMeshRendererLayerRecursive(newEquipmentPrefab, equipmentLayer, setLayerIgnoreMask);
-                        }
+                        //}
                         newEquipmentPrefab.transform.localScale = attachmentNode.HoldableObject.Scale;
-                        if (unitController?.CharacterUnit?.BaseCharacter.CharacterCombat != null && unitController?.CharacterUnit?.BaseCharacter.CharacterCombat.GetInCombat() == true) {
+                        if (unitController.CharacterCombat.GetInCombat() == true) {
                             HoldObject(newEquipmentPrefab, attachmentNode, unitController.gameObject);
                         } else {
                             SheathObject(newEquipmentPrefab, attachmentNode, unitController.gameObject);
                         }
                     } else {
-                        Debug.Log("MecanimModelController.SpawnEquipmentObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " when trying to Equip " + newEquipment.ResourceName);
+                        Debug.LogWarning($"MecanimModelController.SpawnEquipmentObjects(). We could not find the target bone {attachmentPointNode.TargetBone} when trying to Equip {newEquipment.ResourceName}");
                     }
                 }
             }
@@ -159,6 +167,7 @@ namespace AnyRPG {
             return holdableObjects;
         }
 
+        /*
         public void SetLayerRecursive(GameObject objectName, int newLayer) {
             // set the preview unit layer to the PlayerPreview layer so the preview camera can see it and all other cameras will ignore it
             int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
@@ -171,8 +180,8 @@ namespace AnyRPG {
                     meshRenderer.gameObject.layer = newLayer;
                 }
             }
-
         }
+        */
 
         public void SheathObject(GameObject go, AttachmentNode attachmentNode, GameObject searchObject) {
             if (searchObject == null) {
@@ -211,9 +220,9 @@ namespace AnyRPG {
                 return attachmentPointNode;
             } else {
                 // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node
-                if (unitController?.CharacterUnit?.BaseCharacter?.UnitProfile?.UnitPrefabProps?.AttachmentProfile != null) {
-                    if (unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
-                        return unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.PrimaryAttachmentName];
+                if (unitController.UnitProfile?.UnitPrefabProps?.AttachmentProfile != null) {
+                    if (unitController.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
+                        return unitController.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.PrimaryAttachmentName];
                     }
                 } else if (attachmentProfile != null) {
                     if (attachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
@@ -240,9 +249,9 @@ namespace AnyRPG {
                 return attachmentPointNode;
             } else {
                 // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node
-                if (unitController?.CharacterUnit?.BaseCharacter?.UnitProfile?.UnitPrefabProps?.AttachmentProfile != null) {
-                    if (unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.UnsheathedAttachmentName)) {
-                        return unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.UnsheathedAttachmentName];
+                if (unitController.UnitProfile?.UnitPrefabProps?.AttachmentProfile != null) {
+                    if (unitController.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.UnsheathedAttachmentName)) {
+                        return unitController.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.UnsheathedAttachmentName];
                     }
                 }
             }
@@ -267,7 +276,7 @@ namespace AnyRPG {
 
             Transform targetBone = searchObject.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
             if (targetBone == null) {
-                Debug.Log("MecanimModelController.HoldObject(): Unable to find target bone : " + attachmentPointNode.TargetBone + " while holding " + attachmentNode.HoldableObject.ResourceName);
+                Debug.LogWarning($"MecanimModelController.HoldObject(): Unable to find target bone : {attachmentPointNode.TargetBone} while holding {attachmentNode.HoldableObject.ResourceName}");
                 return;
             }
 
@@ -283,9 +292,10 @@ namespace AnyRPG {
         }
 
         public void SheathWeapons() {
+            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.SheathWeapons()");
+
             // loop through all the equipmentslots and check if they have equipment that is of type weapon
             //if they do, run sheathobject on that slot
-
             foreach (EquipmentSlotProfile equipmentSlotProfile in characterEquipmentManager.CurrentEquipment.Keys) {
                 SheathWeapon(equipmentSlotProfile);
             }
@@ -302,10 +312,10 @@ namespace AnyRPG {
         }
 
         public void HoldWeapons() {
-            //Debug.Log(baseCharacter.gameObject.name + ".MecanimModelController.HoldWeapons()");
+            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.HoldWeapons()");
 
             // when mounted, weapons should stay sheathed
-            if (unitController?.Mounted == true) {
+            if (unitController?.IsMounted == true) {
                 return;
             }
 
@@ -332,13 +342,15 @@ namespace AnyRPG {
             }
         }
 
-        private Equipment GetEquipmentForSlot(EquipmentSlotProfile equipmentSlotProfile) {
-            
+        private InstantiatedEquipment GetEquipmentForSlot(EquipmentSlotProfile equipmentSlotProfile) {
+            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.GetEquipmentForSlot({equipmentSlotProfile.ResourceName})");
+
             if (unitModelController.SuppressEquipment == true) {
+                //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.GetEquipmentForSlot({equipmentSlotProfile.ResourceName}) SuppressEquipment is true");
                 return null;
             }
 
-            return characterEquipmentManager.CurrentEquipment[equipmentSlotProfile];
+            return characterEquipmentManager.CurrentEquipment[equipmentSlotProfile].InstantiatedEquipment;
         }
 
         public void RebuildModelAppearance() {
@@ -352,12 +364,13 @@ namespace AnyRPG {
             SynchronizeEquipmentDictionaryKeys();
 
             foreach (EquipmentSlotProfile equipmentSlotProfile in characterEquipmentManager.CurrentEquipment.Keys) {
+                //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.RebuildModelAppearance() slot: {equipmentSlotProfile.ResourceName} item:)");
                 RebuildSlotAppearance(equipmentSlotProfile, GetEquipmentForSlot(equipmentSlotProfile));
             }
         }
 
-        private void RebuildSlotAppearance(EquipmentSlotProfile equipmentSlotProfile, Equipment equipment) {
-            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.RebuildSlotAppearance(" + equipmentSlotProfile.ResourceName + ", " + (equipment == null ? "null" : equipment.ResourceName) + ")");
+        private void RebuildSlotAppearance(EquipmentSlotProfile equipmentSlotProfile, InstantiatedEquipment equipment) {
+            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.RebuildSlotAppearance({equipmentSlotProfile.ResourceName}, {(equipment == null ? "null" : equipment.ResourceName)})");
 
             if (equipment == equippedEquipment[equipmentSlotProfile]) {
                 // equipment spawned is the same as what is the character equipment manager, nothing to do

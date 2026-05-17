@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         string DisplayName { get; }
 
-        void HandlePrerequisiteUpdates();
+        void HandlePrerequisiteUpdates(UnitController sourceUnitController);
     }
 
 }

@@ -34,45 +34,42 @@ namespace AnyRPG {
 
         public string ItemName { get => itemName; set => itemName = value; }
         public string DisplayName { get => ItemName; }
-        public Item Item { get => item; }
+        public Item Item { get => item; set => item = value; }
         public float DropChance { get => dropChance; set => dropChance = value; }
         public int MinDrops { get => minDrops; set => minDrops = value; }
         public int MaxDrops { get => maxDrops; set => maxDrops = value; }
 
-        public bool PrerequisitesMet {
-            get {
-                //Debug.Log(itemName + ".MyPrerequisitesMet");
+        public bool PrerequisitesMet(UnitController sourceUnitController) {
+            //Debug.Log(itemName + ".MyPrerequisitesMet");
 
-                // match standard prerequisites
-                foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
-                    // realtime check for loot
-                    prerequisiteCondition.UpdatePrerequisites();
-                    if (!prerequisiteCondition.IsMet()) {
-                        return false;
-                    }
+            // match standard prerequisites
+            foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
+                // realtime check for loot
+                prerequisiteCondition.UpdatePrerequisites(sourceUnitController);
+                if (!prerequisiteCondition.IsMet(sourceUnitController)) {
+                    return false;
                 }
-
-                // match character class
-                if (matchItemRestrictions) {
-                    if (!item.RequirementsAreMet()) {
-                        return false;
-                    }
-                }
-                // there are no prerequisites, or all prerequisites are complete
-                //Debug.Log(itemName + ".MyPrerequisitesMet: nothing false");
-                return true;
             }
+
+            // match character class
+            if (matchItemRestrictions) {
+                if (!item.RequirementsAreMet(sourceUnitController)) {
+                    return false;
+                }
+            }
+            // there are no prerequisites, or all prerequisites are complete
+            //Debug.Log(itemName + ".MyPrerequisitesMet: nothing false");
+            return true;
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager) {
             Configure(systemGameManager);
-            item = null;
-            if (itemName != null) {
+            if (itemName != string.Empty) {
                 Item tmpItem = systemDataFactory.GetResource<Item>(itemName);
                 if (tmpItem != null) {
                     item = tmpItem;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a loot.  CHECK INSPECTOR");
+                    Debug.LogError($"Loot.SetupScriptableObjects(): Could not find item : {itemName} while inititalizing a loot.  CHECK INSPECTOR");
                 }
             }
 
@@ -95,7 +92,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandlePrerequisiteUpdates() {
+        public void HandlePrerequisiteUpdates(UnitController sourceUnitController) {
             // do nothing
         }
     }

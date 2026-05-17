@@ -2,8 +2,9 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags:
+  - UMAKeepChain
   - Action
   - AutoCrouch
   - Ragdoll
@@ -98,6 +99,8 @@ TagManager:
   - WestBoundary
   - FactionSpawnLocation1
   - FactionSpawnLocation2
+  - UMAIgnore
+  - UnitSpawn1
   layers:
   - Default
   - TransparentFX
@@ -108,14 +111,14 @@ TagManager:
   - 
   - 
   - Player
-  - Enemy
-  - CompanionAI
+  - 
+  - 
   - Triggers
-  - StopMove
-  - Action
-  - HeadTrack
-  - BodyPart
-  - BlockAIRayCast
+  - 
+  - 
+  - 
+  - 
+  - 
   - Equipment
   - CharacterModel
   - PlayerPreview
@@ -125,7 +128,7 @@ TagManager:
   - UnitPreview
   - PetPreview
   - Interactable
-  - 
+  - DroppedItem
   - 
   - 
   - 
@@ -135,3 +138,10 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  m_RenderingLayers:
+  - Default
+  - Outline_1
+  - Outline_2
+  - Outline_3
+  - Outline_4
+  - Interactable

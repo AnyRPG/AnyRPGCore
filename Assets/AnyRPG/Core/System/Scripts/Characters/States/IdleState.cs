@@ -9,14 +9,18 @@ namespace AnyRPG {
         private UnitController unitController;
 
         public void Enter(UnitController unitController) {
-            //Debug.Log($"{unitController.gameObject.name} entering Idle state");
+            //Debug.Log($"IdleState.Enter({unitController.gameObject.name})");
+
             this.unitController = unitController;
             this.unitController.Reset();
+            unitController.NavMeshAgent.enabled = false;
             TryToEnterPatrolState();
         }
 
         public void Exit() {
+            //Debug.Log($"{unitController.gameObject.name}.IdleState.Exit()");
 
+            unitController.NavMeshAgent.enabled = true;
         }
 
         public void TryToEnterPatrolState() {
@@ -30,15 +34,15 @@ namespace AnyRPG {
             }/*
             else {
                 if (unitController.PatrolController == null) {
-                    Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): patrol controller is null");
+                    //Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): patrol controller is null");
                     return;
                 }
                 if (unitController.PatrolController.CurrentPatrol == null) {
-                    Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): current patrol is null");
+                    //Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): current patrol is null");
                     return;
                 }
                 if (unitController.PatrolController.CurrentPatrol.PatrolComplete() == true) {
-                    Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): current patrol is complete");
+                    //Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): current patrol is complete");
                 }
             }
             */
@@ -46,11 +50,12 @@ namespace AnyRPG {
 
         public void Update() {
             //Debug.Log(aiController.gameObject.name + ": IdleState.Update()");
+
             unitController.UpdateTarget();
 
             // change into follow state if the player is close
-            if (unitController.Target != null && unitController.AggroEnabled() == true) {
-                //Debug.Log(aiController.gameObject.name + ": IdleState.Update(): setting follow state");
+            if (unitController.Target != null && unitController.AggroEnabled == true) {
+                //Debug.Log($"{unitController.gameObject.name}.IdleState.Update(): setting follow state");
                 unitController.ChangeState(new FollowState());
                 return;
             }

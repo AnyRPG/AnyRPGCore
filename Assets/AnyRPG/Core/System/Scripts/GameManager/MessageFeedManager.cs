@@ -1,4 +1,3 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -22,7 +21,7 @@ namespace AnyRPG {
 
         // GameManager references
         private ObjectPooler objectPooler = null;
-        private LogManager logManager = null;
+        private MessageLogClient messageLogClient = null;
 
         public CloseableWindow MessageFeedWindow { get => messageFeedWindow; set => messageFeedWindow = value; }
 
@@ -34,11 +33,22 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
-            logManager = systemGameManager.LogManager;
+            messageLogClient = systemGameManager.MessageLogClient;
         }
 
+        /*
+        public void WriteMessage(UnitController sourceUnitController, string message) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+                WriteMessage(message);
+            } else {
+                networkManagerServer.AdvertiseMessageFeedMessage(sourceUnitController, message);
+            }
+        }
+        */
+
         public void WriteMessage(string message) {
-            //Debug.Log("MessageFeedManager.WriteMessage(" + message + ")");
+            //Debug.Log($"MessageFeedManager.WriteMessage({message})");
+
             if (PlayerPrefs.GetInt("UseMessageFeed") == 0) {
                 return;
             }
@@ -47,11 +57,7 @@ namespace AnyRPG {
             //uncomment the next line to make the messages spawn at the top instead of the bottom
             //go.transform.SetAsFirstSibling();
             objectPooler.ReturnObjectToPool(go, 2);
-            if (logManager != null) {
-                logManager.WriteSystemMessage(message);
-            } else {
-                //Debug.Log("CombatLogUI.Myinstance was null!!");
-            }
+            messageLogClient.WriteSystemMessage(message);
         }
         
         public void LockUI() {

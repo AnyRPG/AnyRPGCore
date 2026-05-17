@@ -37,6 +37,7 @@ MonoBehaviour:
     - Life Exchange
     - Tornado
     - Glide
+    - Free Revive
     traitNames:
     - Soul Of The Mage
     armorClassList:
@@ -44,6 +45,8 @@ MonoBehaviour:
     weaponSkills:
     - Staff
     - Wand
+    validPetTypes: []
+    startingPets: []
   unitTypeCapabilities: []
   primaryStats:
   - statName: Intellect
@@ -58,6 +61,6 @@ MonoBehaviour:
     primaryToResourceConversion:
     - resourceName: Mana
       resourcePerPoint: 10
+    regen: []
   powerResources:
   - Mana
-  validPetTypes: []

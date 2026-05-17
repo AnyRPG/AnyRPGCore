@@ -61,7 +61,7 @@ namespace AnyRPG {
                         if (tmpStatusEffect != null) {
                             traitList.Add(tmpStatusEffect.AbilityEffectProperties as StatusEffectProperties);
                         } else {
-                            Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect : " + traitName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                            Debug.LogError($"SystemAbilityManager.SetupScriptableObjects(): Could not find status effect : {traitName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                         }
                     }
                 }

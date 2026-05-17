@@ -22,8 +22,8 @@ namespace AnyRPG {
         protected SaveManager saveManager = null;
         protected MessageFeedManager messageFeedManager = null;
         protected SystemEventManager systemEventManager = null;
-        protected PlayerManager playerManager = null;
-        protected LevelManager levelManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
+        protected LevelManagerClient levelManagerClient = null;
 
         public int Amount {
             get {
@@ -40,26 +40,7 @@ namespace AnyRPG {
             }
         }
 
-        public int CurrentAmount {
-            get {
-                return saveManager.GetQuestObjectiveSaveData(questBase.ResourceName, ObjectiveType.Name, ObjectiveName).Amount;
-                //return false;
-            }
-            set {
-                QuestObjectiveSaveData saveData = saveManager.GetQuestObjectiveSaveData(questBase.ResourceName, ObjectiveType.Name, ObjectiveName);
-                saveData.Amount = value;
-                saveManager.QuestObjectiveSaveDataDictionary[questBase.ResourceName][ObjectiveType.Name][ObjectiveName] = saveData;
-            }
-        }
-
         public virtual string ObjectiveName { get => string.Empty; }
-
-        public virtual bool IsComplete {
-            get {
-                //Debug.Log("checking if quest objective iscomplete, current: " + MyCurrentAmount.ToString() + "; needed: " + amount.ToString());
-                return CurrentAmount >= Amount;
-            }
-        }
 
         public QuestBase QuestBase { get => questBase; set => questBase = value; }
         public string OverrideDisplayName { get => overrideDisplayName; set => overrideDisplayName = value; }
@@ -73,11 +54,35 @@ namespace AnyRPG {
             set => overrideDisplayName = value;
         }
 
-        public virtual void UpdateCompletionCount(bool printMessages = true) {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            saveManager = systemGameManager.SaveManager;
+            messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
+            systemEventManager = systemGameManager.SystemEventManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+            levelManagerClient = systemGameManager.LevelManagerClient;
+        }
+
+        public virtual int CurrentAmount(UnitController sourceUnitController) {
+            //return sourceUnitController.CharacterQuestLog.GetQuestObjectiveSaveData(questBase.ResourceName, ObjectiveType.Name, ObjectiveName).Amount;
+            return questBase.GetObjectiveCurrentAmount(sourceUnitController, ObjectiveType.Name, ObjectiveName);
+        }
+
+        public void SetCurrentAmount(UnitController sourceUnitController, int value) {
+            questBase.SetObjectiveCurrentAmount(sourceUnitController, ObjectiveType.Name, ObjectiveName, value);
+        }
+
+
+        public virtual bool IsComplete(UnitController sourceUnitController) {
+            //Debug.Log("checking if quest objective iscomplete, current: " + MyCurrentAmount.ToString() + "; needed: " + amount.ToString());
+            return CurrentAmount(sourceUnitController) >= Amount;
+        }
+
+        public virtual void UpdateCompletionCount(UnitController sourceUnitController, bool printMessages = true) {
             //Debug.Log("QuestObjective.UpdateCompletionCount()");
         }
 
-        public virtual void OnAcceptQuest(QuestBase questBase, bool printMessages = true) {
+        public virtual void OnAcceptQuest(UnitController sourceUnitController, QuestBase questBase, bool printMessages = true) {
             this.questBase = questBase;
         }
 
@@ -85,16 +90,16 @@ namespace AnyRPG {
             this.questBase = questBase;
         }
 
-        public virtual void OnAbandonQuest() {
+        public virtual void OnAbandonQuest(UnitController sourceUnitController) {
             // overwrite me
         }
 
-        public virtual void HandleQuestStatusUpdated() {
-            UpdateCompletionCount();
+        public virtual void HandleQuestStatusUpdated(UnitController sourceUnitController) {
+            UpdateCompletionCount(sourceUnitController);
         }
 
-        public virtual string GetUnformattedStatus() {
-            return DisplayName + ": " + Mathf.Clamp(CurrentAmount, 0, Amount) + "/" + Amount;
+        public virtual string GetUnformattedStatus(UnitController sourceUnitController) {
+            return DisplayName + ": " + Mathf.Clamp(CurrentAmount(sourceUnitController), 0, Amount) + "/" + Amount;
         }
 
         public virtual void SetupScriptableObjects(SystemGameManager systemGameManager, QuestBase quest) {
@@ -102,14 +107,6 @@ namespace AnyRPG {
             SetQuest(quest);
         }
 
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            saveManager = systemGameManager.SaveManager;
-            messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
-            systemEventManager = systemGameManager.SystemEventManager;
-            playerManager = systemGameManager.PlayerManager;
-            levelManager = systemGameManager.LevelManager;
-        }
     }
 
 

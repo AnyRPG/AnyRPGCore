@@ -4,7 +4,7 @@ using UnityEngine;
 namespace AnyRPG {
 
     [System.Serializable]
-    public class VoiceProps {
+    public class VoiceProps : ConfiguredClass {
 
         [Header("Character")]
 
@@ -81,6 +81,7 @@ namespace AnyRPG {
 
         public AudioClip RandomDamage {
             get {
+                //Debug.Log($"VoiceProps.RandomDamage: damage.Count = {damage.Count}");
                 if (damage.Count > 0) {
                     return damage[Random.Range(0, damage.Count)];
                 }
@@ -126,6 +127,7 @@ namespace AnyRPG {
 
         public AudioClip RandomStartInteract {
             get {
+                //Debug.Log($"VoiceProps.RandomStartInteract: startInteract.Count = {startInteract.Count}");
                 if (startInteract.Count > 0) {
                     return startInteract[Random.Range(0, startInteract.Count)];
                 }
@@ -171,6 +173,70 @@ namespace AnyRPG {
             }
         }
 
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            SetupScriptableObjects();
+        }
+
+        public void SetupScriptableObjects() {
+            foreach (AudioClip audioClip in aggro) {
+                if (audioClip != null) {
+                    systemGameManager.AudioManager.RegisterAudioClip(audioClip);
+                }
+            }
+            foreach (AudioClip audioClip in attack) {
+                if (audioClip != null) {
+                    systemGameManager.AudioManager.RegisterAudioClip(audioClip);
+                }
+            }
+            foreach (AudioClip audioClip in damage) {
+                if (audioClip != null) {
+                    systemGameManager.AudioManager.RegisterAudioClip(audioClip);
+                }
+            }
+            foreach (AudioClip audioClip in jump) {
+                if (audioClip != null) {
+                    systemGameManager.AudioManager.RegisterAudioClip(audioClip);
+                }
+            }
+            foreach (AudioClip audioClip in fallDamage) {
+                if (audioClip != null) {
+                    systemGameManager.AudioManager.RegisterAudioClip(audioClip);
+                }
+            }
+            foreach (AudioClip audioClip in death) {
+                if (audioClip != null) {
+                    systemGameManager.AudioManager.RegisterAudioClip(audioClip);
+                }
+            }
+            foreach (AudioClip audioClip in victory) {
+                if (audioClip != null) {
+                    systemGameManager.AudioManager.RegisterAudioClip(audioClip);
+                }
+            }
+            foreach (AudioClip audioClip in startInteract) {
+                if (audioClip != null) {
+                    systemGameManager.AudioManager.RegisterAudioClip(audioClip);
+                }
+            }
+            foreach (AudioClip audioClip in startVendorInteract) {
+                if (audioClip != null) {
+                    systemGameManager.AudioManager.RegisterAudioClip(audioClip);
+                }
+            }
+            foreach (AudioClip audioClip in stopInteract) {
+                if (audioClip != null) {
+                    systemGameManager.AudioManager.RegisterAudioClip(audioClip);
+                }
+            }
+            foreach (AudioClip audioClip in stopVendorInteract) {
+                if (audioClip != null) {
+                    systemGameManager.AudioManager.RegisterAudioClip(audioClip);
+                }
+            }
+
+        }
 
     }
 

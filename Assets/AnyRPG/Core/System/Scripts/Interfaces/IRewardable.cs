@@ -6,8 +6,8 @@ using UnityEngine;
 namespace AnyRPG {
     public interface IRewardable : IDescribable {
         
-        void GiveReward();
-        bool HasReward();
+        void GiveReward(UnitController sourceUnitController);
+        bool HasReward(UnitController sourceUnitController);
     }
 
 }

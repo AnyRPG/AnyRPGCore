@@ -32,11 +32,6 @@ namespace AnyRPG {
         //public bool UseBehaviorCopy { get => useBehaviorCopy; }
         //public List<string> BehaviorNames { get => behaviorNames; }
 
-        public override string GetInteractionPanelTitle(int optionIndex = 0) {
-            //return (behaviorNames.Count > optionIndex ? behaviorNames[optionIndex] : base.GetInteractionPanelTitle(optionIndex));
-            return base.GetInteractionPanelTitle(optionIndex);
-        }
-
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
             //Debug.Log("BehaviorProps.GetInteractableOption(" + interactable.gameObject.name + ") systemGameManager = " + (systemGameManager == null ? "null" : systemGameManager.gameObject.name));
             InteractableOptionComponent returnValue = new PatrolComponent(interactable, this, systemGameManager);

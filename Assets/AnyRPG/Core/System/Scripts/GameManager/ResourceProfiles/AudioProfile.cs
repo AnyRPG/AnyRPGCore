@@ -1,10 +1,6 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.Serialization;
-using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Audio Profile", menuName = "AnyRPG/AudioProfile")]
@@ -43,6 +39,17 @@ namespace AnyRPG {
         public void PreloadAudioClips() {
             foreach (AudioClip audioClip in audioClips) {
                 audioClip.LoadAudioData();
+            }
+        }
+
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
+            if (audioClips != null) {
+                foreach (AudioClip audioClip in audioClips) {
+                    if (audioClip != null) {
+                        systemGameManager.AudioManager.RegisterAudioClip(audioClip);
+                    }
+                }
             }
         }
     }

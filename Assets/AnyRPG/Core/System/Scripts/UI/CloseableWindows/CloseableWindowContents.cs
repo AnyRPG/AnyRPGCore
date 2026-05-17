@@ -6,11 +6,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CloseableWindowContents : ConfiguredMonoBehaviour/*, ICloseableWindowContents*/ {
+    public class CloseableWindowContents : ConfiguredMonoBehaviour {
 
         public virtual event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
-        [Header("Closeable Window")]
+        [Header("Closeable Window Contents")]
 
         [SerializeField]
         protected Image backGroundImage;
@@ -314,6 +314,7 @@ namespace AnyRPG {
 
         public virtual void Accept() {
             //Debug.Log($"{gameObject.name}.CloseableWindowContents.Accept()");
+
             if (activeSubPanel != null) {
                 activeSubPanel.Accept();
                 return;
@@ -325,6 +326,7 @@ namespace AnyRPG {
 
         public virtual bool Cancel() {
             //Debug.Log($"{gameObject.name}.CloseableWindowContents.Cancel()");
+
             if (activeSubPanel != null) {
                 if (activeSubPanel.Cancel()) {
                     activeSubPanel = null;
@@ -486,13 +488,13 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.CloseableWindowContents.Close()");
             if (closeableWindow != null) {
                 closeableWindow.CloseWindow();
-                return;
             }
-            /*
-            if (parentPanel != null) {
-                parentPanel.Close();
+        }
+
+        public virtual void Open() {
+            if (closeableWindow != null) {
+                closeableWindow.OpenWindow();
             }
-            */
         }
 
         protected void CreateEventSubscriptions() {

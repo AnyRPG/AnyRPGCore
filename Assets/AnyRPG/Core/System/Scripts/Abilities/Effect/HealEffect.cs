@@ -7,7 +7,7 @@ namespace AnyRPG {
     public class HealEffect : AbilityEffect {
 
         [SerializeField]
-        private HealEffectProperties healEffectProperties = new HealEffectProperties();
+        public HealEffectProperties healEffectProperties = new HealEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => healEffectProperties; }
 

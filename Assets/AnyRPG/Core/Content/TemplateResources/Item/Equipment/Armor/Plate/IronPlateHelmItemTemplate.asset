@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: 63a6fc90330f9e74a983a44c0fe9597e, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: very gold
+  description: very iron
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 2
+  itemPickupPrefabProfileName: Plate Helmet Iron
   equipmentSlotType: Helm
   equipmentSetName: 
-  umaRecipeProfileName: Iron Plate Helm
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Iron Plate Helm

@@ -22,4 +22,13 @@ MonoBehaviour:
   optionalOverride: 0
   requiredLevel: 1
   autoLearn: 0
+  giveCharacterExperience: 1
+  useSkillLevels: 1
+  skillLevelCapList:
+  - CharacterLevel: 1
+    SkillLevelCap: 10
+  - CharacterLevel: 10
+    SkillLevelCap: 20
+  useSkillExperience: 1
+  skillExperienceChart: 90010000840300007805000034080000f00a0000100e0000941100001815000064190000b01d0000
   abilityNames: []

@@ -11,7 +11,7 @@ namespace AnyRPG {
     public class PetEffect : AbilityEffect {
 
         [SerializeField]
-        private PetEffectProperties petEffectProperties = new PetEffectProperties();
+        public PetEffectProperties petEffectProperties = new PetEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => petEffectProperties; }
 

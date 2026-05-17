@@ -1,16 +1,20 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class Interactable : Spawnable, IDescribable {
+    public class Interactable : AutoConfiguredMonoBehaviour, IPersistentObjectOwner, IDescribable {
 
-        public event System.Action OnPrerequisiteUpdates = delegate { };
-        public event System.Action OnInteractableDisable = delegate { };
+        public event Action OnPrerequisiteUpdates = delegate { };
+        public event Action OnInteractableDisable = delegate { };
+        public event Action OnInteractableResetSettings = delegate { };
+        public event Action OnInitializeNamePlate = delegate { };
 
         // this field does not do anything, but is needed to satisfy the IDescribable interface
         protected Sprite interactableIcon = null;
@@ -59,76 +63,120 @@ namespace AnyRPG {
         [SerializeField]
         protected bool suppressInteractionWindow = false;
 
+
+        [Tooltip("If true, the InteractionRange collider will be set to the new extents in the Interaction Max Range field.")]
+        [SerializeField]
+        private bool overrideInteractionColliderSize = false;
+
         [Tooltip("For everything except character unit interactions, the interactor must be within this range of this objects collider. This does not apply to interactions triggered by switches.")]
         [SerializeField]
         private float interactionMaxRange = 2f;
 
-        [Header("Additional Spawn Options")]
-
-        [Tooltip("If set to true, all interactable options must have prerequisites met, in addition to the interactable prerequisites, in order to spawn")]
+        [Tooltip("The prefered locations that units wanting to interact will move to, based on NavMeshPath completeness.")]
+        [FormerlySerializedAs("interactLocations")]
         [SerializeField]
-        protected bool checkOptionsToSpawn = false;
+        protected List<GameObject> interactionPoints = new List<GameObject>();
 
-        [Tooltip("Require a valid interactable option in addition to any preqrequisites.  For example, quests on a questgiver, a class changer, and dialogs.")]
-        [SerializeField]
-        protected bool spawnRequiresValidOption = false;
-
-        [Tooltip("Require no valid interactable options in addition to any preqrequisites. For example, quests on a questgiver, a class changer, and dialogs.")]
-        [SerializeField]
-        protected bool despawnRequiresNoValidOption = false;
+        [Header("Controller References")]
 
         [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc.")]
         [SerializeField]
         protected ComponentController componentController = null;
 
+        [Header("Persistence")]
+
+        [SerializeField]
+        protected PersistentObjectComponent persistentObjectComponent = new PersistentObjectComponent();
+
+        [Tooltip("Set this to true to save and load interactable data for this interactable.  This is only necessary if the interactable has interactable options that need to save data, such as loot or a door that can be opened/closed.")]
+        [SerializeField]
+        protected bool persistInteractableData = false;
+
+        [Header("Nameplate")]
+
+        [SerializeField]
+        protected bool hasNameplate = false;
+
+        [SerializeField]
+        protected NamePlateProps namePlateProps = new NamePlateProps();
+
+
+        /*
         [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc.")]
         [SerializeField]
         protected UnitComponentController unitComponentController = null;
+        */
 
-        protected List<InteractableOptionComponent> interactables = new List<InteractableOptionComponent>();
+        protected Dictionary<int, InteractableOptionComponent> interactables = new Dictionary<int, InteractableOptionComponent>();
+        protected int interactableOptionCount = 0;
 
         // state
+        protected InteractableSaveData _interactableSaveData = null;
         protected bool isInteracting = false;
         protected bool miniMapIndicatorReady = false;
         protected bool isMouseOverUnit = false;
         protected bool isMouseOverNameplate = false;
+        protected bool isTargeted = false;
+
+        protected bool isInitialized = false;
+        protected bool startHasRun = false;
+        protected bool componentReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
+        protected bool namePlateReady = false;
+
+
+        protected Dictionary<GameObject, UnitController> inRangeUnitControllers = new Dictionary<GameObject, UnitController>();
 
         // attached components
         protected Collider myCollider;
         //protected MiniMapIndicatorController miniMapIndicator = null;
         //protected MainMapIndicatorController mainMapIndicator = null;
+        protected UUID uuid = null;
+
 
         // created components
         protected CharacterUnit characterUnit = null;
         protected DialogController dialogController = null;
         protected OutlineController outlineController = null;
         protected ObjectMaterialController objectMaterialController = null;
+        protected InteractableEventController interactableEventController = new InteractableEventController();
+        protected BaseNamePlateController nameplateController = null;
+
+        protected Transform nameplateTransform = null;
+        protected Vector3 nameplateVector = Vector3.zero;
 
         // game manager references
+        protected PlayerManagerClient playerManagerClient = null;
         protected UIManager uIManager = null;
         protected NamePlateManager namePlateManager = null;
         protected MiniMapManager miniMapManager = null;
         protected MainMapManager mainMapManager = null;
-        protected InteractionManager interactionManager = null;
+        protected InteractionManagerClient interactionManagerClient = null;
+        protected NetworkManagerServer networkManagerServer = null;
+        protected SystemItemManager systemItemManager = null;
+        protected LevelManagerServer levelManagerServer = null;
 
         // properties
         public bool IsInteracting { get => isInteracting; }
-        public List<InteractableOptionComponent> Interactables { get => interactables; set => interactables = value; }
+        public Dictionary<int, InteractableOptionComponent> Interactables { get => interactables; set => interactables = value; }
 
         public Sprite Icon { get => interactableIcon; }
 
-        public UnitComponentController UnitComponentController { get => unitComponentController; set => unitComponentController = value; }
+        //public UnitComponentController UnitComponentController { get => unitComponentController; set => unitComponentController = value; }
 
         public string ResourceName { get => DisplayName; }
-        public override string DisplayName {
+        public virtual string DisplayName {
             get {
+                if (namePlateProps.DisplayName != string.Empty && hasNameplate) {
+                    return namePlateProps.DisplayName;
+                }
                 if (interactableName != null && interactableName != string.Empty) {
                     return interactableName;
                 }
                 if (characterUnit != null) {
-                    return characterUnit.BaseCharacter.CharacterName;
+                    return characterUnit.UnitController.BaseCharacter.CharacterName;
                 }
-                return base.DisplayName;
+                return gameObject.name;
             }
             set {
                 interactableName = value;
@@ -146,24 +194,9 @@ namespace AnyRPG {
         public bool IsTrigger { get => isTrigger; set => isTrigger = value; }
         public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
         public DialogController DialogController { get => dialogController; }
+        public InteractableEventController InteractableEventController { get => interactableEventController; }
         public virtual bool CombatOnly { get => false; }
         public virtual bool NonCombatOptionsAvailable { get => true; }
-
-        public override bool SpawnPrerequisitesMet {
-            get {
-                bool returnResult = base.SpawnPrerequisitesMet;
-                if (returnResult != true) {
-                    return returnResult;
-                }
-                if (checkOptionsToSpawn == true) {
-                    //Debug.Log($"{gameObject.name}.Interactable.MyPrerequisitesMet()");
-                    if (CanInteract() == false) {
-                        return false;
-                    }
-                }
-                return returnResult;
-            }
-        }
 
         /// <summary>
         /// this is the gameobject that should be targeted by abilities
@@ -183,38 +216,162 @@ namespace AnyRPG {
             }
         }
 
+        public virtual Interactable CharacterTarget {
+            get {
+                return this;
+            }
+        }
+
+        public virtual Interactable PhysicalTarget {
+            get {
+                return this;
+            }
+        }
+
         public bool IsMouseOverUnit { get => isMouseOverUnit; set => isMouseOverUnit = value; }
         public bool IsMouseOverNameplate { get => isMouseOverNameplate; set => isMouseOverNameplate = value; }
         public string InteractionTooltipText { get => interactionTooltipText; set => interactionTooltipText = value; }
         public OutlineController OutlineController { get => outlineController; }
         public ObjectMaterialController ObjectMaterialController { get => objectMaterialController; }
+        public bool SuppressInteractionWindow { get => suppressInteractionWindow; set => suppressInteractionWindow = value; }
+        public bool IsTargeted { get => isTargeted; }
+        public bool IsInitialized { get => isInitialized; }
+        public List<GameObject> InteractionPoints { get => interactionPoints; set => interactionPoints = value; }
+        public virtual bool OverrideInteractionColliderSize { get => overrideInteractionColliderSize; }
+        public virtual IUUID UUID {
+            get {
+                return uuid;
+            }
+        }
+        public PersistentObjectComponent PersistentObjectComponent { get => persistentObjectComponent; set => persistentObjectComponent = value; }
+        public virtual BaseNamePlateController NamePlateController { get => nameplateController; }
+        public virtual NamePlateProps NamePlateProps { get => namePlateProps; set => namePlateProps = value; }
+        public Vector3 NameplateVector { get => nameplateVector; }
 
-        /*
         public override void Configure(SystemGameManager systemGameManager) {
-            //Debug.Log($"{gameObject.name}.Interactable.Configure()");
+            //Debug.Log($"{gameObject.name}.Interactable.Configure() instanceId: {GetInstanceID()}");
+
             base.Configure(systemGameManager);
-        }
-        */
 
-        protected override void LateConfigure() {
-            DisableInteraction();
+            persistentObjectComponent.Setup(this, systemGameManager);
+            GetComponentReferences();
+            //CreateEventSubscriptions();
+            ConfigureComponents();
+            CreateComponents();
+            LateConfigure();
         }
 
-        protected override void ConfigureComponents() {
-            base.ConfigureComponents();
+        private void ConfigureNameplate() {
+            //Debug.Log($"{gameObject.name}.Interactable.ConfigureNameplate() instanceId: {GetInstanceID()}");
+
+            SetNameplateVector();
+
+            nameplateTransform = transform;
+
+            //nameplateController = new BaseNamePlateController(this, systemGameManager);
+            CreateNameplateController();
+            //if (startHasRun && nameplateController != null) {
+            /*
+            if (nameplateController != null) {
+                nameplateController.InitializeNamePlate();
+            } else {
+                //Debug.Log($"{gameObject.name}.Interactable.ConfigureNameplate(): nameplateController {(nameplateController == null ? "null" : "not null")} instanceid: {GetInstanceID()}");
+            }
+            */
+        }
+
+        protected virtual void CreateNameplateController() {
+            //Debug.Log($"{gameObject.name}.Interactable.CreateNameplateController() instanceId: {GetInstanceID()}");
+            
+            nameplateController = new BaseNamePlateController(this, systemGameManager);
+        }
+
+        protected override void PostConfigure() {
+            //Debug.Log($"{gameObject.name}.Interactable.PostConfigure()");
+
+            base.PostConfigure();
+            // this is only called if by AutoConfigure() so we know this is a static scene object, and need to
+            // register to the level manager
+            levelManagerServer.RegisterInteractable(this);
+            Init();
+        }
+
+        public virtual void Init() {
+            //Debug.Log($"{gameObject.name}.Interactable.Init() instanceId: {GetInstanceID()}");
+
+            if (isInitialized == true) {
+                Debug.LogWarning($"{gameObject.name}.Interactable.Init(): already initialized.  Returning.");
+                return;
+            }
+            if (hasNameplate) {
+                ConfigureNameplate();
+            }// else {
+                ///Debug.Log($"{gameObject.name}.Interactable.Configure(): hasNameplate is false, skipping ConfigureNameplate()");
+            //}
+
+            ProcessInit();
+
+            // moved here from CreateEventSubscriptions.  Init should have time to occur before processing this
+            if (playerManagerClient.PlayerUnitSpawned) {
+                //Debug.Log($"{gameObject.name}.Interactable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
+                ProcessPlayerUnitSpawn(playerManagerClient.UnitController);
+            } else {
+                //Debug.Log($"{gameObject.name}.Interactable.CreateEventSubscriptions(): Player Unit is not spawned. Added Handle Spawn listener");
+            }
+            startHasRun = true;
+            isInitialized = true;
+
+            //Debug.Log($"{gameObject.name}.Interactable.Init() complete");
+            PostInit();
+        }
+
+        protected virtual void PostInit() {
+            //Debug.Log($"{gameObject.name}.Interactable.PostInit()");
+
+            if (systemGameManager.GameMode != GameMode.Local) {
+                return;
+            }
+            if (persistentObjectComponent.SaveOnGameSave == false && persistentObjectComponent.SaveOnLevelUnload == false) {
+                return;
+            }
+            if (persistentObjectComponent.PersistObjectPosition == false && persistInteractableData == false) {
+                return;
+            }
+            persistentObjectComponent.LoadPersistentState();
+        }
+
+        protected virtual void LateConfigure() {
+            //DisableInteraction();
+        }
+
+        public virtual void ProcessPlayerUnitSpawn(UnitController sourceUnitController) {
+            //Debug.Log($"{gameObject.name}.Interactable.ProcessPlayerUnitSpawn()");
+
+            if (hasNameplate) {
+                //Debug.Log($"{gameObject.name}.Interactable.ProcessPlayerUnitSpawn(): hasNameplate is true, configuring nameplate");
+                SpawnInteractableNameplate();
+            }
+
+            UpdateOnPlayerUnitSpawn(sourceUnitController);
+        }
+
+        protected virtual void SpawnInteractableNameplate() {
+            InitializeNameplateController();
+        }
+
+        protected virtual void ConfigureComponents() {
+            //Debug.Log($"{gameObject.name}.Interactable.ConfigureComponents() instanceId: {GetInstanceID()}");
+
             if (componentController != null) {
                 componentController.Configure(systemGameManager);
                 componentController.SetInteractable(this);
             }
-            if (unitComponentController != null) {
-                unitComponentController.Configure(systemGameManager);
-            }
         }
 
-        protected override void CreateComponents() {
-            base.CreateComponents();
+        protected virtual void CreateComponents() {
             dialogController = new DialogController(this, systemGameManager);
             outlineController = new OutlineController(this, systemGameManager);
+            interactableEventController.SetInteractable(this, systemGameManager);
             CreateMaterialController();
         }
 
@@ -222,25 +379,32 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.Interactable.CreateMaterialController()");
 
             objectMaterialController = new ObjectMaterialController(this, systemGameManager);
+            objectMaterialController.PopulateOriginalMaterials();
         }
 
         public override void SetGameManagerReferences() {
+            //Debug.Log($"{gameObject.name}.Interactable.SetGameManagerReferences()");
+
             base.SetGameManagerReferences();
 
             uIManager = systemGameManager.UIManager;
             namePlateManager = uIManager.NamePlateManager;
             miniMapManager = uIManager.MiniMapManager;
             mainMapManager = uIManager.MainMapManager;
-            interactionManager = systemGameManager.InteractionManager;
+            interactionManagerClient = systemGameManager.InteractionManagerClient;
+            networkManagerServer = systemGameManager.NetworkManagerServer;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+            systemItemManager = systemGameManager.SystemItemManager;
+            levelManagerServer = systemGameManager.LevelManagerServer;
         }
 
-        public override void GetComponentReferences() {
+        public virtual void GetComponentReferences() {
             //Debug.Log($"{gameObject.name}.Interactable.InitializeComponents()");
 
             if (componentReferencesInitialized == true) {
                 return;
             }
-            base.GetComponentReferences();
+            componentReferencesInitialized = true;
 
             myCollider = GetComponent<Collider>();
 
@@ -249,46 +413,57 @@ namespace AnyRPG {
             foreach (InteractableOption interactableOption in interactableOptionMonoList) {
                 if (interactableOption.InteractableOptionProps != null) {
                     interactableOption.SetupScriptableObjects(systemGameManager);
-                    interactables.Add(interactableOption.InteractableOptionProps.GetInteractableOption(this, interactableOption));
+                    AddInteractableOption(interactableOption.InteractableOptionProps.GetInteractableOption(this, interactableOption));
                 }
             }
+            uuid = GetComponent<UUID>();
         }
 
-        public override void CleanupEverything() {
+        public virtual void CleanupEverything() {
             //Debug.Log($"{gameObject.name}.Interactable.CleanupEverything()");
-            base.CleanupEverything();
-            ClearFromPlayerRangeTable();
             if (dialogController != null) {
                 dialogController.Cleanup();
             }
         }
 
         public void RegisterDespawn(GameObject go) {
-            if (componentController != null) {
-                componentController.RegisterDespawn(go);
-            }
+            RemoveInRangeCollider(go);
         }
 
-        public override void ProcessInit() {
-            base.ProcessInit();
+        public virtual void ProcessInit() {
+            PopulateOriginalMaterials();
 
-            //if (spawnReference != null) {
-                objectMaterialController.PopulateOriginalMaterials();
-            //}
+            CheckEnableInteractableRange();
+
+            //persistentObjectComponent.Init();
         }
 
+        public void PopulateOriginalMaterials() {
+            objectMaterialController.PopulateOriginalMaterials();
+        }
+
+        protected virtual void CheckEnableInteractableRange() {
+            EnableInteractableRange();
+        }
+
+        public void EnableInteractableRange() {
+            //Debug.Log($"{gameObject.name}.Interactable.EnableInteractableRange()");
+
+            // meant to be overwritten in unitcontrollers, as they enable this during SetUnitControllerMode()
+            interactableEventController.NotifyOnEnableInteractableRange();
+        }
 
         /// <summary>
         /// get a list of interactable options by type
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public List<InteractableOptionComponent> GetInteractableOptionList(Type type) {
-            List<InteractableOptionComponent> returnList = new List<InteractableOptionComponent>();
+        public Dictionary<int, InteractableOptionComponent> GetInteractableOptionList(Type type) {
+            Dictionary<int, InteractableOptionComponent> returnList = new Dictionary<int, InteractableOptionComponent>();
 
-            foreach (InteractableOptionComponent interactableOption in interactables) {
-                if (interactableOption.GetType() == type) {
-                    returnList.Add(interactableOption);
+            foreach (KeyValuePair<int, InteractableOptionComponent> row in interactables) {
+                if (row.Value.GetType() == type) {
+                    returnList.Add(row.Key, row.Value);
                 }
             }
 
@@ -302,7 +477,7 @@ namespace AnyRPG {
         /// <returns></returns>
         public InteractableOptionComponent GetFirstInteractableOption(Type type) {
 
-            foreach (InteractableOptionComponent interactableOption in interactables) {
+            foreach (InteractableOptionComponent interactableOption in interactables.Values) {
                 if (interactableOption.GetType() == type) {
                     return interactableOption;
                 }
@@ -311,83 +486,29 @@ namespace AnyRPG {
             return null;
         }
 
-        public void AddInteractable(InteractableOptionComponent interactableOption) {
+        public void AddInteractableOption(InteractableOptionComponent interactableOption) {
             //Debug.Log($"{gameObject.name}.Interactable.AddInteractable()");
-            interactables.Add(interactableOption);
+            interactables.Add(interactableOptionCount, interactableOption);
+            interactableOptionCount++;
         }
 
-        
 
+        /*
         protected virtual void Update() {
-            // if the item is highlighted, we will continue a pulsing glow
-            //return;
-
-            outlineController.Update();
-            
-
-            /*
-            if (isFlashing) {
-                //Debug.Log("Interactable.Update(): isflashing == true");
-                float emission = glowMinIntensity + Mathf.PingPong(Time.time * glowFlashSpeed, glowMaxIntensity - glowMinIntensity);
-                //Debug.Log("Interactable.Update(): emission: " + emission);
-                foreach (Renderer renderer in meshRenderers) {
-                    //Debug.Log("Interactable.Update(): renderer: " + renderer.name);
-                    if (renderer != null) {
-                        // added this condition because of infestor effect adding extra renderers as child objects under the character unit
-                        foreach (Material flashingMaterial in renderer.materials) {
-                            //Debug.Log("Interactable.Update(): flashingmaterial: " + flashingMaterial.name + "; color: " + (glowColor * emission) + "; enabled? " + flashingMaterial.IsKeywordEnabled("_EMISSION"));
-                            Color usedColor = glowColor;
-                            if (lightEmission) {
-                                usedColor = glowColor * emission;
-                                flashingMaterial.SetColor("_EmissionColor", usedColor);
-                            }
-                            flashingMaterial.SetColor("_Color", usedColor);
-                        }
-                    }
-                }
-            }
-            */
         }
+        */
 
-        public override bool CanSpawn() {
-            //Debug.Log($"{gameObject.name}.Interactable.CanSpawn()");
-            bool returnResult = base.CanSpawn();
-            if (returnResult == true && spawnRequiresValidOption) {
-                if (GetCurrentInteractables().Count == 0) {
-                    return false;
-                }
-            }
-            return returnResult;
-        }
-
-        protected override bool CanDespawn() {
-            bool returnResult = base.CanDespawn();
-            if (returnResult == true && despawnRequiresNoValidOption) {
-                if (GetCurrentInteractables().Count > 0) {
-                    return false;
-                }
-            }
-            return returnResult;
-        }
-
-        public override bool UpdateOnPlayerUnitSpawn() {
+        public virtual bool UpdateOnPlayerUnitSpawn(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.Interactable.UpdateOnPlayerUnitSpawn()");
 
-            foreach (InteractableOptionComponent _interactable in interactables) {
-                _interactable.HandlePlayerUnitSpawn();
+            foreach (InteractableOptionComponent _interactable in interactables.Values) {
+                _interactable.HandlePlayerUnitSpawn(sourceUnitController);
             }
             bool preRequisitesUpdated = false;
-            foreach (InteractableOptionComponent _interactable in interactables) {
-                if (_interactable.PrerequisitesMet == true) {
+            foreach (InteractableOptionComponent _interactable in interactables.Values) {
+                if (_interactable.PrerequisitesMet(sourceUnitController) == true) {
                     preRequisitesUpdated = true;
                 }
-            }
-
-            // calling this last intentionally because it can call handleprerequisiteupdates before we have set our prerequisite values properly
-            bool updated = base.UpdateOnPlayerUnitSpawn();
-
-            if (updated) {
-                return true;
             }
 
             // calling this because our base will not have inititalized its prerequisites earlier
@@ -399,19 +520,11 @@ namespace AnyRPG {
             return false;
         }
 
-        public override void HandlePrerequisiteUpdates() {
+        public virtual void HandlePrerequisiteUpdates() {
             //Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates()");
 
-            base.HandlePrerequisiteUpdates();
-            if (!playerManager.PlayerUnitSpawned) {
+            if (!playerManagerClient.PlayerUnitSpawned) {
                 return;
-            }
-            //if ((spawnReference == null || spawnReference.activeSelf == false) && SpawnPrerequisitesMet == false) {
-            if ((spawnReference != null && spawnReference.activeSelf == true)
-                || (spawnReference == null && prefabProfile == null)) {
-                EnableInteraction();
-            } else {
-                DisableInteraction();
             }
 
             // give interaction panel a chance to update or close
@@ -419,55 +532,118 @@ namespace AnyRPG {
 
             InstantiateMiniMapIndicator();
 
-            if (componentController != null) {
-                componentController.InteractableRange.UpdateStatus();
+            foreach (UnitController inRangeUnitController in inRangeUnitControllers.Values) {
+                if (GetCurrentInteractables(inRangeUnitController).Count == 0) {
+                    inRangeUnitController.UnitEventController.NotifyOnExitInteractableRange(this);
+                } else {
+                    inRangeUnitController.EnterInteractableRange(this);
+                }
             }
+
+            if (!playerManagerClient.PlayerUnitSpawned || hasNameplate == false) {
+                //Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
+                return;
+            }
+            UpdateNameplateImage();
+
         }
 
-        public override void Spawn() {
-            //Debug.Log($"{gameObject.name}.Interactable.Spawn()");
+        public void UpdateNameplateImage() {
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.UpdateNamePlateImage()");
 
-            base.Spawn();
+            if (playerManagerClient.UnitController == null) {
+                //Debug.Log($"{gameObject.name}.Interactable.UpdateNamePlateImage(): player has no character");
+                return;
+            }
+            // if there is a nameplate unit give it a chance to initialize its nameplate.
+            // inanimate units cannot be directly interacted with and are not interactableoptions so they won't receive prerequisite updates directly
+            // this means the only way they can spawn their nameplate is through a direct call
+            if (NamePlateController?.NamePlate == null) {
+                // returning for now.  This code was causing nameplates to spawn before the character unit was fully initialized
+                //InitializeNameplateController();
+                //if (NamePlateController.NamePlate == null) {
+                return;
+                //}
+            }
 
-            EnableInteraction();
-            objectMaterialController.PopulateOriginalMaterials();
+            Dictionary<int, InteractableOptionComponent> currentInteractables = GetCurrentInteractables(playerManagerClient.UnitController);
+
+            int currentInteractableCount = currentInteractables.Count;
+            //Debug.Log($"{gameObject.name}.Interactable.UpdateDialogStatus(): currentInteractableCount: " + currentInteractableCount);
+
+            // determine if one of our current interactables is a questgiver
+            bool questGiverCurrent = false;
+            foreach (InteractableOptionComponent interactableOption in currentInteractables.Values) {
+                if (interactableOption is QuestGiverComponent) {
+                    questGiverCurrent = true;
+                    (interactableOption as QuestGiverComponent).UpdateQuestStatus(playerManagerClient.UnitController);
+                }
+            }
+
+            if (currentInteractableCount == 0 || questGiverCurrent == true) {
+                // questgiver should override all other nameplate images since it's special and appears separately
+                NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(false);
+            } else {
+                if (currentInteractableCount == 1) {
+                    // there is only one interactable.  set the specific nameplate image for it
+                    InteractableOptionComponent onlyOption = currentInteractables.Values.First<InteractableOptionComponent>();
+                    if (onlyOption.InteractableOptionProps.NamePlateImage != null) {
+                        NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(true);
+                        NamePlateController.NamePlate.GenericIndicatorImage.sprite = onlyOption.InteractableOptionProps.NamePlateImage;
+                    }
+                } else {
+                    // set a generic indicator if there is more than 1 interactable
+                    NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(true);
+                    NamePlateController.NamePlate.GenericIndicatorImage.sprite = systemConfigurationManager.MultipleInteractionNamePlateImage;
+                }
+            }
         }
 
         // meant to be overwritten on characters
         public virtual void EnableInteraction() {
             //Debug.Log($"{gameObject.name}.Interactable.EnableInteraction()");
-            if (myCollider != null) {
-                myCollider.enabled = true;
-            }
+
+            EnableCollider();
         }
 
         // meant to be overwritten on characters
         public virtual void DisableInteraction() {
             //Debug.Log($"{gameObject.name}.Interactable.DisableInteraction()");
+
+            DisableCollider();
+        }
+
+        public void EnableCollider() {
+            //Debug.Log($"{gameObject.name}.UnitController.EnableCollider()");
+
+            if (myCollider != null) {
+                myCollider.enabled = true;
+            }
+        }
+
+        public void DisableCollider() {
+            //Debug.Log($"{gameObject.name}.UnitController.DisableCollider()");
+
             if (myCollider != null) {
                 myCollider.enabled = false;
             }
         }
 
-        public override void DestroySpawn() {
-            //Debug.Log($"{gameObject.name}.Interactable.DestroySpawn()");
-            base.DestroySpawn();
-
-            DisableInteraction();
-            //MiniMapStatusUpdateHandler(this);
-        }
-
         public bool InstantiateMiniMapIndicator() {
             //Debug.Log($"{gameObject.name}.Interactable.InstantiateMiniMapIndicator()");
 
-            if (!playerManager.PlayerUnitSpawned) {
+            if (networkManagerServer.ServerModeActive == true) {
+                return false;
+            }
+
+            if (!playerManagerClient.PlayerUnitSpawned) {
                 //Debug.Log($"{gameObject.name}.Interactable.InstantiateMiniMapIndicator(): player unit not spawned yet.  returning");
                 return false;
             }
 
-            List<InteractableOptionComponent> validInteractables = GetValidInteractables();
+            Dictionary<int, InteractableOptionComponent> validInteractables = GetValidInteractables(playerManagerClient.UnitController);
             if (validInteractables.Count == 0) {
-                //if (GetValidInteractables(playerManager.MyCharacter.MyCharacterUnit).Count == 0) {
+                //if (GetValidInteractables(playerManager.UnitController.MyCharacterUnit).Count == 0) {
                 //Debug.Log($"{gameObject.name}.Interactable.InstantiateMiniMapIndicator(): No valid Interactables.  Not spawning indicator.");
                 return false;
             }
@@ -514,7 +690,8 @@ namespace AnyRPG {
             //mainMapManager.RemoveIndicator(this);
             mainMapManager.RemoveIndicator(this);
             //}
-
+            // re added this since both places it's called should set it false
+            miniMapIndicatorReady = false;
         }
 
         /*
@@ -523,29 +700,24 @@ namespace AnyRPG {
         }
         */
 
-        public void OpenInteractionWindow() {
-            //Debug.Log($"{gameObject.name}.Interactable.OpenInteractionWindow");
-            interactionManager.BeginInteraction(this);
-            uIManager.craftingWindow.CloseWindow();
-            uIManager.interactionWindow.OpenWindow();
-        }
 
         public void CloseInteractionWindow() {
-            interactionManager.SetInteractable(null);
+            interactionManagerClient.SetInteractable(null);
             uIManager.interactionWindow.CloseWindow();
         }
 
-        public bool CanInteract() {
+        public bool CanInteract(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.Interactable.CanInteract()");
+
             if (notInteractable == true) {
                 return false;
             }
             //Debug.Log($"{gameObject.name}.Interactable.CanInteract()");
-            if (playerManager == null || playerManager.PlayerUnitSpawned == false) {
+            if (playerManagerClient == null || playerManagerClient.PlayerUnitSpawned == false) {
                 return false;
             }
-            List<InteractableOptionComponent> validInteractables = GetValidInteractables();
-            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(playerManager.MyCharacter.MyCharacterUnit);
+            Dictionary<int, InteractableOptionComponent> validInteractables = GetValidInteractables(sourceUnitController);
+            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(playerManager.UnitController.MyCharacterUnit);
             if (validInteractables.Count > 0) {
                 return true;
             } else {
@@ -554,76 +726,33 @@ namespace AnyRPG {
         }
 
         /// <summary>
-        /// Return true if the object trying to interact is in the trigger list (it is inside the collider and allowed to interact)
+        /// The entry method for interactions via trigger.  Character Interactions are handled via InteractionManager
         /// </summary>
         /// <returns></returns>
-        public virtual bool Interact(CharacterUnit source, bool processRangeCheck = false) {
-            //Debug.Log($"{gameObject.name}.Interactable.Interact(" + source.DisplayName + ", " + processRangeCheck + ")");
+        public virtual bool Interact() {
+            //Debug.Log($"{gameObject.name}.Interactable.Interact()");
 
             if (notInteractable == true) {
                 return false;
             }
 
-            // perform range check
-            bool passedRangeCheck = false;
-            if (processRangeCheck) {
-                Collider[] colliders = new Collider[0];
-                int playerMask = 1 << LayerMask.NameToLayer("Player");
-                int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
-                int interactableMask = 1 << LayerMask.NameToLayer("Interactable");
-                int triggerMask = 1 << LayerMask.NameToLayer("Triggers");
-                int validMask = (playerMask | characterMask | interactableMask | triggerMask);
-                Vector3 bottomPoint = new Vector3(source.Interactable.Collider.bounds.center.x,
-                    source.Interactable.Collider.bounds.center.y - source.Interactable.Collider.bounds.extents.y,
-                    source.Interactable.Collider.bounds.center.z);
-                Vector3 topPoint = new Vector3(source.Interactable.Collider.bounds.center.x,
-                    source.Interactable.Collider.bounds.center.y + source.Interactable.Collider.bounds.extents.y,
-                    source.Interactable.Collider.bounds.center.z);
-                colliders = Physics.OverlapCapsule(bottomPoint, topPoint, InteractionMaxRange, validMask);
-                foreach (Collider collider in colliders) {
-                    if (collider.gameObject == gameObject) {
-                        passedRangeCheck = true;
-                        break;
-                    }
-                }
-            }
-
-            float factionValue = PerformFactionCheck(source.BaseCharacter);
-
             // get a list of valid interactables to determine if there is an action we can treat as default
-            List<InteractableOptionComponent> validInteractables = GetCurrentInteractables(source.BaseCharacter, true, factionValue);
-            List<InteractableOptionComponent> finalInteractables = new List<InteractableOptionComponent>();
-            if (processRangeCheck) {
-                foreach (InteractableOptionComponent validInteractable in validInteractables) {
-                    //Debug.Log($"{gameObject.name}.Interactable.Interact(" + source.name + "): valid interactable name: " + validInteractable);
-                    if (validInteractable.CanInteract(processRangeCheck, passedRangeCheck, factionValue)) {
-                        finalInteractables.Add(validInteractable);
-                    }
-                }
-            } else {
-                finalInteractables = validInteractables;
-            }
-            // perform default interaction or open a window if there are multiple valid interactions
-            //Debug.Log($"{gameObject.name}.Interactable.Interact(): validInteractables.Count: " + validInteractables.Count);
-            // changed code, window will always be opened, and it will decide if to pop another one or not
-            if (finalInteractables.Count > 0) {
-                if (suppressInteractionWindow == true || validInteractables.Count == 1) {
-                    if (validInteractables[0].GetCurrentOptionCount() > 1) {
-                        OpenInteractionWindow();
-                    } else {
-                        validInteractables[0].Interact(playerManager.ActiveUnitController.CharacterUnit);
-                    }
-                } else {
-                    OpenInteractionWindow();
-                }
+            Dictionary<int, InteractableOptionComponent> validInteractables = GetCurrentInteractables(null);
+            if (validInteractables.Count > 0) {
+                int key = validInteractables.Take(1).Select(d => d.Key).First();
+                validInteractables[key].Interact(null, key, 0);
                 return true;
             }
-            if (validInteractables.Count > 0 && finalInteractables.Count == 0) {
-                if (processRangeCheck == true && passedRangeCheck == false) {
-                    source.BaseCharacter.UnitController.UnitEventController.NotifyOnMessageFeed(DisplayName + " is out of range");
-                }
-            }
+
             return false;
+        }
+
+        /// <summary>
+        /// give the interactable a chance to face the player
+        /// </summary>
+        /// <param name="unitController"></param>
+        /// <param name="factionValue"></param>
+        public virtual void InteractWithPlayer(UnitController unitController) {
         }
 
         public virtual void ProcessStartInteract() {
@@ -634,7 +763,7 @@ namespace AnyRPG {
             // do something in inherited class
         }
 
-        public virtual void ProcessStartInteractWithOption(InteractableOptionComponent interactableOptionComponent) {
+        public virtual void ProcessStartInteractWithOption(InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
             // do something in inherited class
         }
 
@@ -642,10 +771,10 @@ namespace AnyRPG {
             // do something in inherited class
         }
 
-        public List<InteractableOptionComponent> GetValidInteractables() {
+        public Dictionary<int, InteractableOptionComponent> GetValidInteractables(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.Interactable.GetValidInteractables(" + processRangeCheck + ", " + passedRangeCheck + ")");
 
-            List<InteractableOptionComponent> validInteractables = new List<InteractableOptionComponent>();
+            Dictionary<int, InteractableOptionComponent> validInteractables = new Dictionary<int, InteractableOptionComponent>();
 
             if (notInteractable == true) {
                 return validInteractables;
@@ -656,10 +785,10 @@ namespace AnyRPG {
                 return validInteractables;
             }
 
-            foreach (InteractableOptionComponent _interactable in interactables) {
-                if (_interactable != null && !_interactable.Equals(null)) {
-                    if (_interactable.GetValidOptionCount() > 0
-                        && _interactable.PrerequisitesMet
+            foreach (KeyValuePair<int, InteractableOptionComponent> interactableOption in interactables) {
+                if (interactableOption.Value != null && !interactableOption.Equals(null)) {
+                    if (interactableOption.Value.GetValidOptionCount(sourceUnitController) > 0
+                        && interactableOption.Value.PrerequisitesMet(sourceUnitController)
                         //&& (processRangeCheck == false || _interactable.CanInteract())
                         ) {
 
@@ -667,46 +796,70 @@ namespace AnyRPG {
                         //if (_interactable.CanInteract(source) && _interactable.GetValidOptionCount() > 0 && _interactable.MyPrerequisitesMet) {
 
                         //Debug.Log($"{gameObject.name}.Interactable.GetValidInteractables(): Adding valid interactable: " + _interactable.ToString());
-                        validInteractables.Add(_interactable);
+                        validInteractables.Add(interactableOption.Key, interactableOption.Value);
                     }
                 }
             }
             return validInteractables;
         }
 
-        public virtual float PerformFactionCheck(BaseCharacter sourceCharacter) {
+        public virtual float PerformFactionCheck(UnitController sourceUnitController) {
             // interactables allow everything to interact by default.
             // characters will override this
             return 0;
         }
 
-        public List<InteractableOptionComponent> GetCurrentInteractables(BaseCharacter sourceCharacter = null, bool overrideFactionValue = false, float factionValue = 0f) {
+        public Dictionary<int, InteractableOptionComponent> GetInRangeInteractables(UnitController sourceUnitController) {
+            bool passedRangeCheck = IsInRange(sourceUnitController);
+
+            Dictionary<int, InteractableOptionComponent> inRangeInteractables = new Dictionary<int, InteractableOptionComponent>();
+            foreach (KeyValuePair<int, InteractableOptionComponent> interactableOption in interactables) {
+                if (interactableOption.Value.CanInteract(sourceUnitController, true, passedRangeCheck, true)) {
+                    //Debug.Log($"{gameObject.name}.Interactable.GetCurrentInteractables(): Adding interactable: {interactableOption.ToString()}");
+                    inRangeInteractables.Add(interactableOption.Key, interactableOption.Value);
+                } else {
+                    //Debug.Log($"{gameObject.name}.Interactable.GetValidInteractables(): invalid interactable: {interactableOption.ToString()}");
+                }
+            }
+            return inRangeInteractables;
+        }
+
+        public Dictionary<int, InteractableOptionComponent> GetCurrentInteractables(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.Interactable.GetCurrentInteractables()");
 
-            if (sourceCharacter == null) {
-                sourceCharacter = playerManager.ActiveCharacter;
-            }
-
-            if (overrideFactionValue == false) {
-                factionValue = PerformFactionCheck(sourceCharacter);
-            }
-
             if (notInteractable == true) {
-                return new List<InteractableOptionComponent>();
+                return new Dictionary<int, InteractableOptionComponent>();
             }
 
-            if (interactables == null) {
-                //Debug.Log($"{gameObject.name}.Interactable.GetValidInteractables(): interactables is null.  returning null!");
-                return new List<InteractableOptionComponent>();
-            }
-
-            List<InteractableOptionComponent> currentInteractables = new List<InteractableOptionComponent>();
-            foreach (InteractableOptionComponent _interactable in interactables) {
-                if (_interactable.CanInteract(false, false, factionValue)) {
-                    //Debug.Log($"{gameObject.name}.Interactable.GetCurrentInteractables(): Adding interactable: " + _interactable.ToString());
-                    currentInteractables.Add(_interactable);
+            Dictionary<int, InteractableOptionComponent> currentInteractables = new Dictionary<int, InteractableOptionComponent>();
+            foreach (KeyValuePair<int, InteractableOptionComponent> interactableOption in interactables) {
+                if (interactableOption.Value.CanInteract(sourceUnitController, false, false, true)) {
+                    //Debug.Log($"{gameObject.name}.Interactable.GetCurrentInteractables(): Adding interactable: {interactableOption.ToString()}");
+                    currentInteractables.Add(interactableOption.Key, interactableOption.Value);
                 } else {
-                    //Debug.Log($"{gameObject.name}.Interactable.GetValidInteractables(): invalid interactable: " + _interactable.ToString());
+                    //Debug.Log($"{gameObject.name}.Interactable.GetValidInteractables(): invalid interactable: {interactableOption.ToString()}");
+                }
+            }
+            return currentInteractables;
+        }
+
+        public Dictionary<int, InteractableOptionComponent> GetSwitchInteractables(UnitController sourceUnitController) {
+            //Debug.Log($"{gameObject.name}.Interactable.GetSwitchInteractables({sourceUnitController?.gameObject.name})");
+
+            /*
+            // switches will often not be interactable, so we can skip this check
+            if (notInteractable == true) {
+                return new Dictionary<int, InteractableOptionComponent>();
+            }
+            */
+
+            Dictionary<int, InteractableOptionComponent> currentInteractables = new Dictionary<int, InteractableOptionComponent>();
+            foreach (KeyValuePair<int, InteractableOptionComponent> interactableOption in interactables) {
+                if (interactableOption.Value.CanInteract(sourceUnitController, false, false, true, true)) {
+                    //Debug.Log($"{gameObject.name}.Interactable.GetCurrentInteractables(): Adding interactable: {interactableOption.ToString()}");
+                    currentInteractables.Add(interactableOption.Key, interactableOption.Value);
+                } else {
+                    //Debug.Log($"{gameObject.name}.Interactable.GetValidInteractables(): invalid interactable: {interactableOption.ToString()}");
                 }
             }
             return currentInteractables;
@@ -729,38 +882,52 @@ namespace AnyRPG {
             return false;
         }
 
+        public virtual bool IsMouseOverBlocked() {
+            return false;
+        }
+
         /// <summary>
         /// called manually after mouse enters nameplate or interactable
         /// </summary>
         public void OnMouseIn() {
             //Debug.Log($"{gameObject.name}.Interactable.OnMouseIn()");
+
             if (!isActiveAndEnabled) {
                 // this interactable is inactive, there is no reason to do anything
                 return;
             }
 
-            if (playerManager == null) {
-                return;
-            }
-            if (playerManager.PlayerUnitSpawned == false) {
+            if (networkManagerServer.ServerModeActive == true) {
                 return;
             }
 
-            if (playerManager.ActiveUnitController.gameObject == gameObject) {
+            if (playerManagerClient == null) {
+                return;
+            }
+            if (playerManagerClient.PlayerUnitSpawned == false) {
+                return;
+            }
+
+            if (playerManagerClient.ActiveUnitController.gameObject == gameObject) {
                 return;
             }
 
             if (notInteractable == true) {
+                //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): notInteractable is true, not showing tooltip or glow.");
                 return;
             }
 
-            //playerManager.PlayerController.HandleMouseOver(this);
+            if (IsMouseOverBlocked()) {
+                //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): Mouse over is blocked, not showing tooltip or glow.");
+                return;
+            }
 
             if (showTooltip == false) {
+                //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): showTooltip is false, not showing tooltip or glow.");
                 return;
             }
 
-            if (EventSystem.current.IsPointerOverGameObject() && !namePlateManager.MouseOverNamePlate()) {
+            if (EventSystem.current.IsPointerOverGameObject() == true && !namePlateManager.MouseOverNamePlate()) {
                 // THIS CODE WILL STILL CAUSE THE GUY TO GLOW IF YOU MOUSE OVER HIS NAMEPLATE WHILE A WINDOW IS UP.  NOT A BIG DEAL FOR NOW
                 // IT HAS TO BE THIS WAY BECAUSE THE MOUSEOVER WINDOW IS A GAMEOBJECT AND WE NEED TO BE ABLE TO GLOW WHEN A WINDOW IS NOT UP AND WE ARE OVER IT
                 // THIS COULD BE POTENTIALLY FIXED BY BLOCKING MOUSEOVER THE SAME WAY WE BLOCK DRAG IN THE UIMANAGER BY RESTRICTING ON MOUSEENTER ON ANY CLOSEABLEWINDOW IF IT'S TOO DISTRACTING
@@ -769,26 +936,34 @@ namespace AnyRPG {
                 return;
             }
 
-            if (SpawnPrerequisitesMet == false) {
-                return;
+            foreach (InteractableOptionComponent interactableOption in interactables.Values) {
+                if (interactableOption.BlockTooltip == true) {
+                    //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): {interactableOption.GetType()} is blocking tooltip.  Not showing tooltip or glow.");
+                    return;
+                }
             }
 
             // moved to before the return statement.  This is because we still want a tooltip even if there are no current interactions to perform
             // added pivot so the tooltip doesn't bounce around
-            uIManager.ShowToolTip(new Vector2(0, 1), uIManager.MouseOverWindow.transform.position, this);
+            uIManager.ShowToolTip(new Vector2(0, 1), uIManager.MouseOverWindow.transform.position, CharacterTarget);
 
-            if (GetCurrentInteractables().Count == 0) {
-                //if (GetValidInteractables(playerManager.MyCharacter.MyCharacterUnit).Count == 0) {
+            // this function will not be triggered on the server, so sending the client player is ok
+            if (CharacterTarget.GetCurrentInteractables(playerManagerClient.ActiveUnitController).Count == 0) {
+                //if (GetValidInteractables(playerManager.UnitController.MyCharacterUnit).Count == 0) {
                 //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): No current Interactables.  Not glowing.");
                 return;
             }
+
             if (glowOnMouseOver) {
+                //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): Turning on outline.");
                 outlineController.TurnOnOutline();
-                
-            }
+            }// else {
+                //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): glowOnMouseOver is false, not turning on outline.");
+            //}
+
         }
 
-        
+
 
         /*
         public void OnMouseExit() {
@@ -805,18 +980,23 @@ namespace AnyRPG {
         public void OnMouseOut() {
             //Debug.Log($"{gameObject.name}.Interactable.OnMouseOut()");
 
-            if (playerManager == null) {
+            if (playerManagerClient == null) {
                 return;
             }
-            if (playerManager.PlayerUnitSpawned == false) {
+            if (playerManagerClient.PlayerUnitSpawned == false) {
                 return;
             }
 
-            if (playerManager.ActiveUnitController.gameObject == gameObject) {
+            if (playerManagerClient.ActiveUnitController.gameObject == gameObject) {
                 return;
             }
 
             if (notInteractable == true) {
+                return;
+            }
+
+            if (isInitialized == false) {
+                // if the unit despawns while the mouse is over it, we don't want to do anything
                 return;
             }
 
@@ -825,13 +1005,13 @@ namespace AnyRPG {
                 return;
             }
 
-            //playerManager.PlayerController.HandleMouseOut(this);
-
-            if (showTooltip == false) {
+            if (IsMouseOverBlocked()) {
                 return;
             }
 
-            if (SpawnPrerequisitesMet == false) {
+            //playerManager.PlayerController.HandleMouseOut(this);
+
+            if (showTooltip == false) {
                 return;
             }
 
@@ -849,8 +1029,9 @@ namespace AnyRPG {
         /// putting this in InteractableOptionComponent for now also
         /// </summary>
         public virtual void StopInteract() {
+            // this is currently unused?  no references to it.
             //Debug.Log($"{gameObject.name}.Interactable.StopInteract()");
-            foreach (InteractableOptionComponent interactable in interactables) {
+            foreach (InteractableOptionComponent interactable in interactables.Values) {
                 interactable.StopInteract();
             }
             CloseInteractionWindow();
@@ -859,57 +1040,52 @@ namespace AnyRPG {
         }
 
         public void OnTriggerEnter(Collider other) {
-            //Debug.Log($"{gameObject.name}.Interactable.OnTriggerEnter(" + other.gameObject.name + ")");
+            //Debug.Log($"{gameObject.name}.Interactable.OnTriggerEnter({other.gameObject.name})");
 
             if (notInteractable == true) {
                 return;
             }
 
             if (isTrigger) {
-                UnitController unitController = other.gameObject.GetComponent<UnitController>();
-                // ensure ai don't accidentally trigger interactions
-                if (unitController != null && unitController == playerManager.ActiveUnitController) {
-                    //Debug.Log($"{gameObject.name}.Interactable.OnTriggerEnter(): triggered by player");
+                if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false) {
+                    // triggers are server authoritative
+                    return;
+                }
 
-                    // don't clear target on interaction with trigger since it could be a door switch or cutscene switch
-                    playerManager.PlayerController.InterActWithTarget(this, false);
-                    //Interact(otherCharacterUnit);
-                } else if (interactWithAny && playerManager.ActiveUnitController.CharacterUnit != null) {
-                    Interact(playerManager.ActiveUnitController.CharacterUnit);
+                UnitController unitController = other.gameObject.GetComponent<UnitController>();
+                if (unitController != null) {
+                    if (unitController.RiderUnitController != null) {
+                        unitController.RiderUnitController.UnitEventController.NotifyOnEnterInteractableTrigger(this);
+                    } else if (unitController.UnitEventController != null) {
+                        unitController.UnitEventController.NotifyOnEnterInteractableTrigger(this);
+                    }
+                } else if (interactWithAny) {
+                    Interact();
                 }
             }
         }
 
         public void OnTriggerExit(Collider other) {
+            //Debug.Log($"{gameObject.name}.Interactable.OnTriggerExit({other.gameObject.name})");
+
             if (notInteractable == true) {
                 return;
             }
 
             if (isTrigger == true && interactOnExit == true) {
+                if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false) {
+                    // triggers are server authoritative
+                    return;
+                }
                 UnitController unitController = other.gameObject.GetComponent<UnitController>();
                 // ensure ai don't accidentally trigger interactions
-                if (unitController != null && unitController == playerManager.ActiveUnitController) {
-                    //Debug.Log($"{gameObject.name}.Interactable.OnTriggerEnter(): triggered by player");
-                    // don't clear target on interaction with trigger since it could be a door switch or cutscene switch
-                    playerManager.PlayerController.InterActWithTarget(this, false);
-                    //Interact(otherCharacterUnit);
-                } else if (interactWithAny && playerManager.ActiveUnitController.CharacterUnit != null) {
-                    Interact(playerManager.ActiveUnitController.CharacterUnit);
+                if (unitController != null) {
+                    unitController.UnitEventController.NotifyOnEnterInteractableTrigger(this);
+                } else if (interactWithAny) {
+                    Interact();
                 }
             }
 
-        }
-
-        public void ClearFromPlayerRangeTable() {
-            //Debug.Log($"{gameObject.name}.Interactable.ClearFromPlayerRangeTable()");
-            // prevent bugs if a unit despawns before the player moves out of range of it
-            if (playerManager != null
-                && playerManager.PlayerController != null
-                && playerManager.ActiveUnitController != null) {
-                if (playerManager.PlayerController.Interactables.Contains(this)) {
-                    playerManager.PlayerController.Interactables.Remove(this);
-                }
-            }
         }
 
         public virtual string GetSummary() {
@@ -943,15 +1119,15 @@ namespace AnyRPG {
 
 
             // switched this to current interactables so that we don't see mouseover options that we can't current interact with
-            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(playerManager.MyCharacter.MyCharacterUnit);
-            List<InteractableOptionComponent> currentInteractables = GetCurrentInteractables();
+            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(playerManager.UnitController.MyCharacterUnit);
+            Dictionary<int, InteractableOptionComponent> currentInteractables = GetCurrentInteractables(playerManagerClient.UnitController);
 
             // perform default interaction or open a window if there are multiple valid interactions
             List<string> returnStrings = new List<string>();
-            foreach (InteractableOptionComponent _interactable in currentInteractables) {
+            foreach (InteractableOptionComponent interactableOptionComponent in currentInteractables.Values) {
                 //if (!(_interactable is INamePlateUnit)) {
                 // we already put the character name in the description so skip it here
-                returnStrings.Add(_interactable.GetSummary());
+                returnStrings.Add(interactableOptionComponent.GetSummary(playerManagerClient.UnitController));
                 //}
             }
             returnString = string.Join("\n", returnStrings);
@@ -959,23 +1135,40 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessBeginDialog() {
+            if (hasNameplate && NamePlateController != null && NamePlateController.NamePlate != null) {
+                NamePlateController.NamePlate.ShowSpeechBubble();
+            }
         }
 
         public virtual void ProcessEndDialog() {
+            if (hasNameplate && NamePlateController != null && NamePlateController.NamePlate != null) {
+                NamePlateController.NamePlate.HideSpeechBubble();
+            }
         }
 
         public virtual void ProcessDialogTextUpdate(string newText) {
+            if (hasNameplate && NamePlateController != null && NamePlateController.NamePlate != null) {
+                NamePlateController.NamePlate.SetSpeechText(newText);
+            }
         }
 
         public virtual void ProcessShowQuestIndicator(string indicatorText, QuestGiverComponent questGiverComponent) {
+            if (hasNameplate && NamePlateController != null && NamePlateController.NamePlate != null) {
+                NamePlateController.NamePlate.QuestIndicatorBackground.SetActive(true);
+                //Debug.Log($"{gameObject.name}:QuestGiver.UpdateQuestStatus() Indicator is active.  Setting to: " + indicatorType);
+                questGiverComponent.SetIndicatorText(indicatorText, NamePlateController.NamePlate.QuestIndicator);
+            }
         }
 
         public virtual void ProcessHideQuestIndicator() {
+            if (hasNameplate && NamePlateController != null && NamePlateController.NamePlate != null) {
+                NamePlateController.NamePlate.QuestIndicatorBackground.SetActive(false);
+            }
         }
 
         public virtual void ProcessStatusIndicatorSourceInit() {
-            List<InteractableOptionComponent> currentInteractables = GetCurrentInteractables();
-            foreach (InteractableOptionComponent _interactable in currentInteractables) {
+            Dictionary<int, InteractableOptionComponent> currentInteractables = GetCurrentInteractables(playerManagerClient.UnitController);
+            foreach (InteractableOptionComponent _interactable in currentInteractables.Values) {
                 //if (!(_interactable is INamePlateUnit)) {
                 // we already put the character name in the description so skip it here
                 _interactable.ProcessStatusIndicatorSourceInit();
@@ -992,16 +1185,58 @@ namespace AnyRPG {
         #endregion
 
         public void HandleMiniMapStatusUpdate(InteractableOptionComponent interactableOptionComponent) {
-            miniMapManager.InteractableStatusUpdate(this, interactableOptionComponent);
-            mainMapManager.InteractableStatusUpdate(this, interactableOptionComponent);
+            //Debug.Log($"{gameObject.name}.Interactable.HandleMiniMapStatusUpdate({interactableOptionComponent.GetType()})");
+
+            if (networkManagerServer.ServerModeActive == false) {
+                miniMapManager.InteractableStatusUpdate(this, interactableOptionComponent);
+                mainMapManager.InteractableStatusUpdate(this, interactableOptionComponent);
+            }
+            interactableEventController.NotifyOnMiniMapStatusUpdate(interactableOptionComponent);
         }
 
-        public virtual void ConfigureDialogPanel(DialogPanelController dialogPanelController) {
-            // only needed in namePlateUnit and above
+        public virtual void ConfigureDialogPanel(DialogPanel dialogPanelController) {
+            //Debug.Log($"{gameObject.name}.Interactable.ConfigureDialogPanel()");
+
+            dialogPanelController.ConfigurePortrait(null);
+
+            //dialogPanelController.ConfigureSnapshotPortrait();
         }
 
-        public override void ResetSettings() {
-            foreach (InteractableOptionComponent interactableOptionComponent in interactables) {
+        public virtual bool IsInRange(UnitController sourceUnitController) {
+            GetValidInteractables(sourceUnitController);
+            return IsInInteractableRange(sourceUnitController.gameObject);
+        }
+
+        public void NotifyOnInteractableDisable() {
+            OnInteractableDisable();
+        }
+
+        public void NotifyOnInteractableResetSettings() {
+            //Debug.Log($"{gameObject.name}.Interactable.NotifyOnInteractableResetSettings() {GetInstanceID()}");
+
+            OnInteractableResetSettings();
+        }
+
+        public void RemoveNamePlate() {
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.RemoveNamePlate()");
+
+            nameplateController?.RemoveNamePlate();
+            namePlateReady = false;
+        }
+
+
+        public virtual void ResetSettings() {
+            //Debug.Log($"{gameObject.name}.Interactable.ResetSettings() {GetInstanceID()}");
+
+            if (hasNameplate) {
+                RemoveNamePlate();
+            }
+
+            if (glowOnMouseOver) {
+                outlineController.TurnOffOutline();
+            }
+
+            foreach (InteractableOptionComponent interactableOptionComponent in interactables.Values) {
                 //Debug.Log($"{gameObject.name}.Interactable.Awake(): Found InteractableOptionComponent: " + interactable.ToString());
                 if (interactableOptionComponent != null) {
                     // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
@@ -1009,10 +1244,15 @@ namespace AnyRPG {
                 }
             }
             CleanupMiniMapIndicator();
-            OnInteractableDisable();
+            NotifyOnInteractableResetSettings();
 
-            interactables = new List<InteractableOptionComponent>();
+            foreach (UnitController inRangeUnitController in inRangeUnitControllers.Values) {
+                inRangeUnitController.UnitEventController.NotifyOnExitInteractableRange(this);
+            }
+            inRangeUnitControllers.Clear();
 
+            interactables = new Dictionary<int, InteractableOptionComponent>();
+            interactableOptionCount = 0;
             isInteracting = false;
             miniMapIndicatorReady = false;
             isMouseOverUnit = false;
@@ -1021,18 +1261,281 @@ namespace AnyRPG {
             //miniMapIndicator = null;
             //mainMapIndicator = null;
 
+            //CleanupEventSubscriptions();
+            CleanupEverything();
+
+            uuid = null;
             characterUnit = null;
-
             outlineController = null;
+            objectMaterialController = null;
+            interactableEventController = new InteractableEventController();
+            dialogController = null;
 
-            // base is intentionally last because we want to unitialize children first
-            base.ResetSettings();
+            startHasRun = false;
+            componentReferencesInitialized = false;
+            isInitialized = false;
+            //eventSubscriptionsInitialized = false;
+            isTargeted = false;
+            _interactableSaveData = null;
+
+            UnregisterWithLevelManager();
+        }
+
+        protected virtual void UnregisterWithLevelManager() {
+            //Debug.Log($"{gameObject.name}.Interactable.UnregisterWithLevelManager()");
+            levelManagerServer.UnregisterInteractable(this);
         }
 
         public virtual void OnSendObjectToPool() {
-            if (componentController != null) {
-                componentController.InteractableRange.OnSendObjectToPool();
+        }
+
+        /*
+        public void CreateEventSubscriptions() {
+            //Debug.Log($"{gameObject.name}.Interactable.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
+                return;
             }
+            ProcessCreateEventSubscriptions();
+            eventSubscriptionsInitialized = true;
+        }
+
+        public virtual void ProcessCreateEventSubscriptions() {
+            //Debug.Log($"{gameObject.name}.Interactable.ProcessCreateEventSubscriptions() Interactable instance: {GetInstanceID()}");
+        }
+
+        public void CleanupEventSubscriptions() {
+            //Debug.Log($"{gameObject.name}.Interactable.CleanupEventSubscriptions(): {GetInstanceID()}");
+
+            if (!eventSubscriptionsInitialized) {
+                return;
+            }
+            ProcessCleanupEventSubscriptions();
+            eventSubscriptionsInitialized = false;
+        }
+
+        public virtual void ProcessCleanupEventSubscriptions() {
+            //Debug.Log($"{gameObject.name}.Interactable.ProcessCleanupEventSubscriptions() Interactable Instance: {GetInstanceID()}");
+        }
+        */
+
+
+        public void SetTargeted() {
+            //Debug.Log($"{gameObject.name}.Interactable.SetTargeted()");
+
+            isTargeted = true;
+            HandleTargeted();
+        }
+
+        public virtual void HandleTargeted() {
+            interactableEventController.NotifyOnTargeted();
+        }
+
+        public void SetUnTargeted() {
+            //Debug.Log($"{gameObject.name}.Interactable.SetUnTargeted()");
+
+            isTargeted = false;
+            HandleUnTargeted();
+        }
+
+        public void HandleUnTargeted() {
+            interactableEventController.NotifyOnUnTargeted();
+        }
+
+        public void InteractableTriggerEnter(Collider collider) {
+            //Debug.Log($"{gameObject.name}.Interactable.InteractableTriggerEnter({collider.gameObject.name})");
+
+            if (inRangeUnitControllers.ContainsKey(collider.gameObject) == false) {
+                UnitController unitController = collider.gameObject.GetComponent<UnitController>();
+                if (unitController != null
+                    && unitController.isInitialized == false) {
+                    //Debug.LogWarning($"{gameObject.name}.Interactable.InteractableTriggerEnter({collider.gameObject.name}): unit controller is not initialized.  ignoring trigger enter.");
+                }
+                if (unitController == null
+                    || unitController.isInitialized == false
+                    || ((unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) == false)) {
+                    return;
+                }
+                if (unitController.UnitControllerMode == UnitControllerMode.Player) {
+                    inRangeUnitControllers.Add(collider.gameObject, unitController);
+                }/* else if (unitController.UnitControllerMode == UnitControllerMode.Mount && unitController.RiderUnitController != null) {
+                    inRangeUnitControllers.Add(unitController.RiderUnitController.gameObject, unitController.RiderUnitController);
+                }*/
+                if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false) {
+                    // events from triggers are server authoritative
+                    return;
+                }
+                if (unitController.UnitControllerMode == UnitControllerMode.Player) {
+                    if (GetCurrentInteractables(unitController).Count == 0) {
+                        return;
+                    }
+                }
+                unitController.EnterInteractableRange(this);
+            }
+        }
+
+        public void InteractableTriggerExit(Collider collider) {
+            if (inRangeUnitControllers.ContainsKey(collider.gameObject) == false) {
+                return;
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                // events from triggers are server authoritative
+                inRangeUnitControllers[collider.gameObject].UnitEventController.NotifyOnExitInteractableRange(this);
+            }
+            RemoveInRangeCollider(collider.gameObject);
+        }
+
+        private void RemoveInRangeCollider(GameObject go) {
+            //Debug.Log("InteractableRange.RemoveInRangeCollider(" + go.name + ") count: " + inRangeColliders.Count);
+            if (inRangeUnitControllers.ContainsKey(go)) {
+                inRangeUnitControllers.Remove(go);
+            }
+        }
+
+        public bool IsInInteractableRange(GameObject go) {
+            //Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}) count: {inRangeUnitControllers.Count}"); 
+            //Debug.Log($"InteractableRange.IsInRange({go.name}) count: {inRangeUnitControllers.Count} instanceId: {GetInstanceID()}");
+
+            if (inRangeUnitControllers.ContainsKey(go)) {
+                //Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}): in range");
+                return true;
+            }
+            //Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}): not in range");
+            return false;
+        }
+
+        public InteractableSaveData GetInteractableSaveData() {
+            //Debug.Log($"{gameObject.name}.Interactable.GetInteractableSaveData()");
+
+            InteractableSaveData interactableSaveData = new InteractableSaveData();
+            foreach (InteractableOptionComponent interactableOptionComponent in interactables.Values) {
+                interactableOptionComponent.SetSaveData(interactableSaveData);
+            }
+            return interactableSaveData;
+        }
+
+        public void LoadInteractableSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{gameObject.name}.Interactable.LoadInteractableSaveData()");
+
+            _interactableSaveData = interactableSaveData;
+            systemItemManager.LoadItemInstanceListSaveData(interactableSaveData.ItemInstanceListSaveData);
+            foreach (InteractableOptionComponent interactableOptionComponent in interactables.Values) {
+                interactableOptionComponent.LoadFromSaveData(interactableSaveData);
+            }
+        }
+
+        public virtual void PopulatePersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
+            //Debug.Log($"{gameObject.name}.Interactable.PopulatePersistentObjectSaveData()");
+
+            if (persistInteractableData == false) {
+                return;
+            }
+            persistentObjectSaveData.InteractableSaveData = GetInteractableSaveData();
+            persistentObjectSaveData.InteractableSaveData.BundleItems(systemItemManager);
+        }
+
+        public virtual void LoadPersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
+            //Debug.Log($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData()");
+
+            if (persistInteractableData == false) {
+                //Debug.LogWarning($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData(): persistInteractableData is false, skipping loading interactable data.");
+                return;
+            }
+            if (persistentObjectSaveData.InteractableSaveData == null) {
+                //Debug.LogWarning($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData(): no interactable save data found.  skipping.");
+                return;
+            }
+            LoadInteractableSaveData(persistentObjectSaveData.InteractableSaveData);
+        }
+
+        public void ProcessStopNetworkClient() {
+            //Debug.Log($"{gameObject.name}.Interactable.ProcessStopNetworkClient()");
+
+            bool canReset = false;
+            foreach (InteractableOptionComponent interactableOptionComponent in interactables.Values) {
+                //Debug.Log($"{gameObject.name}.Interactable.Awake(): Found InteractableOptionComponent: " + interactable.ToString());
+                if (interactableOptionComponent != null) {
+                    // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
+                    if (interactableOptionComponent.ResetOnStopNetwork()) {
+                        canReset = true;
+                        break;
+                    }
+                }
+            }
+            if (canReset) {
+                ResetSettings();
+            }
+        }
+
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
+
+        /// <summary>
+        /// initialize a nameplate if it has not been initialied yet
+        /// </summary>
+        public virtual void InitializeNameplateController() {
+            //Debug.Log($"{gameObject.name}.UnitController.InitializeNamePlateController()");
+
+            if (namePlateReady == true) {
+                return;
+            }
+            if (InitializeNamePlate()) {
+                namePlateReady = true;
+            }
+        }
+
+        /// <summary>
+        /// directly initialize a nameplate
+        /// </summary>
+        public bool InitializeNamePlate() {
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.InitializenamePlate() namePlateReady: " + namePlateReady);
+            // account for characters that spawn dead 
+            if (namePlateReady == true) {
+                return false;
+            }
+            if (NamePlateController.InitializeNamePlate()) {
+                OnInitializeNamePlate();
+                return true;
+            }
+            return false;
+        }
+
+        public virtual Vector3 GetNameplatePosition() {
+            return transform.position + nameplateVector;
+        }
+
+        // this method needs to exist to allow timeline controlled units to add a nameplate when enabled
+        // TO DO : FIX ME; timelines will have to send some event to the unit controller to initialize the nameplate
+        // this was breaking in network mode
+        /*
+        public void OnEnable() {
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.OnEnable()");
+
+            // characters can get disabled by cutscenes, so need to initialize nameplate on re-enable
+            if (startHasRun && namePlateController != null) {
+                namePlateController.InitializeNamePlate();
+            }
+        }
+        */
+
+        public virtual void OnDisable() {
+            //Debug.Log($"NamePlateUnit.OnDisable() instanceId: {GetInstanceID()}");
+            // characters can get disabled by cutscenes, so need to remove nameplate
+            if (hasNameplate) {
+                RemoveNamePlate();
+            }
+        }
+
+        public void SetNameplateVector() {
+            //Debug.Log($"{gameObject.name}.Interactable.SetNameplateVector()");
+
+            if (componentController != null) {
+                //nameplateTransform = componentController.GetNameplateTransform();
+                nameplateVector = componentController.NameplateVector;
+                //Debug.Log($"{gameObject.name}.NamePlateUnit.SetNameplateVector() nameplateVector: {nameplateVector} instanceId: {GetInstanceID()}");
+            }// else {
+                //Debug.LogWarning($"{gameObject.name}.NamePlateUnit.SetNameplateVector() could not find component controller to set nameplate vector.  Using default value of {nameplateVector}");
+            //}
         }
 
 

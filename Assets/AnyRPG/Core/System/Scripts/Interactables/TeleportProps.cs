@@ -15,12 +15,12 @@ namespace AnyRPG {
 
         [Tooltip("When interacted with, the player will cast this ability. Only applies if Portal Type is Ability.")]
         [SerializeField]
-        [ResourceSelector(resourceType = typeof(BaseAbility))]
+        [ResourceSelector(resourceType = typeof(Ability))]
         private string abilityName = string.Empty;
 
-        private BaseAbility ability = null;
+        private Ability ability = null;
 
-        public BaseAbility BaseAbility { get => ability; }
+        public Ability BaseAbility { get => ability; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new TeleportComponent(interactable, this, systemGameManager);
@@ -34,7 +34,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects(systemGameManager);
 
             if (abilityName != null && abilityName != string.Empty) {
-                BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
+                Ability baseAbility = systemDataFactory.GetResource<Ability>(abilityName);
                 if (baseAbility != null) {
                     ability = baseAbility;
                 } else {

@@ -1,17 +1,13 @@
-using AnyRPG;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.Serialization;
-using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Unit Type", menuName = "AnyRPG/UnitType")]
     public class UnitType : DescribableResource, IStatProvider, ICapabilityProvider {
 
         [Header("Capabilities")]
-
+        
         [Tooltip("Capabilities that apply to all characters of this unit type")]
         [SerializeField]
         private CapabilityProps capabilities = new CapabilityProps();

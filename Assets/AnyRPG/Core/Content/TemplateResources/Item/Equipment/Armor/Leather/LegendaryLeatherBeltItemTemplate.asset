@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0.3
+  itemPickupPrefabProfileName: Leather Belt Yellow
   equipmentSlotType: Belt
   equipmentSetName: Legendary Leather
-  umaRecipeProfileName: Yellow Leather Belt
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Yellow Leather Belt

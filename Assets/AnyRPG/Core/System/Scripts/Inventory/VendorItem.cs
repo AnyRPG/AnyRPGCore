@@ -13,6 +13,7 @@ namespace AnyRPG {
 
         //[SerializeField]
         private Item item = null;
+        private InstantiatedItem instantiatedItem = null;
 
         [SerializeField]
         private int quantity = 1;
@@ -27,12 +28,24 @@ namespace AnyRPG {
 
         private ItemQuality itemQuality = null;
 
+        public int itemIndex = 0;
+
         public Item Item {
             get {
                 return item;
             }
             set {
                 item = value;
+            }
+        }
+
+        public InstantiatedItem InstantiatedItem {
+            get {
+                return instantiatedItem;
+            }
+            set {
+                instantiatedItem = value;
+                item = instantiatedItem.Item;
             }
         }
 
@@ -71,43 +84,48 @@ namespace AnyRPG {
             return item.ItemQuality;
         }
 
-        public int BuyPrice() {
+        public int BuyPrice(UnitController sourceUnitController) {
             if (itemQuality != null) {
-                return item.BuyPrice(itemQuality);
+                return item.BuyPrice(sourceUnitController, itemQuality);
             }
-            return item.BuyPrice();
+            return item.BuyPrice(sourceUnitController);
+        }
+
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+            if (instantiatedItem != null) {
+                tooltipController.UpdateCurrencyAmount(instantiatedItem, "Sell Price: ");
+            }
         }
 
         public void SetupScriptableObjects(SystemDataFactory systemDataFactory, IDescribable describable) {
 
-            item = null;
-            if (itemName != null) {
+            if (itemName != string.Empty) {
                 Item tmpItem = systemDataFactory.GetResource<Item>(itemName);
                 if (tmpItem != null) {
                     item = tmpItem;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a vendor item for " + describable.DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"VendorItem.SetupScriptableObjects(): Could not find item : {itemName} while inititalizing a vendor item for {describable.ResourceName}.  CHECK INSPECTOR");
                 }
             }
 
-            itemQuality = null;
-            if (itemQualityName != null && itemQualityName != string.Empty) {
+            if (itemQualityName != string.Empty) {
                 ItemQuality tmpItemQuality = systemDataFactory.GetResource<ItemQuality>(itemQualityName);
                 if (tmpItemQuality != null) {
                     itemQuality = tmpItemQuality;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item quality : " + itemQualityName + " while inititalizing a vendor item for " + describable.DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"VendorItem.SetupScriptableObjects(): Could not find item quality : {itemQualityName} while inititalizing a vendor item for {describable.ResourceName}.  CHECK INSPECTOR");
                 }
             }
         }
 
         string IDescribable.GetSummary() {
-            return item.GetSummary(GetItemQuality());
+            return item.GetSummary(GetItemQuality(), item.ItemLevel);
         }
 
         string IDescribable.GetDescription() {
-            return item.GetDescription(GetItemQuality());
+            return item.GetDescription(GetItemQuality(), item.ItemLevel);
         }
+
     }
 
 }

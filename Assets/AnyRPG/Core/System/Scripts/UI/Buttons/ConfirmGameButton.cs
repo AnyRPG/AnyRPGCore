@@ -19,25 +19,25 @@ namespace AnyRPG {
         private TextMeshProUGUI description = null;
 
         [SerializeField]
-        private AnyRPGSaveData mySaveData;
+        private CharacterSaveData mySaveData;
 
         // game manager references
         private SystemDataFactory systemDataFactory = null;
 
-        public AnyRPGSaveData MySaveData { get => mySaveData; set => mySaveData = value; }
+        public CharacterSaveData MySaveData { get => mySaveData; set => mySaveData = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
-        public void AddSaveData(AnyRPGSaveData mySaveData) {
+        public void AddSaveData(CharacterSaveData mySaveData) {
             //Debug.Log("LoadGameButton.AddSaveData()");
             this.mySaveData = mySaveData;
 
             icon.sprite = null;
-            if (mySaveData.playerFaction != null && MySaveData.playerFaction != string.Empty) {
-                Faction playerFaction = systemDataFactory.GetResource<Faction>(mySaveData.playerFaction);
+            if (mySaveData.CharacterFaction != null && MySaveData.CharacterFaction != string.Empty) {
+                Faction playerFaction = systemDataFactory.GetResource<Faction>(mySaveData.CharacterFaction);
                 // needs to be checked anyway.  could have invalid faction in save data
                 if (playerFaction != null) {
                     icon.sprite = playerFaction.Icon;
@@ -50,16 +50,16 @@ namespace AnyRPG {
             icon.color = Color.white;
             //Debug.Log("LoadGameButton.AddSaveData(): Setting playerName.text: " + mySaveData.playerName);
             //Debug.Log("LoadGameButton.AddSaveData(): Setting DataFileName: " + mySaveData.DataFileName);
-            playerName.text = mySaveData.playerName;
+            playerName.text = mySaveData.CharacterName;
 
             // format the button text
             string descriptionText = string.Empty;
             if (systemConfigurationManager.NewGameFaction == true) {
-                descriptionText += "Faction: " + (mySaveData.playerFaction == null || mySaveData.playerFaction == string.Empty ? "None" : MySaveData.playerFaction) + "\n";
+                descriptionText += "Faction: " + (mySaveData.CharacterFaction == null || mySaveData.CharacterFaction == string.Empty ? "None" : MySaveData.CharacterFaction) + "\n";
             }
             if (systemConfigurationManager.NewGameClass == true) {
-                descriptionText += "Class: " + (mySaveData.characterClass == null || mySaveData.characterClass == string.Empty ? "None" : mySaveData.characterClass) + "\n";
-                descriptionText += "Specialization: " + (mySaveData.classSpecialization == null || mySaveData.classSpecialization == string.Empty ? "None" : MySaveData.classSpecialization) + "\n";
+                descriptionText += "Class: " + (mySaveData.CharacterClass == null || mySaveData.CharacterClass == string.Empty ? "None" : mySaveData.CharacterClass) + "\n";
+                descriptionText += "Specialization: " + (mySaveData.ClassSpecialization == null || mySaveData.ClassSpecialization == string.Empty ? "None" : MySaveData.ClassSpecialization) + "\n";
             }
 
             // set the text on the button

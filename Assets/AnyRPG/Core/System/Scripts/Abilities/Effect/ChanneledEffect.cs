@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class ChanneledEffect : AbilityEffect {
 
         [SerializeField]
-        private ChanneledEffectProperties channeledEffectProperties = new ChanneledEffectProperties();
+        public ChanneledEffectProperties channeledEffectProperties = new ChanneledEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => channeledEffectProperties; }
 

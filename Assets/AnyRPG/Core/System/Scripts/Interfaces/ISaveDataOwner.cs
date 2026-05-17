@@ -5,7 +5,7 @@ using UnityEngine;
 namespace AnyRPG {
     public interface ISaveDataOwner {
 
-        void SetSaveData(AnyRPGSaveData saveData);
+        void SetSaveData(CharacterSaveData saveData);
     }
 
 }

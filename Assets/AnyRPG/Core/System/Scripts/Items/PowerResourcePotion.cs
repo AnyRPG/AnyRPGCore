@@ -22,41 +22,14 @@ namespace AnyRPG {
 
         private HealEffectProperties healEffect = null;
 
-        public override bool Use() {
-            //Debug.Log(DisplayName + ".PowerResourcePotion.Use()");
-            int fullcount = 0;
-            foreach (ResourceAmountNode resourceAmountNode in healEffect.ResourceAmounts) {
-                if (playerManager.MyCharacter.CharacterStats.GetPowerResourceAmount(resourceAmountNode.PowerResource) >= playerManager.MyCharacter.CharacterStats.GetPowerResourceMaxAmount(resourceAmountNode.PowerResource)) {
-                    fullcount++;
-                }
-            }
-            if (fullcount >= healEffect.ResourceAmounts.Count) {
-                //messageFeedManager.WriteMessage("Your " + powerResource.DisplayName + " is already full!");
-                messageFeedManager.WriteMessage("Already full!");
-                return false;
-            }
-            bool returnValue = base.Use();
-            if (returnValue == false) {
-                return false;
-            }
+        public HealEffectProperties HealEffect { get => healEffect; set => healEffect = value; }
 
-            // perform heal effect
-            healEffect.Cast(playerManager.ActiveCharacter, playerManager.UnitController, null, null);
-
-            return returnValue;
-
+        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, long itemInstanceId, Item item, ItemQuality usedItemQuality) {
+            if ((item is PowerResourcePotion) == false) {
+                return null;
+            }
+            return new InstantiatedPowerResourcePotion(systemGameManager, itemInstanceId, item as PowerResourcePotion, usedItemQuality);
         }
-
-        /*
-        public override string GetCastableInformation() {
-            //Debug.Log(DisplayName + ".PowerResourcePotion.GetCastableInformation()");
-            string returnString = string.Empty;
-            //if (ability != null) {
-                returnString += string.Format("\n<color=green>Use: {0}</color>", description);
-            //}
-            return returnString;
-        }
-        */
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);

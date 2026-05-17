@@ -27,7 +27,8 @@ namespace AnyRPG {
 
         // game manager references
         private AudioManager audioManager = null;
-        private LevelManager levelManager = null;
+        private LevelManagerClient levelManagerClient = null;
+        private CutsceneBarController cutsceneBarController = null;
 
         public int BehaviorIndex { get => behaviorIndex; }
         public bool BehaviorPlaying { get => behaviorPlaying; set => behaviorPlaying = value; }
@@ -47,7 +48,8 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             audioManager = systemGameManager.AudioManager;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
+            cutsceneBarController = systemGameManager.UIManager.CutSceneBarController;
         }
 
         // this should be run after the unit profile is set
@@ -61,8 +63,9 @@ namespace AnyRPG {
 
 
         public void Cleanup() {
-            //Debug.Log("PlayerManager.OnDisable()");
-            CleanupDialog();
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.Cleanup()");
+
+            CleanupBehavior();
             CleanupScriptableObjects();
         }
 
@@ -70,28 +73,25 @@ namespace AnyRPG {
             behaviorPlaying = newValue;
         }
 
-        public void TryPlayBehavior(BehaviorProfile behaviorProfile, BehaviorComponent caller = null) {
-            //Debug.Log($"{unitController.gameObject.name}.BehaviorInteractable.TryPlayBehavior()");
+        public void TryPlayBehavior(BehaviorProfile behaviorProfile, BehaviorComponent caller = null, UnitController sourceUnitController = null) {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorInteractable.TryPlayBehavior({behaviorProfile.ResourceName})");
 
             if (behaviorPlaying == false) {
-                behaviorCoroutine = unitController.StartCoroutine(PlayBehavior(behaviorProfile, caller));
+                behaviorCoroutine = unitController.StartCoroutine(PlayBehavior(behaviorProfile, caller, sourceUnitController));
             }
         }
 
-        private void CleanupDialog() {
+        private void CleanupBehavior() {
             //nameplate
             if (behaviorCoroutine != null) {
                 unitController.StopCoroutine(behaviorCoroutine);
             }
             behaviorCoroutine = null;
             SetBehaviorPlaying(false);
-            if (unitController != null && unitController.NamePlateController.NamePlate != null) {
-                unitController.NamePlateController.NamePlate.HideSpeechBubble();
-            }
         }
 
-        public IEnumerator PlayBehavior(BehaviorProfile behaviorProfile, BehaviorComponent caller = null) {
-            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.DisplayName) + ")");
+        public IEnumerator PlayBehavior(BehaviorProfile behaviorProfile, BehaviorComponent caller = null, UnitController sourceUnitController = null) {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayBehavior({(behaviorProfile == null ? "null" : behaviorProfile.DisplayName)})");
 
             SetBehaviorPlaying(true);
 
@@ -100,7 +100,7 @@ namespace AnyRPG {
             BehaviorNode currentbehaviorNode = null;
             suppressNameplateImage = true;
 
-            behaviorProfile.ResetStatus(behaviorList[behaviorProfile]);
+            behaviorProfile.ResetStatus(sourceUnitController, behaviorList[behaviorProfile]);
 
             // give the interactable a chance to update the nameplate image and minimap indicator since we want the option to interact to be gone while the behavior is playing
             if (caller != null) {
@@ -141,7 +141,7 @@ namespace AnyRPG {
             behaviorCoroutine = null;
             SetBehaviorPlaying(false);
             suppressNameplateImage = false;
-            behaviorProfile.Completed = true;
+            behaviorProfile.SetCompleted(sourceUnitController, true);
 
             // give the interactable a chance to update the nameplate image and minimap indicator since we want the option to interact to be gone while the behavior is playing
             //ProcessBehaviorBeginEnd();
@@ -161,8 +161,9 @@ namespace AnyRPG {
         }
         */
 
-        public void HandlePrerequisiteUpdates() {
+        public void HandlePrerequisiteUpdates(UnitController sourceUnitController) {
             //Debug.Log($"{unitController.gameObject.name}.BehaviorController.HandlePrerequisiteUpdates()");
+
             if (unitController.UnitControllerMode != UnitControllerMode.AI) {
                 return;
             }
@@ -170,11 +171,11 @@ namespace AnyRPG {
             PlayAutomaticBehaviors();
 
             if (behaviorComponent != null) {
-                behaviorComponent.HandlePrerequisiteUpdates();
+                behaviorComponent.HandlePrerequisiteUpdates(sourceUnitController);
             }
         }
 
-        public void HandlePlayerUnitSpawn() {
+        public void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
             //Debug.Log($"{unitController.gameObject.name}.BehaviorController.HandlePlayerUnitSpawn()");
             if (unitController.UnitControllerMode != UnitControllerMode.AI) {
                 return;
@@ -182,25 +183,35 @@ namespace AnyRPG {
 
             // since player unit spawn doesn't trigger prerequisite update on individual behaviors, a manual check is needed
             foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
-                behaviorProfile.UpdatePrerequisites(false);
+                behaviorProfile.UpdatePrerequisites(sourceUnitController, false);
             }
             PlayAutomaticBehaviors();
             // the behavior component may have already triggered on this event, so trigger it manually since a prerequisite update was just performed
             if (behaviorComponent != null) {
-                behaviorComponent.HandlePlayerUnitSpawn();
+                behaviorComponent.HandlePlayerUnitSpawn(sourceUnitController);
             }
         }
 
 
         public void PlayAutomaticBehaviors() {
-            //Debug.Log($"{unitController.gameObject.name}.Controller.PlayAutomaticBehaviors()");
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayAutomaticBehaviors()");
 
+            if (networkManagerServer.ServerModeActive == true) {
+                //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayAutomaticBehaviors() aborting because server mode");
+                return;
+            }
             if (unitController.UnitControllerMode != UnitControllerMode.AI) {
+                //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayAutomaticBehaviors() aborting because not AI");
                 return;
             }
 
             foreach (BehaviorProfile behaviorProfile in GetCurrentOptionList()) {
-                if (behaviorProfile.Automatic == true && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
+                //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayAutomaticBehaviors() assessing {behaviorProfile.ResourceName}");
+
+                // in order for automatic behaviors to play on the server, we can't check against any state, such as completed
+                if (behaviorProfile.Automatic == true
+                    && (behaviorProfile.Repeatable == true || cutsceneBarController.CurrentCutscene != null)) {
+                    //if (behaviorProfile.Automatic == true && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
                     TryPlayBehavior(behaviorProfile);
                 }
             }
@@ -208,10 +219,13 @@ namespace AnyRPG {
 
         public List<BehaviorProfile> GetCurrentOptionList() {
             //Debug.Log($"{unitController.gameObject.name}.BehaviorController.GetCurrentOptionList()");
+
             List<BehaviorProfile> currentList = new List<BehaviorProfile>();
             foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
-                if (behaviorProfile.PrerequisitesMet == true
-                    && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
+                if (behaviorProfile.PrerequisiteConditions.Count == 0
+                    && (behaviorProfile.Repeatable == true || cutsceneBarController.CurrentCutscene != null)) {
+                    // took away prerequisite check and completed check for multiplayer
+                    //&& (behaviorProfile.Completed(sourceUnitController) == false || behaviorProfile.Repeatable == true)) {
                     //Debug.Log("BehaviorInteractable.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.DisplayName + "; id: " + behaviorProfile.GetInstanceID());
                     currentList.Add(behaviorProfile);
                 }
@@ -221,8 +235,11 @@ namespace AnyRPG {
         }
 
         public void AddToBehaviorList(BehaviorProfile behaviorProfile) {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.AddToBehaviorList({behaviorProfile.ResourceName})");
+
             behaviorList.Add(behaviorProfile, new BehaviorProfileState(behaviorProfile));
             behaviorProfile.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
+            behaviorProfile.OnEventTriggered += HandleEventTrigger;
         }
 
         public void SetupScriptableObjects() {
@@ -242,9 +259,19 @@ namespace AnyRPG {
         }
 
         public void CleanupScriptableObjects() {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.CleanupScriptableObjects()");
+
             foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
+                //Debug.Log($"{unitController.gameObject.name}.BehaviorController.CleanupScriptableObjects() unsubscribing from {behaviorProfile.ResourceName}");
                 behaviorProfile.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
+                behaviorProfile.OnEventTriggered -= HandleEventTrigger;
             }
+        }
+
+        private void HandleEventTrigger(BehaviorProfile behaviorProfile) {
+            //dDebug.Log($"{unitController.gameObject.name}.BehaviorController.HandleEventTrigger({behaviorProfile.ResourceName})");
+
+            TryPlayBehavior(behaviorProfile);
         }
 
         public void StopBackgroundMusic() {
@@ -252,7 +279,7 @@ namespace AnyRPG {
         }
 
         public void StartBackgroundMusic() {
-            levelManager.PlayLevelSounds();
+            levelManagerClient.PlayLevelSounds();
         }
 
 

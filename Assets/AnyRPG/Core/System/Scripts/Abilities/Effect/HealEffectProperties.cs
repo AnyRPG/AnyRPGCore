@@ -25,7 +25,7 @@ namespace AnyRPG {
         /// <param name="source"></param>
         /// <param name="target"></param>
         public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(DisplayName + ".HealEffect.PerformAbilityHit(" + source.AbilityManager.UnitGameObject.name + ", " + (target == null ? "null" : target.gameObject.name) + ")");
+            //Debug.Log($"{ResourceName}.HealEffectProperties.PerformAbilityHit({source.AbilityManager.UnitGameObject.name}, {(target == null ? "null" : target.gameObject.name)}");
 
             base.PerformAbilityHit(source, target, abilityEffectInput);
         }
@@ -35,11 +35,10 @@ namespace AnyRPG {
         }
 
         public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
-            //public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
-            //Debug.Log(DisplayName + ".HealEffect.ProcessAbilityHit(" + (target == null ? "null" : target.gameObject.name) + ", " + finalAmount + ", " + source.AbilityManager.UnitGameObject.name + ")");
+            //Debug.Log($"{ResourceName}.HealEffectProperties.ProcessAbilityHit({(target == null ? "null" : target.gameObject.name)}, {finalAmount}, {source.AbilityManager.UnitGameObject.name}, {powerResource.ResourceName})");
 
-            abilityEffectContext.powerResource = powerResource;
-            bool returnValue = CharacterUnit.GetCharacterUnit(target).BaseCharacter.CharacterStats.RecoverResource(abilityEffectContext, powerResource, finalAmount, source, true, combatMagnitude);
+            abilityEffectContext.PowerResource = powerResource;
+            bool returnValue = CharacterUnit.GetCharacterUnit(target).UnitController.CharacterStats.RecoverResource(abilityEffectContext, powerResource, finalAmount, source, combatMagnitude);
             if (returnValue == false) {
                 return false;
             }

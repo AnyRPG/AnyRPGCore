@@ -16,12 +16,13 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
 
             //cloneSource = GetCloneSource();
-            unitProfile = petSpawnControlPanel.SelectedPetSpawnButton.MyUnitProfile;
+            unitProfile = petSpawnControlPanel.SelectedPetSpawnButton.UnitProfile;
             if (unitProfile == null) {
                 return;
             }
 
-            SpawnUnit();
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
+            SpawnUnit(characterConfigurationRequest);
         }
 
     }

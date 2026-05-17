@@ -59,6 +59,10 @@ MonoBehaviour:
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
+    statusEffectObjectList:
+    - holdableObjectName: Ice Spikes
+      useUniversalAttachment: 0
+      attachmentName: 
     statusEffectAlignment: 2
     statusEffectTypeName: 
     statusEffectGroupName: 

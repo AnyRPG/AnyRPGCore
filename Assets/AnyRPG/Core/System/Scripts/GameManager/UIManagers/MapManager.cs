@@ -24,7 +24,7 @@ namespace AnyRPG {
 
 
         // game manager references
-        private LevelManager levelManager = null;
+        private LevelManagerClient levelManagerClient = null;
         private CameraManager cameraManager = null;
 
         public Texture2D MapTexture { get => mapTexture; }
@@ -34,18 +34,20 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             cameraManager.MainMapCamera.enabled = false;
+
             mapTextureFolder = mapTextureFolderBase + systemConfigurationManager.GameName.Replace(" ", "") + "/Images/MiniMap/";
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             cameraManager = systemGameManager.CameraManager;
         }
 
         public void ProcessLevelLoad() {
             //Debug.Log("MapManager.ProcessLevelLoad()");
+
             //Debug.Log("MapManager.ProcessLevelLoad(): creating Texture2D with size : " + (int)levelManager.SceneBounds.size.x + ", " + (int)levelManager.SceneBounds.size.z);
             UpdateCameraSize();
 
@@ -72,7 +74,7 @@ namespace AnyRPG {
 
         /*
         public void RenderMapFromCamera() {
-            Debug.Log("MapManager.RenderMapFromCamera()");
+            //Debug.Log("MapManager.RenderMapFromCamera()");
             renderTexture = new RenderTexture((int)levelManager.SceneBounds.size.x, (int)levelManager.SceneBounds.size.z, 16, RenderTextureFormat.ARGB32);
             renderTexture.Create();
             cameraManager.MainMapCamera.Render();
@@ -100,7 +102,21 @@ namespace AnyRPG {
             renderTexture = new RenderTexture((int)cameraSize * systemConfigurationManager.UIConfiguration.AutoPixelsPerMeter, (int)cameraSize * systemConfigurationManager.UIConfiguration.AutoPixelsPerMeter, 16, RenderTextureFormat.ARGB32);
             renderTexture.Create();
             cameraManager.MainMapCamera.targetTexture = renderTexture;
+
+
+            float originalLodBias = QualitySettings.lodBias;
+            int originalMaximumLod = QualitySettings.maximumLODLevel;
+            
+            // Temporarily set LOD settings to force LOD 0 for all cameras
+            QualitySettings.lodBias = 100f; // A high value to force the highest LOD at any distance
+            QualitySettings.maximumLODLevel = 0; // The highest detail LOD
+
             cameraManager.MainMapCamera.Render();
+
+            // Restore original LOD settings
+            QualitySettings.lodBias = originalLodBias;
+            QualitySettings.maximumLODLevel = originalMaximumLod;
+
 
             //yield return new WaitForEndOfFrame();
 
@@ -115,15 +131,15 @@ namespace AnyRPG {
         private void UpdateCameraSize() {
             //Debug.Log("MainMapController.UpdateCameraSize()");
             //float newCameraSize = cameraSizeDefault;
-            cameraSize = Mathf.Max(levelManager.SceneBounds.extents.x, levelManager.SceneBounds.extents.z);
+            cameraSize = Mathf.Max(levelManagerClient.SceneBounds.extents.x, levelManagerClient.SceneBounds.extents.z);
             cameraManager.MainMapCamera.orthographicSize = cameraSize;
         }
 
         private void UpdateCameraPosition() {
             //Debug.Log("MainMapController.UpdateCameraPosition()");
-            Vector3 wantedPosition = new Vector3(levelManager.SceneBounds.center.x, levelManager.SceneBounds.center.y + levelManager.SceneBounds.extents.y + 1f, levelManager.SceneBounds.center.z);
+            Vector3 wantedPosition = new Vector3(levelManagerClient.SceneBounds.center.x, levelManagerClient.SceneBounds.center.y + levelManagerClient.SceneBounds.extents.y + 1f, levelManagerClient.SceneBounds.center.z);
             //Debug.Log("MainMapController.UpdateCameraPosition() wantedposition: " + wantedPosition);
-            Vector3 wantedLookPosition = new Vector3(levelManager.SceneBounds.center.x, levelManager.SceneBounds.center.y, levelManager.SceneBounds.center.z);
+            Vector3 wantedLookPosition = new Vector3(levelManagerClient.SceneBounds.center.x, levelManagerClient.SceneBounds.center.y, levelManagerClient.SceneBounds.center.z);
             //Debug.Log("MainMapController.UpdateCameraPosition() wantedLookPosition: " + wantedLookPosition);
             cameraManager.MainMapCamera.transform.position = wantedPosition;
             cameraManager.MainMapCamera.transform.LookAt(wantedLookPosition);

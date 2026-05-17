@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class CapturePetEffect : AbilityEffect {
 
         [SerializeField]
-        private CapturePetEffectProperties capturePetEffectProperties = new CapturePetEffectProperties();
+        public CapturePetEffectProperties capturePetEffectProperties = new CapturePetEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => capturePetEffectProperties; }
 

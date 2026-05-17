@@ -22,7 +22,7 @@ namespace AnyRPG {
         [SerializeField]
         protected Image castIcon = null;
 
-        protected UnitNamePlateController unitNamePlateController = null;
+        protected UnitController unitController = null;
 
         protected float originalCastSliderWidth = 0f;
 
@@ -46,6 +46,9 @@ namespace AnyRPG {
 
         public void DisableCastBar() {
             //Debug.Log($"{gameObject.name}.CastBarController.DisableCastBar()");
+            if (SystemGameManager.IsShuttingDown == true) {
+                return;
+            }
             if (closeableWindow?.DragHandle != null && closeableWindow.DragHandle.UiLocked == false && closeableWindow.DragHandle.NeverDraggable != true) {
                 //Debug.Log($"{gameObject.name}.CastBarController.InitializeController(): ui is unlocked and neverdraggable is not set to true.  returning to avoid deactivating cast bar");
                 return;
@@ -72,22 +75,21 @@ namespace AnyRPG {
             //this.gameObject.SetActive(true);
         }
 
-        public void SetTarget(UnitNamePlateController unitNamePlateController) {
+        public void SetTarget(UnitController unitController) {
             //Debug.Log($"{gameObject.name}.CastBarController.SetTarget(" + target.name + ")");
             InitializeController();
-            this.unitNamePlateController = unitNamePlateController;
+            this.unitController = unitController;
             TargetInitialization();
         }
 
         public void ClearTarget() {
             //Debug.Log($"{gameObject.name}.CastBarController.ClearTarget()");
-            if (unitNamePlateController != null
-                && unitNamePlateController.UnitController != null) {
-                unitNamePlateController.UnitController.UnitEventController.OnCastTimeChanged -= OnCastTimeChanged;
-                unitNamePlateController.UnitController.UnitEventController.OnCastComplete -= OnCastStop;
-                unitNamePlateController.UnitController.UnitEventController.OnCastCancel -= OnCastStop;
+            if (unitController != null) {
+                unitController.UnitEventController.OnCastTimeChanged -= OnCastTimeChanged;
+                unitController.UnitEventController.OnCastComplete -= HandleCastStop;
+                unitController.UnitEventController.OnCastCancel -= HandleCastStop;
             }
-            unitNamePlateController = null;
+            unitController = null;
             targetInitialized = false;
             DisableCastBar();
         }
@@ -95,21 +97,20 @@ namespace AnyRPG {
         private void InitializeCallbacks() {
             //Debug.Log($"{gameObject.name}.CastBarController.InitializeCallbacks()");
 
-            if (unitNamePlateController != null
-                && unitNamePlateController.UnitController != null) {
-                unitNamePlateController.UnitController.UnitEventController.OnCastTimeChanged += OnCastTimeChanged;
-                unitNamePlateController.UnitController.UnitEventController.OnCastComplete += OnCastStop;
-                unitNamePlateController.UnitController.UnitEventController.OnCastCancel += OnCastStop;
+            if (unitController != null) {
+                unitController.UnitEventController.OnCastTimeChanged += OnCastTimeChanged;
+                unitController.UnitEventController.OnCastComplete += HandleCastStop;
+                unitController.UnitEventController.OnCastCancel += HandleCastStop;
             }
 
         }
 
-        void OnCastStop(BaseCharacter source) {
+        void HandleCastStop() {
             //Debug.Log($"{gameObject.name}.CastBarController.OnCastStop();");
             DisableCastBar();
         }
 
-        public void OnCastTimeChanged(IAbilityCaster abilityCaster, BaseAbilityProperties ability, float currentPercent) {
+        public void OnCastTimeChanged(IAbilityCaster abilityCaster, AbilityProperties ability, float currentPercent) {
             //Debug.Log($"{gameObject.name}.CastBarController.OnCastTimeChanged(" + currentTime + ") : total casting time: " + ability.MyAbilityCastingTime);
 
             if (currentPercent <= 1f) {

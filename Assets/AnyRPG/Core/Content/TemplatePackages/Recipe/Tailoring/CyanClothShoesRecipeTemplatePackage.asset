@@ -21,10 +21,9 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: ba3e4ee262069a24692c414899f955a9, type: 2}
-  - {fileID: 11400000, guid: e643ac9e80ed41542af49c349280e540, type: 2}
   - {fileID: 11400000, guid: 6672f4269d467f24bb471317756a5b9b, type: 2}
-  - {fileID: 11400000, guid: 1d9062a42d7d5a147b16fc649cfb61c5, type: 2}
   prefabs: []
   dependencies:
-  - {fileID: 11400000, guid: 068e2e052a113a645878e5fb5e72dfd8, type: 2}
+  - {fileID: 11400000, guid: 8d521ceaf922a854b9f58ef561aeee0e, type: 2}
+  - {fileID: 11400000, guid: 8e75a435d82384a45bbb343acc2b73af, type: 2}
+  - {fileID: 11400000, guid: b59b438fe53468b48ad45c10442a1b9e, type: 2}

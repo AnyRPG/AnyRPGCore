@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: 131916ce48aabe0469421c80e6049ce1, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: very gold
+  description: very iron
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 5
+  itemPickupPrefabProfileName: Plate Armor Iron
   equipmentSlotType: Armor
   equipmentSetName: 
-  umaRecipeProfileName: Iron Plate Armor
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Iron Plate Armor

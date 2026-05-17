@@ -9,13 +9,21 @@ namespace AnyRPG {
 
         [Header("Prefab")]
 
-        [Tooltip("The prefab to use for the base unit")]
+        [Tooltip("The prefab to use for the base unit when spawned locally")]
         [SerializeField]
         private GameObject unitPrefab = null;
+
+        [Tooltip("The prefab to use for the base unit when spawned over a network connection")]
+        [SerializeField]
+        private GameObject networkUnitPrefab = null;
 
         [Tooltip("The prefab to use for the model, if the unit prefab doesn't already have a model.")]
         [SerializeField]
         private GameObject modelPrefab = null;
+
+        [Tooltip("The prefab to use for the model, if the unit prefab doesn't already have a model, and is being spawned over a network connection")]
+        [SerializeField]
+        private GameObject networkModelPrefab = null;
 
         [Tooltip("The type of character model for the purpose of character customization")]
         [SerializeReference]
@@ -43,14 +51,21 @@ namespace AnyRPG {
         [SerializeField]
         private AnimationProps animationProps = new AnimationProps();
 
-        [Tooltip("Should the model be rotated in the direction of travel while moving?  True is the best setting if no strafe or backing up animations exist on the animation profile.")]
+        [Tooltip("If true, the model will not be able to enable strafe mode in third person view.  True is the best setting if no strafe or backing up animations exist on the animation profile.")]
+        [FormerlySerializedAs("rotateModel")]
         [SerializeField]
-        protected bool rotateModel = false;
+        protected bool forceRotateModelMode = false;
 
         [Header("NamePlate")]
 
         [SerializeField]
         protected NamePlateProps namePlateProps = new NamePlateProps();
+
+        [SerializeField]
+        private UnitFrameProps unitFrameProps = new UnitFrameProps();
+
+        [SerializeField]
+        private UnitPreviewProps unitPreviewProps = new UnitPreviewProps();
 
         [Header("Mount")]
 
@@ -111,7 +126,7 @@ namespace AnyRPG {
         public AttachmentProfile AttachmentProfile { get => attachmentProfile; set => attachmentProfile = value; }
         public GameObject UnitPrefab { get => unitPrefab; set => unitPrefab = value; }
         public GameObject ModelPrefab { get => modelPrefab; set => modelPrefab = value; }
-        public bool RotateModel { get => rotateModel; set => rotateModel = value; }
+        public bool ForceRotateModelMode { get => forceRotateModelMode; set => forceRotateModelMode = value; }
         public NamePlateProps NamePlateProps { get => namePlateProps; set => namePlateProps = value; }
         public AnimationProps AnimationProps { get => animationProps; set => animationProps = value; }
         public string FloatTransform { get => floatTransform; set => floatTransform = value; }
@@ -120,6 +135,10 @@ namespace AnyRPG {
         public bool UseInlineAnimationProps { get => useInlineAnimationProps; set => useInlineAnimationProps = value; }
         public string AttachmentProfileName { get => attachmentProfileName; set => attachmentProfileName = value; }
         public CharacterModelProvider ModelProvider { get => modelProvider; set => modelProvider = value; }
+        public GameObject NetworkModelPrefab { get => networkModelPrefab; set => networkModelPrefab = value; }
+        public GameObject NetworkUnitPrefab { get => networkUnitPrefab; set => networkUnitPrefab = value; }
+        public UnitFrameProps UnitFrameProps { get => unitFrameProps; set => unitFrameProps = value; }
+        public UnitPreviewProps UnitPreviewProps { get => unitPreviewProps; set => unitPreviewProps = value; }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
             //Debug.Log($"UnitPrefabProps.SetupScriptableObjects({describable.ResourceName})");

@@ -20,14 +20,19 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
+  suppressNameplateFaction: 1
   automaticPrefabProfile: 0
   prefabProfileName: 
   useInlinePrefabProps: 1
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
+    networkUnitPrefab: {fileID: 0}
     modelPrefab: {fileID: 943068409625311753, guid: 022ab4d98a489344283da6d08ddec94c,
       type: 3}
+    networkModelPrefab: {fileID: 0}
+    modelProvider:
+      rid: -2
     animationProfileName: Dragon
     useInlineAnimationProps: 0
     animationProps:
@@ -114,10 +119,9 @@ MonoBehaviour:
       swimMoveClip: {fileID: 0}
       flyIdleClip: {fileID: 0}
       flyMoveClip: {fileID: 0}
-    rotateModel: 1
+    forceRotateModelMode: 1
     namePlateProps:
       displayName: 
-      suppressNamePlate: 0
       suppressFaction: 1
       overrideNameplatePosition: 1
       namePlatePosition: {x: 0, y: 6, z: 0}
@@ -125,6 +129,15 @@ MonoBehaviour:
       unitFrameTarget: jaw_upper_end
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
       unitFrameCameraPositionOffset: {x: 0, y: 0, z: 1.5}
+      unitPreviewTarget: 
+      unitPreviewCameraLookOffset: {x: 0, y: 3.5, z: 0}
+      unitPreviewCameraPositionOffset: {x: 0, y: 3.5, z: 10}
+    unitFrameProps:
+      useSnapShot: 0
+      unitFrameTarget: jaw_upper_end
+      unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+      unitFrameCameraPositionOffset: {x: 0, y: 0, z: 1.5}
+    unitPreviewProps:
       unitPreviewTarget: 
       unitPreviewCameraLookOffset: {x: 0, y: 3.5, z: 0}
       unitPreviewCameraPositionOffset: {x: 0, y: 3.5, z: 10}
@@ -137,7 +150,6 @@ MonoBehaviour:
     floatHeight: 1.4
     addFloatHeightToTransform: 0
     floatTransform: back1
-  isUMAUnit: 0
   isPet: 1
   flightCapable: 1
   glideCapable: 0
@@ -210,7 +222,9 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: dd766fb1-eca7-4d79-8dc1-5c8ec60366e5
+  m_UUID: 3798f2ab-5f06-4529-aec0-a71448363567
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

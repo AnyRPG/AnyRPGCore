@@ -37,4 +37,4 @@ MonoBehaviour:
   quests:
   - startQuest: 1
     endQuest: 1
-    questName: Choose Reward
+    questName: Choose Faction Reward

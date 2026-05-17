@@ -9,49 +9,53 @@ namespace AnyRPG {
     public class FactionChangeComponent : InteractableOptionComponent {
 
         // game manager references
-        private FactionChangeManager factionChangeManager = null;
+        private FactionChangeManagerClient factionChangeManager = null;
 
         public FactionChangeProps Props { get => interactableOptionProps as FactionChangeProps; }
 
         public FactionChangeComponent(Interactable interactable, FactionChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
-            if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
-                interactableOptionProps.InteractionPanelTitle = Props.Faction.DisplayName + " Faction";
+            if (interactionPanelTitle == string.Empty) {
+                interactionPanelTitle = Props.Faction.DisplayName + " Faction";
             }
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            factionChangeManager = systemGameManager.FactionChangeManager;
+            factionChangeManager = systemGameManager.FactionChangeManagerClient;
         }
 
         public override void ProcessCreateEventSubscriptions() {
             //Debug.Log("GatheringNode.CreateEventSubscriptions()");
             base.ProcessCreateEventSubscriptions();
 
-            SystemEventManager.StartListening("OnFactionChange", HandleFactionChange);
+            systemEventManager.OnFactionChange += HandleFactionChange;
         }
 
         public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.FactionChangeInteractable.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
 
-            SystemEventManager.StopListening("OnFactionChange", HandleFactionChange);
+            systemEventManager.OnFactionChange -= HandleFactionChange;
         }
 
-        public void HandleFactionChange(string eventName, EventParamProperties eventParamProperties) {
-            HandlePrerequisiteUpdates();
+        public void HandleFactionChange() {
+            HandleOptionStateChange();
         }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
             //Debug.Log(interactable.gameObject.name + ".FactionChangeInteractable.Interact()");
 
-            base.Interact(source, optionIndex);
-
-            factionChangeManager.SetDisplayFaction(Props.Faction, this);
-            uIManager.factionChangeWindow.OpenWindow();
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
             return true;
+        }
+
+        public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
+
+            factionChangeManager.SetProps(Props, this, componentIndex, choiceIndex);
+            uIManager.factionChangeWindow.OpenWindow();
         }
 
         public override void StopInteract() {
@@ -59,19 +63,22 @@ namespace AnyRPG {
             uIManager.factionChangeWindow.CloseWindow();
         }
 
-        public override int GetCurrentOptionCount() {
+        public override int GetCurrentOptionCount(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.CharacterCreatorInteractable.GetCurrentOptionCount()");
-            return GetValidOptionCount();
+            return GetValidOptionCount(sourceUnitController);
         }
 
         // faction is a special type of prerequisite
-        public override bool PrerequisitesMet {
-            get {
-                if (playerManager.MyCharacter.Faction == Props.Faction) {
+        public override bool PrerequisitesMet(UnitController sourceUnitController) {
+                if (sourceUnitController.BaseCharacter.Faction == Props.Faction) {
                     return false;
                 }
-                return base.PrerequisitesMet;
-            }
+                return base.PrerequisitesMet(sourceUnitController);
+        }
+
+        public void ChangeCharacterFaction(UnitController sourceUnitController) {
+            sourceUnitController.BaseCharacter.ChangeCharacterFaction(Props.Faction);
+            NotifyOnConfirmAction(sourceUnitController);
         }
 
         //public override bool PlayInteractionSound() {

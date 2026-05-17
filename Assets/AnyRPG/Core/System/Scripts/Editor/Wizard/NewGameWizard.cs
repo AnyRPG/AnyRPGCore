@@ -20,11 +20,22 @@ namespace AnyRPG {
             ScriptableWizard.DisplayWizard<NewGameWizard>("New Game Wizard", "Create");
         }
 
-        protected override void SetDefaultPlayerUnitProfileName(SystemConfigurationManager systemConfigurationManager) {
-            base.SetDefaultPlayerUnitProfileName(systemConfigurationManager);
+        protected override void ConfigureGameOptions(SystemConfigurationManager systemConfigurationManager) {
+            base.ConfigureGameOptions(systemConfigurationManager);
 
             systemConfigurationManager.DefaultPlayerUnitProfileName = "Mecanim Human Male";
         }
+
+        
+        public override void CreateFirstScene(string gameParentFolder, string gameName, string sceneName, bool copyExistingScene, SceneAsset existingScene, AudioClip newSceneDayAmbientSounds, AudioClip newSceneNightAmbientSounds, AudioClip newSceneMusic, ICreateSceneRequestor createSceneRequestor) {
+            // create first scene
+            NewSceneWizardBase.CreateScene(gameParentFolder, gameName, firstSceneName, copyExistingScene, existingScene, firstSceneDayAmbientSounds, firstSceneNightAmbientSounds, firstSceneMusic, this, NewSceneWizard.PortalTemplatePath);
+        }
+
+        public override bool CheckRequiredTemplatesExist() {
+            return NewSceneWizard.CheckRequiredTemplatesExistStatic();
+        }
+
     }
 
 }

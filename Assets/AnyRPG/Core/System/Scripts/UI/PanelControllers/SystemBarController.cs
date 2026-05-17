@@ -42,6 +42,12 @@ namespace AnyRPG {
         [SerializeField]
         private SystemPanelButton inventoryButton = null;
 
+        [SerializeField]
+        private SystemPanelButton petsButton = null;
+
+        [SerializeField]
+        private SystemPanelButton socialButton = null;
+
         // game manager references
         UIManager uIManager = null;
 
@@ -58,6 +64,8 @@ namespace AnyRPG {
             currenciesButton.Configure(systemGameManager);
             achievementsButton.Configure(systemGameManager);
             inventoryButton.Configure(systemGameManager);
+            petsButton.Configure(systemGameManager);
+            socialButton.Configure(systemGameManager);
 
             mainMenuButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
             abilityBookButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
@@ -69,6 +77,8 @@ namespace AnyRPG {
             currenciesButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
             achievementsButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
             inventoryButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
+            petsButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
+            socialButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
 
 
             if (systemConfigurationManager.UIConfiguration.SystemBarMainMenu != null) {
@@ -100,6 +110,12 @@ namespace AnyRPG {
             }
             if (systemConfigurationManager.UIConfiguration.SystemBarInventory != null) {
                 inventoryButton.Icon = systemConfigurationManager.UIConfiguration.SystemBarInventory;
+            }
+            if (systemConfigurationManager.UIConfiguration.SystemBarPets != null) {
+                petsButton.Icon = systemConfigurationManager.UIConfiguration.SystemBarPets;
+            }
+            if (systemConfigurationManager.UIConfiguration.SystemBarSocial != null) {
+                socialButton.Icon = systemConfigurationManager.UIConfiguration.SystemBarSocial;
             }
         }
 
@@ -147,6 +163,14 @@ namespace AnyRPG {
 
         public void ClickInventory() {
             uIManager.inventoryWindow.ToggleOpenClose();
+        }
+
+        public void ClickPets() {
+            uIManager.petSpawnWindow.ToggleOpenClose();
+        }
+
+        public void ClickSocial() {
+            uIManager.socialWindow.ToggleOpenClose();
         }
 
 

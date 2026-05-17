@@ -15,8 +15,8 @@ namespace AnyRPG {
         public UnitSpawnControllerProps Props { get => interactableOptionProps as UnitSpawnControllerProps; }
 
         public UnitSpawnControllerComponent(Interactable interactable, UnitSpawnControllerProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
-            if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
-                interactableOptionProps.InteractionPanelTitle = "Spawn Characters";
+            if (interactionPanelTitle == string.Empty) {
+                interactionPanelTitle = "Spawn Characters";
             }
         }
 
@@ -26,11 +26,15 @@ namespace AnyRPG {
             unitSpawnManager = systemGameManager.UnitSpawnManager;
         }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            base.Interact(source, optionIndex);
-            unitSpawnManager.SetProps(Props, this);
-            uIManager.unitSpawnWindow.OpenWindow();
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
             return true;
+        }
+
+        public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
+            unitSpawnManager.SetProps(Props, this, componentIndex, choiceIndex);
+            uIManager.unitSpawnWindow.OpenWindow();
         }
 
         public override void StopInteract() {
@@ -38,10 +42,22 @@ namespace AnyRPG {
             uIManager.unitSpawnWindow.CloseWindow();
         }
 
-        public override int GetCurrentOptionCount() {
+        public override int GetCurrentOptionCount(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.CharacterCreatorInteractable.GetCurrentOptionCount()");
-            return GetValidOptionCount();
+            return GetValidOptionCount(sourceUnitController);
         }
+
+        public void SpawnUnit(UnitController sourceUnitController, int unitLevel, int extraLevels, bool useDynamicLevel, UnitProfile unitProfile, UnitToughness unitToughness) {
+            //Debug.Log($"{interactable.gameObject.name}UnitSpawnManager.SpawnUnit({sourceUnitController.gameObject.name}, {unitLevel}, {extraLevels}, {useDynamicLevel}, {unitProfile.ResourceName}, {(unitToughness == null ? string.Empty : unitToughness.ResourceName)})");
+
+            foreach (UnitSpawnNode unitSpawnNode in Props.UnitSpawnNodeList) {
+                if (unitSpawnNode != null) {
+                    unitSpawnNode.ManualSpawn(unitLevel, extraLevels, useDynamicLevel, unitProfile, unitToughness, sourceUnitController);
+                }
+            }
+            NotifyOnConfirmAction(sourceUnitController);
+        }
+
 
     }
 

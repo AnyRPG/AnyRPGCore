@@ -20,27 +20,8 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  uMARecipeProfileProperties:
-    uMARecipes:
-    - {fileID: 11400000, guid: cb63edb86e86bff4bbabc8650ed916c1, type: 2}
-    - {fileID: 11400000, guid: 0b73dd38891490b948cbe792a2361f56, type: 2}
-    sharedColors:
-    - sharedColorname: Leg Equipment Color 1
-      color: {r: 0, g: 0.83137256, b: 0.83137256, a: 1}
   properties:
-    equipmentModels:
-    - rid: 5705935833309905130
+    equipmentModels: []
   references:
     version: 2
-    RefIds:
-    - rid: 5705935833309905130
-      type: {class: UMAEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        umaRecipeProfileName: 
-        properties:
-          uMARecipes:
-          - {fileID: 11400000, guid: cb63edb86e86bff4bbabc8650ed916c1, type: 2}
-          - {fileID: 11400000, guid: 0b73dd38891490b948cbe792a2361f56, type: 2}
-          sharedColors:
-          - sharedColorname: Leg Equipment Color 1
-            color: {r: 0, g: 0.83137256, b: 0.83137256, a: 1}
+    RefIds: []

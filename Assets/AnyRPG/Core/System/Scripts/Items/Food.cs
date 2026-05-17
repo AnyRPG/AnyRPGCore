@@ -62,12 +62,19 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(StatusEffect))]
         private string statusEffect = string.Empty;
 
-        private ChanneledAbilityProperties channeledAbility = null;
+        private Ability ability = null;
 
-        public override BaseAbilityProperties Ability {
+        public override AbilityProperties Ability {
             get {
-                return channeledAbility;
+                return ability.AbilityProperties;
             }
+        }
+
+        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, long itemInstanceId, Item item, ItemQuality usedItemQuality) {
+            if ((item is Food) == false) {
+                return null;
+            }
+            return new InstantiatedFood(systemGameManager, itemInstanceId, item as Food, usedItemQuality);
         }
 
         /*
@@ -83,8 +90,17 @@ namespace AnyRPG {
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
 
-            DescribableProperties describable = new DescribableProperties(this);
-            describable.DisplayName = consumptionVerb + " " + DisplayName;
+            if (castingAudioClip != null) {
+                systemGameManager.AudioManager.RegisterAudioClip(castingAudioClip);
+            }
+
+            ability = ScriptableObject.CreateInstance("Ability") as Ability;
+            ability.ResourceName = $"Food.{ResourceName}";
+            ability.DisplayName = $"{consumptionVerb} {DisplayName}";
+            ability.Icon = Icon;
+            if (ItemQuality != null) {
+                ability.IconBackgroundImage = ItemQuality.IconBackgroundImage;
+            }
 
             // set up the tick effect
             HealEffectProperties healEffect = new HealEffectProperties();
@@ -106,11 +122,9 @@ namespace AnyRPG {
                 resourceAmountNode.MaxAmount = powerResourceAmountNode.MaxAmount;
                 healEffect.ResourceAmounts.Add(resourceAmountNode);
             }
-            healEffect.SetupScriptableObjects(systemGameManager, describable);
+            healEffect.SetupScriptableObjects(systemGameManager, ability);
 
 
-            // set up the ability
-            channeledAbility = new ChanneledAbilityProperties();
             // target options
             AbilityTargetProps abilityTargetProps = new AbilityTargetProps();
             abilityTargetProps.AutoSelfCast = true;
@@ -118,26 +132,28 @@ namespace AnyRPG {
             abilityTargetProps.CanCastOnSelf = true;
             abilityTargetProps.RequireLiveTarget = true;
             abilityTargetProps.RequireTarget = true;
-            channeledAbility.TargetOptions = abilityTargetProps;
+            ability.AbilityProperties.TargetOptions = abilityTargetProps;
 
-            channeledAbility.AbilityPrefabSource = AbilityPrefabSource.Ability;
-            channeledAbility.HoldableObjectList = holdableObjectList;
-            channeledAbility.AnimationProfileName = animationProfileName;
-            channeledAbility.CastingAnimationClip = animationClip;
-            channeledAbility.UseAnimationCastTime = true;
-            channeledAbility.CastingAudioClip = castingAudioClip;
-            channeledAbility.CastingAudioProfileName = castingAudioProfileName;
-            channeledAbility.LoopAudio = loopAudio;
-            channeledAbility.UseableWithoutLearning = true;
-            channeledAbility.UseSpeedMultipliers = false;
-            channeledAbility.TickRate = tickRate;
+            ability.AbilityProperties.AbilityPrefabSource = AbilityPrefabSource.Ability;
+            ability.AbilityProperties.HoldableObjectList = holdableObjectList;
+            ability.AbilityProperties.AnimationProfileName = animationProfileName;
+            //ability.CastingAnimationClip = animationClip;
+            ability.AbilityProperties.UseAnimationCastTime = true;
+            ability.AbilityProperties.CastingAudioClip = castingAudioClip;
+            ability.AbilityProperties.CastingAudioProfileName = castingAudioProfileName;
+            ability.AbilityProperties.LoopAudio = loopAudio;
+            ability.AbilityProperties.UseableWithoutLearning = true;
+            ability.AbilityProperties.UseSpeedMultipliers = false;
+            ability.AbilityProperties.TickRate = tickRate;
             if (statusEffect != string.Empty) {
-                channeledAbility.AbilityEffectNames = new List<string>() { statusEffect };
+                ability.AbilityProperties.AbilityEffectNames = new List<string>() { statusEffect };
             }
             //channeledAbility.AbilityEffectNames.Add(statusEffect);
-            channeledAbility.ChanneledAbilityEffects.Add(healEffect);
+            ability.AbilityProperties.ChanneledAbilityEffects.Add(healEffect);
 
-            channeledAbility.SetupScriptableObjects(systemGameManager, describable);
+            ability.SetupScriptableObjects(systemGameManager);
+            
+            systemDataFactory.AddResource<Ability>(ability);
         }
 
     }

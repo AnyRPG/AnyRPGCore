@@ -48,7 +48,7 @@ namespace AnyRPG {
 
             int buttonIndex = 0;
             foreach (ActionButton assignActionButton in actionButtons) {
-                assignActionButton.SetIndex(buttonIndex);
+                assignActionButton.SetIndex(buttonIndex, true);
                 assignActionButton.SetPanel(this);
                 assignActionButton.SetTooltipTransform(rectTransform);
                 buttonIndex++;

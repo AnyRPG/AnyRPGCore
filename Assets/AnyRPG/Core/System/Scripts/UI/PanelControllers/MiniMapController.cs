@@ -87,13 +87,13 @@ namespace AnyRPG {
 
         // system component references
         protected CameraManager cameraManager = null;
-        protected PlayerManager playerManager = null;
-        protected LevelManager levelManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
+        protected LevelManagerClient levelManagerClient = null;
         protected MiniMapManager miniMapManager = null;
         protected ObjectPooler objectPooler = null;
         protected MapManager mapManager = null;
         protected UIManager uIManager = null;
-        protected TimeOfDayManager timeOfDayManager = null;
+        protected TimeOfDayManagerServer timeOfDayManagerServer = null;
 
         // map indicators
         protected Dictionary<Interactable, MiniMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MiniMapIndicatorController>();
@@ -129,12 +129,12 @@ namespace AnyRPG {
 
             uIManager = systemGameManager.UIManager;
             cameraManager = systemGameManager.CameraManager;
-            playerManager = systemGameManager.PlayerManager;
-            levelManager = systemGameManager.LevelManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             miniMapManager = uIManager.MiniMapManager;
             objectPooler = systemGameManager.ObjectPooler;
             mapManager = systemGameManager.UIManager.MapManager;
-            timeOfDayManager = systemGameManager.TimeOfDayManager;
+            timeOfDayManagerServer = systemGameManager.TimeOfDayManagerServer;
         }
 
         protected override void ProcessCreateEventSubscriptions() {
@@ -163,7 +163,8 @@ namespace AnyRPG {
         }
 
         public void HandleAddIndicator(Interactable interactable) {
-            //Debug.Log("MiniMapController.HandleAddIndicator(" + interactable.gameObject.name + interactable.gameObject.GetInstanceID() + ")");
+            //Debug.Log($"MiniMapController.HandleAddIndicator({interactable.gameObject.name} ({interactable.gameObject.GetInstanceID()}))");
+
             if (mapIndicatorControllers.ContainsKey(interactable) == false) {
                 GameObject mapIndicator = objectPooler.GetPooledObject(miniMapIndicatorPrefab, (mapGraphic.transform));
                 if (mapIndicator != null) {
@@ -183,6 +184,8 @@ namespace AnyRPG {
         }
 
         public void HandleRemoveIndicator(Interactable interactable) {
+            //Debug.Log($"MiniMapController.HandleRemoveIndicator({interactable.gameObject.name} ({interactable.gameObject.GetInstanceID()}))");
+
             if (mapIndicatorControllers.ContainsKey(interactable)) {
                 mapIndicatorControllers[interactable].ResetSettings();
                 objectPooler.ReturnObjectToPool(mapIndicatorControllers[interactable].gameObject);
@@ -198,13 +201,15 @@ namespace AnyRPG {
         }
 
         public void LateUpdate() {
+            /*
             if (systemConfigurationManager.UseThirdPartyCameraControl == true
                 && cameraManager.ThirdPartyCamera.activeInHierarchy == true
                 && playerManager.PlayerUnitSpawned == true) {
                 UpdateMiniMap();
             }
+            */
 
-            clockText.text = timeOfDayManager.InGameTime.ToShortTimeString();
+            clockText.text = timeOfDayManagerServer.InGameTime.ToShortTimeString();
         }
 
         void UpdateMiniMap() {
@@ -308,7 +313,7 @@ namespace AnyRPG {
         }
 
         private void CommonInitialization() {
-            SceneNode sceneNode = levelManager.GetActiveSceneNode();
+            SceneNode sceneNode = levelManagerClient.GetActiveSceneNode();
             if (sceneNode != null) {
                 zoneNameText.text = sceneNode.DisplayName;
             } else {
@@ -356,8 +361,8 @@ namespace AnyRPG {
 
             // scale factor gives the number of pixels per meter for this image
             // it assumes a square image whose factor is based on the largest scene dimension
-            levelScaleFactor = miniMapGraphicRawImage.texture.width / (levelManager.SceneBounds.size.x > levelManager.SceneBounds.size.z ? levelManager.SceneBounds.size.x : levelManager.SceneBounds.size.z);
-            levelOffset = levelManager.SceneBounds.center;
+            levelScaleFactor = miniMapGraphicRawImage.texture.width / (levelManagerClient.SceneBounds.size.x > levelManagerClient.SceneBounds.size.z ? levelManagerClient.SceneBounds.size.x : levelManagerClient.SceneBounds.size.z);
+            levelOffset = levelManagerClient.SceneBounds.center;
 
             EnableIndicators();
 

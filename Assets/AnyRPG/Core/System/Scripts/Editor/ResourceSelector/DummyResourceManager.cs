@@ -14,7 +14,7 @@ namespace AnyRPG {
             typeof(AnimationProfile).Name,
             typeof(ArmorClass).Name,
             typeof(AudioProfile).Name,
-            typeof(BaseAbility).Name,
+            typeof(Ability).Name,
             typeof(BehaviorProfile).Name,
             typeof(CharacterClass).Name,
             typeof(CharacterRace).Name,
@@ -27,6 +27,7 @@ namespace AnyRPG {
             typeof(EnvironmentStateProfile).Name,
             typeof(EquipmentSet).Name,
             typeof(Faction).Name,
+            typeof(GameExtension).Name,
             typeof(InteractableOptionConfig).Name,
             typeof(Item).Name,
             typeof(ItemQuality).Name,
@@ -83,9 +84,9 @@ namespace AnyRPG {
             allResources.AddRange(Resources.LoadAll<T>(folder));
 
             // find the system game manager to load specific resource subfolders for the current game (based on the open scene)
-            SystemConfigurationManager systemConfigurationManager = GameObject.FindObjectOfType<SystemConfigurationManager>();
+            SystemConfigurationManager systemConfigurationManager = GameObject.FindAnyObjectByType<SystemConfigurationManager>();
             if (systemConfigurationManager == null) {
-                SceneConfig sceneConfig = GameObject.FindObjectOfType<SceneConfig>();
+                SceneConfig sceneConfig = GameObject.FindAnyObjectByType<SceneConfig>();
                 if (sceneConfig != null) {
                     systemConfigurationManager = sceneConfig.systemConfigurationManager;
                 }

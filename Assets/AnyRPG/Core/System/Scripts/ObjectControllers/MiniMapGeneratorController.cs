@@ -37,7 +37,7 @@ namespace AnyRPG
 
         public void GetSceneBounds() {
 
-            Bounds sceneBounds = LevelManager.GetSceneBounds();
+            Bounds sceneBounds = LevelManagerClient.GetSceneBounds();
             mapCamera.orthographic = true;
 
             cameraSize = System.Math.Max(sceneBounds.size.x, sceneBounds.size.z);

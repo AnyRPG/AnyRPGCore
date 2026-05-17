@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 
@@ -52,7 +53,8 @@ namespace AnyRPG {
 
         // game manager references
         private SystemDataFactory systemDataFactory = null;
-        private WeatherManager weatherManager = null;
+        private WeatherManagerClient weatherManager = null;
+        private NetworkManagerServer networkManagerServer = null;
 
         public BoxCollider Collider { get => myCollider; set => myCollider = value; }
         public float SurfaceHeight { get => surfaceHeight; set => surfaceHeight = value; }
@@ -64,7 +66,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             surfaceHeight = myCollider.bounds.max.y;
-            //Debug.Log("surfaceHeight = " + surfaceHeight);
+            //Debug.Log($"{gameObject.name}.Water.Configure() surfaceHeight = {surfaceHeight}");
 
             SetupScriptableObjects();
         }
@@ -73,26 +75,36 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             systemDataFactory = systemGameManager.SystemDataFactory;
-            weatherManager = systemGameManager.WeatherManager;
+            weatherManager = systemGameManager.WeatherManagerClient;
+            networkManagerServer = systemGameManager.NetworkManagerServer;
+
         }
 
         private void OnTriggerEnter(Collider other) {
             //Debug.Log($"{gameObject.name}.Water.OnTriggerEnter(" + other.gameObject.name + ")");
 
-            // configure camera
-            if (useFog == true
-                && other.tag == "MainCamera"
-                && fogActivated == false) {
-                fogActivated = true;
+            if (configureCount == 0) {
+                return;
+            }
 
-                // set overrides
-                weatherManager.ActivateWaterFogSettings(true, fogColor, fogDensity);
+            if (networkManagerServer.ServerModeActive == false) {
+                // there is no camera on the server, so this is only run on the client
+                if (useFog == true
+                    && other.tag == "MainCamera"
+                    && fogActivated == false) {
+                    fogActivated = true;
+
+                    // set overrides
+                    weatherManager.ActivateWaterFogSettings(true, fogColor, fogDensity);
+                }
             }
 
             // configure character
             UnitController unitController = other.gameObject.GetComponent<UnitController>();
             if (unitController != null) {
-                unitController.EnterWater(this);
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && unitController.IsOwner == true)) {
+                    unitController.EnterWater(this);
+                }
             }
         }
 
@@ -100,20 +112,27 @@ namespace AnyRPG {
         private void OnTriggerExit(Collider other) {
             //Debug.Log($"{gameObject.name}.Water.OnTriggerExit(" + other.gameObject.name + ")");
 
-            // configure camera
-            if (useFog == true
-                && other.tag == "MainCamera"
-                && fogActivated == true) {
-                fogActivated = false;
-
-                // restore original settings
-                weatherManager.DeactivateWaterFogSettings();
+            if (configureCount == 0) {
+                return;
             }
 
-            // configure character
+            if (networkManagerServer.ServerModeActive == false) {
+                // configure camera
+                if (useFog == true
+                    && other.tag == "MainCamera"
+                    && fogActivated == true) {
+                    fogActivated = false;
+
+                    // restore original settings
+                    weatherManager.DeactivateWaterFogSettings();
+                }
+            }
+
             UnitController unitController = other.gameObject.GetComponent<UnitController>();
             if (unitController != null) {
-                unitController.ExitWater(this);
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && unitController.IsOwner == true)) {
+                    unitController.ExitWater(this);
+                }
             }
 
         }

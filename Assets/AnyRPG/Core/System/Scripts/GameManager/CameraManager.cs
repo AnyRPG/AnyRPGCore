@@ -1,6 +1,3 @@
-using AnyRPG;
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -40,13 +37,15 @@ namespace AnyRPG {
         [SerializeField]
         private Camera petPreviewCamera = null;
 
-        private GameObject thirdPartyCameraGameObject = null;
+        //private GameObject thirdPartyCameraGameObject = null;
 
-        private Camera thirdPartyCamera = null;
+        //private Camera thirdPartyCamera = null;
 
         private AnyRPGCameraController mainCameraController;
 
         private CutsceneCameraController currentCutsceneCameraController = null;
+
+        //private MainMapCameraController mainMapCameraController = null;
 
         private int playerLayer;
         private int equipmentLayer;
@@ -55,8 +54,8 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        LevelManager levelManager = null;
-        PlayerManager playerManager = null;
+        LevelManagerClient levelManagerClient = null;
+        PlayerManagerClient playerManagerClient = null;
 
         public Camera MainCamera { get => mainCamera; set => mainCamera = value; }
         public GameObject MainCameraGameObject { get => mainCameraGameObject; }
@@ -69,35 +68,38 @@ namespace AnyRPG {
         public AnyRPGCameraController MainCameraController { get => mainCameraController; set => mainCameraController = value; }
         public Camera UnitPreviewCamera { get => unitPreviewCamera; set => unitPreviewCamera = value; }
         public Camera PetPreviewCamera { get => petPreviewCamera; set => petPreviewCamera = value; }
-        public GameObject ThirdPartyCamera { get => thirdPartyCameraGameObject; set => thirdPartyCameraGameObject = value; }
+        //public GameObject ThirdPartyCamera { get => thirdPartyCameraGameObject; set => thirdPartyCameraGameObject = value; }
 
         public Camera ActiveMainCamera {
             get {
-                if (MainCameraGameObject != null && MainCameraGameObject.activeSelf == true && MainCamera != null) {
+                if (mainCameraGameObject != null && mainCameraGameObject.activeSelf == true && MainCamera != null) {
                     return MainCamera;
                 }
+                /*
                 if (ThirdPartyCamera != null && ThirdPartyCamera.activeSelf == true && thirdPartyCamera != null) {
                     return thirdPartyCamera;
                 }
+                */
                 return null;
             }
         }
 
         public CutsceneCameraController CurrentCutsceneCameraController { get => currentCutsceneCameraController; set => currentCutsceneCameraController = value; }
         public ObjectHighlighter MainCameraHighlighter { get => mainCameraHighlighter; set => mainCameraHighlighter = value; }
+        //public MainMapCameraController MainMapCameraController { get => mainMapCameraController; set => mainMapCameraController = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CameraManager.Awake()");
             base.Configure(systemGameManager);
-            levelManager = systemGameManager.LevelManager;
-            playerManager = systemGameManager.PlayerManager;
 
-            CheckConfiguration();
+            //CheckConfiguration();
 
             // attach camera to player
             mainCameraController = mainCameraGameObject.GetComponent<AnyRPGCameraController>();
             mainCameraController.Configure(systemGameManager);
+            //mainMapCameraController = mainMapCamera.gameObject.GetComponent<MainMapCameraController>();
 
+            /*
             if (thirdPartyCameraGameObject == null && systemConfigurationManager.ThirdPartyCamera != null) {
                 thirdPartyCameraGameObject = Instantiate(systemConfigurationManager.ThirdPartyCamera, transform);
                 if (thirdPartyCameraGameObject != null) {
@@ -109,9 +111,10 @@ namespace AnyRPG {
                     Debug.LogWarning("Unable to instantiate third party camera GameObject");
                 }
             }
+            */
 
             DisablePreviewCameras();
-            DisableThirdPartyCamera();
+            //DisableThirdPartyCamera();
             DisableFocusCamera();
 
             CreateEventSubscriptions();
@@ -119,6 +122,12 @@ namespace AnyRPG {
             playerLayer = LayerMask.NameToLayer("Player");
             equipmentLayer = LayerMask.NameToLayer("Equipment");
             hideLayers = (1 << playerLayer | 1 << equipmentLayer);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            levelManagerClient = systemGameManager.LevelManagerClient;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public void HidePlayers() {
@@ -131,74 +140,120 @@ namespace AnyRPG {
             mainCamera.cullingMask = mainCamera.cullingMask | hideLayers;
         }
 
-        public void CheckForCutsceneCamera() {
-            //currentCutsceneCameraController = null;
-            currentCutsceneCameraController = FindObjectOfType<CutsceneCameraController>();
+        public void DisableCutsceneCameras(Scene loadedScene) {
+            //Debug.Log("CameraManager.CheckForCutsceneCamera()");
+
+            GameObject[] rootObjects = loadedScene.GetRootGameObjects();
+            foreach (GameObject root in rootObjects) {
+                CutsceneCameraController cutsceneCameraController = root.GetComponentInChildren<CutsceneCameraController>(true);
+                if (cutsceneCameraController != null && cutsceneCameraController.gameObject.activeSelf == false) {
+                    cutsceneCameraController.gameObject.SetActive(false);
+                }
+            }
         }
 
+        public void CheckForCutsceneCamera(Scene loadedScene) {
+            //Debug.Log($"CameraManager.CheckForCutsceneCamera({loadedScene.name})");
+
+            GameObject[] rootObjects = loadedScene.GetRootGameObjects();
+
+            foreach (GameObject root in rootObjects) {
+                CutsceneCameraController cutsceneCameraController = root.GetComponentInChildren<CutsceneCameraController>(true);
+                if (cutsceneCameraController != null) {
+                    // if the camera was inactive, then it has not been configured yet.
+                    // If it was active, then it has already been configured and we can just leave it alone.
+                    if (cutsceneCameraController.gameObject.activeSelf == false) {
+                        cutsceneCameraController.Configure(systemGameManager);
+                    }
+                    // there could potentially be more than one cutscene camera in the scene.
+                    // we will use the last one found as the current cutscene camera, but we will disable all of them
+                    currentCutsceneCameraController = cutsceneCameraController;
+                    currentCutsceneCameraController.gameObject.SetActive(false);
+                }
+            }
+        }
+
+
+        /*
         private void CheckConfiguration() {
             if (systemConfigurationManager.UseThirdPartyCameraControl == true && systemConfigurationManager.ThirdPartyCamera == null && (thirdPartyCamera == null || thirdPartyCameraGameObject == null)) {
                 Debug.LogError("CameraManager.CheckConfiguration(): The system configuration option 'Use Third Party Camera' is true, but no third party camera is configured in the Camera Manager. Check inspector!");
             }
         }
+        */
 
         public void ActivateMainCamera(bool prePositionCamera = false) {
-            //Debug.Log("CameraManager.ActivateMainCamera()");
+            //Debug.Log($"CameraManager.ActivateMainCamera({prePositionCamera})  frame: {Time.frameCount}");
+
             if (systemConfigurationManager == null) {
                 // can't get camera settings, so just return
                 return;
             }
-            if (levelManager.IsMainMenu()
-                || levelManager.IsInitializationScene()) {
-                MainCameraGameObject.SetActive(true);
+            if (levelManagerClient.IsMainMenu()
+                || levelManagerClient.IsInitializationScene()) {
+                mainCameraGameObject.SetActive(true);
                 return;
             }
+            /*
             if (systemConfigurationManager.UseThirdPartyCameraControl == false) {
                 MainCameraGameObject.SetActive(true);
                 return;
             }
-
+            */
+            /*
             if (systemConfigurationManager.UseThirdPartyCameraControl == true) {
                 EnableThirdPartyCamera(prePositionCamera);
                 return;
             }
+            */
 
             // fallback in case no camera found
-            MainCameraGameObject.SetActive(true);
+            mainCameraGameObject.SetActive(true);
         }
 
         public void SwitchToMainCamera() {
-            //Debug.Log("CameraManager.SwitchToMainCamera()");
+            //Debug.Log($"CameraManager.SwitchToMainCamera() frame: {Time.frameCount}");
+
+            /*
             if (systemConfigurationManager.UseThirdPartyCameraControl == true) {
                 DisableThirdPartyCamera();
             }
-            MainCameraGameObject.SetActive(true);
+            */
+            mainCameraGameObject.SetActive(true);
         }
 
         public void DeactivateMainCamera() {
-            //Debug.Log("CameraManager.DeactivateMainCamera()");
-            MainCameraGameObject.SetActive(false);
+            //Debug.Log($"CameraManager.DeactivateMainCamera() frame: {Time.frameCount}");
+
+            mainCameraGameObject.SetActive(false);
+            /*
             if (systemConfigurationManager.UseThirdPartyCameraControl == true) {
                 DisableThirdPartyCamera();
             }
+            */
         }
 
         public void EnableCutsceneCamera() {
-            //Debug.Log("CameraManager.EnableCutsceneCamera()");
+            //Debug.Log($"CameraManager.EnableCutsceneCamera() frame: {Time.frameCount}");
+
             if (currentCutsceneCameraController != null) {
                 //Debug.Log("CameraManager.EnableCutsceneCamera(): enabling");
                 currentCutsceneCameraController.gameObject.SetActive(true);
+            } else {
+                Debug.LogWarning("CameraManager.EnableCutsceneCamera(): currentCutsceneCameraController is null");
             }
         }
 
         public void DisableCutsceneCamera() {
-            //Debug.Log("CameraManager.DisableCutsceneCamera()");
+            //Debug.Log($"CameraManager.DisableCutsceneCamera() frame: {Time.frameCount}");
+
             if (currentCutsceneCameraController != null) {
                 //Debug.Log("CameraManager.DisableCutsceneCamera(): disabling");
                 currentCutsceneCameraController.gameObject.SetActive(false);
             }
         }
 
+        /*
         public void EnableThirdPartyCamera(bool prePositionCamera = false) {
             //Debug.Log("CameraManager.EnableThirdPartyCamera()");
             if (thirdPartyCameraGameObject != null) {
@@ -213,13 +268,16 @@ namespace AnyRPG {
                 thirdPartyCameraGameObject.SetActive(true);
             }
         }
+        */
 
+        /*
         public void DisableThirdPartyCamera() {
             //Debug.Log("CameraManager.DisableThirdPartyCamera()");
             if (thirdPartyCameraGameObject != null) {
                 thirdPartyCameraGameObject.SetActive(false);
             }
         }
+        */
 
         private void DisablePreviewCameras() {
             if (characterPanelCamera != null) {
@@ -245,8 +303,8 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
+            systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            systemEventManager.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
             eventSubscriptionsInitialized = true;
         }
 
@@ -255,8 +313,8 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
+            systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+            systemEventManager.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
             eventSubscriptionsInitialized = false;
         }
 
@@ -268,7 +326,7 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
-        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
+        public void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.CameraManager.HandlePlayerUnitSpawn()");
             ProcessPlayerUnitSpawn();
         }
@@ -288,11 +346,11 @@ namespace AnyRPG {
             // if there is a cutscene in the level, the player will spawn after the cutscene so the need to initialize the camera remains
             //if (levelManager.GetActiveSceneNode().SuppressMainCamera != true) {
                 //Debug.Log("CameraManager.ProcessPlayerUnitSpawn(): suppressed by level = false, spawning camera");
-                mainCameraController.InitializeCamera(playerManager.ActiveUnitController.transform);
+                mainCameraController.InitializeCamera(playerManagerClient.ActiveUnitController.CameraTransform, playerManagerClient.ActiveUnitController.NameplateVector.y);
             //}
         }
 
-        public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
+        public void HandlePlayerUnitDespawn(UnitController unitController) {
             mainCameraController.ClearTarget();
         }
     }

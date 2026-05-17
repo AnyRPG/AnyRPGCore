@@ -76,6 +76,9 @@ namespace AnyRPG {
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
 
+            if (openAudioClip != null) { 
+                systemGameManager.AudioManager.RegisterAudioClip(openAudioClip);
+            }
             if (openAudioClip == null && openAudioProfile != null && openAudioProfile != string.Empty) {
                 AudioProfile audioProfile = systemDataFactory.GetResource<AudioProfile>(openAudioProfile);
                 if (audioProfile != null) {
@@ -85,6 +88,9 @@ namespace AnyRPG {
                 }
             }
 
+            if (closeAudioClip != null) {
+                systemGameManager.AudioManager.RegisterAudioClip(closeAudioClip);
+            }
             if (closeAudioClip == null && closeAudioProfile != null && closeAudioProfile != string.Empty) {
                 AudioProfile audioProfile = systemDataFactory.GetResource<AudioProfile>(closeAudioProfile);
                 if (audioProfile != null) {

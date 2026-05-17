@@ -11,10 +11,10 @@ namespace AnyRPG {
 
     public class MeshModelGroupButton : HighlightButton {
 
-        SwappableMeshAppearancePanelController swappableMeshAppearancePanelController = null;
+        SwappableMeshAppearancePanel swappableMeshAppearancePanelController = null;
         string meshModelGroup = string.Empty;
 
-        public void ConfigureButton(SwappableMeshAppearancePanelController swappableMeshAppearancePanelController, string meshModelGroup) {
+        public void ConfigureButton(SwappableMeshAppearancePanel swappableMeshAppearancePanelController, string meshModelGroup) {
             this.swappableMeshAppearancePanelController = swappableMeshAppearancePanelController;
             this.meshModelGroup = meshModelGroup;
             text.text = meshModelGroup;

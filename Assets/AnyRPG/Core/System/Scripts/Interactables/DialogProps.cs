@@ -26,14 +26,6 @@ namespace AnyRPG {
         public override Sprite Icon { get => (systemConfigurationManager.DialogInteractionPanelImage != null ? systemConfigurationManager.DialogInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (systemConfigurationManager.DialogNamePlateImage != null ? systemConfigurationManager.DialogNamePlateImage : base.NamePlateImage); }
 
-        public override string GetInteractionPanelTitle(int optionIndex = 0) {
-                List<Dialog> currentList = dialogComponent.GetCurrentOptionList();
-                if (currentList.Count > optionIndex) {
-                    return currentList[optionIndex].DisplayName;
-                }
-                return base.GetInteractionPanelTitle(optionIndex);
-        }
-
         public List<Dialog> DialogList { get => dialogList; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {

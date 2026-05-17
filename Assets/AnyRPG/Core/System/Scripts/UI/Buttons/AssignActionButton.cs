@@ -60,7 +60,7 @@ namespace AnyRPG {
 
         public override void Accept() {
             base.Accept();
-            actionBarManager.AssignUseableByIndex(actionButtonIndex);
+            actionBarManager.RequestAssignUseableByIndex(actionButtonIndex);
             (uIManager.GamepadWindow.CloseableWindowContents as GamepadPanel).SetNavigationControllerByIndex(windowPanel.GetNavigationControllerIndex());
             (uIManager.GamepadWindow.CloseableWindowContents as GamepadPanel).CurrentNavigationController.SetCurrentIndex(windowPanel.CurrentNavigationController.CurrentIndex);
 

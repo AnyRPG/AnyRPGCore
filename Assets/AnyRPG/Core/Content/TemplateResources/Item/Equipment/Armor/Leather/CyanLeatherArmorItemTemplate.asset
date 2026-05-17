@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 3
+  itemPickupPrefabProfileName: Leather Armor Cyan
   equipmentSlotType: Armor
   equipmentSetName: 
-  umaRecipeProfileName: Cyan Leather Armor
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Cyan Leather Armor

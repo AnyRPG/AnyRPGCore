@@ -22,7 +22,7 @@ namespace AnyRPG {
         //[SerializeField]
         protected UnitProfile unitProfile;
 
-        public UnitProfile MyUnitProfile { get => unitProfile; set => unitProfile = value; }
+        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public PetSpawnControlPanel PetSpawnControlPanel { get => petSpawnControlPanel; set => petSpawnControlPanel = value; }
 
         public void AddUnitProfile(UnitProfile unitProfile) {

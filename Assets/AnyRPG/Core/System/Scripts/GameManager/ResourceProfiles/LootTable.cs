@@ -30,6 +30,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects(systemGameManager);
 
             if (lootGroups != null) {
+                //Debug.Log($"LootTable.SetupScriptableObjects(): setting up loot groups for {ResourceName}");
                 foreach (LootGroup lootGroup in lootGroups) {
                     foreach (Loot tmpLoot in lootGroup.Loot) {
                         tmpLoot.SetupScriptableObjects(systemGameManager);

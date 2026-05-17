@@ -21,17 +21,25 @@ namespace AnyRPG {
         private Dictionary<GameObject, List<GameObject>> freeObjects = new Dictionary<GameObject, List<GameObject>>();
         private Dictionary<GameObject, List<GameObject>> usedObjects = new Dictionary<GameObject, List<GameObject>>();
 
+        // game manager references
+        private LevelManagerClient levelManagerClient = null;
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         private void Start() {
             PopulateObjectPool();
         }
 
-        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+        public void HandleLevelUnload(int sceneHandle, string sceneName) {
             //Debug.Log("ObjectPooler.HandleLevelUnload()");
             // if object should persist through scene changes globally, do nothing
             if (persistSceneChange == true) {
@@ -164,6 +172,14 @@ namespace AnyRPG {
 
         public void ReturnObjectToPool(GameObject pooledGameObject) {
             //Debug.Log($"ObjectPooler.ReturnObjectToPool({pooledGameObject.name}) instanceID: {pooledGameObject.GetInstanceID()}");
+
+            /*
+            if (pooledGameObject.activeInHierarchy == false) {
+                //Debug.Log($"ObjectPooler.ReturnObjectToPool({pooledGameObject.name}) instanceID: {pooledGameObject.GetInstanceID()} RETURNING INACTIVE OBJECT");
+            } else {
+                //Debug.Log($"ObjectPooler.ReturnObjectToPool({pooledGameObject.name}) instanceID: {pooledGameObject.GetInstanceID()} RETURNING ACTIVE OBJECT");
+            }
+            */
 
             if (pooledGameObject == null) {
                 return;

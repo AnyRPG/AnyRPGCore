@@ -1,12 +1,8 @@
-using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace AnyRPG {
 
-    public class ControlsManager : ConfiguredMonoBehaviour {
+    public class ControlsManager : ConfiguredClass {
 
         private float inputHorizontal = 0f;
         private float inputVertical = 0f;
@@ -45,11 +41,11 @@ namespace AnyRPG {
         protected InputManager inputManager = null;
         protected UIManager uIManager = null;
         protected WindowManager windowManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected ActionBarManager actionBarManager = null;
-        protected CutSceneBarController cutSceneBarController = null;
+        protected CutsceneBarController cutSceneBarController = null;
 
-        public bool GamePadModeActive { get => gamePadModeActive; }
+        public bool GamepadModeActive { get => gamePadModeActive; }
         public bool GamePadInputActive { get => gamePadInputActive; }
         public bool DPadDownPressed { get => dPadDownPressed; }
         public bool DPadUpPressed { get => dPadUpPressed; }
@@ -64,6 +60,8 @@ namespace AnyRPG {
         public float InputHorizontal { get => inputHorizontal; }
         public float InputVertical { get => inputVertical; }
         public bool MouseDisabled { get => mouseDisabled; }
+        public int WindowStackCount { get => windowStackCount; }
+        public bool TextInputActive { get => textInputActive; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -79,7 +77,7 @@ namespace AnyRPG {
             inputManager = systemGameManager.InputManager;
             uIManager = systemGameManager.UIManager;
             windowManager = systemGameManager.WindowManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             actionBarManager = uIManager.ActionBarManager;
             cutSceneBarController = uIManager.CutSceneBarController;
         }
@@ -104,8 +102,8 @@ namespace AnyRPG {
             }
         }
 
-        public void DeActivateGamepadMode(bool toggleUI) {
-            //Debug.Log("ControlsManager.DeActivateGamepadMode()");
+        public void DeactivateGamepadMode(bool toggleUI) {
+            //Debug.Log("ControlsManager.DeactivateGamepadMode()");
             gamePadModeActive = false;
             gamePadInputActive = false;
             UnlockMouse();
@@ -139,8 +137,8 @@ namespace AnyRPG {
             //Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             mouseDisabled = true;
-            if (playerManager.PlayerController != null) {
-                playerManager.PlayerController.DisableMouseOver();
+            if (playerManagerClient.PlayerController != null) {
+                playerManagerClient.PlayerController.DisableMouseOver();
             }
             //Debug.Log("ControlsManager.LockMouse() visibility: " + Cursor.visible);
         }
@@ -163,10 +161,12 @@ namespace AnyRPG {
             }
         }
 
-        void Update() {
+        public void Update() {
+            /*
             if (playerManager.PlayerController != null) {
                 playerManager.PlayerController.ResetMoveInput();
             }
+            */
             RegisterAxis();
             inputManager.RegisterInput();
             CheckMouse();
@@ -197,6 +197,9 @@ namespace AnyRPG {
                 }
             }
 
+            // taking window stack count here because window could be closed in uIManager.ProcessInput()
+            windowStackCount = windowManager.WindowStack.Count;
+
             // only send input to the next block if the name change window is not open
             if (textInputActive == false) {
                 uIManager.ProcessInput();
@@ -213,7 +216,6 @@ namespace AnyRPG {
             // don't send input to the player controller if windows are open
             // because the input could close the window, and accidentally do something like select the nearest target
             // by passing the input to the player controller after the window manager
-            windowStackCount = windowManager.WindowStack.Count;
             if (windowStackCount > 0) {
                 windowManager.Navigate();
             }
@@ -227,11 +229,11 @@ namespace AnyRPG {
                 if (cutSceneBarController.CurrentCutscene != null) {
                     cutSceneBarController.ProcessInput();
                 } else {
-                    if (playerManager.PlayerController != null) {
+                    if (playerManagerClient.PlayerController != null) {
                         if (gamePadModeActive) {
                             actionBarManager.ProcessGamepadInput();
                         }
-                        playerManager.PlayerController.ProcessInput();
+                        playerManagerClient.PlayerController.ProcessInput();
                     }
                 }
             }

@@ -1,4 +1,3 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -10,8 +9,13 @@ namespace AnyRPG {
 
     public class NavigableInputField : HighlightButton {
 
+        [Header("Navigable Input Field")]
+
         [SerializeField]
         TMP_InputField inputField = null;
+
+        [SerializeField]
+        private bool disableControlsOnClick = true;
 
         protected bool interacting = false;
 
@@ -54,6 +58,17 @@ namespace AnyRPG {
             base.Cancel();
             interacting = false;
             inputField.DeactivateInputField();
+        }
+
+        protected override void HandleLeftClick() {
+            base.HandleLeftClick();
+            if (disableControlsOnClick) {
+                controlsManager.ActivateTextInput();
+            }
+        }
+
+        public void HandleEndEdit() {
+            controlsManager.DeactivateTextInput();
         }
 
     }

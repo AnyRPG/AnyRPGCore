@@ -21,39 +21,40 @@ namespace AnyRPG {
             }
         }
 
-        public void UpdateKillCount(BaseCharacter character, float creditPercent) {
+        public void UpdateKillCount(UnitController sourceUnitController, UnitController killedUnitController, float creditPercent) {
             //Debug.Log("KillObjective.UpdateKillCount()");
 
-            bool completeBefore = IsComplete;
+            bool completeBefore = IsComplete(sourceUnitController);
             if (completeBefore) {
                 return;
             }
 
             // INVESTIGATE IF STRING MATCH CAN BE REPLACED WITH TYPE.GETTYPE DIRECT MATCH
-            if (character.GetType() == Type.GetType(targetName) || SystemDataUtility.MatchResource(character.CharacterName, targetName) || SystemDataUtility.MatchResource(character.Faction.ResourceName, targetName)) {
-                CurrentAmount++;
-                questBase.CheckCompletion();
-                if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && CurrentAmount != 0) {
-                    messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, Amount), Amount));
+            if (killedUnitController.GetType() == Type.GetType(targetName)
+                || SystemDataUtility.MatchResource(killedUnitController.BaseCharacter.CharacterName, targetName)
+                || SystemDataUtility.MatchResource(killedUnitController.BaseCharacter.Faction.ResourceName, targetName)) {
+                SetCurrentAmount(sourceUnitController, CurrentAmount(sourceUnitController) + 1);
+                if (CurrentAmount(sourceUnitController) <= Amount && questBase.PrintObjectiveCompletionMessages && CurrentAmount(sourceUnitController) != 0) {
+                    sourceUnitController.WriteMessageFeedMessage(string.Format("Kill {0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount(sourceUnitController), 0, Amount), Amount));
                 }
-                if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages) {
-                    messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, DisplayName));
+                if (completeBefore == false && IsComplete(sourceUnitController) && questBase.PrintObjectiveCompletionMessages) {
+                    sourceUnitController.WriteMessageFeedMessage(string.Format("Kill {0}: Objective Complete", CurrentAmount(sourceUnitController), DisplayName));
                 }
-
+                questBase.CheckCompletion(sourceUnitController);
             }
         }
 
-        public override void OnAcceptQuest(QuestBase quest, bool printMessages = true) {
-            base.OnAcceptQuest(quest, printMessages);
+        public override void OnAcceptQuest(UnitController sourceUnitController, QuestBase quest, bool printMessages = true) {
+            base.OnAcceptQuest(sourceUnitController, quest, printMessages);
 
             // don't forget to remove these later
-            playerManager.MyCharacter.CharacterCombat.OnKillEvent += UpdateKillCount;
+            sourceUnitController.UnitEventController.OnKillEvent += UpdateKillCount;
         }
 
-        public override void OnAbandonQuest() {
-            base.OnAbandonQuest();
-            if (playerManager?.MyCharacter?.CharacterCombat != null) {
-                playerManager.MyCharacter.CharacterCombat.OnKillEvent -= UpdateKillCount;
+        public override void OnAbandonQuest(UnitController sourceUnitController) {
+            base.OnAbandonQuest(sourceUnitController);
+            if (sourceUnitController.CharacterCombat != null) {
+                sourceUnitController.UnitEventController.OnKillEvent -= UpdateKillCount;
             }
         }
 

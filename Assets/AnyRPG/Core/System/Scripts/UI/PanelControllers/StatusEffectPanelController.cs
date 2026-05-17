@@ -36,9 +36,9 @@ namespace AnyRPG {
         public void SetTarget(UnitController unitController) {
             //Debug.Log($"{gameObject.name}.StatusEffectPanelController.SetTarget(" + unitController.DisplayName + ")");
             this.targetUnitController = unitController;
-            if (targetUnitController.CharacterUnit.BaseCharacter != null && targetUnitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
+            if (targetUnitController.BaseCharacter != null && targetUnitController.CharacterStats != null) {
                 //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + "): checking status effects");
-                foreach (StatusEffectNode statusEffectNode in targetUnitController.CharacterUnit.BaseCharacter.CharacterStats.StatusEffects.Values) {
+                foreach (StatusEffectNode statusEffectNode in targetUnitController.CharacterStats.StatusEffects.Values) {
                     AddStatusNode(statusEffectNode);
                 }
                 CreateEventSubscriptions();
@@ -63,8 +63,8 @@ namespace AnyRPG {
             statusEffectNodes.Clear();
         }
 
-        public void HandleStatusEffectAdd(StatusEffectNode statusEffectNode) {
-            //Debug.Log($"{gameObject.name}.StatusEffectPanelController.HandleStatusEffectAdd(" + statusEffectNode.StatusEffect.DisplayName + "): character: " + (targetUnitController == null ? "null" : targetUnitController.DisplayName));
+        public void HandleStatusEffectAdd(UnitController sourceUnitController, StatusEffectNode statusEffectNode) {
+            //Debug.Log($"{gameObject.name}.StatusEffectPanelController.HandleStatusEffectAdd({statusEffectNode.StatusEffect.DisplayName}): character: {(targetUnitController == null ? "null" : targetUnitController.DisplayName)}");
 
             AddStatusNode(statusEffectNode);
         }
@@ -142,10 +142,10 @@ namespace AnyRPG {
             foreach (StatusEffectNodeScript _statusEffectNodeScript in statusEffectNodes) {
                 if (_statusEffectNodeScript == null) {
                     removeList.Add(_statusEffectNodeScript);
-                    Debug.Log("StatusEffectPanelController.SpawnStatusNode() a status effect node script was null.  This should not happen because scripts should clear themselves on disable");
+                    //Debug.Log("StatusEffectPanelController.SpawnStatusNode() a status effect node script was null.  This should not happen because scripts should clear themselves on disable");
                 } else if (_statusEffectNodeScript.gameObject.activeSelf == false) {
                     removeList.Add(_statusEffectNodeScript);
-                    Debug.Log("StatusEffectPanelController.SpawnStatusNode() a status effect node script was inactive.  This should not happen because scripts should clear themselves on disable");
+                    //Debug.Log("StatusEffectPanelController.SpawnStatusNode() a status effect node script was inactive.  This should not happen because scripts should clear themselves on disable");
                 }
             }
             foreach (StatusEffectNodeScript _statusEffectNodeScript in removeList) {

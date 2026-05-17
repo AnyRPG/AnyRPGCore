@@ -15,7 +15,7 @@ namespace AnyRPG {
         private AbilityEffectContext abilityEffectContext = null;
 
         // the reference to the character stats this node sits on
-        private CharacterStats characterStats = null;
+        private UnitController unitController = null;
 
         // track state
         private int currentStacks = 1;
@@ -31,7 +31,7 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
 
         public StatusEffectProperties StatusEffect { get => statusEffect; set => statusEffect = value; }
-        public Coroutine MyMonitorCoroutine { get => monitorCoroutine; set => monitorCoroutine = value; }
+        public Coroutine MonitorCoroutine { get => monitorCoroutine; set => monitorCoroutine = value; }
         public AbilityEffectContext AbilityEffectContext { get => abilityEffectContext; set => abilityEffectContext = value; }
         public Dictionary<PrefabProfile, List<GameObject>> PrefabObjects { get => prefabObjects; set => prefabObjects = value; }
         public int CurrentStacks { get => currentStacks; set => currentStacks = value; }
@@ -47,8 +47,8 @@ namespace AnyRPG {
         }
 
         //public void Setup(CharacterStats characterStats, StatusEffect _statusEffect, Coroutine newCoroutine) {
-        public void Setup(CharacterStats characterStats, StatusEffectProperties statusEffect, AbilityEffectContext abilityEffectContext) {
-            this.characterStats = characterStats;
+        public void Setup(UnitController unitController, StatusEffectProperties statusEffect, AbilityEffectContext abilityEffectContext) {
+            this.unitController = unitController;
             this.statusEffect = statusEffect;
             this.abilityEffectContext = abilityEffectContext;
             //this.monitorCoroutine = newCoroutine;
@@ -61,7 +61,8 @@ namespace AnyRPG {
                 foreach (List<GameObject> gameObjectList in prefabObjects.Values) {
                     foreach (GameObject go in gameObjectList) {
                         //Debug.Log("StatusEffectNode.ClearEffectPrefabs() statusEffect: " + statusEffect.DisplayName + "; Destroy: " + go.name);
-                        objectPooler.ReturnObjectToPool(go, StatusEffect.PrefabDestroyDelay);
+                        //objectPooler.ReturnObjectToPool(go, StatusEffect.PrefabDestroyDelay);
+                        objectPooler.ReturnObjectToPool(go);
                     }
 
                 }
@@ -70,11 +71,21 @@ namespace AnyRPG {
         }
 
         public void CancelStatusEffect() {
-            //Debug.Log("StatusEffectNode.CancelStatusEffect(): " + StatusEffect.DisplayName);
+            //Debug.Log($"StatusEffectNode.CancelStatusEffect(): {StatusEffect.ResourceName}");
+
             ClearEffectPrefabs();
-            StatusEffect.CancelEffect(characterStats.BaseCharacter);
-            characterStats.HandleStatusEffectRemoval(statusEffect);
+            statusEffect.CancelEffect(unitController);
+            unitController.CharacterStats.HandleStatusEffectRemoval(statusEffect);
             ClearNodeScripts();
+
+            // notify last or we will save with the status effect still active and it will come back when we load
+            unitController.UnitEventController.NotifyOnCancelStatusEffect(statusEffect);
+
+            if (statusEffect.ClassTrait == false
+                && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true)) {
+                unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, 0, CombatTextType.loseBuff, CombatMagnitude.normal, abilityEffectContext);
+            }
+
         }
 
         public void ClearNodeScripts() {
@@ -169,6 +180,7 @@ namespace AnyRPG {
             if (statusEffect.RefreshableDuration) {
                 SetRemainingDuration(statusEffect.Duration);
             }
+            unitController.UnitEventController.NotifyOnAddStatusEffectStack(statusEffect.ResourceName);
             return returnValue;
         }
 

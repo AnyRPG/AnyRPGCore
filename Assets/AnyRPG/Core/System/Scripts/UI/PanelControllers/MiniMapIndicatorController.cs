@@ -45,7 +45,7 @@ namespace AnyRPG {
             if (interactable == null) {
                 return;
             }
-            foreach (InteractableOptionComponent interactableOptionComponent in interactable.Interactables) {
+            foreach (InteractableOptionComponent interactableOptionComponent in interactable.Interactables.Values) {
                 // prioritize images - DICTIONARY DOESN'T CURRENTLY SUPPORT BOTH
                 if (interactableOptionComponent.HasMiniMapIcon()) {
                     GameObject go = objectPooler.GetPooledObject(miniMapImageLayerPrefab, contentParent);

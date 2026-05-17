@@ -1,4 +1,3 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,44 +11,78 @@ namespace AnyRPG {
         private bool objectOpen = false;
 
         public AnimatedObjectComponent(Interactable interactable, AnimatedObjectProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
-            interactableOptionProps.InteractionPanelTitle = "Interactable";
+            interactionPanelTitle = "Interactable";
         }
 
-        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0, bool processNonCombatCheck = true) {
+        public override bool CanInteract(UnitController sourceUnitController, bool processRangeCheck, bool passedRangeCheck, bool processNonCombatCheck, bool viaSwitch = false) {
 
-            if (Props.SwitchOnly == true) {
+            if (Props.SwitchOnly == true && viaSwitch == false) {
                 return false;
             }
-            return base.CanInteract(processRangeCheck, passedRangeCheck, factionValue, processNonCombatCheck);
+            return base.CanInteract(sourceUnitController, processRangeCheck, passedRangeCheck, processNonCombatCheck);
         }
 
-        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
+        public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex = 0) {
             //Debug.Log($"{gameObject.name}.AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
-            base.Interact(source, optionIndex);
-            uIManager.interactionWindow.CloseWindow();
+            base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
             if (Props.AnimationComponent == null) {
-                Debug.Log("AnimatedObjectComponent.Interact(): Animation component was null");
+                //Debug.Log("AnimatedObjectComponent.Interact(): Animation component was null");
                 return false;
             }
-            ChooseMovement();
+            ChooseMovement(sourceUnitController, componentIndex);
 
-            return false;
+            return true;
         }
 
-        private void ChooseMovement() {
+        public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            uIManager.interactionWindow.CloseWindow();
+        }
+
+        public void ChooseMovement(UnitController sourceUnitController, int componentIndex) {
+            //interactable.InteractableEventController.NotifyOnAnimatedObjectChooseMovement(sourceUnitController, optionIndex);
             if (objectOpen) {
-                Props.AnimationComponent.Play(Props.CloseAnimationClip.name);
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                    Props.AnimationComponent.Play(Props.CloseAnimationClip.name);
+                }
                 if (Props.OpenAudioClip != null) {
-                    interactable.UnitComponentController.PlayEffectSound(Props.CloseAudioClip);
+                    interactable.InteractableEventController.NotifyOnPlayEffectSound(Props.CloseAudioClip, false);
                 }
                 objectOpen = false;
             } else {
-                Props.AnimationComponent.Play(Props.OpenAnimationClip.name);
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                    Props.AnimationComponent.Play(Props.OpenAnimationClip.name);
+                }
                 if (Props.CloseAudioClip != null) {
-                    interactable.UnitComponentController.PlayEffectSound(Props.OpenAudioClip);
+                    interactable.InteractableEventController.NotifyOnPlayEffectSound(Props.OpenAudioClip, false);
                 }
                 objectOpen = true;
+            }
+        }
+
+        public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
+            base.LoadFromSaveData(interactableSaveData);
+            if (interactableSaveData.AnimatedObjectSaveData.Count > 0) {
+                objectOpen = interactableSaveData.AnimatedObjectSaveData[0].ObjectOpen;
+                if (objectOpen) {
+                    Props.AnimationComponent.Play(Props.OpenAnimationClip.name);
+                } else {
+                    Props.AnimationComponent.Play(Props.CloseAnimationClip.name);
+                }
+            }
+        }
+
+        public override void SetSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.AnimatedObjectComponent.SetSaveData()");
+
+            base.SetSaveData(interactableSaveData);
+            AnimatedObjectSaveData animatedObjectSaveData = new AnimatedObjectSaveData() {
+                ObjectOpen = objectOpen
+            };
+            if (interactableSaveData.AnimatedObjectSaveData.Count > 0) {
+                interactableSaveData.AnimatedObjectSaveData[0] = animatedObjectSaveData;
+            } else {
+                interactableSaveData.AnimatedObjectSaveData.Add(animatedObjectSaveData);
             }
         }
 

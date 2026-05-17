@@ -7,7 +7,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class CharacterCurrencyManager : ConfiguredClass {
 
-        private BaseCharacter baseCharacter;
+        private UnitController unitController;
 
         private Dictionary<string, CurrencyNode> currencyList = new Dictionary<string, CurrencyNode>();
 
@@ -16,8 +16,8 @@ namespace AnyRPG {
 
         public Dictionary<string, CurrencyNode> CurrencyList { get => currencyList; }
 
-        public CharacterCurrencyManager (BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
-            this.baseCharacter = baseCharacter;
+        public CharacterCurrencyManager (UnitController unitController, SystemGameManager systemGameManager) {
+            this.unitController = unitController;
             Configure(systemGameManager);
         }
 
@@ -32,40 +32,35 @@ namespace AnyRPG {
                 return;
             }
             CurrencyNode newCurrencyNode = new CurrencyNode();
-            string keyName = SystemDataUtility.PrepareStringForMatch(currency.ResourceName);
-            if (CurrencyList.ContainsKey(keyName)) {
+            if (currencyList.ContainsKey(currency.ResourceName)) {
                 newCurrencyNode = new CurrencyNode();
-                newCurrencyNode.currency = CurrencyList[keyName].currency;
-                newCurrencyNode.Amount = currencyAmount + CurrencyList[keyName].Amount;
-                CurrencyList[keyName] = newCurrencyNode;
+                newCurrencyNode.currency = currencyList[currency.ResourceName].currency;
+                newCurrencyNode.Amount = currencyAmount + currencyList[currency.ResourceName].Amount;
+                currencyList[currency.ResourceName] = newCurrencyNode;
                 RedistributeCurrency(currency);
-                SystemEventManager.TriggerEvent("OnCurrencyChange", new EventParamProperties());
                 return;
             }
 
             newCurrencyNode = new CurrencyNode();
             newCurrencyNode.currency = currency;
             newCurrencyNode.Amount = currencyAmount;
-            CurrencyList[keyName] = newCurrencyNode;
-            //OnCurrencyChange();
+            currencyList[currency.ResourceName] = newCurrencyNode;
             RedistributeCurrency(currency);
-            SystemEventManager.TriggerEvent("OnCurrencyChange", new EventParamProperties());
         }
 
         public bool SpendCurrency(Currency currency, int currencyAmount) {
             //Debug.Log(baseCharacter.gameObject.name + ".PlayerCurrencyManager.SpendCurrency(" + currency.DisplayName + ", " + currencyAmount + ")");
             //bool foundReputation = false;
             CurrencyNode newCurrencyNode = new CurrencyNode();
-            string keyName = SystemDataUtility.PrepareStringForMatch(currency.ResourceName);
-            if (CurrencyList.ContainsKey(keyName)) {
+            string keyName = currency.ResourceName;
+            if (currencyList.ContainsKey(keyName)) {
                 if (currencyConverter.GetBaseCurrencyAmount(currency, currencyAmount) <= GetBaseCurrencyValue(currency) ) {
                     //if (currencyAmount < MyCurrencyList[keyName].MyAmount) {
                     newCurrencyNode = new CurrencyNode();
-                    newCurrencyNode.currency = CurrencyList[keyName].currency;
-                    newCurrencyNode.Amount = CurrencyList[keyName].Amount - currencyAmount;
-                    CurrencyList[keyName] = newCurrencyNode;
+                    newCurrencyNode.currency = currencyList[keyName].currency;
+                    newCurrencyNode.Amount = currencyList[keyName].Amount - currencyAmount;
+                    currencyList[keyName] = newCurrencyNode;
                     RedistributeCurrency(currency);
-                    SystemEventManager.TriggerEvent("OnCurrencyChange", new EventParamProperties());
                     return true;
                 } else {
                     return false;
@@ -79,10 +74,10 @@ namespace AnyRPG {
             CurrencyGroup currencyGroup = currencyConverter.FindCurrencyGroup(currency);
             if (currencyGroup != null) {
                 // attemp redistribution
-                Currency baseCurrency = currencyGroup.MyBaseCurrency;
+                Currency baseCurrency = currencyGroup.BaseCurrency;
                 // convert everything in the group to the base amount
                 int baseCurrencyAmount = GetCurrencyAmount(baseCurrency);
-                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
+                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.CurrencyGroupRates) {
                     baseCurrencyAmount += GetCurrencyAmount(currencyGroupRate.Currency) * currencyGroupRate.BaseMultiple;
                 }
                 //Debug.Log("CharacterCurrencyManager.GetBaseCurrencyValue(" + currency.DisplayName + ") return: " + baseCurrencyAmount);
@@ -92,22 +87,23 @@ namespace AnyRPG {
         }
 
         public void RedistributeCurrency(Currency currency) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCurrencyManager.RedistributeCurrency(" + currency.DisplayName + ")");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCurrencyManager.RedistributeCurrency({currency.ResourceName})");
+
             CurrencyGroup currencyGroup = currencyConverter.FindCurrencyGroup(currency);
             if (currencyGroup != null) {
 
                 // attemp redistribution
-                Currency baseCurrency = currencyGroup.MyBaseCurrency;
+                Currency baseCurrency = currencyGroup.BaseCurrency;
 
                 // convert everything in the group to the base amount
                 int baseCurrencyAmount = GetCurrencyAmount(baseCurrency);
-                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
+                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.CurrencyGroupRates) {
                     baseCurrencyAmount += GetCurrencyAmount(currencyGroupRate.Currency) * currencyGroupRate.BaseMultiple;
                 }
 
                 // create a sorted list and work down from the largest denomination, carrying the remainders
                 SortedDictionary<int, Currency> sortList = new SortedDictionary<int, Currency>();
-                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
+                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.CurrencyGroupRates) {
                     sortList.Add(currencyGroupRate.BaseMultiple, currencyGroupRate.Currency);
                 }
                 Dictionary<Currency, int> newAmountList = new Dictionary<Currency, int>();
@@ -123,28 +119,31 @@ namespace AnyRPG {
                     }
                 }
                 // whatever is left over is the base amount
-                newAmountList.Add(currencyGroup.MyBaseCurrency, baseCurrencyAmount);
+                newAmountList.Add(currencyGroup.BaseCurrency, baseCurrencyAmount);
 
                 // replace the original values in the currency list with the redistributed ones
                 foreach (KeyValuePair<Currency, int> newCurrencyValue in newAmountList) {
-                    if (CurrencyList.ContainsKey(SystemDataUtility.PrepareStringForMatch(newCurrencyValue.Key.ResourceName))) {
-                        CurrencyList.Remove(SystemDataUtility.PrepareStringForMatch(newCurrencyValue.Key.ResourceName));
+                    if (currencyList.ContainsKey(newCurrencyValue.Key.ResourceName)) {
+                        currencyList.Remove(newCurrencyValue.Key.ResourceName);
                     }
                     CurrencyNode newSaveData = new CurrencyNode();
                     newSaveData = new CurrencyNode();
                     newSaveData.currency = newCurrencyValue.Key;
                     newSaveData.Amount = newCurrencyValue.Value;
-                    CurrencyList[SystemDataUtility.PrepareStringForMatch(newCurrencyValue.Key.ResourceName)] = newSaveData;
+                    currencyList[newCurrencyValue.Key.ResourceName] = newSaveData;
+                    unitController.UnitEventController.NotifyOnCurrencyChange(newCurrencyValue.Key.ResourceName, newCurrencyValue.Value);
                 }
-                SystemEventManager.TriggerEvent("OnCurrencyChange", new EventParamProperties());
+            } else {
+                unitController.UnitEventController.NotifyOnCurrencyChange(currency.ResourceName, currencyList[currency.ResourceName].Amount);
             }
+
         }
 
         public int GetCurrencyAmount(Currency currency) {
             //Debug.Log(baseCharacter.gameObject.name + ".PlayerCurrencyManager.GetCurrency(" + currency.DisplayName + ")");
-            string keyName = SystemDataUtility.PrepareStringForMatch(currency.ResourceName);
-            if (CurrencyList.ContainsKey(keyName)) {
-                return CurrencyList[keyName].Amount;
+            string keyName = currency.ResourceName;
+            if (currencyList.ContainsKey(keyName)) {
+                return currencyList[keyName].Amount;
             }
 
             // default return
@@ -153,14 +152,15 @@ namespace AnyRPG {
 
         public Dictionary<Currency, int> GetRedistributedCurrency() {
             //Debug.Log("PlayerCurrencyManager.GetRedistributedCurrency()");
+
             CurrencyGroup currencyGroup = systemConfigurationManager.DefaultCurrencyGroup;
             Dictionary<Currency, int> returnDictionary = new Dictionary<Currency, int>();
             if (currencyGroup != null) {
                 // attemp redistribution
-                Currency baseCurrency = currencyGroup.MyBaseCurrency;
+                Currency baseCurrency = currencyGroup.BaseCurrency;
                 // convert everything in the group to the base amount
                 int baseCurrencyAmount = GetCurrencyAmount(baseCurrency);
-                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
+                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.CurrencyGroupRates) {
                     baseCurrencyAmount += GetCurrencyAmount(currencyGroupRate.Currency) * currencyGroupRate.BaseMultiple;
                 }
                 returnDictionary.Add(baseCurrency, baseCurrencyAmount);
@@ -169,6 +169,15 @@ namespace AnyRPG {
             return null;
         }
 
+        public void LoadCurrencyValue(Currency currency, int amount) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCurrencyManager.LoadCurrencyValue({currency.ResourceName}, {amount})");
+
+            CurrencyNode newCurrencyNode = new CurrencyNode();
+            newCurrencyNode.currency = currency;
+            newCurrencyNode.Amount = amount;
+            currencyList[currency.ResourceName] = newCurrencyNode;
+            unitController.UnitEventController.NotifyOnCurrencyChange(currency.ResourceName, amount);
+        }
     }
 
 }

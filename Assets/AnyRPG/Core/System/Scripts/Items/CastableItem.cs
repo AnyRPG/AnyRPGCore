@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     //[CreateAssetMenu(fileName = "New Scroll",menuName = "AnyRPG/Inventory/Items/Scroll", order = 1)]
-    public abstract class CastableItem : Item, IUseable {
+    public abstract class CastableItem : Item {
 
         /*
         [SerializeField]
@@ -20,7 +20,7 @@ namespace AnyRPG {
         [SerializeField]
         private string toolTip = string.Empty;
 
-        public abstract BaseAbilityProperties Ability { get; }
+        public abstract AbilityProperties Ability { get; }
 
         // game manager references
         protected SystemAbilityController systemAbilityController = null;
@@ -28,22 +28,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemAbilityController = systemGameManager.SystemAbilityController;
-        }
-
-        public override bool Use() {
-            //Debug.Log("CastableItem.Use()");
-            if (Ability == null) {
-                Debug.LogError(ResourceName + ".CastableItem.Use(): ability is null.  Please set it in the inspector!");
-                return false;
-            }
-            bool returnValue = base.Use();
-            if (returnValue == false) {
-                return false;
-            }
-            if (playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(Ability)) {
-                Remove();
-            }
-            return returnValue;
         }
 
         public override bool HadSpecialIcon(ActionButton actionButton) {
@@ -54,17 +38,14 @@ namespace AnyRPG {
             return base.HadSpecialIcon(actionButton);
         }
 
-        public override Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
-            //Debug.Log(DisplayName + ".CastableItem.ChooseMonitorCoroutine()");
-            if (Ability == null) {
-                return null;
-            }
-            return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(Ability.DisplayName));
+        public override string GetDescription(ItemQuality usedItemQuality, int usedItemLevel) {
+            //Debug.Log(DisplayName + ".CastableItem.GetSummary()");
+            return base.GetDescription(usedItemQuality, usedItemLevel) + GetCastableItemDescription();
         }
 
-        public override string GetDescription(ItemQuality usedItemQuality) {
+        public string GetCastableItemDescription() {
             //Debug.Log(DisplayName + ".CastableItem.GetSummary()");
-            return base.GetDescription(usedItemQuality) + GetCastableInformation() + GetCooldownString();
+            return GetCastableInformation() + GetCooldownString();
         }
 
         public virtual string GetCastableInformation() {

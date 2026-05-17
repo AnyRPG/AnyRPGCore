@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace AnyRPG {
 
@@ -10,6 +12,8 @@ namespace AnyRPG {
         public Dictionary<string, ResourceProfile> resourceDictionary = new Dictionary<string, ResourceProfile>();
 
         public void Setup<TDataType>(SystemGameManager systemGameManager) where TDataType : ResourceProfile {
+            //Debug.Log($"FactoryDataAccess.Setup<{typeof(TDataType).Name}>()");
+
             FactoryDataLoader<TDataType> factoryData = new FactoryDataLoader<TDataType>(typeof(TDataType).Name, systemGameManager);
             resourceDictionary = factoryData.LoadResourceList();
         }
@@ -64,6 +68,17 @@ namespace AnyRPG {
             }
         }
 
+        public void AddResource<TDataType>(TDataType resourceProfile) where TDataType : ResourceProfile {
+            //Debug.Log($"FactoryDataAccess.AddResource({resourceProfile.ResourceName}) {typeof(TDataType).Name}");
+
+            if (resourceDictionary.ContainsKey(SystemDataUtility.PrepareStringForMatch(resourceProfile.ResourceName))) {
+                //Debug.Log($"FactoryDataAccess.AddResource({resourceProfile.ResourceName}) already in dictionary!");
+                return;
+            } else {
+                resourceDictionary.Add(SystemDataUtility.PrepareStringForMatch(resourceProfile.ResourceName), resourceProfile);
+                //Debug.Log($"FactoryDataAccess.AddResource({resourceProfile.ResourceName}) adding to dictionary");
+            }
+        }
     }
 
 }

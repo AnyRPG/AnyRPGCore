@@ -26,6 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5392010216800778309}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -34,7 +35,6 @@ Transform:
   - {fileID: 1433497834614341215}
   - {fileID: 663997020016410762}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &6291103121898040472
 BoxCollider:
@@ -44,9 +44,17 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5392010216800778309}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &5713609159632931334
@@ -61,32 +69,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df07de734135f834b9ba0098ec4ed914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabProfileName: 
-  spawnDelay: 0
-  spawnReference: {fileID: 179349489550580272}
-  despawnObject: 1
-  spawnPrerequisites: []
   showTooltip: 1
   interactableName: Flax
   glowOnMouseOver: 1
-  lightEmission: 0
-  glowFlashSpeed: 1.5
-  glowMinIntensity: 4.5
-  glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  temporaryMaterial: {fileID: 2100000, guid: 74229b87f443f8147b736ddd18c87e70, type: 2}
   interactionTooltipText: Gather
   notInteractable: 0
   interactWithAny: 0
   interactOnExit: 0
   isTrigger: 0
   suppressInteractionWindow: 0
+  overrideInteractionColliderSize: 0
   interactionMaxRange: 2
-  checkOptionsToSpawn: 1
-  spawnRequiresValidOption: 0
-  despawnRequiresNoValidOption: 0
+  interactionPoints: []
   componentController: {fileID: 2529777466101071453}
-  unitComponentController: {fileID: 0}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!114 &410231103204313661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,12 +108,21 @@ MonoBehaviour:
     lootTableNames:
     - Herbalism Flax Node
     spawnTimer: 30
+    spawnObject: {fileID: 179349489550580272}
     abilityName: Herbalism
+    skillName: Herbalism
+    requiredSkillLevel: 0
+    chanceToGainLevel: 0.5
+    skillExperienceReward: 25
+    maxSkillExperienceLevel: 0
+    characterExperienceReward: 25
+    maxCharacterExperienceLevel: 0
 --- !u!1001 &3936048459763079397
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 3812000997736614746}
     m_Modifications:
     - target: {fileID: 3810760316307473109, guid: 9d558d569719992459e3364972a53b44,
@@ -176,6 +186,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d558d569719992459e3364972a53b44, type: 3}
 --- !u!1 &179349489550580272 stripped
 GameObject:
@@ -194,6 +207,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 3812000997736614746}
     m_Modifications:
     - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
@@ -272,6 +286,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37f353160369b234b89e9214e5695cf7, type: 3}
 --- !u!4 &1433497834614341215 stripped
 Transform:

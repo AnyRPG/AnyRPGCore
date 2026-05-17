@@ -32,22 +32,24 @@ namespace AnyRPG {
         }
         */
 
-        public override void CancelEffect(BaseCharacter targetCharacter) {
+        public override void CancelEffect(UnitController targetUnitController) {
             //Debug.Log(displayName +  ".MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
             if (SystemGameManager.IsShuttingDown == true) {
                 // game is in the middle of exiting
                 return;
             }
-            if (targetCharacter.UnitController == null) {
+            if (targetUnitController == null) {
                 return;
             }
-            targetCharacter.UnitController.DeActivateMountedState();
-            
-            base.CancelEffect(targetCharacter);
+            if (systemGameManager.GameMode == GameMode.Local || systemGameManager.NetworkManagerServer.ServerModeActive == true) {
+                targetUnitController.DeactivateMountedState();
+            }
+
+            base.CancelEffect(targetUnitController);
         }
 
         public override bool CanCast() {
-            if (levelManager.GetActiveSceneNode()?.AllowMount == false) {
+            if (levelManagerClient.GetActiveSceneNode()?.AllowMount == false) {
                 //Debug.Log(DisplayName + ".MountEffect.CanCast(): scene does not allow mount");
                 return false;
             }
@@ -65,15 +67,14 @@ namespace AnyRPG {
             }
             Dictionary<PrefabProfile, List<GameObject>> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
 
-            UnitController mountUnitController = unitProfile.SpawnUnitPrefab(source.AbilityManager.UnitGameObject.transform.parent, source.AbilityManager.UnitGameObject.transform.position, source.AbilityManager.UnitGameObject.transform.forward, UnitControllerMode.Mount);
-            if (mountUnitController != null) {
-                mountUnitController.Init();
-                source.AbilityManager.SetMountedState(mountUnitController, unitProfile);
-            }
+            source.AbilityManager.SummonMount(unitProfile);
+            
             return returnObjects;
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
+            //Debug.Log($"MountEffectProperties.SetupScriptableObjects({describable.ResourceName})");
+
             base.SetupScriptableObjects(systemGameManager, describable);
 
             if (unitProfileName != null && unitProfileName != string.Empty) {
@@ -81,10 +82,10 @@ namespace AnyRPG {
                 if (tmpUnitProfile != null) {
                     unitProfile = tmpUnitProfile;
                 } else {
-                    Debug.LogError("MountEffect.SetupScriptableObjects(): Could not find prefab Profile : " + unitProfileName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"MountEffectProperties.SetupScriptableObjects(): Could not find prefab Profile : {unitProfileName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             } else {
-                Debug.LogError("MountEffect.SetupScriptableObjects(): Mount effect requires a unit prefab profile but non was configured while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                Debug.LogError($"MountEffectProperties.SetupScriptableObjects(): Mount effect requires a unit prefab profile but non was configured while inititalizing {ResourceName}.  CHECK INSPECTOR");
             }
 
         }

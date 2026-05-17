@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class InstantEffect : AbilityEffect {
 
         [SerializeField]
-        private InstantEffectProperties instantEffectProperties = new InstantEffectProperties();
+        public InstantEffectProperties instantEffectProperties = new InstantEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => instantEffectProperties; }
 

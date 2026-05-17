@@ -14,14 +14,16 @@ namespace AnyRPG {
         float CoolDown { get; }
         bool RequireOutOfCombat { get; }
         bool RequireStealth { get; }
-        bool Use();
-        bool ActionButtonUse();
+        bool AlwaysDisplayCount { get; }
+        bool Use(UnitController sourceUnitController);
+        bool ActionButtonUse(UnitController sourceUnitController);
         Coroutine ChooseMonitorCoroutine(ActionButton actionButton);
-        bool IsUseableStale();
+        bool IsUseableStale(UnitController sourceUnitController);
         void UpdateActionButtonVisual(ActionButton actionButton);
-        void UpdateChargeCount(ActionButton actionButton);
+        int GetChargeCount();
         IUseable GetFactoryUseable();
         void AssignToActionButton(ActionButton actionButton);
+        void HandleRemoveFromActionButton(ActionButton actionButton);
         void UpdateTargetRange(ActionBarManager actionBarManager, ActionButton actionButton);
     }
 }
