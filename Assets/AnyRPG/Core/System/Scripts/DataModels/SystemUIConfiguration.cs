@@ -133,7 +133,7 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite systemBarPets;
 
-        [Tooltip("The pets icon to show on the UI system bar.")]
+        [Tooltip("The social icon to show on the UI system bar.")]
         [SerializeField]
         private Sprite systemBarSocial;
 

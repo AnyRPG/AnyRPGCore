@@ -9,21 +9,14 @@ namespace AnyRPG {
 
         [Header("Effect")]
 
-        [Tooltip("If true, use the inline effect instead of named effect")]
+        [Tooltip("If true, use the inline effect instead of named effect.")]
         [SerializeField]
         private bool useInlineEffect = false;
 
-        [Tooltip("The resources to affect, and the amounts of the effects")]
+        [Tooltip("The resources to affect, and the amounts of the effects.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private string effectName = string.Empty;
-
-        [Tooltip("The resources to affect, and the amounts of the effects")]
-        [SerializeReference]
-        [SerializeReferenceButton]
-        private AbilityEffectConfig inlineEffect = null;
-
-
 
         private AbilityEffectProperties abilityEffectProperties = null;
 
@@ -36,35 +29,17 @@ namespace AnyRPG {
             return new InstantiatedActionEffectItem(systemGameManager, itemInstanceId, item as ActionEffectItem, usedItemQuality);
         }
 
-        /*
-        public override string GetCastableInformation() {
-            //Debug.Log(DisplayName + ".PowerResourcePotion.GetCastableInformation()");
-            string returnString = string.Empty;
-            //if (ability != null) {
-                returnString += string.Format("\n<color=green>Use: {0}</color>", description);
-            //}
-            return returnString;
-        }
-        */
-
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
 
-            if (useInlineEffect) {
-                abilityEffectProperties = inlineEffect.AbilityEffectProperties;
-                abilityEffectProperties.SetupScriptableObjects(systemGameManager, new DescribableProperties(Icon, ResourceName));
-            } else {
-                if (effectName != null && effectName != string.Empty) {
-                    AbilityEffect tmpEffect = systemDataFactory.GetResource<AbilityEffect>(effectName);
-                    if (tmpEffect != null) {
-                        abilityEffectProperties = tmpEffect.AbilityEffectProperties;
-                    } else {
-                        Debug.LogError("PowerResourcePotion.SetupScriptableObjects(): Could not find ability effect : " + effectName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
-                    }
+            if (effectName != null && effectName != string.Empty) {
+                AbilityEffect tmpEffect = systemDataFactory.GetResource<AbilityEffect>(effectName);
+                if (tmpEffect != null) {
+                    abilityEffectProperties = tmpEffect.AbilityEffectProperties;
+                } else {
+                    Debug.LogError($"PowerResourcePotion.SetupScriptableObjects(): Could not find ability effect : {effectName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
-
-
 
         }
     }

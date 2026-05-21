@@ -95,7 +95,7 @@ namespace AnyRPG {
             carryWeightText.text = $"<color={(totalWeight > carryWeight ? "red" : "white")}>Inventory: {Mathf.Ceil(inventoryWeight)} kg\n" +
                 $"Equipped: {Mathf.Ceil(equippedWeight)} kg\n" +
                 $"Total: {Mathf.Ceil(totalWeight)}";
-            if (systemConfigurationManager.UseEncumberance == true) {
+            if (systemConfigurationManager.UseEncumbrance == true) {
                 carryWeightText.text += $" / {Mathf.Ceil(carryWeight)}";
             }
             carryWeightText.text += " kg</color>";

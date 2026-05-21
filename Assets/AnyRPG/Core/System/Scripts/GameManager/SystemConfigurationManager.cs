@@ -17,15 +17,17 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> loadResourcesFolders = new List<string>();
 
+        [Tooltip("If true, the play offline menu will be available from the main menu.")]
         [SerializeField]
         private bool allowOfflinePlay = true;
 
+        [Tooltip("If true, the play online menu will be available from the main menu.")]
         [SerializeField]
         private bool allowOnlinePlay = false;
 
         [Header("Scenes")]
 
-        [Tooltip("The name of the scene that loads the game manager into memory, and then proceeds to the main menu")]
+        [Tooltip("The name of the scene that loads the game manager into memory, and then proceeds to the main menu.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(SceneNode))]
         private string initializationScene = "Core Game";
@@ -40,7 +42,7 @@ namespace AnyRPG {
         // reference to the main menu scene node
         private SceneNode mainMenuSceneNode = null;
 
-        [Tooltip("When a new game is started, the character will initially spawn in this scene if no scene is provided by their faction")]
+        [Tooltip("When a new game is started, the character will initially spawn in this scene if no scene is provided by their faction.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(SceneNode))]
         private string defaultStartingZone = string.Empty;
@@ -162,7 +164,7 @@ namespace AnyRPG {
 
         [Header("CAMERA")]
 
-        [Tooltip("In free mode, the player can move the camera.  In isometric mode, the camera is locked to the specified angle")]
+        [Tooltip("In free mode, the player can move the camera.  In isometric mode, the camera is locked to the specified angle.")]
         [SerializeField]
         private CameraViewMode cameraViewMode = CameraViewMode.Free;
 
@@ -182,7 +184,7 @@ namespace AnyRPG {
         private bool allowClickToMove = false;
         */
 
-        [Tooltip("The controller configuration set on first game load")]
+        [Tooltip("The controller configuration set on first game load.")]
         [SerializeField]
         private DefaultControllerConfiguration defaultControllerConfiguration;
 
@@ -190,7 +192,7 @@ namespace AnyRPG {
         [SerializeField]
         private float tabTargetMaxDistance = 40f;
 
-        [Tooltip("When standing on any object in this layer mask, the character will be considered to be grounded")]
+        [Tooltip("When standing on any object in this layer mask, the character will be considered to be grounded.")]
         [SerializeField]
         private LayerMask defaultGroundMask;
 
@@ -203,8 +205,9 @@ namespace AnyRPG {
         private float maxTurnSpeed = 360f;
 
         [Tooltip("If true, the character will have an encumbered speed when carrying too much weight.")]
+        [FormerlySerializedAs("useEncumberance")]
         [SerializeField]
-        private bool useEncumberance = false;
+        private bool useEncumbrance = false;
 
         [Tooltip("The weight limit (in kilograms) at which the character will be encumbered. Any value provided by stats be added to this value.")]
         [SerializeField]
@@ -302,7 +305,7 @@ namespace AnyRPG {
         [SerializeField]
         private int maxLevel = 50;
 
-        [Tooltip("A list of experience amounts required to level up the character.  The index of the list is the character level, and the value is the experience required to reach the next level.")]
+        [Tooltip("A list of experience amounts required to level up the character.  The index of the list (starting at 1) is the character level, and the value is the experience required to reach the next level.")]
         [SerializeField]
         private List<int> experienceChart = new List<int>() {
             500,1000,1500,2000,2500,3500,4500,5500,6500,7500,
@@ -350,7 +353,6 @@ namespace AnyRPG {
         [Tooltip("The amount of currency required to create a guild (in the base currency of the default system currency group).")]
         [SerializeField]
         private int createGuildCurrencyAmount = 0;
-
 
         [Header("Currency Scaling")]
 
@@ -420,7 +422,7 @@ namespace AnyRPG {
 
         [Header("AI Behavior")]
 
-        [Tooltip("If true, the AI will return to their start position if pulled too far away from it")]
+        [Tooltip("If true, the AI will return to their start position if pulled too far away from it.")]
         [SerializeField]
         private bool enableLeashing = true;
 
@@ -462,7 +464,7 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultPlayerUnitLayer = "Player";
 
-        [Tooltip("Character units will automatically be set to this layer so they can respond to AOE / looting and other things that filter by this layer.")]
+        [Tooltip("Preview units will automatically be set to this layer.")]
         [SerializeField]
         private string defaultPreviewUnitLayer = "UnitPreview";
 
@@ -534,164 +536,185 @@ namespace AnyRPG {
         private List<ProjectorColorMapNode> highlightCircleColorMap = new List<ProjectorColorMapNode>();
 
         [Tooltip("An image to use on a nameplate if there is more than 1 valid interactable option.")]
+        [FormerlySerializedAs("multipleInteractionNamePlateImage")]
         [SerializeField]
-        private Sprite multipleInteractionNamePlateImage = null;
+        private Sprite multipleInteractionNameplateImage = null;
 
         [Tooltip("An image to use on a nameplate if only crafting is available, but more than 1 craft skill can be shown.")]
+        [FormerlySerializedAs("multipleCraftNamePlateImage")]
         [SerializeField]
-        private Sprite multipleCraftNamePlateImage = null;
+        private Sprite multipleCraftNameplateImage = null;
 
         [Tooltip("An image to use beside an auction option in the interaction UI window.")]
         [SerializeField]
         private Sprite auctionInteractionPanelImage = null;
 
-        [Tooltip("An image to for an auction option on a nameplate.")]
+        [Tooltip("An image to use for an auction option on a nameplate.")]
+        [FormerlySerializedAs("auctionNamePlateImage")]
         [SerializeField]
-        private Sprite auctionNamePlateImage = null;
+        private Sprite auctionNameplateImage = null;
 
         [Tooltip("An image to use beside a bank option in the interaction UI window.")]
         [SerializeField]
         private Sprite bankInteractionPanelImage = null;
 
-        [Tooltip("An image to for a bank option on a nameplate.")]
+        [Tooltip("An image to use for a bank option on a nameplate.")]
+        [FormerlySerializedAs("bankNamePlateImage")]
         [SerializeField]
-        private Sprite bankNamePlateImage = null;
+        private Sprite bankNameplateImage = null;
 
         [Tooltip("An image to use beside a guildmaster option in the interaction UI window.")]
         [SerializeField]
         private Sprite guildmasterInteractionPanelImage = null;
 
-        [Tooltip("An image to for a guildmaster option on a nameplate.")]
+        [Tooltip("An image to use for a guildmaster option on a nameplate.")]
+        [FormerlySerializedAs("guildmasterNamePlateImage")]
         [SerializeField]
-        private Sprite guildmasterNamePlateImage = null;
+        private Sprite guildmasterNameplateImage = null;
 
         [Tooltip("An image to use beside a quest giver option in the interaction UI window.")]
         [SerializeField]
         private Sprite questGiverInteractionPanelImage = null;
 
-        [Tooltip("An image to for a quest giver option on a nameplate.")]
+        [Tooltip("An image to use for a quest giver option on a nameplate.")]
+        [FormerlySerializedAs("questGiverNamePlateImage")]
         [SerializeField]
-        private Sprite questGiverNamePlateImage = null;
+        private Sprite questGiverNameplateImage = null;
 
         [Tooltip("An image to use beside a dialog option in the interaction UI window.")]
         [SerializeField]
         private Sprite dialogInteractionPanelImage = null;
 
-        [Tooltip("An image to for a dialog option on a nameplate.")]
+        [Tooltip("An image to use for a dialog option on a nameplate.")]
+        [FormerlySerializedAs("dialogNamePlateImage")]
         [SerializeField]
-        private Sprite dialogNamePlateImage = null;
+        private Sprite dialogNameplateImage = null;
 
         [Tooltip("An image to use beside a mailbox option in the interaction UI window.")]
         [SerializeField]
         private Sprite mailboxInteractionPanelImage = null;
 
-        [Tooltip("An image to for a mailbox option on a nameplate.")]
+        [Tooltip("An image to use for a mailbox option on a nameplate.")]
+        [FormerlySerializedAs("mailboxNamePlateImage")]
         [SerializeField]
-        private Sprite mailboxNamePlateImage = null;
+        private Sprite mailboxNameplateImage = null;
 
         [Tooltip("An image to use beside a name change option in the interaction UI window.")]
         [SerializeField]
         private Sprite nameChangeInteractionPanelImage = null;
 
-        [Tooltip("An image to for a name change option on a nameplate.")]
+        [Tooltip("An image to use for a name change option on a nameplate.")]
+        [FormerlySerializedAs("nameChangeNamePlateImage")]
         [SerializeField]
-        private Sprite nameChangeNamePlateImage = null;
+        private Sprite nameChangeNameplateImage = null;
 
         [Tooltip("An image to use beside a storage container option in the interaction UI window.")]
         [SerializeField]
         private Sprite storageContainerInteractionPanelImage = null;
 
-        [Tooltip("An image to for a storage container option on a nameplate.")]
+        [Tooltip("An image to use for a storage container option on a nameplate.")]
         [SerializeField]
         private Sprite storageContainerNamePlateImage = null;
 
         [Tooltip("An image to use beside a cutscene option in the interaction UI window.")]
+        [FormerlySerializedAs("cutSceneInteractionPanelImage")]
         [SerializeField]
-        private Sprite cutSceneInteractionPanelImage = null;
+        private Sprite cutsceneInteractionPanelImage = null;
 
-        [Tooltip("An image to for a cutscene option on a nameplate.")]
+        [Tooltip("An image to use for a cutscene option on a nameplate.")]
+        [FormerlySerializedAs("cutSceneNamePlateImage")]
         [SerializeField]
-        private Sprite cutSceneNamePlateImage = null;
+        private Sprite cutsceneNameplateImage = null;
 
         [Tooltip("An image to use beside a lootable character option in the interaction UI window.")]
         [SerializeField]
         private Sprite lootableCharacterInteractionPanelImage = null;
 
-        [Tooltip("An image to for a lootable character option on a nameplate.")]
+        [Tooltip("An image to use for a lootable character option on a nameplate.")]
+        [FormerlySerializedAs("lootableCharacterNamePlateImage")]
         [SerializeField]
-        private Sprite lootableCharacterNamePlateImage = null;
+        private Sprite lootableCharacterNameplateImage = null;
 
         [Tooltip("An image to use beside a character creator option in the interaction UI window.")]
         [SerializeField]
         private Sprite characterCreatorInteractionPanelImage = null;
 
-        [Tooltip("An image to for a character creator option on a nameplate.")]
+        [Tooltip("An image to use for a character creator option on a nameplate.")]
+        [FormerlySerializedAs("characterCreatorNamePlateImage")]
         [SerializeField]
-        private Sprite characterCreatorNamePlateImage = null;
+        private Sprite characterCreatorNameplateImage = null;
 
         [Tooltip("An image to use beside a unit spawn controller option in the interaction UI window.")]
         [SerializeField]
         private Sprite unitSpawnControllerInteractionPanelImage = null;
 
-        [Tooltip("An image to for a unit spawn controller option on a nameplate.")]
+        [Tooltip("An image to use for a unit spawn controller option on a nameplate.")]
+        [FormerlySerializedAs("unitSpawnControllerNamePlateImage")]
         [SerializeField]
-        private Sprite unitSpawnControllerNamePlateImage = null;
+        private Sprite unitSpawnControllerNameplateImage = null;
 
         [Tooltip("An image to use beside a faction change option in the interaction UI window.")]
         [SerializeField]
         private Sprite factionChangeInteractionPanelImage = null;
 
-        [Tooltip("An image to for a faction change option on a nameplate.")]
+        [Tooltip("An image to use for a faction change option on a nameplate.")]
+        [FormerlySerializedAs("factionChangeNamePlateImage")]
         [SerializeField]
-        private Sprite factionChangeNamePlateImage = null;
+        private Sprite factionChangeNameplateImage = null;
 
         [Tooltip("An image to use beside a class change option in the interaction UI window.")]
         [SerializeField]
         private Sprite classChangeInteractionPanelImage = null;
 
-        [Tooltip("An image to for a class change option on a nameplate.")]
+        [Tooltip("An image to use for a class change option on a nameplate.")]
+        [FormerlySerializedAs("classChangeNamePlateImage")]
         [SerializeField]
-        private Sprite classChangeNamePlateImage = null;
+        private Sprite classChangeNameplateImage = null;
 
         [Tooltip("An image to use beside a vendor option in the interaction UI window.")]
         [SerializeField]
         private Sprite vendorInteractionPanelImage = null;
 
-        [Tooltip("An image to for a vendor option on a nameplate.")]
+        [Tooltip("An image to use for a vendor option on a nameplate.")]
+        [FormerlySerializedAs("vendorNamePlateImage")]
         [SerializeField]
-        private Sprite vendorNamePlateImage = null;
+        private Sprite vendorNameplateImage = null;
 
         [Tooltip("An image to use beside a portal option in the interaction UI window.")]
         [SerializeField]
         private Sprite portalInteractionPanelImage = null;
 
-        [Tooltip("An image to for a portal option on a nameplate.")]
+        [Tooltip("An image to use for a portal option on a nameplate.")]
+        [FormerlySerializedAs("portalNamePlateImage")]
         [SerializeField]
-        private Sprite portalNamePlateImage = null;
+        private Sprite portalNameplateImage = null;
 
         [Tooltip("An image to use beside a skill trainer option in the interaction UI window.")]
         [SerializeField]
         private Sprite skillTrainerInteractionPanelImage = null;
 
-        [Tooltip("An image to for a skill trainer option on a nameplate.")]
+        [Tooltip("An image to use for a skill trainer option on a nameplate.")]
+        [FormerlySerializedAs("skillTrainerNamePlateImage")]
         [SerializeField]
-        private Sprite skillTrainerNamePlateImage = null;
+        private Sprite skillTrainerNameplateImage = null;
 
         [Tooltip("An image to use beside a music player option in the interaction UI window.")]
         [SerializeField]
         private Sprite musicPlayerInteractionPanelImage = null;
 
-        [Tooltip("An image to for a music player option on a nameplate.")]
+        [Tooltip("An image to use for a music player option on a nameplate.")]
+        [FormerlySerializedAs("musicPlayerNamePlateImage")]
         [SerializeField]
-        private Sprite musicPlayerNamePlateImage = null;
+        private Sprite musicPlayerNameplateImage = null;
 
         [Tooltip("An image to use beside an activatable object option in the interaction UI window.")]
         [SerializeField]
         private Sprite activatableObjectInteractionPanelImage = null;
 
-        [Tooltip("An image to for an activatable object option on a nameplate.")]
+        [Tooltip("An image to use for an activatable object option on a nameplate.")]
+        [FormerlySerializedAs("activatableObjectNamePlateImage")]
         [SerializeField]
-        private Sprite activatableObjectNamePlateImage = null;
+        private Sprite activatableObjectNameplateImage = null;
 
         [Header("Quest Configuration")]
 
@@ -717,11 +740,11 @@ namespace AnyRPG {
 
         [Header("NETWORK")]
 
-        [Tooltip("Select the backend that will be used to store and retrieve player and account data.")]
+        [Tooltip("The backend that will be used to store and retrieve player and account data.  The File mode will store data in files on the local server and is appropriate for quick testing of single server instances.")]
         [SerializeField]
         private ServerBackend serverBackend = ServerBackend.File;
 
-        [Tooltip("This is the address of the API server that the dedicated game server will connect to for database operations. Do not use a trailing slash.")]
+        [Tooltip("The address of the API server that the dedicated game server will connect to for database operations. Do not use a trailing slash.")]
         [SerializeField]
         private string apiServerAddress = "https://apiserver.yourdomain.com";
 
@@ -729,11 +752,11 @@ namespace AnyRPG {
         [SerializeField]
         private bool validateAPIServerCert = true;
 
-        [Tooltip("This is the shared secret that allows the game server to login to the api server.")]
+        [Tooltip("This is the shared secret that allows the game server to login to the API server.")]
         [SerializeField]
         private string apiServerSharedSecret = "AnySecretThatCouldNotBeGuessed";
 
-        [Tooltip("This is the address (and optionally port) of the dedicated authoritative game server that all clients connect to.")]
+        [Tooltip("This is the address (and optionally port) of the dedicated authoritative game server that all clients connect to. Users can change this value on the login window.")]
         [SerializeField]
         private string gameServerAddress = "localhost";
 
@@ -779,45 +802,45 @@ namespace AnyRPG {
         public AbilityEffect LootSparkleEffect { get => lootSparkleEffect; set => lootSparkleEffect = value; }
         public AbilityEffect LevelUpEffect { get => levelUpEffect; set => levelUpEffect = value; }
         public Sprite QuestGiverInteractionPanelImage { get => questGiverInteractionPanelImage; set => questGiverInteractionPanelImage = value; }
-        public Sprite QuestGiverNamePlateImage { get => questGiverNamePlateImage; set => questGiverNamePlateImage = value; }
+        public Sprite QuestGiverNamePlateImage { get => questGiverNameplateImage; set => questGiverNameplateImage = value; }
         public Sprite DialogInteractionPanelImage { get => dialogInteractionPanelImage; set => dialogInteractionPanelImage = value; }
-        public Sprite DialogNamePlateImage { get => dialogNamePlateImage; set => dialogNamePlateImage = value; }
+        public Sprite DialogNamePlateImage { get => dialogNameplateImage; set => dialogNameplateImage = value; }
         public Sprite NameChangeInteractionPanelImage { get => nameChangeInteractionPanelImage; set => nameChangeInteractionPanelImage = value; }
-        public Sprite NameChangeNamePlateImage { get => nameChangeNamePlateImage; set => nameChangeNamePlateImage = value; }
+        public Sprite NameChangeNamePlateImage { get => nameChangeNameplateImage; set => nameChangeNameplateImage = value; }
         public Sprite StorageContainerInteractionPanelImage { get => storageContainerInteractionPanelImage; set => storageContainerInteractionPanelImage = value; }
         public Sprite StorageContainerNamePlateImage { get => storageContainerNamePlateImage; set => storageContainerNamePlateImage = value; }
-        public Sprite CutSceneInteractionPanelImage { get => cutSceneInteractionPanelImage; set => cutSceneInteractionPanelImage = value; }
-        public Sprite CutSceneNamePlateImage { get => cutSceneNamePlateImage; set => cutSceneNamePlateImage = value; }
+        public Sprite CutSceneInteractionPanelImage { get => cutsceneInteractionPanelImage; set => cutsceneInteractionPanelImage = value; }
+        public Sprite CutSceneNamePlateImage { get => cutsceneNameplateImage; set => cutsceneNameplateImage = value; }
         public Sprite LootableCharacterInteractionPanelImage { get => lootableCharacterInteractionPanelImage; set => lootableCharacterInteractionPanelImage = value; }
-        public Sprite LootableCharacterNamePlateImage { get => lootableCharacterNamePlateImage; set => lootableCharacterNamePlateImage = value; }
+        public Sprite LootableCharacterNamePlateImage { get => lootableCharacterNameplateImage; set => lootableCharacterNameplateImage = value; }
         public Sprite CharacterCreatorInteractionPanelImage { get => characterCreatorInteractionPanelImage; set => characterCreatorInteractionPanelImage = value; }
-        public Sprite CharacterCreatorNamePlateImage { get => characterCreatorNamePlateImage; set => characterCreatorNamePlateImage = value; }
+        public Sprite CharacterCreatorNamePlateImage { get => characterCreatorNameplateImage; set => characterCreatorNameplateImage = value; }
         public Sprite FactionChangeInteractionPanelImage { get => factionChangeInteractionPanelImage; set => factionChangeInteractionPanelImage = value; }
-        public Sprite FactionChangeNamePlateImage { get => factionChangeNamePlateImage; set => factionChangeNamePlateImage = value; }
+        public Sprite FactionChangeNamePlateImage { get => factionChangeNameplateImage; set => factionChangeNameplateImage = value; }
         public Sprite ClassChangeInteractionPanelImage { get => classChangeInteractionPanelImage; set => classChangeInteractionPanelImage = value; }
-        public Sprite ClassChangeNamePlateImage { get => classChangeNamePlateImage; set => classChangeNamePlateImage = value; }
+        public Sprite ClassChangeNamePlateImage { get => classChangeNameplateImage; set => classChangeNameplateImage = value; }
         public Sprite PortalInteractionPanelImage { get => portalInteractionPanelImage; set => portalInteractionPanelImage = value; }
-        public Sprite PortalNamePlateImage { get => portalNamePlateImage; set => portalNamePlateImage = value; }
+        public Sprite PortalNamePlateImage { get => portalNameplateImage; set => portalNameplateImage = value; }
         public Sprite SkillTrainerInteractionPanelImage { get => skillTrainerInteractionPanelImage; set => skillTrainerInteractionPanelImage = value; }
-        public Sprite SkillTrainerNamePlateImage { get => skillTrainerNamePlateImage; set => skillTrainerNamePlateImage = value; }
+        public Sprite SkillTrainerNamePlateImage { get => skillTrainerNameplateImage; set => skillTrainerNameplateImage = value; }
         public AbilityEffect DeathEffect { get => deathEffect; set => deathEffect = value; }
-        public Sprite MultipleInteractionNamePlateImage { get => multipleInteractionNamePlateImage; set => multipleInteractionNamePlateImage = value; }
+        public Sprite MultipleInteractionNamePlateImage { get => multipleInteractionNameplateImage; set => multipleInteractionNameplateImage = value; }
         public float DefaultDespawnTimer { get => defaultDespawnTimer; set => defaultDespawnTimer = value; }
         public Sprite BankInteractionPanelImage { get => bankInteractionPanelImage; set => bankInteractionPanelImage = value; }
-        public Sprite BankNamePlateImage { get => bankNamePlateImage; set => bankNamePlateImage = value; }
+        public Sprite BankNamePlateImage { get => bankNameplateImage; set => bankNameplateImage = value; }
         public Sprite GuildmasterInteractionPanelImage { get => guildmasterInteractionPanelImage; set => guildmasterInteractionPanelImage = value; }
-        public Sprite GuildmasterNamePlateImage { get => guildmasterNamePlateImage; set => guildmasterNamePlateImage = value; }
+        public Sprite GuildmasterNamePlateImage { get => guildmasterNameplateImage; set => guildmasterNameplateImage = value; }
         public Sprite VendorInteractionPanelImage { get => vendorInteractionPanelImage; set => vendorInteractionPanelImage = value; }
-        public Sprite VendorNamePlateImage { get => vendorNamePlateImage; set => vendorNamePlateImage = value; }
-        public Sprite MultipleCraftNamePlateImage { get => multipleCraftNamePlateImage; set => multipleCraftNamePlateImage = value; }
+        public Sprite VendorNamePlateImage { get => vendorNameplateImage; set => vendorNameplateImage = value; }
+        public Sprite MultipleCraftNamePlateImage { get => multipleCraftNameplateImage; set => multipleCraftNameplateImage = value; }
         public string GameName { get => gameName; set => gameName = value; }
         public string GameVersion { get => gameVersion; set => gameVersion = value; }
         public Sprite UnitSpawnControllerInteractionPanelImage { get => unitSpawnControllerInteractionPanelImage; set => unitSpawnControllerInteractionPanelImage = value; }
-        public Sprite UnitSpawnControllerNamePlateImage { get => unitSpawnControllerNamePlateImage; set => unitSpawnControllerNamePlateImage = value; }
+        public Sprite UnitSpawnControllerNamePlateImage { get => unitSpawnControllerNameplateImage; set => unitSpawnControllerNameplateImage = value; }
         public Sprite MusicPlayerInteractionPanelImage { get => musicPlayerInteractionPanelImage; set => musicPlayerInteractionPanelImage = value; }
-        public Sprite MusicPlayerNamePlateImage { get => musicPlayerNamePlateImage; set => musicPlayerNamePlateImage = value; }
+        public Sprite MusicPlayerNamePlateImage { get => musicPlayerNameplateImage; set => musicPlayerNameplateImage = value; }
         public Sprite ActivatableObjectInteractionPanelImage { get => activatableObjectInteractionPanelImage; set => activatableObjectInteractionPanelImage = value; }
-        public Sprite ActivatableObjectNamePlateImage { get => activatableObjectNamePlateImage; set => activatableObjectNamePlateImage = value; }
+        public Sprite ActivatableObjectNamePlateImage { get => activatableObjectNameplateImage; set => activatableObjectNameplateImage = value; }
         public RuntimeAnimatorController DefaultAnimatorController { get => defaultAnimatorController; set => defaultAnimatorController = value; }
         public AnimationProfile DefaultAnimationProfile { get => defaultAnimationProfile; set => defaultAnimationProfile = value; }
         public Material DefaultCastingLightProjector { get => defaultCastTargetCircle; set => defaultCastTargetCircle = value; }
@@ -951,9 +974,9 @@ namespace AnyRPG {
         public ServerBackend ServerBackend { get => serverBackend; set => serverBackend = value; }
         public string PrivateMessageChatCommand { get => privateMessageChatCommand; set => privateMessageChatCommand = value; }
         public Sprite MailboxInteractionPanelImage { get => mailboxInteractionPanelImage; set => mailboxInteractionPanelImage = value; }
-        public Sprite MailboxNamePlateImage { get => mailboxNamePlateImage; set => mailboxNamePlateImage = value; }
+        public Sprite MailboxNamePlateImage { get => mailboxNameplateImage; set => mailboxNameplateImage = value; }
         public Sprite AuctionInteractionPanelImage { get => auctionInteractionPanelImage; set => auctionInteractionPanelImage = value; }
-        public Sprite AuctionNamePlateImage { get => auctionNamePlateImage; set => auctionNamePlateImage = value; }
+        public Sprite AuctionNameplateImage { get => auctionNameplateImage; set => auctionNameplateImage = value; }
         public int BasePostageCurrencyAmount { get => basePostageCurrencyAmount; set => basePostageCurrencyAmount = value; }
         public int PostageCurrencyAmountPerAttachment { get => postageCurrencyAmountPerAttachment; set => postageCurrencyAmountPerAttachment = value; }
         public int AuctionDepositAmount { get => auctionDepositAmount; set => auctionDepositAmount = value; }
@@ -977,7 +1000,7 @@ namespace AnyRPG {
         public List<int> ExperienceChart { get => experienceChart; set => experienceChart = value; }
         public bool CanDropItems { get => canDropItems; set => canDropItems = value; }
         public bool SplitStacksOnDrop { get => splitStacksOnDrop; set => splitStacksOnDrop = value; }
-        public bool UseEncumberance { get => useEncumberance; set => useEncumberance = value; }
+        public bool UseEncumbrance { get => useEncumbrance; set => useEncumbrance = value; }
         public float EncumberedSpeed { get => encumberedSpeed; set => encumberedSpeed = value; }
         public float BaseCarryWeight { get => baseCarryWeight; set => baseCarryWeight = value; }
 

@@ -320,7 +320,7 @@ namespace AnyRPG {
             float currentMovementSpeed = (playerManagerClient.UnitController.IsEncumbered ? systemConfigurationManager.EncumberedSpeed : playerManagerClient.UnitController.CharacterStats.RunSpeed);
             updateString += $"Movement Speed: <color={(playerManagerClient.UnitController.IsEncumbered ? "red" : "white")}>{Mathf.Clamp(currentMovementSpeed, 0, systemConfigurationManager.MaxMovementSpeed).ToString("F1")} (m/s)</color>\n\n";
 
-            if (systemConfigurationManager.UseEncumberance == true) {
+            if (systemConfigurationManager.UseEncumbrance == true) {
                 float currentWeightLoad = playerManagerClient.UnitController.CharacterEquipmentManager.EquippedWeight + playerManagerClient.UnitController.CharacterInventoryManager.Weight;
                 float carryWeight = playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue + systemConfigurationManager.BaseCarryWeight;
                 string colorString = currentWeightLoad > carryWeight ? "red" : "white";

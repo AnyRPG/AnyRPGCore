@@ -192,7 +192,7 @@ namespace AnyRPG {
                 if (UnderControl == true && MasterUnit != null) {
                     return MasterUnit.MovementSpeed;
                 }
-                if (systemConfigurationManager.UseEncumberance == true && isEncumbered == true) {
+                if (systemConfigurationManager.UseEncumbrance == true && isEncumbered == true) {
                     return systemConfigurationManager.EncumberedSpeed;
                 }
                 return (walking == false ? characterStats.RunSpeed : characterStats.WalkSpeed);

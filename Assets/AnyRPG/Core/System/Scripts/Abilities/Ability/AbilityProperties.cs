@@ -32,11 +32,11 @@ namespace AnyRPG {
 
         [Header("Prefabs")]
 
-        [Tooltip("Physical prefabs to attach to bones on the character unit")]
+        [Tooltip("Physical prefabs to attach to bones on the character unit.")]
         [SerializeField]
         private List<AbilityAttachmentNode> holdableObjectList = new List<AbilityAttachmentNode>();
 
-        [Tooltip("If true, the prefabs will be despawned when the cast phase ends, instead of during or at the end of the action phase")]
+        [Tooltip("If true, the prefabs will be despawned when the cast phase ends, instead of during or at the end of the action phase.")]
         [SerializeField]
         private bool despawnPrefabsOnCastEnd = false;
 
@@ -76,15 +76,15 @@ namespace AnyRPG {
         
         [Header("Animated Ability")]
 
-        [Tooltip("Is this an auto attack ability")]
+        [Tooltip("Is this an auto attack ability.")]
         [SerializeField]
         private bool isAutoAttack = false;
 
-        [Tooltip("If true, a random animation from the unit attack animations will be used")]
+        [Tooltip("If true, a random animation from the unit attack animations will be used.")]
         [SerializeField]
         private bool useUnitAttackAnimations = false;
 
-        [Tooltip("This option is only valid if this is not an auto attack ability.  If true, it will use the current auto-attack animations so it looks good with any weapon.")]
+        [Tooltip("This option is only valid if this is not an auto attack ability. If true, it will use the current auto-attack animations so it looks good with any weapon.")]
         [SerializeField]
         private bool useAutoAttackAnimations = false;
 
@@ -235,7 +235,7 @@ namespace AnyRPG {
 
         [Header("Target Properties")]
 
-        [Tooltip("Ignore the below target options and use the check from the first ability effect instead")]
+        [Tooltip("Ignore the below target options and use the check from the first ability effect instead.")]
         [SerializeField]
         private bool useAbilityEffectTargetting = false;
 
