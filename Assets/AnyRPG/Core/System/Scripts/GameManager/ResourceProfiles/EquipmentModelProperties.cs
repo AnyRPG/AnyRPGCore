@@ -7,7 +7,7 @@ namespace AnyRPG {
     [System.Serializable]
     public class EquipmentModelProperties : ConfiguredClass {
 
-        [Tooltip("The name of the equipment this model profile will be added to at run-time")]
+        [Tooltip("The name of the equipment this model profile will be added to at run-time.")]
         [ResourceSelector(resourceType = typeof(Equipment))]
         [SerializeField]
         private string applyToEquipmentName = string.Empty;

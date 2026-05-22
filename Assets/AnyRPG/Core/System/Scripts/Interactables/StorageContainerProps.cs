@@ -8,6 +8,7 @@ namespace AnyRPG {
 
         [Header("Storage Container")]
 
+        [Tooltip("The number of item slots in the container.")]
         [SerializeField]
         private int numberOfSlots = 20;
 

@@ -11,6 +11,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<GameObject> dontDestroyOnLoadPrefabsList = new List<GameObject>();
 
+        [Tooltip("If set, an extension to override.")]
         [ResourceSelector(resourceType = typeof(GameExtension))]
         [SerializeField]
         private string overrideExtension = string.Empty;

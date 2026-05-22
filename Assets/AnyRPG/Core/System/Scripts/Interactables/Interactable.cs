@@ -94,6 +94,7 @@ namespace AnyRPG {
 
         [Header("Nameplate")]
 
+        [Tooltip("Set this to true to have a nameplate appear over the object.  The nameplate will show the interactable's name and any interactable options it has.")]
         [SerializeField]
         protected bool hasNameplate = false;
 

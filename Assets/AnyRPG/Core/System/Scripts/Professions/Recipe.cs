@@ -17,7 +17,7 @@ namespace AnyRPG {
         [SerializeField]
         private int requiredLevel = 1;
 
-        [Tooltip("The skill required to gather from this node, or empty for none.")]
+        [Tooltip("The skill required to learn this recipe, or empty for none.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Skill))]
         private string skillName = string.Empty;
@@ -34,7 +34,7 @@ namespace AnyRPG {
         [SerializeField]
         private int skillExperienceReward = 25;
 
-        [Tooltip("The maximum skill level at which skill experience will be granted for crafting this recipe.  If the character skill is higher than this level, they will get no skill experience. 0 means this recipe will never stop giving experience")]
+        [Tooltip("The maximum skill level at which skill experience will be granted for crafting this recipe.  If the character skill is higher than this level, they will get no skill experience. 0 means this recipe will never stop giving experience.")]
         [SerializeField]
         private int maxSkillExperienceLevel = 0;
 
@@ -42,25 +42,28 @@ namespace AnyRPG {
         [SerializeField]
         private int characterExperienceReward = 25;
 
-        [Tooltip("The maximum character level at which experience will be granted for crafting this recipe.  If the character is higher than this level, they will get no experience. 0 means this recipe will never stop giving experience")]
+        [Tooltip("The maximum character level at which experience will be granted for crafting this recipe.  If the character is higher than this level, they will get no experience. 0 means this recipe will never stop giving experience.")]
         [SerializeField]
         private int maxCharacterExperienceLevel = 0;
 
         [Header("Crafting")]
 
+        [Tooltip("The materials required to craft this recipe.")]
         [SerializeField]
         private List<CraftingMaterial> craftingMaterials = new List<CraftingMaterial>();
 
+        [Tooltip("The item that will be created upon completion of crafting.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Item))]
         private string itemOutputName = string.Empty;
 
-        //[SerializeField]
         private Item output;
 
+        [Tooltip("The number of new items that will be created upon completion of crafting.")]
         [SerializeField]
         private int outputCount = 0;
 
+        [Tooltip("The name of a Craft Ability that must be known to craft this recipe.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Ability))]
         private string craftAbilityName = string.Empty;

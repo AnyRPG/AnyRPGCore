@@ -1,10 +1,8 @@
-using System;
-using System.Collections;
 using UnityEngine;
 
 namespace AnyRPG {
 
-    [CreateAssetMenu(fileName = "New Faction Change Config", menuName = "AnyRPG/Interactable/GuildmasterConfig")]
+    [CreateAssetMenu(fileName = "New Guild Master Config", menuName = "AnyRPG/Interactable/GuildmasterConfig")]
     public class GuildmasterConfig : InteractableOptionConfig {
 
         [SerializeField]

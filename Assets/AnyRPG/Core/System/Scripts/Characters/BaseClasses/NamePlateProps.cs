@@ -11,11 +11,11 @@ namespace AnyRPG {
         [SerializeField]
         private string displayName = string.Empty;
 
-        [Tooltip("If true, the nameplate position will be set to this value")]
+        [Tooltip("If true, the nameplate position will be set to this value.")]
         [SerializeField]
         private bool overrideNameplatePosition = false;
 
-        [Tooltip("The position of the NamePlate anchor, relative to the unit pivot")]
+        [Tooltip("The position of the NamePlate anchor, relative to the unit pivot.")]
         [SerializeField]
         private Vector3 namePlatePosition = Vector3.zero;
 

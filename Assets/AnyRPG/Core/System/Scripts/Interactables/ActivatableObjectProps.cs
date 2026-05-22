@@ -15,7 +15,7 @@ namespace AnyRPG {
         protected float despawnTimer = 5f;
         */
 
-        [Tooltip("The gameObject that will be enabled or disabled ")]
+        [Tooltip("The gameObject that will be enabled or disabled.")]
         [SerializeField]
         private GameObject spawnObject = null;
 

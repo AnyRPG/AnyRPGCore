@@ -6,11 +6,11 @@ namespace AnyRPG {
 
         [Header("Set Character Class Command")]
 
-        [Tooltip("If true, all parameters will be ignored, and the character class will be the one listed below")]
+        [Tooltip("If true, all parameters will be ignored, and the character class will be the one listed below.")]
         [SerializeField]
         private bool fixedCharacterClass = false;
 
-        [Tooltip("The name of the character class to set")]
+        [Tooltip("The name of the character class to set if Fixed Character Class is true.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(CharacterClass))]
         private string characterClassName = string.Empty;

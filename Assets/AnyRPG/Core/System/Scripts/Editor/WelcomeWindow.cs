@@ -180,7 +180,7 @@ namespace AnyRPG {
 
             switch (selectedTab) {
                 case 0: DrawStartHereTab(); break;
-                case 1: DrawAddonsTab(); break;
+                //case 1: DrawAddonsTab(); break;
                 case 2: DrawCreateYourGameTab(); break;
                 case 3: DrawDemosTab(); break;
                 case 4: DrawSupportTab(); break;
@@ -251,7 +251,7 @@ namespace AnyRPG {
 
             return hasSettings && hasPackage;
         }
-
+        /*
         private void DrawAddonsTab() {
             EditorGUILayout.LabelField("INSTALL OPTIONAL ADDONS", EditorStyles.boldLabel);
 
@@ -364,7 +364,9 @@ namespace AnyRPG {
 
 
         }
+        */
 
+        /*
         private void DrawModularAddonPanel(string title, string desc, string addonFolder, string gitUrl, string webUrl, string addonLabel, List<UnityPackageReq> unityReqs = null, List<AddonReq> addonReqs = null, Action extraContent = null) {
             GUILayout.BeginVertical(title, "window");
             GUILayout.Space(16);
@@ -411,6 +413,7 @@ namespace AnyRPG {
 
             GUILayout.EndVertical();
         }
+        */
 
         private void DrawFullAddonStep(string stepLabel, string folder, string gitUrl, string webUrl, bool isInstalled, bool requirementsMet) {
             string relPath = Path.Combine("Assets", "AnyRPG", "Addons", folder);
@@ -1023,6 +1026,7 @@ namespace AnyRPG {
 
     }
 
+    /*
     public class UnityPackageReq {
         public string Name;
         public string Folder;           // e.g., "Assets/UMA"
@@ -1036,5 +1040,6 @@ namespace AnyRPG {
         public string GitUrl = string.Empty;
         public string WebUrl = string.Empty;
     }
+    */
 
 }

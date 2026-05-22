@@ -1,6 +1,3 @@
-using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -8,10 +5,6 @@ namespace AnyRPG {
     public class ActionEffectItem : ActionItem {
 
         [Header("Effect")]
-
-        [Tooltip("If true, use the inline effect instead of named effect.")]
-        [SerializeField]
-        private bool useInlineEffect = false;
 
         [Tooltip("The resources to affect, and the amounts of the effects.")]
         [SerializeField]
