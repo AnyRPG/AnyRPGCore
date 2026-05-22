@@ -115,7 +115,6 @@ namespace AnyRPG {
                 Folder = "a-lost-soul-demo-games",
                 GitUrl = "https://github.com/AnyRPG/a-lost-soul-demo-games",
                 PackageName = "A Lost Soul Demo Games",
-                UnityPackages = new List<UnityPackageReq> { umaPackage },
                 AddonDependencies = new List<AddonReq> { umaDependency, cc0Dependency }
             }
         };
