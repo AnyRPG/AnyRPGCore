@@ -17,9 +17,6 @@ namespace AnyRPG {
 
         public static Vector2 scrollPosition;
 
-        private int selectedTab = 0;
-        private Vector2 scrollPos;
-
         //GUISkin skin;
         private const int windowMinWidth = 800;
         private const int windowMinHeight = 600;
@@ -323,7 +320,7 @@ namespace AnyRPG {
                 if (gitUrl != "") {
                     GUILayout.BeginVertical(EditorStyles.helpBox);
                     GUI.enabled = requirementsMet;
-                    if (GUILayout.Button($"Install {stepLabel.Substring(stepLabel.IndexOf('.') + 2)} (Requires Git)", GUILayout.Height(25))) {
+                    if (GUILayout.Button($"Install {stepLabel} (Requires Git)", GUILayout.Height(25))) {
                         InstallAddon(folder, gitUrl);
                     }
                     GUI.enabled = true;
