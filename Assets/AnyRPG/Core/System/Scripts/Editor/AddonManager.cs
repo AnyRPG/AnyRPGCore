@@ -93,7 +93,6 @@ namespace AnyRPG {
                 Folder = "anymmo-fishnet-uma",
                 GitUrl = "https://github.com/AnyRPG/anymmo-fishnet-uma",
                 PackageName = "AnyMMO FishNet UMA Addon",
-                UnityPackages = new List<UnityPackageReq> { fishNetPackage, umaPackage },
                 AddonDependencies = new List<AddonReq> { umaDependency, fishNetDependency }
             },
             new AddonData {
