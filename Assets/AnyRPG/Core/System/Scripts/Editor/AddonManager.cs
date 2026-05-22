@@ -250,6 +250,8 @@ namespace AnyRPG {
             // Draw your label using the new style
             EditorGUILayout.LabelField(title, titleStyle);
 
+            GUILayout.Space(10);
+
             // Custom Requirement: Description is beautifully relocated into the top-level Info box style
             DrawCustomInfoBox(desc, "console.infoicon");
             GUILayout.Space(15);
