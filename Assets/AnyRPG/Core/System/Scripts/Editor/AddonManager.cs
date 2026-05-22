@@ -41,7 +41,7 @@ namespace AnyRPG {
         }
 
         public void OnEnable() {
-            titleContent = new GUIContent("Welcome To AnyRPG");
+            titleContent = new GUIContent("AnyRPG Addon Manager");
 
             // Set a minimum size to prevent the UI from breaking
             minSize = new Vector2(windowMinWidth, windowMinHeight);
@@ -242,8 +242,13 @@ namespace AnyRPG {
         // --- REFACTORED MODULAR PANEL (Respecting your styles & execution requirements) ---
         private void DrawModularAddonPanel(string title, string desc, string addonFolder, string gitUrl, string webUrl, string addonLabel, List<UnityPackageReq> unityReqs = null, List<AddonReq> addonReqs = null, Action extraContent = null) {
             GUILayout.BeginVertical(); // Removed "window" style background string wrapper completely
-            
-            EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
+
+            GUIStyle titleStyle = new GUIStyle(EditorStyles.boldLabel) {
+                fontSize = 16
+            };
+
+            // Draw your label using the new style
+            EditorGUILayout.LabelField(title, titleStyle);
 
             // Custom Requirement: Description is beautifully relocated into the top-level Info box style
             DrawCustomInfoBox(desc, "console.infoicon");
