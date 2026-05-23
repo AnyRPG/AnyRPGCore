@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
 using UnityEditor;
-using UnityEditor.Build.Profile;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -258,7 +257,7 @@ namespace AnyRPG {
 
             // --- UNITY PACKAGE DEPENDENCIES ---
             if (unityReqs != null && unityReqs.Count > 0) {
-                EditorGUILayout.LabelField("REQUIRED UNITY PACKAGES", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField("UNITY PACKAGE DEPENDENCIES", EditorStyles.boldLabel);
                 GUILayout.Space(5);
 
                 foreach (var req in unityReqs) {
@@ -274,7 +273,7 @@ namespace AnyRPG {
 
             // --- ANYRPG ADDON DEPENDENCIES ---
             if (addonReqs != null && addonReqs.Count > 0) {
-                EditorGUILayout.LabelField("REQUIRED ANYRPG ADDONS", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField("ANYRPG ADDON DEPENDENCIES", EditorStyles.boldLabel);
                 GUILayout.Space(5);
 
                 foreach (var req in addonReqs) {
@@ -286,12 +285,13 @@ namespace AnyRPG {
                     DrawStatusStep($"{req.Name}", installed, "Installed", "Manage Addon",
                         () => NavigateToAddon(req.Folder),
                         string.Empty);
+                    GUILayout.Space(5);
                 }
-                GUILayout.Space(15);
+                GUILayout.Space(10);
             }
 
             // --- THE PRIMARY ADDON ---
-            EditorGUILayout.LabelField("INSTALLATION & MANAGEMENT", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("ADDON STATUS", EditorStyles.boldLabel);
             GUILayout.Space(5);
 
             string mainRelPath = Path.Combine("Assets", "AnyRPG", "Addons", addonFolder);
@@ -301,7 +301,7 @@ namespace AnyRPG {
 
             // --- STEP 3+ (Extra Content) ---
             if (mainInstalled && allReqsMet && extraContent != null) {
-                GUILayout.Space(15);
+                GUILayout.Space(10);
                 EditorGUILayout.LabelField("POST-INSTALLATION CONFIGURATION", EditorStyles.boldLabel);
                 GUILayout.Space(5);
                 extraContent.Invoke();
@@ -317,9 +317,11 @@ namespace AnyRPG {
 
             //GUILayout.BeginVertical(EditorStyles.helpBox);
             DrawStatusStep(stepLabel, isInstalled, "Installed", "", null, gitUrl != string.Empty ? gitUrl : webUrl, requirementsMet);
+            GUILayout.Space(15);
 
-            GUILayout.BeginVertical(EditorStyles.helpBox);
-            EditorGUILayout.LabelField("Manage", EditorStyles.miniBoldLabel);
+            //GUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("ADDON MANAGEMENT", EditorStyles.boldLabel);
+            GUILayout.Space(5);
 
             if (!isInstalled) {
                 if (gitUrl != "") {
@@ -331,6 +333,7 @@ namespace AnyRPG {
                     GUI.enabled = true;
                     DrawTerminalCommand($"git clone {gitUrl} \"{fullPath}\"");
                     GUILayout.EndVertical();
+                    GUILayout.Space(5);
                 }
                 if (webUrl != "") {
                     GUILayout.BeginVertical(EditorStyles.helpBox);
@@ -338,6 +341,7 @@ namespace AnyRPG {
                         Application.OpenURL(webUrl);
                     }
                     GUILayout.EndVertical();
+                    GUILayout.Space(5);
                 }
             } else {
                 if (gitUrl != "") {
@@ -347,6 +351,7 @@ namespace AnyRPG {
                     }
                     DrawTerminalCommand($"cd \"{fullPath}\" && git pull");
                     GUILayout.EndVertical();
+                    GUILayout.Space(5);
 
                     GUILayout.BeginVertical(EditorStyles.helpBox);
                     if (GUILayout.Button("Check for Updates (Requires Git)", GUILayout.Height(25))) {
@@ -354,6 +359,7 @@ namespace AnyRPG {
                     }
                     DrawTerminalCommand($"cd \"{fullPath}\" && git fetch && git status -uno");
                     GUILayout.EndVertical();
+                    GUILayout.Space(5);
                 }
                 if (webUrl != "") {
                     GUILayout.BeginVertical(EditorStyles.helpBox);
@@ -361,6 +367,7 @@ namespace AnyRPG {
                         Application.OpenURL(webUrl);
                     }
                     GUILayout.EndVertical();
+                    GUILayout.Space(5);
                 }
 
                 GUILayout.BeginVertical(EditorStyles.helpBox);
@@ -372,10 +379,12 @@ namespace AnyRPG {
                 }
                 EditorGUILayout.HelpBox("Removes the addon files from the project.", MessageType.None);
                 GUILayout.EndVertical();
+                GUILayout.Space(5);
+
             }
 
             //GUILayout.EndVertical();
-            GUILayout.EndVertical();
+            //GUILayout.EndVertical();
         }
 
         private void DrawStatusStep(string label, bool installed, string okText, string btnText, Action onClick, string url, bool enabled = true) {
@@ -531,53 +540,6 @@ namespace AnyRPG {
 
             //GUILayout.EndVertical();
         }
-
-        /*
-        private void DrawStatusStep(string label, bool installed, string okText, string btnText, Action onClick, string url, bool enabled = true) {
-            GUILayout.BeginVertical(EditorStyles.helpBox);
-
-            // Row 1: Title
-            EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
-
-            // Row 2: Status Line
-            GUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Status:", GUILayout.Width(50));
-            if (installed) {
-                GUI.color = Color.green;
-                GUILayout.Label("\u2714 " + okText);
-                GUI.color = Color.white;
-            } else {
-                GUI.color = new Color(1f, 0.4f, 0.4f);
-                GUILayout.Label("\u2718 Missing", GUILayout.Width(70));
-                GUI.color = Color.white;
-            }
-                GUILayout.FlexibleSpace();
-
-                GUI.enabled = enabled;
-                if (btnText != "") {
-                    if (GUILayout.Button(btnText, GUILayout.MinWidth(120), GUILayout.Height(22))) {
-                        // This opens the Package Manager and filters for the package
-                        onClick?.Invoke();
-                    }
-                }
-                GUI.enabled = true;
-
-            GUILayout.EndHorizontal();
-
-            // Row 3: Manual URL Link
-            GUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("URL:", GUILayout.Width(40));
-            GUIStyle linkStyle = new GUIStyle(EditorStyles.label) {
-                normal = { textColor = new Color(0.3f, 0.6f, 1f) },
-                fontStyle = FontStyle.Italic,
-                fontSize = 12
-            };
-            if (GUILayout.Button(url, linkStyle)) Application.OpenURL(url);
-            GUILayout.EndHorizontal();
-
-            GUILayout.EndVertical();
-        }
-        */
 
         private Texture2D MakeTex(int width, int height, Color col) {
             Color[] pix = new Color[width * height];
