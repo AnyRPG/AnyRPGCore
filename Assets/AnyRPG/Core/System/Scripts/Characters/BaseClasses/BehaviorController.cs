@@ -1,0 +1,284 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace AnyRPG {
+    public class BehaviorController : ConfiguredClass {
+
+        private UnitController unitController = null;
+
+        private int behaviorIndex = 0;
+
+        private float maxBehaviorTime = 300f;
+
+        private Coroutine behaviorCoroutine = null;
+
+        private bool behaviorPlaying = false;
+
+        private bool suppressNameplateImage = false;
+
+        private Dictionary<BehaviorProfile, BehaviorProfileState> behaviorList = new Dictionary<BehaviorProfile, BehaviorProfileState>();
+
+        private BehaviorComponent behaviorComponent = null;
+
+        // game manager references
+        private AudioManager audioManager = null;
+        private LevelManagerClient levelManagerClient = null;
+        private CutsceneBarController cutsceneBarController = null;
+
+        public int BehaviorIndex { get => behaviorIndex; }
+        public bool BehaviorPlaying { get => behaviorPlaying; set => behaviorPlaying = value; }
+        public bool SuppressNameplateImage { get => suppressNameplateImage; }
+        public Dictionary<BehaviorProfile, BehaviorProfileState> BehaviorList { get => behaviorList; set => behaviorList = value; }
+
+        public BehaviorController(UnitController unitController, SystemGameManager systemGameManager) {
+            //Debug.Log($"{unitController.gameObject.name}BehaviorController.Constructor()");
+
+            this.unitController = unitController;
+            Configure(systemGameManager);
+
+            SetupScriptableObjects();
+            //HandlePrerequisiteUpdates();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            audioManager = systemGameManager.AudioManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
+            cutsceneBarController = systemGameManager.UIManager.CutSceneBarController;
+        }
+
+        // this should be run after the unit profile is set
+        public void Init() {
+            //Debug.Log($"{unitController.gameObject.name}BehaviorController.Init()");
+
+            behaviorComponent = BehaviorComponent.GetBehaviorComponent(unitController);
+
+            PlayAutomaticBehaviors();
+        }
+
+
+        public void Cleanup() {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.Cleanup()");
+
+            CleanupBehavior();
+            CleanupScriptableObjects();
+        }
+
+        public void SetBehaviorPlaying(bool newValue) {
+            behaviorPlaying = newValue;
+        }
+
+        public void TryPlayBehavior(BehaviorProfile behaviorProfile, BehaviorComponent caller = null, UnitController sourceUnitController = null) {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorInteractable.TryPlayBehavior({behaviorProfile.ResourceName})");
+
+            if (behaviorPlaying == false) {
+                behaviorCoroutine = unitController.StartCoroutine(PlayBehavior(behaviorProfile, caller, sourceUnitController));
+            }
+        }
+
+        private void CleanupBehavior() {
+            //nameplate
+            if (behaviorCoroutine != null) {
+                unitController.StopCoroutine(behaviorCoroutine);
+            }
+            behaviorCoroutine = null;
+            SetBehaviorPlaying(false);
+        }
+
+        public IEnumerator PlayBehavior(BehaviorProfile behaviorProfile, BehaviorComponent caller = null, UnitController sourceUnitController = null) {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayBehavior({(behaviorProfile == null ? "null" : behaviorProfile.DisplayName)})");
+
+            SetBehaviorPlaying(true);
+
+            float elapsedTime = 0f;
+            behaviorIndex = 0;
+            BehaviorNode currentbehaviorNode = null;
+            suppressNameplateImage = true;
+
+            behaviorProfile.ResetStatus(sourceUnitController, behaviorList[behaviorProfile]);
+
+            // give the interactable a chance to update the nameplate image and minimap indicator since we want the option to interact to be gone while the behavior is playing
+            if (caller != null) {
+                caller.ProcessBehaviorBeginEnd();
+            }
+            //ProcessBehaviorBeginEnd();
+            while (behaviorIndex < behaviorProfile.BehaviorNodes.Count) {
+                foreach (BehaviorNode behaviorNode in behaviorProfile.BehaviorNodes) {
+                    if (behaviorNode.StartTime <= elapsedTime && behaviorList[behaviorProfile].BehaviorNodeStates[behaviorNode].Completed == false) {
+                        currentbehaviorNode = behaviorNode;
+
+                        if (currentbehaviorNode.BehaviorActionNodes != null) {
+                            foreach (BehaviorActionNode behaviorActionNode in currentbehaviorNode.BehaviorActionNodes) {
+                                if (behaviorActionNode.BehaviorMethod != null && behaviorActionNode.BehaviorMethod != string.Empty) {
+                                    //Debug.Log($"{unitController.gameObject.name}.BehaviorInteractable.playBehavior(): sending Message " + behaviorActionNode.MyBehaviorMethod + "(" + behaviorActionNode.MyBehaviorParameter + ")");
+                                    if (behaviorActionNode.BehaviorParameter != null && behaviorActionNode.BehaviorParameter != string.Empty) {
+                                        unitController.gameObject.SendMessage(behaviorActionNode.BehaviorMethod, behaviorActionNode.BehaviorParameter, SendMessageOptions.DontRequireReceiver);
+                                    } else {
+                                        unitController.gameObject.SendMessage(behaviorActionNode.BehaviorMethod, SendMessageOptions.DontRequireReceiver);
+                                    }
+                                }
+                            }
+                        }
+
+                        behaviorList[behaviorProfile].BehaviorNodeStates[behaviorNode].Completed = true;
+                        behaviorIndex++;
+                    }
+                }
+                elapsedTime += Time.deltaTime;
+
+                // circuit breaker
+                if (elapsedTime >= maxBehaviorTime) {
+                    break;
+                }
+                yield return null;
+            }
+            //Debug.Log($"{gameObject.name}.BehaviorInteractable.playBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.DisplayName) + ") : END LOOP");
+            behaviorCoroutine = null;
+            SetBehaviorPlaying(false);
+            suppressNameplateImage = false;
+            behaviorProfile.SetCompleted(sourceUnitController, true);
+
+            // give the interactable a chance to update the nameplate image and minimap indicator since we want the option to interact to be gone while the behavior is playing
+            //ProcessBehaviorBeginEnd();
+            if (caller != null) {
+                caller.ProcessBehaviorBeginEnd();
+            }
+
+            // hope this doesn't cause stack overflow ?  it shouldn't because technically this one exits immediately after that call ?
+            if (behaviorProfile.Looping == true) {
+                behaviorCoroutine = unitController.StartCoroutine(PlayBehavior(behaviorProfile));
+            }
+        }
+
+        /*
+        public void ProcessBehaviorBeginEnd() {
+            HandlePrerequisiteUpdates();
+        }
+        */
+
+        public void HandlePrerequisiteUpdates(UnitController sourceUnitController) {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.HandlePrerequisiteUpdates()");
+
+            if (unitController.UnitControllerMode != UnitControllerMode.AI) {
+                return;
+            }
+
+            PlayAutomaticBehaviors();
+
+            if (behaviorComponent != null) {
+                behaviorComponent.HandlePrerequisiteUpdates(sourceUnitController);
+            }
+        }
+
+        public void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.HandlePlayerUnitSpawn()");
+            if (unitController.UnitControllerMode != UnitControllerMode.AI) {
+                return;
+            }
+
+            // since player unit spawn doesn't trigger prerequisite update on individual behaviors, a manual check is needed
+            foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
+                behaviorProfile.UpdatePrerequisites(sourceUnitController, false);
+            }
+            PlayAutomaticBehaviors();
+            // the behavior component may have already triggered on this event, so trigger it manually since a prerequisite update was just performed
+            if (behaviorComponent != null) {
+                behaviorComponent.HandlePlayerUnitSpawn(sourceUnitController);
+            }
+        }
+
+
+        public void PlayAutomaticBehaviors() {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayAutomaticBehaviors()");
+
+            if (networkManagerServer.ServerModeActive == true) {
+                //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayAutomaticBehaviors() aborting because server mode");
+                return;
+            }
+            if (unitController.UnitControllerMode != UnitControllerMode.AI) {
+                //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayAutomaticBehaviors() aborting because not AI");
+                return;
+            }
+
+            foreach (BehaviorProfile behaviorProfile in GetCurrentOptionList()) {
+                //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayAutomaticBehaviors() assessing {behaviorProfile.ResourceName}");
+
+                // in order for automatic behaviors to play on the server, we can't check against any state, such as completed
+                if (behaviorProfile.Automatic == true
+                    && (behaviorProfile.Repeatable == true || cutsceneBarController.CurrentCutscene != null)) {
+                    //if (behaviorProfile.Automatic == true && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
+                    TryPlayBehavior(behaviorProfile);
+                }
+            }
+        }
+
+        public List<BehaviorProfile> GetCurrentOptionList() {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.GetCurrentOptionList()");
+
+            List<BehaviorProfile> currentList = new List<BehaviorProfile>();
+            foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
+                if (behaviorProfile.PrerequisiteConditions.Count == 0
+                    && (behaviorProfile.Repeatable == true || cutsceneBarController.CurrentCutscene != null)) {
+                    // took away prerequisite check and completed check for multiplayer
+                    //&& (behaviorProfile.Completed(sourceUnitController) == false || behaviorProfile.Repeatable == true)) {
+                    //Debug.Log("BehaviorInteractable.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.DisplayName + "; id: " + behaviorProfile.GetInstanceID());
+                    currentList.Add(behaviorProfile);
+                }
+            }
+            //Debug.Log("BehaviorInteractable.GetValidOptionList(): List Size: " + validList.Count);
+            return currentList;
+        }
+
+        public void AddToBehaviorList(BehaviorProfile behaviorProfile) {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.AddToBehaviorList({behaviorProfile.ResourceName})");
+
+            behaviorList.Add(behaviorProfile, new BehaviorProfileState(behaviorProfile));
+            behaviorProfile.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
+            behaviorProfile.OnEventTriggered += HandleEventTrigger;
+        }
+
+        public void SetupScriptableObjects() {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.SetupScriptableObjects()");
+
+            // local behaviors
+            if (unitController.BehaviorNames != null) {
+                foreach (string behaviorName in unitController.BehaviorNames) {
+                    BehaviorProfile tmpBehaviorProfile = null;
+                        tmpBehaviorProfile = systemDataFactory.GetResource<BehaviorProfile>(behaviorName);
+                    if (tmpBehaviorProfile != null) {
+                        AddToBehaviorList(tmpBehaviorProfile);
+                    }
+                }
+            }
+
+        }
+
+        public void CleanupScriptableObjects() {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.CleanupScriptableObjects()");
+
+            foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
+                //Debug.Log($"{unitController.gameObject.name}.BehaviorController.CleanupScriptableObjects() unsubscribing from {behaviorProfile.ResourceName}");
+                behaviorProfile.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
+                behaviorProfile.OnEventTriggered -= HandleEventTrigger;
+            }
+        }
+
+        private void HandleEventTrigger(BehaviorProfile behaviorProfile) {
+            //dDebug.Log($"{unitController.gameObject.name}.BehaviorController.HandleEventTrigger({behaviorProfile.ResourceName})");
+
+            TryPlayBehavior(behaviorProfile);
+        }
+
+        public void StopBackgroundMusic() {
+            audioManager.StopMusic();
+        }
+
+        public void StartBackgroundMusic() {
+            levelManagerClient.PlayLevelSounds();
+        }
+
+
+    }
+
+}

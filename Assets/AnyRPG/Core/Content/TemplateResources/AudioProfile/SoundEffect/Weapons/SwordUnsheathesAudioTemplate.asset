@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: SwordUnsheathesAudioTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Sword Unsheathes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 6e936fa6e62c07d428ac7c2cff1964af, type: 3}
+  - {fileID: 8300000, guid: 32a4fe4197701e84eb106c7350810dd9, type: 3}
+  - {fileID: 8300000, guid: cf7e1639f300d2344b3e1912d8adfc83, type: 3}
+  - {fileID: 8300000, guid: acf1159d08bcaf1438021ece84c494da, type: 3}
+  - {fileID: 8300000, guid: 61169bf31d99168459ac23d00bdc81c9, type: 3}
+  - {fileID: 8300000, guid: b10649aff070d504583dc48ebc913934, type: 3}

@@ -1,0 +1,21 @@
+ENGINE
+======
+The AnyRPG Engine is a self contained open source code base licensed under Unity Asset Store Compatible terms (MIT)
+
+UNITY PACKAGE
+=============
+In order to provide a full demonstration of the AnyRPG Engine capabilities, the AnyRPG Engine Unity Package makes use of several public domain assets.
+All sources have been credit as listed below.
+
+LICENSE LOCATIONS
+=================
+
+SMALL ASSETS
+--------------
+Third party assets that are small enough to not materially affect the size of the export are included in their entirety in the Examples/ThirdPartyContent or Engine/ThirdPartyContent folders.
+These assets are contained in their own subfolders that each have a file named AnyRPGThirdPartyAttribution.txt which contains links to the licenses and original download location.
+
+LARGE ASSETS
+--------------
+Third party assets that are extremely large, where only small parts of the content were used, are located in the Content/ThirdPartyContent folder.
+To ensure that the license files are not missed in the export, licenses have been moved/copied/created under the Engine/ThirdPartyContent/Licenses folder.

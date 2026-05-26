@@ -1,0 +1,39 @@
+namespace AnyRPG {
+    public class DeathState : IState {
+        private UnitController baseController;
+
+        public void Enter(UnitController baseController) {
+            //Debug.Log(baseController.gameObject.name + ".DeathState.Enter(): entered death state");
+            this.baseController = baseController;
+            //this.aiController.BaseCharacter.MyCharacterUnit.GetComponentInChildren<Animator>().enabled = false;
+            this.baseController.DisableAgent();
+            this.baseController.DisableMotor();
+            this.baseController.DisableAggro();
+            this.baseController.ClearTarget();
+
+            if (this.baseController.CombatStrategy != null) {
+                this.baseController.ResetCombat();
+            }
+
+            // handle despawn
+            baseController.TryToDespawn();
+
+        }
+
+        public void Exit() {
+            //Debug.Log(aiController.gameObject.name + ".DeathState.Exit()");
+            this.baseController.EnableAgent();
+            this.baseController.EnableMotor();
+            baseController.EnableAggro();
+        }
+
+        public void Update() {
+            if (baseController.CharacterStats.IsAlive) {
+                //Debug.Log("No Longer Dead!");
+                baseController.ChangeState(new ReturnState());
+                return;
+            }
+        }
+    }
+
+}

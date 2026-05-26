@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 0
+    path: Assets/Games/NewGame/Scenes/NewGame/NewGame.unity
+    guid: 3627d0dc2f376a948986afd63b2ef988
+  - enabled: 0
+    path: Assets/Games/NewGame/Scenes/NewGameMainMenu/NewGameMainMenu.unity
+    guid: 3c06cdf44af81b54884d7d29cdeb2760
+  - enabled: 0
+    path: Assets/Games/NewGame/Scenes/NewScene/NewScene.unity
+    guid: 9aa6caaadaebbd846b9acef81d86faad
+  m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0

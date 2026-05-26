@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: BlacksmithingAudioTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Blacksmithing
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 3e5467bc839cdd94c8efd265de1a7c14, type: 3}
+  - {fileID: 8300000, guid: 51ec4a5223a7ea548ba056d3bc008270, type: 3}
+  - {fileID: 8300000, guid: d41b7c9290e1609458d27d4844d5dc82, type: 3}
+  - {fileID: 8300000, guid: 09a7205f68b35144f82626ad2161dccd, type: 3}
+  - {fileID: 8300000, guid: 26ab6cecbda7d3141a7eae3a36fbd424, type: 3}
+  - {fileID: 8300000, guid: a13d32a9d6eb39546bb1d5cd63db8351, type: 3}

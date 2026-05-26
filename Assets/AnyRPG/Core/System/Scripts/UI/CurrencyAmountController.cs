@@ -1,0 +1,32 @@
+using UnityEngine;
+using TMPro;
+
+namespace AnyRPG {
+    public class CurrencyAmountController : ConfiguredMonoBehaviour {
+
+        [SerializeField]
+        private DescribableIcon currencyIcon;
+
+        [SerializeField]
+        private TextMeshProUGUI amountText;
+
+        public DescribableIcon CurrencyIcon { get => currencyIcon; set => currencyIcon = value; }
+        public TextMeshProUGUI AmountText { get => amountText; set => amountText = value; }
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            currencyIcon.Configure(systemGameManager);
+        }
+
+        public void DisableTooltip() {
+            currencyIcon.DisableTooltip();
+        }
+
+        public void SetToolTipTransform(RectTransform toolTipTransform) {
+            currencyIcon.SetToolTipTransform(toolTipTransform);
+        }
+    }
+
+
+}

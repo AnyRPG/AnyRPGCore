@@ -1,0 +1,15 @@
+License File Created By AnyRPG
+
+This asset has not been modified beyond the necessary step of creating smaller animations from large single animations.
+
+Original Asset Download Link:
+https://assetstore.unity.com/packages/3d/animations/raw-mocap-data-for-mecanim-5330
+
+Author Name:
+Unity Technologies
+
+Author URL:
+https://assetstore.unity.com/packages/3d/animations/raw-mocap-data-for-mecanim-5330
+
+License:
+Unknown, package was deprected and original page is just a redirect now, but this was a free asset published by Unity for inclusion in projects so attribution requirement is assumed.

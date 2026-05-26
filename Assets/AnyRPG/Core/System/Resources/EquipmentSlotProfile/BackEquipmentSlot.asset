@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf6123fefb185543833bd12e3e5e966, type: 3}
+  m_Name: BackEquipmentSlot
+  m_EditorClassIdentifier: 
+  resourceName: Back
+  displayName: 
+  icon: {fileID: 21300000, guid: e80c5f33c2ee5bf49b4c8a846cf192ff, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: Back Slot
+  optionalOverride: 1
+  mainWeaponSlot: 0
+  statWeight: 1
+  equipmentSlotTypeList:
+  - Cape
+  setOnHitAudio: 0

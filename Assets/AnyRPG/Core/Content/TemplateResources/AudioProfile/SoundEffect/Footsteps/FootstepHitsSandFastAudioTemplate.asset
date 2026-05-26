@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: FootstepHitsSandFastAudioTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Footstep Hits Sand Fast
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: f761e0540d1422748a415624a19ab2f2, type: 3}
+  - {fileID: 8300000, guid: 56ab5f2ccf45d634baf4bbfc672ad528, type: 3}
+  - {fileID: 8300000, guid: 329e88ae6a58149479aefb2a626c858d, type: 3}
+  - {fileID: 8300000, guid: 18c0ab0c573dd28468658a53416c7b39, type: 3}

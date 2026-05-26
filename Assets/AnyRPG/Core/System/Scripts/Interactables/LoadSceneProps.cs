@@ -1,0 +1,26 @@
+using UnityEngine;
+
+namespace AnyRPG {
+
+    [System.Serializable]
+    public class LoadSceneProps : PortalProps {
+
+        [Header("Scene Options")]
+
+        [Tooltip("When interacted with, this scene will load directly.")]
+        [SerializeField]
+        private string sceneName = string.Empty;
+
+
+        public string SceneName { get => sceneName; set => sceneName = value; }
+
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+            InteractableOptionComponent returnValue = new LoadSceneComponent(interactable, this, systemGameManager);
+            if (interactableOption != null) {
+                interactableOption.SetComponent(returnValue);
+            }
+            return returnValue;
+        }
+    }
+
+}

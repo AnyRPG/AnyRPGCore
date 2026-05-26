@@ -1,0 +1,59 @@
+using UnityEngine;
+
+namespace AnyRPG {
+    public class PlayerDeathPanel : WindowPanel {
+
+        //public override event Action<ICloseableWindowContents> OnOpenWindow;
+
+        /*
+        [SerializeField]
+        private HighlightButton respawnButton = null;
+        */
+        [SerializeField]
+        private HighlightButton reviveButton = null;
+
+        // game manager references
+        private UIManager uIManager = null;
+        private PlayerManagerClient playerManagerClient = null;
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            //respawnButton.Configure(systemGameManager);
+            //reviveButton.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            uIManager = systemGameManager.UIManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+        }
+
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("PlayerDeathPanelController.ProcessOpenWindowNotification()");
+
+            base.ProcessOpenWindowNotification();
+
+            if (playerManagerClient.UnitController.CharacterStats.CanRevive() == true) {
+                //Debug.Log("PlayerDeathPanelController.ProcessOpenWindowNotification(): CanRevive is true, enabling revive button");
+                reviveButton.gameObject.SetActive(true);
+            } else {
+                //Debug.Log("PlayerDeathPanelController.ProcessOpenWindowNotification(): CanRevive is false, disabling revive button");
+                reviveButton.gameObject.SetActive(false);
+            }
+        }
+
+        public void RespawnPlayer() {
+            uIManager.playerOptionsMenuWindow.CloseWindow();
+            playerManagerClient.RequestRespawnPlayer();
+        }
+
+        public void RevivePlayer() {
+            //Debug.Log("PlayerOptionsController.RevivePlayer()");
+
+            uIManager.playerOptionsMenuWindow.CloseWindow();
+            playerManagerClient.RequestRevivePlayer();
+        }
+
+    }
+
+}

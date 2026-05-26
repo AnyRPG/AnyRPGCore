@@ -1,0 +1,156 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace AnyRPG {
+    [CreateAssetMenu(fileName = "New Combat Strategy", menuName = "AnyRPG/CombatStrategy")]
+    [System.Serializable]
+    public class CombatStrategy : DescribableResource {
+
+        [Header("Combat Strategy")]
+
+        [SerializeField]
+        private List<CombatStrategyNode> phaseNodes = new List<CombatStrategyNode>();
+
+        public List<CombatStrategyNode> PhaseNodes { get => phaseNodes; set => phaseNodes = value; }
+
+        public AbilityProperties GetValidAbility(UnitController sourceCharacter) {
+            List<AbilityProperties> returnList = new List<AbilityProperties>();
+
+            if (sourceCharacter != null) {
+                //Debug.Log($"{gameObject.name}.AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
+                List<CombatStrategyNode> validPhaseNodes = GetValidPhaseNodes(sourceCharacter);
+
+                foreach (CombatStrategyNode validPhaseNode in validPhaseNodes) {
+
+                    AttempStartPhase(sourceCharacter, validPhaseNode);
+
+                    // ATTEMPT BUFF AND IMMEDIATELY RETURN ANY BUFF THAT NEEDS CASTING
+                    foreach (AbilityProperties baseAbility in validPhaseNode.MaintainBuffList) {
+                        if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
+                            if (!sourceCharacter.CharacterStats.StatusEffects.ContainsKey(baseAbility.GetCastEndEffects(sourceCharacter)[0].ResourceName)
+                                && sourceCharacter.AbilityManager.CanCastAbility(baseAbility)
+                                && baseAbility.CanUseOn(sourceCharacter, sourceCharacter)) {
+                                return baseAbility;
+                            }
+                        }
+                    }
+
+                    // IF NO BUFF AVAILABLE, GET A LIST OF VALID ATTACKS
+                    foreach (AbilityProperties baseAbility in validPhaseNode.AttackAbilityList) {
+                        if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
+                            if (sourceCharacter.AbilityManager.CanCastAbility(baseAbility)
+                                && baseAbility.CanUseOn(sourceCharacter.Target, sourceCharacter)
+                                && sourceCharacter.AbilityManager.PerformLOSCheck(sourceCharacter.Target, baseAbility)) {
+                                returnList.Add(baseAbility);
+                            }
+                        }
+                    }
+
+                }
+            }
+            if (returnList.Count > 0) {
+                int randomIndex = Random.Range(0, returnList.Count);
+                //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): returnList.Count: " + returnList.Count + "; randomIndex: " + randomIndex);
+                return returnList[randomIndex];
+            }
+            //Debug.Log(sourceCharacter.UnitController.gameObject.name + ".CombatStrategy.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
+            return null;
+
+        }
+
+        public AbilityProperties GetMeleeAbility(UnitController sourceCharacter) {
+
+            if (sourceCharacter != null && sourceCharacter.AbilityManager != null) {
+                //Debug.Log($"{gameObject.name}.AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
+                List<CombatStrategyNode> validPhaseNodes = GetValidPhaseNodes(sourceCharacter);
+
+                foreach (CombatStrategyNode validPhaseNode in validPhaseNodes) {
+
+                    AttempStartPhase(sourceCharacter, validPhaseNode);
+
+                    // IF NO BUFF AVAILABLE, GET A LIST OF VALID ATTACKS
+                    foreach (AbilityProperties baseAbility in validPhaseNode.AttackAbilityList) {
+                        if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
+                            if (baseAbility.GetTargetOptions(sourceCharacter).CanCastOnEnemy && baseAbility.GetTargetOptions(sourceCharacter).UseMeleeRange == true) {
+                                return baseAbility;
+                            }
+                        } else {
+                            Debug.LogWarning($"CombatStrategy.GetValidAttackAbility(): ABILITY NOT KNOWN: {baseAbility.ResourceName}");
+                        }
+                    }
+
+                }
+            }
+            return null;
+
+        }
+
+        public void AttempStartPhase(UnitController sourceCharacter, CombatStrategyNode validPhaseNode) {
+            if (sourceCharacter.StartCombatPhase(validPhaseNode)) {
+                validPhaseNode.StartPhase();
+            }
+        }
+
+        public List<AbilityProperties> GetAttackRangeAbilityList(UnitController sourceCharacter) {
+            //Debug.Log(sourceCharacter.gameObject.name + ".CombatStrategy.GetAttackRangeAbilityList()");
+
+            List<AbilityProperties> returnList = new List<AbilityProperties>();
+
+            if (sourceCharacter != null) {
+                //Debug.Log($"{gameObject.name}.AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
+                List<CombatStrategyNode> validPhaseNodes = GetValidPhaseNodes(sourceCharacter);
+
+                foreach (CombatStrategyNode validPhaseNode in validPhaseNodes) {
+
+                    AttempStartPhase(sourceCharacter, validPhaseNode);
+
+                    foreach (AbilityProperties baseAbility in validPhaseNode.AttackAbilityList) {
+                        if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
+                            returnList.Add(baseAbility);
+                        } else {
+                            Debug.LogWarning($"CombatStrategy.GetValidAttackAbility(): ABILITY NOT KNOWN: {baseAbility.DisplayName}");
+                        }
+                    }
+                }
+            }
+            return returnList;
+
+        }
+
+        public List<CombatStrategyNode> GetValidPhaseNodes(UnitController sourceCharacter) {
+            List<CombatStrategyNode> returnList = new List<CombatStrategyNode>();
+            foreach (CombatStrategyNode phaseNode in phaseNodes) {
+                if (sourceCharacter != null && sourceCharacter.CharacterStats != null) {
+                    if (Mathf.Ceil((sourceCharacter.CharacterStats.CurrentPrimaryResource / (float)sourceCharacter.CharacterStats.MaxPrimaryResource) * 100f) <= phaseNode.MaxHealthPercent
+                        && Mathf.Floor((sourceCharacter.CharacterStats.CurrentPrimaryResource / (float)sourceCharacter.CharacterStats.MaxPrimaryResource) * 100f) >= phaseNode.MinHealthPercent) {
+                        returnList.Add(phaseNode);
+                    }
+                }
+            }
+            return returnList;
+        }
+
+        public bool HasMusic() {
+            foreach (CombatStrategyNode phaseNode in phaseNodes) {
+                if (phaseNode.PhaseMusicProfileName != null && phaseNode.PhaseMusicProfileName != string.Empty) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
+
+            if (phaseNodes != null) {
+                foreach (CombatStrategyNode combatStrategyNode in phaseNodes) {
+                    if (combatStrategyNode != null) {
+                        combatStrategyNode.SetupScriptableObjects(systemGameManager, this);
+                    }
+                    
+                }
+            }
+        }
+    }
+
+}

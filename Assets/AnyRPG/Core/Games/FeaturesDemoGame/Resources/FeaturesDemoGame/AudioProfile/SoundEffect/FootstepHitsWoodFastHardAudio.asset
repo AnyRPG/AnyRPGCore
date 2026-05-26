@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: FootstepHitsWoodFastHardAudio
+  m_EditorClassIdentifier: 
+  resourceName: Footstep Hits Wood Fast Hard
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 1081e6d25a8eed241bb17285a6435582, type: 3}
+  - {fileID: 8300000, guid: 3be90c026af0d764092338ad4353da44, type: 3}
+  - {fileID: 8300000, guid: b0882b34806eeb941a045b37d2a0bfcd, type: 3}
+  - {fileID: 8300000, guid: 2155e483e2f00b64e9834ee9daa999d8, type: 3}
+  - {fileID: 8300000, guid: 7ec4e286290bd9e46afdeefea9ff6b0d, type: 3}
+  - {fileID: 8300000, guid: b1df144fc3dc61d428908757ab23be08, type: 3}
+  - {fileID: 8300000, guid: a1562ecff2777454ea4e3b04ed77a2ae, type: 3}
+  - {fileID: 8300000, guid: ee714e6f5d7dddc47b25734a2f50c8f6, type: 3}
+  - {fileID: 8300000, guid: 85ef39deb576b6b47ac4dee8deec5b6d, type: 3}
+  - {fileID: 8300000, guid: 39eb9aa9ccdafb64c81a20d687f986bc, type: 3}

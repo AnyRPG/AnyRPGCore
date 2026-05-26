@@ -1,0 +1,24 @@
+namespace AnyRPG {
+
+    public class MeshModelGroupButton : HighlightButton {
+
+        SwappableMeshAppearancePanel swappableMeshAppearancePanelController = null;
+        string meshModelGroup = string.Empty;
+
+        public void ConfigureButton(SwappableMeshAppearancePanel swappableMeshAppearancePanelController, string meshModelGroup) {
+            this.swappableMeshAppearancePanelController = swappableMeshAppearancePanelController;
+            this.meshModelGroup = meshModelGroup;
+            text.text = meshModelGroup;
+        }
+
+        public override void Interact() {
+            base.Interact();
+            ShowModelGroup();
+        }
+
+        public void ShowModelGroup() {
+            swappableMeshAppearancePanelController.ShowModelGroup(this, meshModelGroup);
+        }
+    }
+
+}

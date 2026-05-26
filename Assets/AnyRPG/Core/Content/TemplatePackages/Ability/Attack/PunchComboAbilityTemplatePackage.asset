@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: PunchComboAbilityTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Punch Combo Ability
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 60797d7ea1792a34d96092328c622022, type: 2}
+  - {fileID: 11400000, guid: 67400674d88f6e04cb9f24e062c1fb4c, type: 2}
+  - {fileID: 11400000, guid: ce9e17c515050794aa1831e40b924896, type: 2}
+  - {fileID: 11400000, guid: 9f675a2f9c1d4be4f8aada19bababbef, type: 2}
+  - {fileID: 11400000, guid: 44284c113a9969b44adee855e2293bed, type: 2}
+  - {fileID: 11400000, guid: a145a04324ffbf14295f591fce63a6a1, type: 2}
+  - {fileID: 11400000, guid: a49e4d90681cd1446947c5d50c0aac1f, type: 2}
+  - {fileID: 11400000, guid: 63db892cc349c134ea7df1544be90022, type: 2}
+  prefabs: []
+  dependencies: []

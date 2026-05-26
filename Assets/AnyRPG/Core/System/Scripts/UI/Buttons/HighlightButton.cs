@@ -1,0 +1,251 @@
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+namespace AnyRPG {
+
+    public class HighlightButton : NavigableElement {
+
+        [Header("Highlight Button")]
+
+        //[SerializeField]
+        //protected bool interactOnSelect = false;
+
+        [SerializeField]
+        protected TextMeshProUGUI text;
+
+        [Tooltip("If true, the image attached to the button will not be tinted with the system defined highlightButtonColor")]
+        [SerializeField]
+        protected bool ignoreSystemImageTint = false;
+
+        [SerializeField]
+        protected Button highlightButton;
+
+        /*
+        [Tooltip("The highlight image will be invisible when not selected or hovered")]
+        [SerializeField]
+        protected bool hideImageWhenInactive = true;
+        */
+
+
+        [Tooltip("The normalColor, highlightedColor, and selectedColor will be overwritten with this color when the button is selected")]
+        [SerializeField]
+        protected Color selectedButtonColor = new Color32(165, 165, 165, 166);
+
+        [Tooltip("Use locally defined local color instead of system configuration manager normal color")]
+        [SerializeField]
+        protected bool overrideNormalColor = false;
+
+        [Tooltip("Color when not clicked or hovered")]
+        [SerializeField]
+        protected Color normalColor = new Color32(163, 163, 163, 82);
+
+        [Tooltip("Use locally defined local color instead of system configuration manager highlighted color")]
+        [SerializeField]
+        protected bool overrideHighlightedColor = false;
+
+        [Tooltip("Color when mouse hovered")]
+        [SerializeField]
+        protected Color highlightedColor = new Color32(165, 165, 165, 166);
+
+        [Tooltip("Use locally defined local color instead of system configuration manager highlighted color")]
+        [SerializeField]
+        protected bool overridePressedColor = false;
+
+        [Tooltip("Color during mouse click")]
+        [SerializeField]
+        protected Color pressedColor = new Color32(120, 120, 120, 71);
+
+        [Tooltip("Use locally defined local color instead of system configuration manager highlighted color")]
+        [SerializeField]
+        protected bool overrideSelectedColor = false;
+
+        [Tooltip("Color after mouse click")]
+        [SerializeField]
+        protected Color selectedColor = new Color32(165, 165, 165, 166);
+
+        [Tooltip("Use locally defined local color instead of system configuration manager highlighted color")]
+        [SerializeField]
+        protected bool overrideDisabledColor = false;
+
+        [Tooltip("Color when not interactable")]
+        [SerializeField]
+        //protected Color disabledColor = new Color32(200, 200, 200, 128);
+        protected Color disabledColor = new Color32(82, 82, 82, 17);
+
+        [SerializeField]
+        protected bool CapitalizeText = false;
+
+        [Header("Sounds")]
+
+        [Tooltip("If true, the click sound is played when the mouse clicks this button")]
+        [SerializeField]
+        protected bool mouseClickSound = true;
+
+        [Tooltip("If true, the hover sound is played when the mouse moves over this button")]
+        [SerializeField]
+        protected bool mouseHoverSound = true;
+
+        // game manager references
+        protected UIManager uIManager = null;
+
+        public TextMeshProUGUI Text { get => text; }
+        public Button Button { get => highlightButton; set => highlightButton = value; }
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            if (!ignoreSystemImageTint) {
+                //highlightedButtonColor = systemConfigurationManager.DefaultUISolidColor;
+                if (highlightButton != null) {
+                    //Image highlightButtonImage = highlightButton.GetComponent<Image>();
+                    //if (highlightButtonImage != null) {
+                    if (highlightButton.targetGraphic != null) {
+                        //highlightButtonImage.color = systemConfigurationManager.HighlightButtonColor;
+                        highlightButton.targetGraphic.color = systemConfigurationManager.UIConfiguration.HighlightButtonColor;
+                    }
+                }
+            }
+            if (!overrideNormalColor) {
+                normalColor = systemConfigurationManager.UIConfiguration.ButtonNormalColor;
+            }
+            if (!overrideHighlightedColor) {
+                highlightedColor = systemConfigurationManager.UIConfiguration.ButtonHighlightedColor;
+            }
+            if (!overridePressedColor) {
+                pressedColor = systemConfigurationManager.UIConfiguration.ButtonPressedColor;
+            }
+            if (!overrideSelectedColor) {
+                selectedColor = systemConfigurationManager.UIConfiguration.ButtonSelectedColor;
+            }
+            if (!overrideDisabledColor) {
+                disabledColor = systemConfigurationManager.UIConfiguration.ButtonDisabledColor;
+            }
+            if (highlightButton != null) {
+                ColorBlock colorBlock = highlightButton.colors;
+                colorBlock.normalColor = normalColor;
+                colorBlock.highlightedColor = highlightedColor;
+                colorBlock.pressedColor = pressedColor;
+                colorBlock.selectedColor = selectedColor;
+                colorBlock.disabledColor = disabledColor;
+                highlightButton.colors = colorBlock;
+            }
+            DeSelect();
+        }
+
+        public override void SetGameManagerReferences() {
+            //Debug.Log($"{gameObject.name}.HighlightButton.SetGameManagerReferences(): " + GetInstanceID());
+            base.SetGameManagerReferences();
+
+            uIManager = systemGameManager.UIManager;
+        }
+
+        public override bool Available() {
+            if (highlightButton != null && highlightButton.interactable == false) {
+                return false;
+            }
+
+            return base.Available();
+        }
+
+
+        public override void Select() {
+            //Debug.Log($"{gameObject.name}.HighlightButton.Select()");
+            base.Select();
+            //if (highlightButton != null && useHighlightColorOnButton == true) {
+            //if (interactOnSelect == true) {
+            //    Interact();
+            //}
+
+            if (highlightButton != null && navigationControllerFocused == true && controlsManager.GamePadInputActive == true) {
+                ColorBlock colorBlock = highlightButton.colors;
+                colorBlock.normalColor = selectedButtonColor;
+                colorBlock.highlightedColor = selectedButtonColor;
+                colorBlock.selectedColor = selectedButtonColor;
+                highlightButton.colors = colorBlock;
+                EventSystem.current.SetSelectedGameObject(highlightButton.gameObject);
+            }
+            if (CapitalizeText == true) {
+                text.text = text.text.ToUpper();
+            }
+        }
+
+        public override void DeSelect() {
+            //Debug.Log($"{gameObject.name}.HightlightButton.DeSelect()");
+
+            base.DeSelect();
+            if (highlightButton != null) {
+                ColorBlock colorBlock = highlightButton.colors;
+                colorBlock.normalColor = normalColor;
+                colorBlock.highlightedColor = highlightedColor;
+                colorBlock.pressedColor = pressedColor;
+                colorBlock.selectedColor = selectedColor;
+                colorBlock.disabledColor = disabledColor;
+                highlightButton.colors = colorBlock;
+            }
+            if (CapitalizeText == true) {
+                text.text = text.text.ToLower();
+            }
+
+            //prevent buttons updated as a result of text updates from deselecting the input field
+            if (controlsManager.TextInputActive == false) {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+        }
+
+        public override void OnHoverSound() {
+            if (highlightButton != null && highlightButton.interactable == false) {
+                // don't do hover sound for buttons we can't click
+                return;
+            }
+            base.OnHoverSound();
+        }
+
+        public override void OnPointerEnter(PointerEventData eventData) {
+            base.OnPointerEnter(eventData);
+            if (mouseHoverSound == true) {
+                OnHoverSound();
+            }
+        }
+
+        protected override void HandleLeftClick() {
+            base.HandleLeftClick();
+            if (mouseClickSound == true) {
+                OnClickSound();
+            }
+
+            Interact();
+        }
+
+        /// <summary>
+        /// called by pressing the accept button on the gamepad
+        /// </summary>
+        public override void Accept() {
+            //Debug.Log($"{gameObject.name}.HighlightButton.Accept()");
+
+            base.Accept();
+            if (highlightButton != null) {
+                highlightButton.onClick.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// Meant to be called from the OnClick() action of a Unity button component, which can also be invoked via gamepad button press causing Accept() to fire
+        /// </summary>
+        public virtual void ButtonClickAction() {
+            if (controlsManager.GamePadInputActive == false) {
+                Select();
+                owner.SetCurrentButton(this);
+            }
+        }
+
+
+        public virtual void CheckMouse() {
+            if (UIManager.MouseInRect(transform as RectTransform)) {
+                uIManager.HideToolTip();
+            }
+        }
+
+    }
+
+}

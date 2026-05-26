@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c036cb4fa6223f645af5f1c3dc4a06a1, type: 3}
+  m_Name: FeaturesDemoDungeonSceneNode
+  m_EditorClassIdentifier: 
+  resourceName: Features Demo Dungeon
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: A dangerous volcanic valley with lava, enemy minions, and a tough
+    boss.
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  loadingScreenImage: {fileID: 0}
+  useRegionalFile: 0
+  sceneFile: FeaturesDemoDungeon
+  dayAmbientSoundsProfile: 
+  dayAmbientSoundsAudio: {fileID: 8300000, guid: 9f9cc9a72a4f7c94f8ec9fc435ad4c77,
+    type: 3}
+  nightAmbientSoundsProfile: 
+  nightAmbientSoundsAudio: {fileID: 8300000, guid: 9f9cc9a72a4f7c94f8ec9fc435ad4c77,
+    type: 3}
+  backgroundMusicProfile: 
+  backgroundMusicAudio: {fileID: 0}
+  movementLoopProfileName: 
+  movementHitProfileName: 
+  footStepProfiles:
+  - Footstep Hits Gravel Fast
+  - Footstep Hits Stone
+  - Footstep Hits Mud
+  - Footstep Hits Gravel Fast
+  - Footstep Hits Leaves
+  - Footstep Hits Wet
+  - Footstep Hits Gravel Soft Slow
+  allowMount: 0
+  suppressCharacterSpawn: 0
+  suppressMainCamera: 0
+  autoPlayCutsceneName: 
+  environmentStateNames: []
+  sunRotationMode: 0
+  useDefaultSunAngle: 0
+  sunAngle: 90
+  rotateSunColor: 0
+  useDefaultSunGradient: 0
+  sunGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  blendedSkybox: 0
+  rotateSkybox: 0
+  skyboxRotationOffset: 0
+  reverseSkyboxRotation: 0
+  minWeatherLength: 3600
+  maxWeatherLength: 10800
+  noWeatherWeight: 100
+  weatherWeights: []

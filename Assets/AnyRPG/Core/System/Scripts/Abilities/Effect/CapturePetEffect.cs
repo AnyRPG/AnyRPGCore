@@ -1,0 +1,14 @@
+using UnityEngine;
+
+namespace AnyRPG {
+    [CreateAssetMenu(fileName = "New Capture Pet Effect", menuName = "AnyRPG/Abilities/Effects/CapturePetEffect")]
+    public class CapturePetEffect : AbilityEffect {
+
+        [SerializeField]
+        public CapturePetEffectProperties capturePetEffectProperties = new CapturePetEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => capturePetEffectProperties; }
+
+
+    }
+}

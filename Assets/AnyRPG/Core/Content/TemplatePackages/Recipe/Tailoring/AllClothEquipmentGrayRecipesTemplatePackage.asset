@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllClothEquipmentGrayRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: All Gray Cloth Equipment Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: e8994d7488a474e4f8db308018064e47, type: 2}
+  - {fileID: 11400000, guid: f8e76f1e41fcd064cb34d1b57ae1f75f, type: 2}
+  - {fileID: 11400000, guid: e17a1b15b43c1634c8c42748ac672330, type: 2}
+  - {fileID: 11400000, guid: 8c42c105a745f824680d2362d387d81c, type: 2}
+  - {fileID: 11400000, guid: 037860c20d3cd9341a07438a301ca4c6, type: 2}
+  - {fileID: 11400000, guid: 5076a468d75e06143b3d41482276762b, type: 2}
+  - {fileID: 11400000, guid: 7d3f3a96788c54b449118b87c1233dbd, type: 2}
+  - {fileID: 11400000, guid: f89cda405401b1e43b147a5d3f8e379b, type: 2}

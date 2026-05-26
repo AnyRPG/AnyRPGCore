@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllCraftingSkillsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: All Gathering Skills
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: bd210f5ea1a8c3e40980caa35a1fdc3a, type: 2}
+  - {fileID: 11400000, guid: 2a9f80d6dfea8fc48bfcd2fd39dd13b9, type: 2}
+  - {fileID: 11400000, guid: 8f449522c211dcf4b9eed73810e39cb7, type: 2}
+  - {fileID: 11400000, guid: 145c0ead020e17343ba55c7164dc042a, type: 2}
+  - {fileID: 11400000, guid: 0652b6e78d7be2040a0535d553c2598d, type: 2}
+  - {fileID: 11400000, guid: 20b2dc895eb711042b123842a9825dea, type: 2}
+  - {fileID: 11400000, guid: b898b3d82bcc2a540a39318ecbc89e42, type: 2}
+  - {fileID: 11400000, guid: d8a0305f64f35784e8f1ea11269ec0ba, type: 2}

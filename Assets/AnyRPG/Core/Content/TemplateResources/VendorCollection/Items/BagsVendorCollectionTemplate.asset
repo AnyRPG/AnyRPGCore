@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a03ad32ca7dbbb749878a79ae4cb1937, type: 3}
+  m_Name: BagsVendorCollectionTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Bags
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  vendorItems:
+  - itemName: 8 Slot Bag
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: 10 Slot Bag
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: 12 Slot Bag
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Backpack
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 

@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: FootstepHitsCobblestoneAudioTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Footstep Hits Cobblestone
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 8f082907b3612c540b163e5ef0e15950, type: 3}
+  - {fileID: 8300000, guid: 7c1c55816e3375440a617c8f9057c5f3, type: 3}
+  - {fileID: 8300000, guid: 0fbfcf71be002a5468ed076e1ed44d32, type: 3}
+  - {fileID: 8300000, guid: d04c27b26265edc498cbe4d43ddaa925, type: 3}
+  - {fileID: 8300000, guid: a2e004cae625779409530b8a8d065800, type: 3}
+  - {fileID: 8300000, guid: 9870a0e5fef7fb046974ea1070da0365, type: 3}
+  - {fileID: 8300000, guid: 6f53336a187923140a82155312713797, type: 3}
+  - {fileID: 8300000, guid: ef9ee0bd8f8d29340b9821c21de32db5, type: 3}
+  - {fileID: 8300000, guid: f1dd46d7d7d3f4d49a62dade4acf0af1, type: 3}
+  - {fileID: 8300000, guid: 1c7f120cabadbb7469fd2c52d2f1e076, type: 3}
+  - {fileID: 8300000, guid: 4007188de6b02114e8084ce8ffb5c58a, type: 3}
+  - {fileID: 8300000, guid: b6926441ce8b06f4487212c5fefd1842, type: 3}
+  - {fileID: 8300000, guid: 90d84c1ab4ccc814c87e5a3792e8781a, type: 3}
+  - {fileID: 8300000, guid: 97f91df45e23ed44eb4dc908825645ec, type: 3}
+  - {fileID: 8300000, guid: 5aa068186511edb4cadf66286fca8ed8, type: 3}
+  - {fileID: 8300000, guid: 2c6a744630ba4c64a83fee7d470a4ed9, type: 3}
+  - {fileID: 8300000, guid: 1b6e166e552a9cf439537d551a91fb3a, type: 3}
+  - {fileID: 8300000, guid: fdd4b8493afba3f4c83e908f2f54c7a4, type: 3}
+  - {fileID: 8300000, guid: 3a6117a7fcbac824488e901ead6e3e2c, type: 3}
+  - {fileID: 8300000, guid: bc64afce531c265488725a2bb9abd5ad, type: 3}
+  - {fileID: 8300000, guid: cfe9a016bb889f341ab1b1558ddcc0fc, type: 3}
+  - {fileID: 8300000, guid: ad5ec951d45666c41bd0b6ccd98783aa, type: 3}
+  - {fileID: 8300000, guid: f5a2a89f52bbfc445a7660c60e2eb341, type: 3}
+  - {fileID: 8300000, guid: 9a59b8c9a515a4849a4bbb420e97c714, type: 3}
+  - {fileID: 8300000, guid: c3a95e9adb2f8504284493e492bf190b, type: 3}

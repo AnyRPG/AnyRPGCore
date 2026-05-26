@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c444289f4352a104da57db341cb4df63, type: 3}
+  m_Name: HeirloomItemQuality
+  m_EditorClassIdentifier: 
+  resourceName: Heirloom
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 21300000, guid: 03760cb19b6818b4ba3213d19fd9e9ea,
+    type: 3}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  statMultiplier: 1.25
+  allowRandomItems: 0
+  randomQualityPrefix: 
+  randomStatCount: 0
+  dynamicItemLevel: 1
+  buyPriceMultiplier: 1
+  sellPriceMultiplier: 1
+  requireSellConfirmation: 1
+  qualityColor: {r: 0, g: 1, b: 1, a: 1}
+  tintBackgroundImage: 1

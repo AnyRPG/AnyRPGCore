@@ -1,0 +1,57 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace AnyRPG {
+
+    [System.Serializable]
+    public class BehaviorProps : InteractableOptionProps {
+
+        [Header("Behavior")]
+
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(BehaviorProfile))]
+        private List<string> behaviorNames = new List<string>();
+
+        /*
+        [Tooltip("instantiate a new behavior profile or not when loading behavior profiles")]
+        [SerializeField]
+        private bool useBehaviorCopy = false;
+        */
+
+        public override Sprite Icon { get => (systemConfigurationManager.DialogInteractionPanelImage != null ? systemConfigurationManager.DialogInteractionPanelImage : base.Icon); }
+        public override Sprite NameplateImage { get => (systemConfigurationManager.DialogNameplateImage != null ? systemConfigurationManager.DialogNameplateImage : base.NameplateImage); }
+
+        //public bool UseBehaviorCopy { get => useBehaviorCopy; }
+        public List<string> BehaviorNames { get => behaviorNames; }
+
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+            //Debug.Log("BehaviorProps.GetInteractableOption(" + interactable.gameObject.name + ") systemGameManager = " + (systemGameManager == null ? "null" : systemGameManager.gameObject.name));
+            InteractableOptionComponent returnValue = new BehaviorComponent(interactable, this, systemGameManager);
+            if (interactableOption != null) {
+                interactableOption.SetComponent(returnValue);
+            }
+            return returnValue;
+        }
+
+        /*
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            if (behaviorNames != null) {
+                foreach (string behaviorName in behaviorNames) {
+                    BehaviorProfile tmpBehaviorProfile = null;
+                    if (useBehaviorCopy == true) {
+                        tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetNewResource(behaviorName);
+                    } else {
+                        tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetResource(behaviorName);
+                    }
+                    if (tmpBehaviorProfile != null) {
+                        behaviorList.Add(tmpBehaviorProfile);
+                    }
+                }
+            }
+        }
+        */
+
+    }
+
+}

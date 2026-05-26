@@ -1,0 +1,48 @@
+using UnityEngine;
+
+namespace AnyRPG {
+
+    [System.Serializable]
+    public class CraftingNodeProps : InteractableOptionProps {
+
+        [Tooltip("The ability to cast in order to craft with this node")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(Ability))]
+        private string abilityName = string.Empty;
+
+        private CraftAbilityProperties ability;
+
+
+        // crafting nodes are special.  The image is based on what ability it supports
+        public override Sprite Icon {
+            get {
+                return (Ability.Icon != null ? Ability.Icon : base.Icon);
+            }
+        }
+
+        public override Sprite NameplateImage {
+            get {
+                return (Ability.Icon != null ? Ability.Icon : base.NameplateImage);
+            }
+        }
+
+        public CraftAbilityProperties Ability { get => ability; set => ability = value; }
+
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+            return new CraftingNodeComponent(interactable, this, systemGameManager);
+        }
+
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
+            if (abilityName != null && abilityName != string.Empty) {
+                Ability baseAbility = systemDataFactory.GetResource<Ability>(abilityName);
+                if (baseAbility != null && (baseAbility.AbilityProperties is CraftAbilityProperties)) {
+                    ability = baseAbility.AbilityProperties as CraftAbilityProperties;
+                } else {
+                    Debug.LogError("CraftingNodeComponent.SetupScriptableObjects(): COULD NOT FIND ABILITY " + abilityName + " while initializing ");
+                }
+            }
+        }
+    }
+
+}

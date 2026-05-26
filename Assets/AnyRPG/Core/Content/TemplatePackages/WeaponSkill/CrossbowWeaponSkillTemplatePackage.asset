@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: CrossbowWeaponSkillTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Crossbow Weapon Skill
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: d9d764dc1bed2234fbe98d8266d9a0a2, type: 2}
+  - {fileID: 11400000, guid: 39322221cbc945d49a4d206985b3ba60, type: 2}
+  - {fileID: 11400000, guid: 2e94935ea150bcb4f9c7a3b9bb1fdaf8, type: 2}
+  - {fileID: 11400000, guid: a32ce6e4789c38f498feb778ef1664a6, type: 2}
+  - {fileID: 11400000, guid: 569f8aa65f3141d4a87d307d37f66ced, type: 2}
+  - {fileID: 11400000, guid: 4c71e9e8b73418449a47fdeb39e5a33c, type: 2}
+  - {fileID: 11400000, guid: a49e4d90681cd1446947c5d50c0aac1f, type: 2}
+  - {fileID: 11400000, guid: 63db892cc349c134ea7df1544be90022, type: 2}
+  - {fileID: 11400000, guid: a08418132e4c8574b8c282445862ac74, type: 2}
+  prefabs: []
+  dependencies: []

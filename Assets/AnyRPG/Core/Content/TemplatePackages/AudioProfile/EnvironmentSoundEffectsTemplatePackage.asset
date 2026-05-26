@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: EnvironmentSoundEffectsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Environment Sound Effects
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: cdc85dedf48a20846a85f357f8e45372, type: 2}
+  - {fileID: 11400000, guid: 02f3575415bb67648b4ca5e9e699c229, type: 2}
+  - {fileID: 11400000, guid: 47d00c1f7c43d674383346c510953f68, type: 2}
+  - {fileID: 11400000, guid: af63db4b0d10a4e47abb489b70863276, type: 2}
+  - {fileID: 11400000, guid: ae9e6d66646f7c34d8e043cf59508688, type: 2}
+  - {fileID: 11400000, guid: f97ef15768c586742969dc5b1886b236, type: 2}
+  - {fileID: 11400000, guid: e1a7fadb5fe538c40860c9623c22e66d, type: 2}
+  - {fileID: 11400000, guid: cb93f5d7582a0714882557e2b93b916e, type: 2}
+  - {fileID: 11400000, guid: bed16c823a1374143b1b5d24263f8430, type: 2}
+  - {fileID: 11400000, guid: ab26808c46d3a1b4ca700f5c29ad1c39, type: 2}
+  prefabs: []
+  dependencies: []

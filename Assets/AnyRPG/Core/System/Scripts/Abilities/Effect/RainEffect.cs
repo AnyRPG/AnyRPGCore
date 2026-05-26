@@ -1,0 +1,14 @@
+using UnityEngine;
+
+namespace AnyRPG {
+    [CreateAssetMenu(fileName = "New RainEffect", menuName = "AnyRPG/Abilities/Effects/RainEffect")]
+    public class RainEffect : AbilityEffect {
+
+        [SerializeField]
+        public RainEffectProperties rainEffectProperties = new RainEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => rainEffectProperties; }
+
+
+    }
+}

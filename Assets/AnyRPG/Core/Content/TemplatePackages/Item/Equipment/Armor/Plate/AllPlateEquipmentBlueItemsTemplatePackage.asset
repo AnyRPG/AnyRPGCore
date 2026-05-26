@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllPlateEquipmentBlueItemsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: All Blue Plate Equipment Items
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: e6256f563f06d084fa9f3ffab408d381, type: 2}
+  - {fileID: 11400000, guid: 9fd6d1ff8026d9343bc8915eb860f4ce, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 1d60a5a12daccbf419fa7b1e51a2acf5, type: 2}
+  - {fileID: 11400000, guid: 72e46b8986e3256459f69240a0f66d36, type: 2}
+  - {fileID: 11400000, guid: 4e6855c8bb636034e99a0cf15e0f235a, type: 2}
+  - {fileID: 11400000, guid: 14e8bb543bf1b984b9089dceaf39f306, type: 2}
+  - {fileID: 11400000, guid: 0551949b205ab8c4da2de9758a8b8a7a, type: 2}
+  - {fileID: 11400000, guid: e533dcdda113b9f41863173ccf820c2d, type: 2}
+  - {fileID: 11400000, guid: 9c6880bc9d745f94db312f7bf69d8833, type: 2}
+  - {fileID: 11400000, guid: 1635f56b7af367348b95cf05b56c1826, type: 2}

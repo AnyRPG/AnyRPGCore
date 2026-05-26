@@ -1,0 +1,372 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e31818c35d6ab14fbf88410e7e18453, type: 3}
+  m_Name: DefaultPlayerUnit
+  m_EditorClassIdentifier: 
+  resourceName: Default Player
+  displayName: 
+  icon: {fileID: 21300000, guid: 4ce9927e29c4e67439b2afb877749f1b, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: The default mechanim humanoid player unit configured in the engine.
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  suppressNameplateFaction: 1
+  automaticPrefabProfile: 0
+  prefabProfileName: 
+  useInlinePrefabProps: 1
+  unitPrefabProps:
+    unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
+      type: 3}
+    networkUnitPrefab: {fileID: 0}
+    modelPrefab: {fileID: 6307183516646880328, guid: d46b6b5df6312ea4ba9a077c173ec3c0,
+      type: 3}
+    networkModelPrefab: {fileID: 0}
+    modelProvider:
+      rid: 8385465484531990533
+    animationProfileName: 
+    useInlineAnimationProps: 0
+    animationProps:
+      useRootMotion: 0
+      suppressAdjustAnimatorSpeed: 0
+      attackClips: []
+      castClips: []
+      takeDamageClips: []
+      actionClips: []
+      idleClip: {fileID: 0}
+      jumpClip: {fileID: 0}
+      fallClip: {fileID: 0}
+      landClip: {fileID: 0}
+      walkClip: {fileID: 0}
+      runClip: {fileID: 0}
+      walkBackClip: {fileID: 0}
+      runBackClip: {fileID: 0}
+      turnLeftClip: {fileID: 0}
+      turnRightClip: {fileID: 0}
+      strafeLeftClip: {fileID: 0}
+      jogStrafeLeftClip: {fileID: 0}
+      strafeRightClip: {fileID: 0}
+      jogStrafeRightClip: {fileID: 0}
+      strafeForwardLeftClip: {fileID: 0}
+      jogStrafeForwardLeftClip: {fileID: 0}
+      strafeForwardRightClip: {fileID: 0}
+      jogStrafeForwardRightClip: {fileID: 0}
+      strafeBackLeftClip: {fileID: 0}
+      jogStrafeBackLeftClip: {fileID: 0}
+      strafeBackRightClip: {fileID: 0}
+      jogStrafeBackRightClip: {fileID: 0}
+      stunnedClip: {fileID: 0}
+      fullCombatMirror: 0
+      combatIdleMirror: 0
+      combatIdleClip: {fileID: 0}
+      combatJumpMirror: 0
+      combatJumpClip: {fileID: 0}
+      combatFallMirror: 0
+      combatFallClip: {fileID: 0}
+      combatLandMirror: 0
+      combatLandClip: {fileID: 0}
+      combatWalkMirror: 0
+      combatWalkClip: {fileID: 0}
+      combatRunMirror: 0
+      combatRunClip: {fileID: 0}
+      combatWalkBackMirror: 0
+      combatWalkBackClip: {fileID: 0}
+      combatRunBackMirror: 0
+      combatRunBackClip: {fileID: 0}
+      combatTurnLeftMirror: 0
+      combatTurnLeftClip: {fileID: 0}
+      combatTurnRightMirror: 0
+      combatTurnRightClip: {fileID: 0}
+      combatStrafeLeftMirror: 0
+      combatStrafeLeftClip: {fileID: 0}
+      combatJogStrafeLeftMirror: 0
+      combatJogStrafeLeftClip: {fileID: 0}
+      combatStrafeRightMirror: 0
+      combatStrafeRightClip: {fileID: 0}
+      combatJogStrafeRightMirror: 0
+      combatJogStrafeRightClip: {fileID: 0}
+      combatStrafeForwardLeftMirror: 0
+      combatStrafeForwardLeftClip: {fileID: 0}
+      combatJogStrafeForwardLeftMirror: 0
+      combatJogStrafeForwardLeftClip: {fileID: 0}
+      combatStrafeForwardRightMirror: 0
+      combatStrafeForwardRightClip: {fileID: 0}
+      combatJogStrafeForwardRightMirror: 0
+      combatJogStrafeForwardRightClip: {fileID: 0}
+      combatStrafeBackLeftMirror: 0
+      combatStrafeBackLeftClip: {fileID: 0}
+      combatJogStrafeBackLeftMirror: 0
+      combatJogStrafeBackLeftClip: {fileID: 0}
+      combatStrafeBackRightMirror: 0
+      combatStrafeBackRightClip: {fileID: 0}
+      combatJogStrafeBackRightMirror: 0
+      combatJogStrafeBackRightClip: {fileID: 0}
+      combatStunnedMirror: 0
+      combatStunnedClip: {fileID: 0}
+      deathClip: {fileID: 0}
+      reviveClip: {fileID: 0}
+      levitatedClip: {fileID: 0}
+      swimIdleClip: {fileID: 0}
+      swimMoveClip: {fileID: 0}
+      flyIdleClip: {fileID: 0}
+      flyMoveClip: {fileID: 0}
+    forceRotateModelMode: 0
+    namePlateProps:
+      displayName: 
+      suppressFaction: 1
+      overrideNameplatePosition: 0
+      namePlatePosition: {x: 0, y: 0, z: 0}
+      useSnapShot: 1
+      unitFrameTarget: head
+      unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+      unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+      unitPreviewTarget: 
+      unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
+      unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
+    unitFrameProps:
+      useSnapShot: 1
+      unitFrameTarget: head
+      unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+      unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+    unitPreviewProps:
+      unitPreviewTarget: 
+      unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
+      unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
+    position: {x: 0, y: 0, z: 0}
+    rotationIsGlobal: 0
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: 
+    attachmentProfileName: Humanoid
+    floatHeight: 0.3
+    addFloatHeightToTransform: 1
+    floatTransform: torso
+  isPet: 0
+  flightCapable: 0
+  glideCapable: 0
+  characterName: 
+  title: 
+  factionName: 
+  unitTypeName: 
+  characterRaceName: 
+  characterClassName: 
+  classSpecializationName: 
+  spawnDead: 0
+  preventAutoDespawn: 0
+  defaultToughness: 
+  voiceProfile: 
+  useInlineVoiceProps: 0
+  voiceProps:
+    aggro: []
+    attack: []
+    damage: []
+    jump: []
+    fallDamage: []
+    death: []
+    victory: []
+    startInteract: []
+    startVendorInteract: []
+    stopInteract: []
+    stopVendorInteract: []
+  capabilities:
+    abilityNames: []
+    traitNames: []
+    armorClassList: []
+    weaponSkills: []
+    validPetTypes: []
+    startingPets: []
+  primaryStats: []
+  powerResources: []
+  useProviderEquipment: 0
+  equipmentNameList: []
+  isAggressive: 1
+  aggroRadius: 20
+  automaticCombatStrategy: 0
+  combatStrategyName: 
+  defaultHitEffects: []
+  isMobile: 1
+  footstepType: 3
+  playOnFootstep: 1
+  movementAudioProfileNames:
+  - Default Footstep Hits
+  useInlinePatrol: 0
+  patrolConfig:
+    autoStart: 0
+    destinationList: []
+    useTags: 0
+    destinationTagList: []
+    randomDestinations: 0
+    loopDestinations: 1
+    despawnOnCompletion: 0
+    maxDestinations: 0
+    maxDistanceFromSpawnPoint: 1
+    destinationPauseTime: 0
+    movementSpeed: 0
+    savePositionAtDestination: 0
+  patrolNames: []
+  faceInteractionTarget: 1
+  interactionMaxRange: 3
+  interactableOptions: []
+  inlineInteractableOptions: []
+  persistObjectPosition: 0
+  saveOnLevelUnload: 0
+  saveOnGameSave: 0
+  overwriteUnitUUID: 0
+  m_UUID: f7368e1f-3c76-412e-9701-f0c803c1aedd
+  references:
+    version: 2
+    RefIds:
+    - rid: 8385465484531990533
+      type: {class: SwappableMeshModelProvider, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        useInlineOptions: 0
+        inlineOptions:
+          meshGroups:
+          - groupName: Head
+            hidden: 0
+            optional: 0
+            displayAs: 1
+            hidesGroup: 
+            hideInFirstPerson: 0
+            meshes:
+            - displayName: Head 1
+              icon: {fileID: 21300000, guid: a7e5ee1c2ce46714abc0370deafd55a1, type: 3}
+              meshName: human_male_head_default
+            - displayName: Head 2
+              icon: {fileID: 21300000, guid: 81fbbf8513987b34ca672698f3d83802, type: 3}
+              meshName: human_male_head_2
+            - displayName: Head 3
+              icon: {fileID: 21300000, guid: 019fecba109f26046a2e6271c5363bfa, type: 3}
+              meshName: human_male_head_3
+            - displayName: Head 4
+              icon: {fileID: 21300000, guid: 816403986004e9d44815e030c478a6df, type: 3}
+              meshName: human_male_head_4
+            - displayName: Head 5
+              icon: {fileID: 21300000, guid: da68719528c6d994db26d2c41c81311a, type: 3}
+              meshName: human_male_head_5
+            - displayName: Head 6
+              icon: {fileID: 21300000, guid: e1f21f103dc41fa4dbe937b4f3583c51, type: 3}
+              meshName: human_male_head_6
+          - groupName: Hair
+            hidden: 0
+            optional: 1
+            displayAs: 0
+            hidesGroup: 
+            hideInFirstPerson: 0
+            meshes:
+            - displayName: Hair 1
+              icon: {fileID: 21300000, guid: 502ac5c24285d694887cad282319a126, type: 3}
+              meshName: human_male_hair_1
+            - displayName: Hair 2
+              icon: {fileID: 21300000, guid: fe1ee0e7055768a4aa6baa70ee8e6553, type: 3}
+              meshName: human_male_hair_2
+            - displayName: Hair 3
+              icon: {fileID: 21300000, guid: 798fc914377bb15448a4a164e74f92c0, type: 3}
+              meshName: human_male_hair_3
+            - displayName: Hair 4
+              icon: {fileID: 21300000, guid: 45bdc1d424d2af84ea534bdc7faf9193, type: 3}
+              meshName: human_male_hair_4
+            - displayName: Hair 5
+              icon: {fileID: 21300000, guid: e20c831cef99f124285d9c5e59ba37e3, type: 3}
+              meshName: human_male_hair_5
+            - displayName: Hair 6
+              icon: {fileID: 21300000, guid: 5905afa9ef160c6468368a3be2e525e1, type: 3}
+              meshName: human_male_hair_6
+          - groupName: Armor
+            hidden: 0
+            optional: 1
+            displayAs: 0
+            hidesGroup: 
+            hideInFirstPerson: 0
+            meshes:
+            - displayName: Heavy Armor
+              icon: {fileID: 0}
+              meshName: human_male_heavy_armor
+            - displayName: Medium Armor
+              icon: {fileID: 0}
+              meshName: human_male_medium_armor
+            - displayName: Light Armor
+              icon: {fileID: 0}
+              meshName: human_male_light_armor
+            - displayName: Clothes
+              icon: {fileID: 0}
+              meshName: human_male_light_armor_2
+            - displayName: Blacksmith
+              icon: {fileID: 0}
+              meshName: human_male_light_armor_3
+            - displayName: InnKeeper
+              icon: {fileID: 0}
+              meshName: human_male_light_armor_4
+          - groupName: Helmet
+            hidden: 0
+            optional: 1
+            displayAs: 0
+            hidesGroup: Hair
+            hideInFirstPerson: 0
+            meshes:
+            - displayName: Heavy Helmet
+              icon: {fileID: 0}
+              meshName: human_male_heavy_helmet
+            - displayName: Medium Helmet
+              icon: {fileID: 0}
+              meshName: human_male_medium_helmet
+            - displayName: Light Helmet
+              icon: {fileID: 0}
+              meshName: human_male_light_helmet
+          - groupName: Gloves
+            hidden: 0
+            optional: 1
+            displayAs: 0
+            hidesGroup: 
+            hideInFirstPerson: 0
+            meshes:
+            - displayName: Heavy Gloves
+              icon: {fileID: 0}
+              meshName: human_male_heavy_gloves
+            - displayName: Medium Gloves
+              icon: {fileID: 0}
+              meshName: human_male_medium_gloves
+            - displayName: Light Gloves
+              icon: {fileID: 0}
+              meshName: human_male_light_gloves
+            - displayName: Bracers
+              icon: {fileID: 0}
+              meshName: human_male_light_gloves_3
+          - groupName: Boots
+            hidden: 0
+            optional: 1
+            displayAs: 0
+            hidesGroup: 
+            hideInFirstPerson: 0
+            meshes:
+            - displayName: Heavy Boots
+              icon: {fileID: 0}
+              meshName: human_male_heavy_boots
+            - displayName: Medium Boots
+              icon: {fileID: 0}
+              meshName: human_male_medium_boots
+            - displayName: Light Boots
+              icon: {fileID: 0}
+              meshName: human_male_light_boots
+            - displayName: Clothes
+              icon: {fileID: 0}
+              meshName: human_male_light_boots_2
+          groupDefaults:
+          - groupName: Head
+            optionName: 
+          - groupName: Armor
+            optionName: 
+          - groupName: Gloves
+            optionName: 
+          - groupName: Boots
+            optionName: 
+        sharedOptions: Default Male Swappable Mesh Model

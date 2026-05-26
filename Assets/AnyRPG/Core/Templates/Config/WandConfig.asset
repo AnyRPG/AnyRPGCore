@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdfe734b60a8c184e8dffb2c4c713c90, type: 3}
+  m_Name: WandConfig
+  m_EditorClassIdentifier: 
+  weaponType: Wand
+  weaponSkillContentTemplate: {fileID: 11400000, guid: 1fe45e44ad4aad44db89950a652f8c87,
+    type: 2}
+  weaponSlotConfigs:
+  - weaponSlotType: 0
+    holdableObjectList:
+    - attachmentNodes:
+      - equipmentSlotProfileName: Main Hand
+        holdableObjectName: Wand
+        useUniversalAttachment: 1
+        primaryAttachmentName: Wand Sheathed
+        unsheathedAttachmentName: Right Hand

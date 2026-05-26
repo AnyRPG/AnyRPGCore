@@ -1,0 +1,97 @@
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace AnyRPG {
+    public class AbilityButton : TransparencyButton, IMoveableOwner {
+
+        [Header("Ability Button")]
+
+        //[SerializeField]
+        protected AbilityProperties ability = null;
+
+        [SerializeField]
+        protected Image icon = null;
+
+        [SerializeField]
+        protected TextMeshProUGUI spellName = null;
+
+        [SerializeField]
+        protected TextMeshProUGUI description = null;
+
+        // game manager references
+        protected PlayerManagerClient playerManagerClient = null;
+        protected ActionBarManager actionBarManager = null;
+
+        public IMoveable Moveable => ability;
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+            actionBarManager = systemGameManager.UIManager.ActionBarManager;
+        }
+
+        public void AddAbility(AbilityProperties ability) {
+            this.ability = ability;
+            icon.sprite = ability.Icon;
+            icon.color = Color.white;
+            spellName.text = ability.DisplayName;
+            description.text = ability.GetDescription();
+            description.text = ability.GetShortDescription();
+        }
+
+        public void ClearAbility() {
+            icon.sprite = null;
+            icon.color = new Color32(0, 0, 0, 0);
+            spellName.text = string.Empty;
+            description.text = string.Empty;
+        }
+
+        protected override void HandleLeftClick() {
+            base.HandleLeftClick();
+            uIManager.HandScript.TakeMoveable(this);
+        }
+
+        protected override void HandleRightClick() {
+            base.HandleRightClick();
+            playerManagerClient.UnitController.CharacterAbilityManager.BeginAbility(ability);
+        }
+
+        public override void Select() {
+            //Debug.Log("AbilityButton.Select()");
+            base.Select();
+            if (owner != null) {
+                owner.SetControllerHints("Cast", "Add To Action Bars", "", "", "", "");
+            }
+        }
+
+        public override void DeSelect() {
+            //Debug.Log("AbilityButton.DeSelect()");
+            base.DeSelect();
+            if (owner != null) {
+                owner.HideControllerHints();
+            }
+        }
+
+        public override void Accept() {
+            //Debug.Log("AbilityButton.Accept()");
+            base.Accept();
+            if (ability.CanCast(playerManagerClient.UnitController, true)) {
+                playerManagerClient.UnitController.CharacterAbilityManager.BeginAbility(ability);
+            }
+        }
+
+        public override void JoystickButton2() {
+            //Debug.Log("AbilityButton.JoystickButton2()");
+            base.JoystickButton2();
+            actionBarManager.StartUseableAssignment(ability);
+            uIManager.assignToActionBarsWindow.OpenWindow();
+        }
+
+        public void CancelHandscriptMove() {
+            //Debug.Log("AbilityButton.CancelHandscriptMove()");
+        }
+    }
+
+}

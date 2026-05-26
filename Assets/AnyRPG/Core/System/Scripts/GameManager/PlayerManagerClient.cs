@@ -1,0 +1,1063 @@
+using System;
+using System.Collections;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+namespace AnyRPG {
+    public class PlayerManagerClient : ConfiguredClass, ICharacterRequestor {
+
+        public event Action<UnitController, int> OnTakeFallDamage = delegate {};
+
+        private PlayerController playerController = null;
+
+        private bool playerUnitSpawned = false;
+
+        // a reference to the 'main' unit.  This should be the main character when spawned, and null when not spawned
+        private UnitController unitController = null;
+
+        // a reference to the active unit.  This could change in cases of both mind control and mounted states
+        private UnitController activeUnitController = null;
+
+        // track if subscription to target ready should happen
+        // only used when loading new level or respawning
+        private bool subscribeToTargetReady = false;
+
+        private Coroutine waitForPlayerReadyCoroutine = null;
+
+        //private SpawnPlayerRequest spawnPlayerRequest = null;
+
+        protected bool eventSubscriptionsInitialized = false;
+
+        // game manager references
+        protected SaveManager saveManager = null;
+        protected UIManager uIManager = null;
+        protected LevelManagerClient levelManagerClient = null;
+        protected CameraManager cameraManager = null;
+        protected SystemAbilityController systemAbilityController = null;
+        protected ClassChangeManagerClient classChangeManager = null;
+        protected MessageLogClient messageLogClient = null;
+        protected CastTargettingManager castTargettingManager = null;
+        protected CombatTextManager combatTextManager = null;
+        protected ActionBarManager actionBarManager = null;
+        protected MessageFeedManager messageFeedManager = null;
+        protected ObjectPooler objectPooler = null;
+        protected ControlsManager controlsManager = null;
+        protected CharacterManager characterManager = null;
+        protected PlayerManagerServer playerManagerServer = null;
+        protected SystemAchievementManager systemAchievementManager = null;
+        protected SystemEventManager systemEventManager = null;
+
+        public bool PlayerUnitSpawned { get => playerUnitSpawned; }
+        public UnitController UnitController { get => unitController; }
+        public UnitController ActiveUnitController { get => activeUnitController; }
+        public PlayerController PlayerController { get => playerController; set => playerController = value; }
+        //public PlayerCharacterSaveData PlayerCharacterSaveData { get => playerCharacterSaveData; }
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            CreateEventSubscriptions();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            saveManager = systemGameManager.SaveManager;
+            uIManager = systemGameManager.UIManager;
+            combatTextManager = uIManager.CombatTextManager;
+            actionBarManager = uIManager.ActionBarManager;
+            messageFeedManager = uIManager.MessageFeedManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
+            cameraManager = systemGameManager.CameraManager;
+            systemAbilityController = systemGameManager.SystemAbilityController;
+            messageLogClient = systemGameManager.MessageLogClient;
+            castTargettingManager = systemGameManager.CastTargettingManager;
+            objectPooler = systemGameManager.ObjectPooler;
+            controlsManager = systemGameManager.ControlsManager;
+            characterManager = systemGameManager.CharacterManager;
+            playerManagerServer = systemGameManager.PlayerManagerServer;
+            systemAchievementManager = systemGameManager.SystemAchievementManager;
+            systemEventManager = systemGameManager.SystemEventManager;
+        }
+
+        private void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
+            levelManagerClient.OnLevelLoad += HandleLevelLoad;
+            systemEventManager.OnLevelChanged += PlayLevelUpEffects;
+            systemEventManager.OnPlayerDeath += HandlePlayerDeath;
+            eventSubscriptionsInitialized = true;
+        }
+
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
+                return;
+            }
+            levelManagerClient.OnLevelUnload -= HandleLevelUnload;
+            levelManagerClient.OnLevelLoad -= HandleLevelLoad;
+            systemEventManager.OnLevelChanged -= PlayLevelUpEffects;
+            systemEventManager.OnPlayerDeath -= HandlePlayerDeath;
+            eventSubscriptionsInitialized = false;
+        }
+
+        public void OnDisable() {
+            //Debug.Log("PlayerManager.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
+            CleanupEventSubscriptions();
+        }
+
+        /*
+        /// <summary>
+        /// called when network client is stopped on the player unit
+        /// </summary>
+        public void ProcessStopClient() {
+            //Debug.Log("PlayerManager.ProcessStopClient()");
+            if (SystemGameManager.IsShuttingDown == true) {
+                return;
+            }
+            playerManagerServer.DespawnPlayerUnit(networkManagerClient.AccountId);
+        }
+        */
+
+        public void ProcessExitToMainMenu() {
+            //Debug.Log("PlayerManagerClient.ProcessExitToMainMenu()");
+
+            if (unitController != null) {
+                // we need to check here because the exit to main menu could have come from a network disconnection
+                // that occured before the player unit was spawned
+                playerManagerServer.DespawnPlayerUnit(networkManagerClient.AccountId);
+            } else {
+                //Debug.Log("PlayerManagerClient.ProcessExitToMainMenu(): player unit was not spawned, so no need to despawn");
+                playerManagerServer.RemoveActivePlayer(networkManagerClient.AccountId);
+            }
+            DespawnPlayerConnection();
+            saveManager.ClearSharedData();
+        }
+
+        public void HandleLevelLoad() {
+            //Debug.Log("PlayerManager.HandleLevelLoad()");
+
+            SceneNode activeSceneNode = levelManagerClient.GetActiveSceneNode();
+            
+            if (activeSceneNode == null) {
+                if (levelManagerClient.IsMainMenu()) {
+                    return;
+                }
+            }
+
+            //Debug.Log($"PlayerManagerClient.OnLevelLoad(): scene node {(activeSceneNode == null ? "null" : activeSceneNode.ResourceName)}");
+            // fix to allow character to spawn after cutscene is viewed on next level load - and another fix to prevent character from spawning on a pure cutscene
+            if (activeSceneNode != null) {
+                if ((activeSceneNode.AutoPlayCutscene != null && (activeSceneNode.AutoPlayCutscene.Viewed == false || activeSceneNode.AutoPlayCutscene.Repeatable == true))
+                    || activeSceneNode.SuppressCharacterSpawn) {
+                    //Debug.Log("PlayerManager.OnLevelLoad(): character spawn is suppressed");
+                    return;
+                }
+            }
+
+            // server does not spawn players
+            if (systemGameManager.GameMode == GameMode.Network  && networkManagerServer.ServerModeActive == true) {
+                return;
+            }
+
+            // only remove request if game type is network.  In local mode we need to save the spawn location
+            SpawnPlayerRequest spawnSettings = playerManagerServer.GetSpawnPlayerRequest(networkManagerClient.AccountId, SceneManager.GetActiveScene().name, systemGameManager.GameMode == GameMode.Local);
+            if (spawnSettings.overrideSpawnLocation == false && systemGameManager.GameMode == GameMode.Network) {
+                // it is a network game, and we were loading the default location,
+                // so randomize the spawn position a bit so players don't all spawn in the same place
+                spawnSettings.spawnLocation = new Vector3(spawnSettings.spawnLocation.x + spawnSettings.xOffset, spawnSettings.spawnLocation.y, spawnSettings.spawnLocation.z + spawnSettings.zOffset);
+            }
+
+            cameraManager.MainCameraController.SetTargetPositionRaw(spawnSettings.spawnLocation, spawnSettings.spawnForwardDirection);
+
+            RequestSpawnPlayerUnit();
+        }
+
+        public void PlayLevelUpEffects(UnitController sourceUnitController, int newLevel) {
+            //Debug.Log("PlayerManager.PlayLevelUpEffect()");
+            if (systemConfigurationManager.LevelUpEffect == null) {
+                return;
+            }
+            // 0 to allow playing this effect for different reasons than levelup
+            if (newLevel == 0 || newLevel != 1) {
+                AbilityEffectContext abilityEffectContext = new AbilityEffectContext(systemConfigurationManager.LevelUpEffect.AbilityEffectProperties);
+
+                systemConfigurationManager.LevelUpEffect.AbilityEffectProperties.Cast(systemAbilityController, sourceUnitController, sourceUnitController, abilityEffectContext);
+            }
+        }
+
+        public void PlayDeathEffect() {
+            //Debug.Log("PlayerManager.PlayDeathEffect()");
+            if (PlayerUnitSpawned == false || systemConfigurationManager.DeathEffect == null) {
+                return;
+            }
+            AbilityEffectContext abilityEffectContext = new AbilityEffectContext(systemConfigurationManager.DeathEffect.AbilityEffectProperties);
+            systemConfigurationManager.DeathEffect.AbilityEffectProperties.Cast(systemAbilityController, unitController, unitController, abilityEffectContext);
+        }
+
+        /*
+        public void Initialize() {
+            //Debug.Log("PlayerManager.Initialize()");
+            SpawnPlayerConnection();
+            SpawnPlayerUnit();
+        }
+        */
+
+        public void HandleLevelUnload(int sceneHandle, string sceneName) {
+            //DespawnPlayerUnit();
+            if (playerController != null) {
+                playerController.ProcessLevelUnload();
+            }
+        }
+
+        public void HandlePlayerDeath() {
+            //Debug.Log("PlayerManager.KillPlayer()");
+            PlayDeathEffect();
+        }
+
+        public void RequestRespawnPlayer() {
+            //Debug.Log("PlayerManager.RespawnPlayer()");
+            if (systemGameManager.GameMode == GameMode.Network) {
+                //Debug.Log("PlayerManager.RequestRespawnPlayer(): Lobby Game Mode, requesting server to respawn player unit");
+                networkManagerClient.RequestRespawnPlayerUnit();
+                return;
+            }
+
+            playerManagerServer.RespawnPlayerUnit(0);
+        }
+
+        public void RequestRevivePlayer() {
+            //Debug.Log("PlayerManager.RequestRevivePlayer()");
+
+            if (systemGameManager.GameMode == GameMode.Network) {
+                //Debug.Log("PlayerManager.RequestRespawnPlayer(): Lobby Game Mode, requesting server to respawn player unit");
+                networkManagerClient.RequestRevivePlayerUnit();
+                return;
+            }
+
+            playerManagerServer.RevivePlayerUnit(0);
+        }
+
+        public void SubscribeToTargetReady() {
+            //Debug.Log($"PlayerManagerClient.SubscribeToTargetReady()");
+
+            activeUnitController.OnCameraTargetReady += HandleTargetReady;
+            subscribeToTargetReady = false;
+        }
+
+        public void UnsubscribeFromTargetReady() {
+            if (activeUnitController != null) {
+                activeUnitController.OnCameraTargetReady -= HandleTargetReady;
+            }
+        }
+
+        public void HandleTargetReady() {
+            //Debug.Log($"PlayerManagerClient.HandleTargetReady()");
+
+            waitForPlayerReadyCoroutine = systemGameManager.StartCoroutine(WaitForPlayerReady());
+        }
+
+        private IEnumerator WaitForPlayerReady() {
+            //Debug.Log("PlayerManager.WaitForPlayerReady()");
+            //private IEnumerator WaitForCamera(int frameNumber) {
+            yield return null;
+            //Debug.Log($"{gameObject.name}.UnitFrameController.WaitForCamera(): about to render " + namePlateController.Interactable.GetInstanceID() + "; initial frame: " + frameNumber + "; current frame: " + lastWaitFrame);
+            //if (lastWaitFrame != frameNumber) {
+            if (activeUnitController.IsBuilding() == true) {
+                //Debug.Log($"{gameObject.name}.UnitFrameController.WaitForCamera(): a new wait was started. initial frame: " + frameNumber +  "; current wait: " + lastWaitFrame);
+            } else {
+                //Debug.Log($"{gameObject.name}.UnitFrameController.WaitForCamera(): rendering");
+                waitForPlayerReadyCoroutine = null;
+                UnsubscribeFromTargetReady();
+                cameraManager.ShowPlayers();
+            }
+        }
+
+        public void RequestSpawnPlayerUnit() {
+            //Debug.Log("PlayerManager.SpawnPlayerUnit()");
+
+            cameraManager.HidePlayers();
+            subscribeToTargetReady = true;
+            RequestSpawnPlayerUnit(networkManagerClient.AccountId);
+        }
+
+        public void RequestSpawnPlayerUnit(int accountId) {
+            //Debug.Log($"PlayerManagerClient.RequestSpawnPlayerUnit({accountId})");
+
+            if (systemGameManager.GameMode == GameMode.Network) {
+                networkManagerClient.RequestSpawnPlayerUnit(SceneManager.GetActiveScene().name);
+            } else {
+                playerManagerServer.RequestSpawnPlayerUnit(accountId, SceneManager.GetActiveScene().name);
+            }
+        }
+
+        public void ConfigureSpawnedCharacter(UnitController unitController) {
+            //Debug.Log($"PlayerManagerClient.ConfigureSpawnedCharacter({unitController.gameObject.name})");
+
+            if (subscribeToTargetReady) {
+                SubscribeToTargetReady();
+            }
+        }
+
+        public void PostInit(UnitController unitController) {
+            //Debug.Log($"PlayerManagerClient.PostInit({unitController.gameObject.name})");
+
+            if (unitController.UnitModelController.ModelCreated == false) {
+                // do UMA spawn stuff to wait for UMA to spawn
+                SubscribeToModelReady();
+            } else {
+                // handle spawn immediately since this is a non UMA unit and waiting should not be necessary
+                //HandlePlayerUnitSpawn();
+                HandleModelReady();
+            }
+
+            /*
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // load player data from saveManager
+
+                systemAchievementManager.CreateEventSubscriptions();
+            }
+            */
+
+            if (PlayerPrefs.HasKey("ShowNewPlayerHints") == false) {
+                if (controlsManager.GamepadModeActive == true) {
+                    uIManager.gamepadHintWindow.OpenWindow();
+                } else {
+                    uIManager.keyboardHintWindow.OpenWindow();
+                }
+            }
+        }
+
+        public void SetActiveUnitController(UnitController unitController) {
+            //Debug.Log($"PlayerManagerClient.SetActiveUnitController({(unitController == null ? "null" : unitController.gameObject.name)})");
+
+            activeUnitController = unitController;
+
+            if (activeUnitController != null) {
+                playerController.ProcessSetActiveUnitController();
+            }
+        }
+
+        public void SetUnitController(UnitController unitController) {
+            //Debug.Log($"PlayerManagerClient.SetUnitController({(unitController == null ? "null" : unitController.gameObject.name)})");
+
+            this.unitController = unitController;
+            activeUnitController = unitController;
+
+            if (unitController == null) {
+                playerManagerServer.RemoveActivePlayer(networkManagerClient.AccountId);
+                playerUnitSpawned = false;
+                return;
+            }
+            SubscribeToPlayerEvents();
+            unitController.CharacterUnit.SetCharacterStatsCapabilities();
+            //playerManagerServer.AddActivePlayer(0, unitController);
+        }
+
+        public void HandleModelReady() {
+            //Debug.Log("PlayerManagerClient.HandleModelReady()");
+
+            SubscribeToModelEvents();
+            UnsubscribeFromModelReady();
+
+            HandlePlayerUnitSpawn();
+        }
+
+        public void SubscribeToModelEvents() {
+            //Debug.Log("PlayerManagerClient.SubscribeToModelEvents()");
+
+            //unitController.UnitEventController.OnStatusEffectAdd += HandleStatusEffectAdd;
+            unitController.UnitEventController.OnReceiveCombatTextEvent += HandleReceiveCombatTextEvent;
+            unitController.UnitEventController.OnEncumberedChange += HandleEncumberedChange;
+        }
+
+        public void UnsubscribeFromModelEvents() {
+            //unitController.UnitEventController.OnStatusEffectAdd -= HandleStatusEffectAdd;
+            unitController.UnitEventController.OnReceiveCombatTextEvent -= HandleReceiveCombatTextEvent;
+            unitController.UnitEventController.OnEncumberedChange -= HandleEncumberedChange;
+        }
+
+        private void HandlePlayerUnitSpawn() {
+            //Debug.Log("PlayerManagerClient.HandlePlayerUnitSpawn()");
+
+            playerUnitSpawned = true;
+
+            // inform any subscribers that we just spawned a player unit
+            systemEventManager.NotifyOnPlayerUnitSpawn(unitController);
+
+            playerController.SubscribeToUnitEvents();
+
+            if (unitController.CharacterStats.IsAlive == false) {
+                // when a dead player spawns, we need to lock controller and allow popup to respawn
+                DeathActions();
+            }
+            if (cameraManager.MainCameraController.FirstPersonView == true) {
+                unitController.UnitModelController.ActivateFirstPersonView();
+            }
+        }
+
+        public void SubscribeToModelReady() {
+            //Debug.Log("PlayerManagerClient.SubscribeToModelReady()");
+
+            //activeUnitController.UnitModelController.OnModelUpdated += HandleModelReady;
+            activeUnitController.UnitModelController.OnModelCreated += HandleModelReady;
+        }
+
+        public void UnsubscribeFromModelReady() {
+            //Debug.Log("PlayerManager.UnsubscribeFromModelReady()");
+
+            //activeUnitController.UnitModelController.OnModelUpdated -= HandleModelReady;
+            activeUnitController.UnitModelController.OnModelCreated -= HandleModelReady;
+        }
+
+        public void SpawnPlayerConnection(CharacterSaveData characterSaveData) {
+            //Debug.Log($"PlayerManagerClient.SpawnPlayerConnection({playerCharacterSaveData.SaveData})");
+
+            // this is only called in local mode so we can safely pass zero for account id
+            playerManagerServer.AddPlayerMonitor(0, characterSaveData);
+
+            SpawnPlayerConnectionObject();
+        }
+
+        public void SpawnPlayerConnection() {
+            //Debug.Log("PlayerManager.SpawnPlayerConnection()");
+
+            SpawnPlayerConnectionObject();
+        }
+
+        public void SpawnPlayerConnectionObject() {
+            //Debug.Log("PlayerManager.SpawnPlayerConnectionObject()");
+
+            if (playerController != null) {
+                //Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is not null.  exiting.");
+                return;
+            }
+
+            playerController = new PlayerController();
+            playerController.Configure(systemGameManager);
+
+            SystemEventManager.TriggerEvent("OnBeforePlayerConnectionSpawn", new EventParamProperties());
+            SystemEventManager.TriggerEvent("OnPlayerConnectionSpawn", new EventParamProperties());
+        }
+
+        public void DespawnPlayerConnection() {
+            //Debug.Log("PlayerManager.DespawnPlayerConnection()");
+
+            // this only runs on the client, so is safe to call here
+            playerManagerServer.StopMonitoringPlayerUnit(networkManagerClient.AccountId);
+
+            if (playerController == null) {
+                //Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is null.  exiting.");
+                return;
+            }
+            playerController = null;
+            SystemEventManager.TriggerEvent("OnPlayerConnectionDespawn", new EventParamProperties());
+        }
+
+        public void SubscribeToPlayerEvents() {
+            //Debug.Log("PlayerManager.SubscribeToPlayerEvents()");
+
+            //unitController.UnitEventController.OnImmuneToEffect += HandleImmuneToEffect;
+            unitController.UnitEventController.OnBeforeDie += HandleBeforeDie;
+            //unitController.UnitEventController.OnAfterDie += HandleAfterDie;
+            unitController.UnitEventController.OnLevelChanged += HandleLevelChanged;
+            unitController.UnitEventController.OnGainXP += HandleGainXP;
+            //unitController.UnitEventController.OnRecoverResource += HandleRecoverResource;
+            unitController.UnitEventController.OnResourceAmountChanged += HandleResourceAmountChanged;
+            unitController.UnitEventController.OnEnterCombat += HandleEnterCombat;
+            unitController.UnitEventController.OnDropCombat += HandleDropCombat;
+            //unitController.UnitEventController.OnCombatUpdate += HandleCombatUpdate;
+            //unitController.UnitEventController.OnReceiveCombatMiss += HandleCombatMiss;
+            unitController.UnitEventController.OnAddEquipment += HandleAddEquipment;
+            unitController.UnitEventController.OnRemoveEquipment += HandleRemoveEquipment;
+            //unitController.UnitEventController.OnUnlearnAbilities += HandleUnlearnClassAbilities;
+            unitController.UnitEventController.OnLearnedCheckFail += HandleLearnedCheckFail;
+            unitController.UnitEventController.OnPowerResourceCheckFail += HandlePowerResourceCheckFail;
+            unitController.UnitEventController.OnCombatCheckFail += HandleCombatCheckFail;
+            unitController.UnitEventController.OnStealthCheckFail += HandleStealthCheckFail;
+            unitController.UnitEventController.OnAbilityActionCheckFail += HandleAbilityActionCheckFail;
+            //unitController.UnitEventController.OnTargetInAbilityRangeFail += HandleTargetInAbilityRangeFail;
+            unitController.UnitEventController.OnReputationChange += HandleReputationChange;
+            //unitController.UnitEventController.OnUnlearnAbility += HandleUnlearnAbility;
+            unitController.UnitEventController.OnLearnAbility += HandleLearnAbility;
+            unitController.UnitEventController.OnActivateTargetingMode += HandleActivateTargetingMode;
+            unitController.UnitEventController.OnCombatMessage += HandleCombatMessage;
+            unitController.UnitEventController.OnEnterInteractableRange += HandleEnterInteractableRange;
+            unitController.UnitEventController.OnExitInteractableRange += HandleExitInteractableRange;
+            unitController.UnitEventController.OnAcceptQuest += HandleAcceptQuest;
+            unitController.UnitEventController.OnAbandonQuest += HandleRemoveQuest;
+            unitController.UnitEventController.OnTurnInQuest += HandleRemoveQuest;
+            unitController.UnitEventController.OnMarkQuestComplete += HandleMarkQuestComplete;
+            unitController.UnitEventController.OnQuestObjectiveStatusUpdated += HandleQuestObjectiveStatusUpdated;
+            unitController.UnitEventController.OnLearnSkill += HandleLearnSkill;
+            unitController.UnitEventController.OnUnLearnSkill += HandleUnLearnSkill;
+            unitController.UnitEventController.OnStartInteractWithOption += HandleStartInteractWithOption;
+            unitController.UnitEventController.OnSetCraftAbility += HandleSetCraftAbility;
+            unitController.UnitEventController.OnCraftItem += HandleCraftItem;
+            unitController.UnitEventController.OnFactionChange += HandleFactionChange;
+            //unitController.UnitEventController.OnTakeDamage += HandleTakeDamage;
+            //unitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamage;
+            unitController.UnitEventController.OnDespawn += HandleDespawn;
+            unitController.UnitEventController.OnCurrencyChange += HandleCurrencyChange;
+            unitController.UnitEventController.OnSetGamepadActionButton += HandleSetGamepadActionButton;
+            unitController.UnitEventController.OnSetMouseActionButton += HandleSetMouseActionButton;
+            unitController.UnitEventController.OnUnsetMouseActionButton += HandleUnsetMouseActionButton;
+            unitController.UnitEventController.OnUnsetGamepadActionButton += HandleUnsetGamepadActionButton;
+            unitController.UnitEventController.OnNameChange += HandleNameChange;
+            unitController.UnitEventController.OnRemoveActivePet += HandleRemoveActivePet;
+            unitController.UnitEventController.OnMarkAchievementComplete += HandleMarkAchievementComplete;
+            unitController.UnitEventController.OnWriteMessageFeedMessage += HandleWriteMessageFeedMessage;
+            unitController.UnitEventController.OnItemCountChanged += HandleItemCountChanged;
+            unitController.CharacterInventoryManager.OnAddInventoryBagNode += HandleAddInventoryBagNode;
+            unitController.CharacterInventoryManager.OnAddBankBagNode += HandleAddBankBagNode;
+            unitController.CharacterInventoryManager.OnAddInventorySlot += HandleAddInventorySlot;
+            unitController.CharacterInventoryManager.OnAddBankSlot += HandleAddBankSlot;
+            unitController.CharacterInventoryManager.OnRemoveInventorySlot += HandleRemoveInventorySlot;
+            unitController.CharacterInventoryManager.OnRemoveBankSlot += HandleRemoveBankSlot;
+            unitController.UnitEventController.OnAddBag += HandleAddBag;
+            unitController.UnitEventController.OnNameChangeFail += HandleNameChangeFail;
+            unitController.UnitEventController.OnClassChange += HandleClassChange;
+            unitController.UnitEventController.OnSpecializationChange += HandleSpecializationChange;
+            unitController.UnitEventController.OnSetGuildId += HandleSetGuildId;
+            unitController.UnitEventController.OnManualMovement += HandleManualMovement;
+            unitController.UnitEventController.OnReachDestination += HandleReachDestination;
+            unitController.UnitEventController.OnAddSkillLevel += HandleAddSkillLevel;
+            unitController.UnitEventController.OnAddSkillExperience += HandleAddSkillExperience;
+            unitController.UnitEventController.OnCarryWeightChanged += HandleCarryWeightChanged;
+            unitController.UnitEventController.OnStatChanged += HandleStatChanged;
+        }
+
+        public void UnsubscribeFromPlayerEvents() {
+            //Debug.Log("PlayerManager.UnsubscribeFromPlayerEvents()");
+
+            //unitController.UnitEventController.OnImmuneToEffect -= HandleImmuneToEffect;
+            unitController.UnitEventController.OnBeforeDie -= HandleBeforeDie;
+            //unitController.UnitEventController.OnAfterDie -= HandleAfterDie;
+            unitController.UnitEventController.OnLevelChanged -= HandleLevelChanged;
+            unitController.UnitEventController.OnGainXP -= HandleGainXP;
+            //unitController.UnitEventController.OnRecoverResource -= HandleRecoverResource;
+            unitController.UnitEventController.OnResourceAmountChanged -= HandleResourceAmountChanged;
+            unitController.UnitEventController.OnEnterCombat -= HandleEnterCombat;
+            unitController.UnitEventController.OnDropCombat -= HandleDropCombat;
+            //unitController.UnitEventController.OnCombatUpdate -= HandleCombatUpdate;
+            //unitController.UnitEventController.OnReceiveCombatMiss -= HandleCombatMiss;
+            unitController.UnitEventController.OnAddEquipment -= HandleAddEquipment;
+            unitController.UnitEventController.OnRemoveEquipment -= HandleRemoveEquipment;
+            //unitController.UnitEventController.OnUnlearnAbilities -= HandleUnlearnClassAbilities;
+            unitController.UnitEventController.OnLearnedCheckFail -= HandleLearnedCheckFail;
+            unitController.UnitEventController.OnPowerResourceCheckFail -= HandlePowerResourceCheckFail;
+            unitController.UnitEventController.OnCombatCheckFail -= HandleCombatCheckFail;
+            unitController.UnitEventController.OnStealthCheckFail -= HandleStealthCheckFail;
+            unitController.UnitEventController.OnAbilityActionCheckFail -= HandleAbilityActionCheckFail;
+            //unitController.UnitEventController.OnTargetInAbilityRangeFail -= HandleTargetInAbilityRangeFail;
+            unitController.UnitEventController.OnReputationChange -= HandleReputationChange;
+            //unitController.UnitEventController.OnUnlearnAbility -= HandleUnlearnAbility;
+            unitController.UnitEventController.OnLearnAbility -= HandleLearnAbility;
+            unitController.UnitEventController.OnActivateTargetingMode -= HandleActivateTargetingMode;
+            unitController.UnitEventController.OnCombatMessage -= HandleCombatMessage;
+            unitController.UnitEventController.OnEnterInteractableRange -= HandleEnterInteractableRange;
+            unitController.UnitEventController.OnExitInteractableRange -= HandleExitInteractableRange;
+            unitController.UnitEventController.OnAcceptQuest -= HandleAcceptQuest;
+            unitController.UnitEventController.OnAbandonQuest -= HandleRemoveQuest;
+            unitController.UnitEventController.OnTurnInQuest -= HandleRemoveQuest;
+            unitController.UnitEventController.OnMarkQuestComplete -= HandleMarkQuestComplete;
+            unitController.UnitEventController.OnQuestObjectiveStatusUpdated -= HandleQuestObjectiveStatusUpdated;
+            unitController.UnitEventController.OnLearnSkill -= HandleLearnSkill;
+            unitController.UnitEventController.OnUnLearnSkill -= HandleUnLearnSkill;
+            unitController.UnitEventController.OnStartInteractWithOption -= HandleStartInteractWithOption;
+            unitController.UnitEventController.OnSetCraftAbility -= HandleSetCraftAbility;
+            unitController.UnitEventController.OnCraftItem -= HandleCraftItem;
+            unitController.UnitEventController.OnFactionChange -= HandleFactionChange;
+            //unitController.UnitEventController.OnTakeDamage -= HandleTakeDamage;
+            //unitController.UnitEventController.OnTakeFallDamage -= HandleTakeFallDamage;
+            unitController.UnitEventController.OnDespawn -= HandleDespawn;
+            unitController.UnitEventController.OnCurrencyChange -= HandleCurrencyChange;
+            unitController.UnitEventController.OnSetGamepadActionButton -= HandleSetGamepadActionButton;
+            unitController.UnitEventController.OnSetMouseActionButton -= HandleSetMouseActionButton;
+            unitController.UnitEventController.OnUnsetMouseActionButton -= HandleUnsetMouseActionButton;
+            unitController.UnitEventController.OnUnsetGamepadActionButton -= HandleUnsetGamepadActionButton;
+            unitController.UnitEventController.OnNameChange -= HandleNameChange;
+            unitController.UnitEventController.OnRemoveActivePet -= HandleRemoveActivePet;
+            unitController.UnitEventController.OnMarkAchievementComplete -= HandleMarkAchievementComplete;
+            unitController.UnitEventController.OnWriteMessageFeedMessage -= HandleWriteMessageFeedMessage;
+            unitController.UnitEventController.OnItemCountChanged -= HandleItemCountChanged;
+            unitController.CharacterInventoryManager.OnAddInventoryBagNode -= HandleAddInventoryBagNode;
+            unitController.CharacterInventoryManager.OnAddBankBagNode -= HandleAddBankBagNode;
+            unitController.CharacterInventoryManager.OnAddInventorySlot -= HandleAddInventorySlot;
+            unitController.CharacterInventoryManager.OnAddBankSlot -= HandleAddBankSlot;
+            unitController.CharacterInventoryManager.OnRemoveInventorySlot -= HandleRemoveInventorySlot;
+            unitController.CharacterInventoryManager.OnRemoveBankSlot -= HandleRemoveBankSlot;
+            unitController.UnitEventController.OnAddBag -= HandleAddBag;
+            unitController.UnitEventController.OnNameChangeFail -= HandleNameChangeFail;
+            unitController.UnitEventController.OnClassChange -= HandleClassChange;
+            unitController.UnitEventController.OnSpecializationChange -= HandleSpecializationChange;
+            unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
+            unitController.UnitEventController.OnManualMovement -= HandleManualMovement;
+            unitController.UnitEventController.OnReachDestination -= HandleReachDestination;
+            unitController.UnitEventController.OnAddSkillLevel -= HandleAddSkillLevel;
+            unitController.UnitEventController.OnAddSkillExperience -= HandleAddSkillExperience;
+            unitController.UnitEventController.OnCarryWeightChanged -= HandleCarryWeightChanged;
+            unitController.UnitEventController.OnStatChanged -= HandleStatChanged;
+            unitController.UnitEventController.OnEncumberedChange -= HandleEncumberedChange;
+        }
+
+        private void HandleEncumberedChange(bool encumbered) {
+            messageFeedManager.WriteMessage(encumbered ? "You are encumbered" : "You are no longer encumbered");
+        }
+
+        private void HandleStatChanged() {
+            systemEventManager.NotifyOnStatChanged();
+        }
+
+        private void HandleCarryWeightChanged() {
+            systemEventManager.NotifyOnCarryWeightChanged();
+        }
+
+        private void HandleAddSkillExperience(Skill skill, int experience) {
+            combatTextManager.SpawnCombatText(unitController, $"{experience} {skill.DisplayName}", CombatTextType.gainSkillExperience);
+        }
+
+        private void HandleAddSkillLevel(Skill skill, int addLevel) {
+            combatTextManager.SpawnCombatText(unitController, $"{addLevel} {skill.DisplayName}", CombatTextType.gainSkillLevel);
+        }
+
+        private void HandleReachDestination() {
+            //Debug.Log("PlayerManagerClient.HandleReachDestination()");
+
+            uIManager.MovementTargetController.DisableProjector();
+        }
+
+        private void HandleManualMovement() {
+            uIManager.MovementTargetController.DisableProjector();
+        }
+
+        private void HandleSetGuildId(int guildId, string guildName) {
+            systemEventManager.NotifyOnSetGuildId(guildId);
+        }
+
+        private void HandleNameChangeFail() {
+            systemEventManager.NotifyOnNameChangeFail();
+        }
+
+        private void HandleItemCountChanged(UnitController controller, Item item) {
+            systemEventManager.NotifyOnItemCountChanged(unitController, item);
+        }
+
+        private void HandleWriteMessageFeedMessage(string messageText) {
+            //Debug.Log($"PlayerManagerClient.HandleWriteMessageFeedMessage({messageText})");
+
+            messageFeedManager.WriteMessage(messageText);
+        }
+
+        public void HandleMarkAchievementComplete(UnitController targetUnitController, Achievement achievement) {
+            PlayLevelUpEffects(targetUnitController, 0);
+        }
+
+        public void HandleRemoveActivePet(UnitProfile unitProfile) {
+            systemEventManager.NotifyOnRemoveActivePet(unitProfile);
+        }
+
+        public void HandleNameChange(string newName) {
+            systemEventManager.NotifyOnNameChange(newName);
+            uIManager.PlayerUnitFramePanel.SetTarget(unitController);
+        }
+
+        public void HandleUnsetGamepadActionButton(int buttonIndex) {
+            systemEventManager.NotifyOnUnsetGamepadActionButton(buttonIndex);
+        }
+
+        public void HandleUnsetMouseActionButton(int buttonIndex) {
+            systemEventManager.NotifyOnUnsetMouseActionButton(buttonIndex);
+        }
+
+        public void HandleSetMouseActionButton(IUseable useable, int buttonIndex) {
+            systemEventManager.NotifyOnSetMouseActionButton(useable, buttonIndex);
+        }
+
+        public void HandleSetGamepadActionButton(IUseable useable, int buttonIndex) {
+            systemEventManager.NotifyOnSetGamepadActionButton(useable, buttonIndex);
+        }
+
+        public void HandleCurrencyChange(string currencyResourceName, int amount) {
+            //Debug.Log("PlayerManager.HandleCurrencyChange()");
+            systemEventManager.NotifyOnCurrencyChange();
+        }
+
+        public void HandleDespawn(UnitController controller) {
+            UnsubscribeFromPlayerEvents();
+            UnsubscribeFromModelEvents();
+            systemEventManager.NotifyOnPlayerUnitDespawn(controller);
+            SetUnitController(null);
+        }
+
+        /*
+        public void HandleTakeDamage(IAbilityCaster sourceCaster, UnitController targetUnitController, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, string abilityName, AbilityEffectContext abilityEffectContext) {
+
+            combatTextManager.SpawnCombatText(targetUnitController, amount, combatTextType, combatMagnitude, abilityEffectContext);
+            //systemEventManager.NotifyOnTakeDamage(sourceCaster, unitController, amount, abilityName);
+        }
+        */
+
+        /*
+        public void HandleTakeFallDamage(UnitController targetUnitController, int damageAmount) {
+            combatTextManager.SpawnCombatText(targetUnitController, damageAmount, CombatTextType.normal, CombatMagnitude.normal, null);
+            //OnTakeFallDamage(unitController, damageAmount);
+        }
+        */
+
+        public void HandleReceiveCombatTextEvent(Interactable targetInteractable, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log($"PlayerManagerClient.HandleReceiveCombatTextEvent({targetInteractable?.gameObject.name}, {amount}, {combatTextType}, {combatMagnitude})");
+
+            combatTextManager.SpawnCombatText(targetInteractable, amount, combatTextType, combatMagnitude, abilityEffectContext);
+
+            string textColor = ColorUtility.ToHtmlStringRGB(Color.white);
+            string messageText = string.Empty;
+            string sourceName = string.Empty;
+            string targetName = targetInteractable.DisplayName;
+            string reflectedString = abilityEffectContext.ReflectDamage ? " (Reflected)" : string.Empty;
+            string criticalString = combatMagnitude == CombatMagnitude.critical ? " (Critical)" : string.Empty;
+
+            if (abilityEffectContext.ReflectDamage == false && abilityEffectContext.AbilityCaster?.AbilityManager != null) {
+                if (abilityEffectContext.AbilityCaster.gameObject == unitController.gameObject) {
+                    sourceName = "Your ";
+                } else {
+                    sourceName = $"{abilityEffectContext.AbilityCaster.AbilityManager.Name}'s ";
+                }
+            }
+
+            string abilityName = "Unknown Ability";
+            if (abilityEffectContext.BaseAbility != null) {
+                abilityName = abilityEffectContext.BaseAbility.DisplayName;
+            } else if (abilityEffectContext.AbilityEffect != null) {
+                abilityName = abilityEffectContext.AbilityEffect.DisplayName;
+            }
+            if (targetInteractable.gameObject == unitController.gameObject) {
+                targetName = "You";
+            }
+
+            // convert the combat text event into a combat message for the message log
+            string verb = string.Empty;
+            if (combatTextType == CombatTextType.normal || combatTextType == CombatTextType.ability) {
+                // turn text red if the target is the player or its pet
+                if (targetInteractable.gameObject == unitController.gameObject
+                    || unitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.gameObject).Contains(targetInteractable.gameObject)) {
+                    textColor = ColorUtility.ToHtmlStringRGB(Color.red);
+                }
+                verb = "hit";
+                messageText = $"{sourceName}{abilityName} {verb} {targetName} for {amount}{reflectedString}{criticalString}";
+            } else if (combatTextType == CombatTextType.fallDamage) {
+                if (targetInteractable.gameObject == unitController.gameObject
+                    || unitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.gameObject).Contains(targetInteractable.gameObject)) {
+                    textColor = ColorUtility.ToHtmlStringRGB(Color.red);
+                }
+                if (targetInteractable.gameObject == unitController.gameObject) {
+                    verb = "take";
+                } else {
+                    verb = "takes";
+                }
+                messageText = $"{targetName} {verb} {amount} fall damage";
+            } else if (combatTextType == CombatTextType.gainHealth) {
+                if (targetInteractable.gameObject == unitController.gameObject
+                    || unitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.gameObject).Contains(targetInteractable.gameObject)) {
+                    textColor = ColorUtility.ToHtmlStringRGB(Color.green);
+                }
+                verb = "healed";
+                messageText = $"{sourceName}{abilityName} {verb} {targetName} for {amount}{reflectedString}{criticalString}";
+            } else if (combatTextType == CombatTextType.gainResource) {
+                if (targetInteractable.gameObject == unitController.gameObject
+                    || unitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.gameObject).Contains(targetInteractable.gameObject)) {
+                    textColor = ColorUtility.ToHtmlStringRGB(Color.green);
+                }
+                if (abilityEffectContext.AbilityCaster != null && abilityEffectContext.AbilityCaster.gameObject == unitController.gameObject) {
+                    if (abilityEffectContext.ReflectDamage == false) {
+                        sourceName = "your ";
+                    }
+                    verb = "gain";
+                    targetName = "You";
+                } else {
+                    verb = "gained";
+                }
+                messageText = $"{targetName} {verb} {amount} {abilityEffectContext.PowerResource.DisplayName} from {sourceName}{abilityName}{reflectedString}{criticalString}";
+            } else if (combatTextType == CombatTextType.gainBuff) {
+                if (targetInteractable.gameObject == unitController.gameObject
+                    || unitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.gameObject).Contains(targetInteractable.gameObject)) {
+                    textColor = ColorUtility.ToHtmlStringRGB(Color.cyan);
+                }
+                verb = "gained";
+                messageText = $"{targetName} {verb} {abilityName}";
+            } else if (combatTextType == CombatTextType.loseBuff) {
+                if (targetInteractable.gameObject == unitController.gameObject
+                    || unitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.gameObject).Contains(targetInteractable.gameObject)) {
+                    textColor = ColorUtility.ToHtmlStringRGB(Color.cyan);
+                }
+                verb = "lost";
+                messageText = $"{targetName} {verb} {abilityName}";
+            } else if (combatTextType == CombatTextType.miss) {
+                verb = "missed";
+                messageText = $"{sourceName}{abilityName} {verb} {targetName}";
+            } else if (combatTextType == CombatTextType.immune) {
+                verb = "was immune to";
+                messageText = $"{targetName} {verb} {sourceName}{abilityName}";
+            } else {
+                // only log heals and hits for now, possibly expand this later if wanted
+                return;
+            }
+            messageText = $"<color=#{textColor}>{messageText}</color>";
+            messageLogClient.WriteCombatMessage(messageText);
+        }
+
+        /*
+        public void HandleReceiveStatusEffectCombatTextEvent(UnitController targetUnitController, StatusEffectProperties statusEffect, bool addEffect) {
+            combatTextManager.SpawnCombatText(targetUnitController, statusEffect, addEffect);
+        }
+        */
+
+        public void HandleFactionChange(Faction newFaction, Faction oldFaction) {
+            systemEventManager.NotifyOnFactionChange();
+            systemEventManager.NotifyOnReputationChange(unitController);
+            messageFeedManager.WriteMessage($"Changed faction to {newFaction.DisplayName}");
+        }
+
+        public void HandleAddBag(InstantiatedBag bag, BagNode node) {
+            systemEventManager.NotifyOnAddBag();
+        }
+
+        public void HandleCraftItem() {
+            systemEventManager.NotifyOnCraftItem();
+        }
+
+        public void HandleSetCraftAbility(CraftAbilityProperties abilityProperties) {
+            systemEventManager.NotifyOnSetCraftAbility(unitController, abilityProperties);
+        }
+
+        public void HandleStartInteractWithOption(UnitController sourceUnitController, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
+            //Debug.Log($"PlayerManagerClient.HandleStartInteractWithOption({sourceUnitController.gameObject.name}, {interactableOptionComponent.Interactable.gameObject.name}, {componentIndex}, {choiceIndex})");
+
+            interactableOptionComponent.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
+        }
+
+        public void HandleLearnSkill(UnitController sourceUnitController, Skill skill) {
+            //Debug.Log($"PlayerManagerClient.HandleLearnSkill({sourceUnitController.gameObject.name}, {skill.ResourceName})");
+
+            systemEventManager.NotifyOnLearnSkill(unitController, skill);
+        }
+
+        public void HandleUnLearnSkill(UnitController sourceUnitController, Skill skill) {
+            systemEventManager.NotifyOnUnLearnSkill(unitController, skill);
+        }
+
+        public void HandleQuestObjectiveStatusUpdated(UnitController sourceUnitController, Quest quest) {
+            systemEventManager.NotifyOnQuestObjectiveStatusUpdated(sourceUnitController, quest);
+        }
+
+        public void HandleMarkQuestComplete(UnitController sourceUnitController, QuestBase questBase) {
+            systemEventManager.NotifyOnMarkQuestComplete(sourceUnitController, questBase);
+        }
+
+        public void HandleRemoveQuest(UnitController sourceUnitController, QuestBase questBase) {
+            systemEventManager.NotifyOnRemoveQuest(sourceUnitController, questBase);
+        }
+
+        public void HandleAcceptQuest(UnitController sourceUnitController, QuestBase questBase) {
+            systemEventManager.NotifyOnAcceptQuest(sourceUnitController, questBase);
+        }
+
+        public void HandleEnterInteractableRange(UnitController controller, Interactable interactable) {
+            playerController.AddInteractable(interactable);
+        }
+
+        public void HandleExitInteractableRange(UnitController controller, Interactable interactable) {
+            playerController.RemoveInteractable(interactable);
+        }
+
+        public void HandleAddInventoryBagNode(BagNode bagNode) {
+            systemEventManager.NotifyOnAddInventoryBagNode(bagNode);
+        }
+
+        public void HandleAddBankBagNode(BagNode bagNode) {
+            systemEventManager.NotifyOnAddBankBagNode(bagNode);
+        }
+
+        public void HandleAddInventorySlot(InventorySlot inventorySlot) {
+            //Debug.Log("PlayerManager.HandleAddInventorySlot()");
+
+            systemEventManager.NotifyOnAddInventorySlot(inventorySlot);
+        }
+
+        public void HandleAddBankSlot(InventorySlot inventorySlot) {
+            //Debug.Log("PlayerManager.HandleAddBankSlot()");
+
+            systemEventManager.NotifyOnAddBankSlot(inventorySlot);
+        }
+
+        public void HandleRemoveInventorySlot(InventorySlot inventorySlot) {
+            systemEventManager.NotifyOnRemoveInventorySlot(inventorySlot);
+        }
+
+        public void HandleRemoveBankSlot(InventorySlot inventorySlot) {
+            systemEventManager.NotifyOnRemoveBankSlot(inventorySlot);
+        }
+
+        public void HandleCombatMessage(string messageText) {
+            messageLogClient.WriteCombatMessage(messageText);
+        }
+
+        /*
+        public void HandleCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
+            combatTextManager.SpawnCombatText(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
+        }
+        */
+
+        public void HandleActivateTargetingMode(AbilityProperties baseAbility) {
+            castTargettingManager.EnableProjector(baseAbility);
+        }
+
+        public void HandleAbilityActionCheckFail(AbilityProperties baseAbility) {
+            if (PlayerUnitSpawned == true && messageLogClient != null) {
+                messageLogClient.WriteCombatMessage($"Cannot use {(baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName)}. Waiting for another ability to finish.");
+            }
+        }
+
+        public void HandleLearnAbility(UnitController sourceUnitController, AbilityProperties baseAbility) {
+            //Debug.Log($"PlayerManagerClient.HandleLearnAbility({baseAbility.ResourceName})");
+
+            systemEventManager.NotifyOnAbilityListChanged(sourceUnitController, baseAbility);
+            // this is ok to have here for now because prerequisites are only used on the client
+            baseAbility.NotifyOnLearn(sourceUnitController);
+        }
+
+        /*
+        public void HandleCombatUpdate() {
+            //Debug.Log("PlayerManager.HandleCombatUpdate()");
+
+            activeUnitController.CharacterCombat.HandleAutoAttack();
+        }
+        */
+
+        public void HandleDropCombat() {
+            //Debug.Log("PlayerManager.HandleDropCombat()");
+
+            if (messageLogClient != null) {
+                messageLogClient.WriteCombatMessage("Left combat");
+            }
+        }
+
+        public void HandleEnterCombat(Interactable interactable) {
+            if (messageLogClient != null) {
+                messageLogClient.WriteCombatMessage($"Entered combat with {interactable.DisplayName}");
+            }
+        }
+
+        public void HandleReputationChange(UnitController sourceUnitController) {
+            //Debug.Log("PlayerManager.HandleReputationChange");
+
+            systemEventManager.NotifyOnReputationChange(sourceUnitController);
+        }
+
+        public void HandleTargetInAbilityRangeFail(AbilityProperties baseAbility, Interactable target) {
+            if (baseAbility != null && messageLogClient != null) {
+                messageLogClient.WriteCombatMessage($"{target.name} is out of range of {(baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName)}");
+            }
+        }
+
+        public void HandleCombatCheckFail(AbilityProperties ability) {
+            messageLogClient.WriteCombatMessage($"The ability {ability.DisplayName} can only be cast while out of combat");
+        }
+
+        public void HandleStealthCheckFail(AbilityProperties ability) {
+            messageLogClient.WriteCombatMessage($"The ability {ability.DisplayName} can only be cast while while stealthed");
+        }
+
+        public void HandlePowerResourceCheckFail(AbilityProperties ability, IAbilityCaster abilityCaster) {
+            messageLogClient.WriteCombatMessage($"Not enough {ability.PowerResource.DisplayName} to perform {ability.DisplayName} at a cost of {ability.GetResourceCost(abilityCaster)}");
+        }
+
+        public void HandleLearnedCheckFail(AbilityProperties ability) {
+            messageLogClient.WriteCombatMessage($"You have not learned the ability {ability.DisplayName} yet");
+        }
+
+        private void HandleAddEquipment(EquipmentSlotProfile profile, InstantiatedEquipment equipment) {
+            systemEventManager.NotifyOnAddEquipment(profile, equipment);
+        }
+
+        private void HandleRemoveEquipment(EquipmentSlotProfile profile, InstantiatedEquipment equipment) {
+            systemEventManager.NotifyOnRemoveEquipment(profile, equipment);
+        }
+
+        public void HandleResourceAmountChanged(PowerResource powerResource, int maxAmount, int currentAmount) {
+            actionBarManager.UpdateVisuals();
+        }
+
+        public void HandleGainXP(UnitController unitController, int gainedXP, int currentXP) {
+            if (messageLogClient != null) {
+                messageLogClient.WriteSystemMessage($"You gain {gainedXP} experience");
+            }
+            if (activeUnitController != null) {
+                combatTextManager.SpawnCombatText(activeUnitController, gainedXP, CombatTextType.gainXP, CombatMagnitude.normal, null);
+            }
+            SystemEventManager.TriggerEvent("OnXPGained", new EventParamProperties());
+        }
+
+        public void HandleLevelChanged(int newLevel) {
+            systemEventManager.NotifyOnLevelChanged(unitController, newLevel);
+            messageFeedManager.WriteMessage(string.Format("YOU HAVE REACHED LEVEL {0}!", newLevel.ToString()));
+        }
+
+        public void HandleBeforeDie(UnitController deadUnitController) {
+            DeathActions();
+            systemEventManager.NotifyOnPlayerDeath();
+        }
+
+        private void DeathActions() {
+            uIManager.PlayerDeathHandler(unitController);
+        }
+
+        public void HandleAfterDie(CharacterStats deadCharacterStats) {
+        }
+        
+        public void HandleClassChange(UnitController sourceUnitController, CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
+            systemEventManager.NotifyOnClassChange(sourceUnitController, newCharacterClass, oldCharacterClass);
+            messageFeedManager.WriteMessage("Changed class to " + newCharacterClass.DisplayName);
+        }
+
+        public void HandleSpecializationChange(UnitController sourceUnitController, ClassSpecialization newSpecialization, ClassSpecialization oldSpecialization) {
+            systemEventManager.NotifyOnSpecializationChange(sourceUnitController, newSpecialization, oldSpecialization);
+            if (newSpecialization != null) {
+                messageFeedManager.WriteMessage("Changed specialization to " + newSpecialization.DisplayName);
+            }
+        }
+
+
+        public void RequestSpawnPet(UnitProfile unitProfile) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                playerManagerServer.SpawnPet(unitController, unitProfile);
+            } else {
+                networkManagerClient.RequestSpawnPet(unitProfile);
+            }
+        }
+
+        public void RequestDespawnPet(UnitProfile unitProfile) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                playerManagerServer.DespawnPet(unitController, unitProfile);
+            } else {
+                networkManagerClient.RequestDespawnPet(unitProfile);
+            }
+        }
+
+        /*
+        // this spawn request is only used for the camera positioning.
+        // the spawn request that controls the player position is handed by the playerManagerServer
+        public void AddSpawnRequest(int accountId, SpawnPlayerRequest spawnPlayerRequest) {
+            this.spawnPlayerRequest = spawnPlayerRequest;
+        }
+        */
+    }
+
+}

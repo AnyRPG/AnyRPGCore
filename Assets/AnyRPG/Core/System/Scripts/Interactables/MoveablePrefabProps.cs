@@ -1,0 +1,31 @@
+using UnityEngine;
+
+namespace AnyRPG {
+
+    [System.Serializable]
+    public class MoveablePrefabProps : InteractableOptionProps {
+
+        [SerializeField]
+        private float movementSpeed = 0.05f;
+
+        [SerializeField]
+        private float rotationSpeed = 10f;
+
+        [Tooltip("If true, the animation will keep looping while the switch is in the on state")]
+        [SerializeField]
+        private bool loop = false;
+
+        public float MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
+        public float RotationSpeed { get => rotationSpeed; set => rotationSpeed = value; }
+        public bool Loop { get => loop; set => loop = value; }
+
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+            InteractableOptionComponent returnValue = new MoveablePrefabComponent(interactable, this, systemGameManager);
+            if (interactableOption != null) {
+                interactableOption.SetComponent(returnValue);
+            }
+            return returnValue;
+        }
+    }
+
+}

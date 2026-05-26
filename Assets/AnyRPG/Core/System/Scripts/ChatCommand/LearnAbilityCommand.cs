@@ -1,0 +1,59 @@
+using UnityEngine;
+
+namespace AnyRPG {
+    [CreateAssetMenu(fileName = "New Learn Ability Command", menuName = "AnyRPG/Chat Commands/Learn Ability Command")]
+    public class LearnAbilityCommand : ChatCommand {
+
+        [Header("Learn Ability Command")]
+
+        [Tooltip("If true, all parameters will be ignored, and the ability learned will be the ability listed below")]
+        [SerializeField]
+        private bool fixedAbility = false;
+
+        [Tooltip("Only applies if Fixed Ability is true")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(Ability))]
+        private string abilityName = string.Empty;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            //systemItemManager = systemGameManager.SystemItemManager;
+        }
+
+        public override void ExecuteCommand(string commandParameters, int accountId) {
+            //Debug.Log("GainItemCommand.ExecuteCommand() Executing command " + DisplayName + " with parameters (" + commandParameters + ")");
+
+            // add a fixed item
+            if (fixedAbility == true) {
+                LearnAbility(abilityName, accountId);
+                return;
+            }
+
+            // the item comes from parameters, but none were given
+            if (commandParameters == string.Empty) {
+                return;
+            }
+
+            // add an item from parameters
+            LearnAbility(commandParameters, accountId);
+        }
+
+        private void LearnAbility(string abilityName, int accountId) {
+            playerManagerServer.LearnAbility(abilityName, accountId);
+        }
+
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
+
+            if (fixedAbility == true && abilityName != null && abilityName != string.Empty) {
+                Ability tmpAbility = systemDataFactory.GetResource<Ability>(abilityName);
+                if (tmpAbility == null) {
+                    Debug.LogError("LearnAbilityCommand.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                }
+            }
+        }
+
+    }
+
+}

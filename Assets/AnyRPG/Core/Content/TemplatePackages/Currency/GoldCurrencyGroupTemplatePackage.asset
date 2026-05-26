@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: GoldCurrencyGroupTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Gold Currency Group
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: d04b87b968bfcf1469ffacf4d96a4b3e, type: 2}
+  - {fileID: 11400000, guid: 5a59ef2920534004a9c98073f01dd046, type: 2}
+  - {fileID: 11400000, guid: 5ddb34b52e5107446a4b5c556a914316, type: 2}
+  - {fileID: 11400000, guid: fedacb0dace313d49bb31c9ca24a1916, type: 2}
+  prefabs: []
+  dependencies: []

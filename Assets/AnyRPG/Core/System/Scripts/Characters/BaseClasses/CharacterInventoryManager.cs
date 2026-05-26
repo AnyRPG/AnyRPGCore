@@ -1,0 +1,1521 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+namespace AnyRPG {
+    public class CharacterInventoryManager : ConfiguredClass {
+
+        //public event System.Action OnClearData = delegate { };
+        public event Action<BagNode> OnAddInventoryBagNode = delegate { };
+        public event Action<BagNode> OnAddBankBagNode = delegate { };
+        public event Action<InventorySlot> OnAddInventorySlot = delegate { };
+        public event Action<InventorySlot> OnAddBankSlot = delegate { };
+        public event Action<InventorySlot> OnRemoveInventorySlot = delegate { };
+        public event Action<InventorySlot> OnRemoveBankSlot = delegate { };
+
+        private SlotScript fromSlot;
+
+        // BagNodes contain a bag and some metadata about the bag
+        private List<BagNode> bagNodes = new List<BagNode>();
+        private List<BagNode> bankNodes = new List<BagNode>();
+
+        private List<InventorySlot> inventorySlots = new List<InventorySlot>();
+        private List<InventorySlot> bankSlots = new List<InventorySlot>();
+        private List<EquipmentInventorySlot> equipmentSlots = new List<EquipmentInventorySlot>();
+
+        //private Dictionary<int, InstantiatedItem> instantiatedItems = new Dictionary<int, InstantiatedItem>();
+
+        private UnitController unitController = null;
+
+        // state tracking
+        private float weight = 0f;
+
+        // game manager references
+        private LootManager lootManager = null;
+        private MessageLogServer messageLogServer = null;
+        private ServerDataService serverDataService = null;
+        private ObjectPooler objectPooler = null;
+        private LevelManagerServer levelManagerServer = null;
+
+        protected bool eventSubscriptionsInitialized = false;
+
+
+        public int CurrentBagCount {
+            get {
+                int count = 0;
+                foreach (BagNode bagNode in bagNodes) {
+                    if (bagNode.InstantiatedBag != null) {
+                        count++;
+                    }
+                }
+                return count;
+            }
+        }
+
+        public int TotalSlotCount {
+            get {
+                return inventorySlots.Count + bankSlots.Count;
+            }
+        }
+
+        public int FullSlotCount { get => TotalSlotCount - EmptySlotCount(); }
+
+        public SlotScript FromSlot {
+            get {
+                return fromSlot;
+            }
+
+            set {
+                fromSlot = value;
+                if (value != null) {
+                    fromSlot.Icon.color = Color.grey;
+                }
+            }
+        }
+
+        public List<BagNode> BagNodes { get => bagNodes; set => bagNodes = value; }
+        public List<BagNode> BankNodes { get => bankNodes; set => bankNodes = value; }
+        public List<InventorySlot> InventorySlots { get => inventorySlots; set => inventorySlots = value; }
+        public List<InventorySlot> BankSlots { get => bankSlots; set => bankSlots = value; }
+        public List<EquipmentInventorySlot> EquipmentSlots { get => equipmentSlots; set => equipmentSlots = value; }
+        public float Weight { get => weight; }
+
+        public CharacterInventoryManager(UnitController unitController, SystemGameManager systemGameManager) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats()");
+            this.unitController = unitController;
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            lootManager = systemGameManager.LootManager;
+            messageLogServer = systemGameManager.MessageLogServer;
+            serverDataService = systemGameManager.ServerDataService;
+            objectPooler = systemGameManager.ObjectPooler;
+            levelManagerServer = systemGameManager.LevelManagerServer;
+        }
+
+
+        /*
+        public void ClearData() {
+            //Debug.Log("InventoryManager.ClearData()");
+            // keep the bag nodes, but clear their data. bag nodes are associated with physical windows and there is no point in re-initiating those
+            foreach (BagNode bagNode in bagNodes) {
+                //Debug.Log("InventoryManager.ClearData(): got a bag node");
+                //bagNode.MyBag = null;
+                if (bagNode.IsBankNode == false) {
+                    //Debug.Log("Got a bag node, removing!");
+                    RemoveBag(bagNode.Bag, true);
+                } else {
+                    //Debug.Log("Got a bank node, not removing!");
+                }
+            }
+            //bagWindowPositionsSet = false;
+            uIManager.bankWindow.CloseWindow();
+            uIManager.inventoryWindow.CloseWindow();
+            //MyBagNodes.Clear();
+
+            OnClearData();
+        }
+        */
+
+        public int EmptySlotCount(bool bankSlot = false) {
+            int count = 0;
+
+            if (bankSlot) {
+                foreach (InventorySlot slot in bankSlots) {
+                    if (slot.IsEmpty) {
+                        count++;
+                    }
+                }
+            } else {
+                foreach (InventorySlot slot in inventorySlots) {
+                    if (slot.IsEmpty) {
+                        count++;
+                    }
+                }
+            }
+
+            return count;
+        }
+
+        public void LoadEquippedBagData(List<EquippedBagSaveData> equippedBagSaveData, bool bank) {
+            //Debug.Log("InventoryManager.LoadEquippedBagData(" + bank + ")");
+            int counter = 0;
+            foreach (EquippedBagSaveData saveData in equippedBagSaveData) {
+                InstantiatedBag newBag = GetInstantiatedBagFromSaveData(saveData);
+                if (newBag != null) {
+                    if (bank == true) {
+                        AddBag(newBag, BankNodes[counter]);
+                    } else {
+                        AddBag(newBag, BagNodes[counter]);
+                    }
+                }
+                counter++;
+            }
+        }
+
+        public List<InventorySlot> AddInventorySlots(int numSlots) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddInventorySlots({numSlots})");
+
+            List<InventorySlot> returnList = new List<InventorySlot>();
+            for (int i = 0; i < numSlots; i++) {
+                InventorySlot inventorySlot = new InventorySlot(systemGameManager);
+                returnList.Add(inventorySlot);
+                AddInventorySlot(inventorySlot);
+            }
+            return returnList;
+        }
+
+        private void AddInventorySlot(InventorySlot inventorySlot) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddInventorySlot() count: {inventorySlots.Count}");
+
+            inventorySlots.Add(inventorySlot);
+            inventorySlot.OnAddItem += HandleAddItemToInventorySlot;
+            inventorySlot.OnRemoveItem += HandleRemoveItemFromInventorySlot;
+            OnAddInventorySlot(inventorySlot);
+        }
+
+        private void HandleRemoveItemFromInventorySlot(InventorySlot slot, InstantiatedItem instantiatedItem) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.HandleRemoveItemFromInventorySlot({instantiatedItem.Item.ResourceName})");
+
+            weight -= instantiatedItem.Item.Weight;
+            NotifyOnItemCountChanged(instantiatedItem.Item);
+            unitController.UnitEventController.NotifyOnRemoveItemFromInventorySlot(slot, instantiatedItem);
+            CalculateEncumbered();
+            unitController.UnitEventController.NotifyOnCarryWeightChanged();
+        }
+
+        private void HandleAddItemToInventorySlot(InventorySlot slot, InstantiatedItem instantiatedItem) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.HandleAddItemToInventorySlot({slot.GetCurrentInventorySlotIndex(unitController)}, {instantiatedItem.Item.ResourceName})");
+
+            weight += instantiatedItem.Item.Weight;
+            NotifyOnItemCountChanged(instantiatedItem.Item);
+            unitController.UnitEventController.NotifyOnAddItemToInventorySlot(slot, instantiatedItem);
+            CalculateEncumbered();
+            unitController.UnitEventController.NotifyOnCarryWeightChanged();
+        }
+
+        public void CalculateEncumbered() {
+            float totalWeight = weight + unitController.CharacterEquipmentManager.EquippedWeight;
+            if (totalWeight > systemConfigurationManager.BaseCarryWeight + unitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue) {
+                unitController.SetEncumbered(true);
+            } else {
+                unitController.SetEncumbered(false);
+            }
+        }
+
+        private void RemoveInventorySlot(InventorySlot inventorySlot) {
+            inventorySlots.Remove(inventorySlot);
+            inventorySlot.OnAddItem -= HandleAddItemToInventorySlot;
+            inventorySlot.OnRemoveItem -= HandleRemoveItemFromInventorySlot;
+            OnRemoveInventorySlot(inventorySlot);
+        }
+
+        private void AddBankSlot(InventorySlot inventorySlot) {
+            bankSlots.Add(inventorySlot);
+            inventorySlot.OnAddItem += HandleAddItemToBankSlot;
+            inventorySlot.OnRemoveItem += HandleRemoveItemFromBankSlot;
+            OnAddBankSlot(inventorySlot);
+        }
+
+        private void RemoveBankSlot(InventorySlot inventorySlot) {
+            bankSlots.Remove(inventorySlot);
+            inventorySlot.OnAddItem -= HandleAddItemToBankSlot;
+            inventorySlot.OnRemoveItem -= HandleRemoveItemFromBankSlot;
+            OnRemoveBankSlot(inventorySlot);
+        }
+
+        private void HandleRemoveItemFromBankSlot(InventorySlot slot, InstantiatedItem item) {
+            unitController.UnitEventController.NotifyOnRemoveItemFromBankSlot(slot, item);
+
+        }
+
+        private void HandleAddItemToBankSlot(InventorySlot slot, InstantiatedItem item) {
+            unitController.UnitEventController.NotifyOnAddItemToBankSlot(slot, item);
+        }
+
+        public List<InventorySlot> AddBankSlots(int numSlots) {
+            //Debug.Log("CharacterInventoryManager.AddBankSlots(" + numSlots + ")");
+            List<InventorySlot> returnList = new List<InventorySlot>();
+            for (int i = 0; i < numSlots; i++) {
+                InventorySlot inventorySlot = new InventorySlot(systemGameManager);
+                returnList.Add(inventorySlot);
+                AddBankSlot(inventorySlot);
+            }
+            return returnList;
+        }
+
+        public void ClearSlots(List<InventorySlot> clearSlots) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.ClearSlots()");
+
+            foreach (InventorySlot inventorySlot in clearSlots) {
+                if (inventorySlots.Contains(inventorySlot)) {
+                    RemoveInventorySlot(inventorySlot);
+                }
+                if (bankSlots.Contains(inventorySlot)) {
+                    RemoveBankSlot(inventorySlot);
+                }
+            }
+        }
+
+
+        public void PerformSetupActivities() {
+            InitializeDefaultInventorySlots();
+            InitializeDefaultBankSlots();
+            InitializeBagNodes();
+            InitializeBankNodes();
+        }
+
+        public void InitializeDefaultInventorySlots() {
+            for (int i = 0; i < systemConfigurationManager.DefaultInventorySlots; i++) {
+                InventorySlot inventorySlot = new InventorySlot(systemGameManager);
+                AddInventorySlot(inventorySlot);
+            }
+        }
+
+        public void InitializeDefaultBankSlots() {
+            for (int i = 0; i < systemConfigurationManager.DefaultBankSlots; i++) {
+                InventorySlot inventorySlot = new InventorySlot(systemGameManager);
+                AddBankSlot(inventorySlot);
+            }
+        }
+
+        public void InitializeBagNodes() {
+            //Debug.Log("InventoryManager.InitializeBagNodes()");
+            if (bagNodes.Count > 0) {
+                //Debug.Log("InventoryManager.InitializeBagNodes(): already initialized.  exiting!");
+                return;
+            }
+            for (int i = 0; i < systemConfigurationManager.MaxInventoryBags; i++) {
+                BagNode bagNode = new BagNode(this, false, i);
+                bagNodes.Add(bagNode);
+                OnAddInventoryBagNode(bagNode);
+            }
+        }
+
+        public void InitializeBankNodes() {
+            //Debug.Log("InventoryManager.InitializeBagNodes()");
+            if (bankNodes.Count > 0) {
+                //Debug.Log("InventoryManager.InitializeBagNodes(): already initialized.  exiting!");
+                return;
+            }
+            for (int i = 0; i < systemConfigurationManager.MaxBankBags; i++) {
+                BagNode bagNode = new BagNode(this, true, i);
+                bankNodes.Add(bagNode);
+                OnAddBankBagNode(bagNode);
+            }
+        }
+
+
+        public (bool, BagNode) AddInventoryBag(InstantiatedBag instantiatedBag) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddInventoryBag({instantiatedBag.ResourceName})");
+
+            foreach (BagNode bagNode in bagNodes) {
+                if (bagNode.InstantiatedBag == null) {
+                    PopulateBagNode(bagNode, instantiatedBag);
+                    return (true, bagNode);
+                }
+            }
+            return (false, null);
+        }
+
+        public (bool, BagNode) AddBankBag(InstantiatedBag instantiatedBag) {
+            //Debug.Log("InventoryManager.AddBankBag(" + bag.DisplayName + ")");
+            foreach (BagNode bagNode in bankNodes) {
+                if (bagNode.InstantiatedBag == null) {
+                    PopulateBagNode(bagNode, instantiatedBag);
+                    return (true, bagNode);
+                }
+            }
+            return (false, null);
+        }
+
+        public void AddBag(InstantiatedBag instantiatedBag, BagNode bagNode) {
+            //Debug.Log("CharacterInventoryManager.AddBag(Bag, BagNode)");
+            PopulateBagNode(bagNode, instantiatedBag);
+            unitController.UnitEventController.NotifyOnAddBag(instantiatedBag, bagNode);
+        }
+
+        private void PopulateBagNode(BagNode bagNode, InstantiatedBag instantiatedBag) {
+            if (instantiatedBag != null) {
+                bagNode.AddBag(instantiatedBag);
+            }
+        }
+
+        /// <summary>
+        /// Removes the bag from the inventory
+        /// </summary>
+        /// <param name="instantiatedBag"></param>
+        public void RemoveBag(InstantiatedBag instantiatedBag, bool clearOnly = false) {
+            //Debug.Log("InventoryManager.RemoveBag(" + bag.DisplayName + ", " + clearOnly + ")");
+            foreach (BagNode bagNode in bagNodes) {
+                if (bagNode.InstantiatedBag == instantiatedBag) {
+                    ProcessRemovebag(bagNode, instantiatedBag, false, clearOnly);
+                    return;
+                }
+            }
+            foreach (BagNode bagNode in bankNodes) {
+                if (bagNode.InstantiatedBag == instantiatedBag) {
+                    ProcessRemovebag(bagNode, instantiatedBag, true, clearOnly);
+                    return;
+                }
+            }
+        }
+
+        public void ProcessRemovebag(BagNode bagNode, InstantiatedBag instantiatedBag, bool bankNode, bool clearOnly) {
+            // give the old bagNode a temp location so we can add its items back to the inventory
+            //BagPanel tmpBagPanel = bagNode.BagPanel;
+
+            // make item list before nulling the bag, because that will clear the pane slots
+            List<InstantiatedItem> itemsToAddBack = new List<InstantiatedItem>();
+            foreach (InstantiatedItem instantiatedItem in bagNode.GetItems()) {
+                itemsToAddBack.Add(instantiatedItem);
+            }
+
+            // null the bag so the items won't get added back, as we are trying to empty it so we can remove it
+            bagNode.RemoveBag();
+
+            if (!clearOnly) {
+                // bag is now gone, can add items back to inventory and they won't go back in that bag
+                foreach (InstantiatedItem instantiatedItem in itemsToAddBack) {
+                    AddItem(instantiatedItem, bankNode);
+                }
+            }
+
+            // remove references the bag held to the node it belonged to and the panel it spawned
+            if (instantiatedBag != null) {
+                if (instantiatedBag.BagNode != null) {
+                    instantiatedBag.BagNode = null;
+                }
+            }
+            unitController.UnitEventController.NotifyOnRemoveBag(instantiatedBag);
+        }
+
+        public void RequestSwapBags(InstantiatedBag oldInstantiatedBag, InstantiatedBag newInstantiatedBag) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                SwapEquippedOrUnequippedBags(oldInstantiatedBag, newInstantiatedBag);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestSwapBags(oldInstantiatedBag, newInstantiatedBag);
+            }
+        }
+
+        public void SwapEquippedOrUnequippedBags(InstantiatedBag oldInstantiatedBag, InstantiatedBag newInstantiatedBag) {
+            if (oldInstantiatedBag.BagNode != null && newInstantiatedBag.BagNode != null) {
+                SwapEquippedBags(oldInstantiatedBag, newInstantiatedBag);
+            } else {
+                SwapBags(oldInstantiatedBag, newInstantiatedBag);
+            }
+        }
+
+        public void SwapEquippedBags(InstantiatedBag oldInstantiatedBag, InstantiatedBag newInstantiatedBag) {
+            int newSlotCount = TotalSlotCount - (oldInstantiatedBag.Slots + newInstantiatedBag.Slots);
+
+            // if there will not be enough space in the inventory after the bag swap, don't swap
+            if (newSlotCount - FullSlotCount < 0) {
+                return;
+            }
+
+            BagNode oldBagNode = oldInstantiatedBag.BagNode;
+            BagNode newBagNode = newInstantiatedBag.BagNode;
+
+            RemoveBag(oldInstantiatedBag);
+            RemoveBag(newInstantiatedBag);
+            AddBag(oldInstantiatedBag, newBagNode);
+            AddBag(newInstantiatedBag, oldBagNode);
+        }
+
+        public void SwapBags(InstantiatedBag oldInstantiatedBag, InstantiatedBag newInstantiatedBag) {
+            int newSlotCount = (TotalSlotCount - oldInstantiatedBag.Slots) + newInstantiatedBag.Slots;
+
+            // if there will not be enough space in the inventory after the bag swap, don't swap
+            if (newSlotCount - FullSlotCount < 0) {
+                return;
+            }
+
+            // check if the new bag is in the old bag
+            bool bagInBag = false;
+            if (oldInstantiatedBag.BagNode.InventorySlots.Contains(newInstantiatedBag.Slot)) {
+                bagInBag = true;
+            }
+
+            // do swap
+            //List<Item> bagItems = oldBag.MyBagPanel.GetItems();
+            List<InstantiatedItem> instantiatedBagItems = oldInstantiatedBag.BagNode.GetItems();
+
+            BagNode oldBagNode = oldInstantiatedBag.BagNode;
+            InventorySlot oldSlot = newInstantiatedBag.Slot;
+            //newBag.BagNode = oldBag.BagNode;
+            bool isBankNode = oldInstantiatedBag.BagNode.IsBankNode;
+
+            // remove bag and do not add items back since the new bag hasn't been added yet and the inventory may not have the space
+            RemoveBag(oldInstantiatedBag, true);
+
+            // clear the slot the new bag is in so the bag doesn't get duplicated
+            //newInstantiatedBag.Slot.Clear();
+            newInstantiatedBag.Remove();
+
+            // make space by adding the new bag
+            AddBag(newInstantiatedBag, oldBagNode);
+
+            if (bagInBag == false) {
+                // add the old bag into the same inventory slot
+                oldSlot.AddItem(oldInstantiatedBag);
+            } else {
+                // add the old bag into any available inventory slot
+                AddItem(oldInstantiatedBag, isBankNode);
+            }
+
+            // add items back now that the space exists
+            foreach (InstantiatedItem instantiatedItem in instantiatedBagItems) {
+                if (instantiatedItem != newInstantiatedBag) {
+                    AddItem(instantiatedItem, newInstantiatedBag.BagNode.IsBankNode);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds an item to the inventory
+        /// </summary>
+        /// <param name="instantiatedItem"></param>
+        public bool AddItem(InstantiatedItem instantiatedItem, bool addToBank, bool performUniqueCheck = true) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddItem({(instantiatedItem == null ? "null" : instantiatedItem.DisplayName)}, {addToBank})");
+
+            if (instantiatedItem == null) {
+                return false;
+            }
+            if (performUniqueCheck == true && instantiatedItem.Item.UniqueItem == true && GetItemCount(instantiatedItem.Item.ResourceName) > 0) {
+                unitController.UnitEventController.NotifyOnWriteMessageFeedMessage($"{instantiatedItem.DisplayName} is unique.  You can only carry one at a time.");
+                return false;
+            }
+            if (instantiatedItem.Item.MaximumStackSize > 0) {
+                if (PlaceInStack(instantiatedItem, addToBank)) {
+                    return true;
+                }
+            }
+            //Debug.Log("About to attempt placeInEmpty");
+            return PlaceInEmpty(instantiatedItem, addToBank);
+        }
+
+        public bool AddInventoryItem(InstantiatedItem instantiatedItem, InventorySlot inventorySlot) {
+            return inventorySlot.AddItem(instantiatedItem);
+        }
+
+        public bool AddInventoryItem(InstantiatedItem instantiatedItem, int slotIndex) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddInventoryItem({instantiatedItem.ResourceName}, {slotIndex})");
+
+            if (inventorySlots.Count > slotIndex) {
+                return inventorySlots[slotIndex].AddItem(instantiatedItem);
+            }
+            return AddItem(instantiatedItem, false);
+        }
+
+        public bool AddBankItem(InstantiatedItem instantiatedItem, int slotIndex) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddBankItem({instantiatedItem.ResourceName}, {slotIndex})");
+
+            if (bankSlots.Count > slotIndex) {
+                return bankSlots[slotIndex].AddItem(instantiatedItem);
+            }
+            return AddItem(instantiatedItem, true);
+        }
+
+        public void RemoveInventoryItem(InstantiatedItem instantiatedItem, int slotIndex) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RemoveInventoryItem({instantiatedItem.ResourceName}, {slotIndex})");
+
+            if (inventorySlots.Count > slotIndex) {
+                inventorySlots[slotIndex].RemoveItem(instantiatedItem);
+            }
+        }
+
+        public void RemoveBankItem(InstantiatedItem instantiatedItem, int slotIndex) {
+            if (bankSlots.Count > slotIndex) {
+                bankSlots[slotIndex].RemoveItem(instantiatedItem);
+            }
+        }
+
+        public void RemoveInventoryItem(InstantiatedItem instantiatedItem) {
+            foreach (InventorySlot slot in inventorySlots) {
+                if (!slot.IsEmpty && slot.InstantiatedItem == instantiatedItem) {
+                    slot.RemoveItem(instantiatedItem);
+                    return;
+                }
+            }
+        }
+
+        public void RemoveInventoryItem(long itemInstanceId) {
+            foreach (InventorySlot slot in inventorySlots) {
+                if (!slot.IsEmpty && slot.InstantiatedItem.InstanceId == itemInstanceId) {
+                    slot.RemoveItem(slot.InstantiatedItem);
+                    return;
+                }
+            }
+        }
+
+        private bool PlaceInEmpty(InstantiatedItem instantiatedItem, bool addToBank) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.PlaceInEmpty({instantiatedItem.ResourceName}, {addToBank})");
+
+            int slotIndex = 0;
+            if (addToBank == true) {
+                foreach (InventorySlot inventorySlot in bankSlots) {
+                    //Debug.Log($"CharacterInventoryManager.PlaceInEmpty({instantiatedItem.ResourceName}): checking slot");
+                    if (inventorySlot.IsEmpty) {
+                        //Debug.Log($"CharacterInventoryManager.PlaceInEmpty({instantiatedItem.ResourceName}): checking slot: its empty.  adding item");
+                        inventorySlot.AddItem(instantiatedItem);
+                        unitController.UnitEventController.NotifyOnPlaceInEmpty(instantiatedItem, addToBank, slotIndex);
+                        return true;
+                    }
+                    slotIndex++;
+                }
+            } else {
+                foreach (InventorySlot inventorySlot in inventorySlots) {
+                    //Debug.Log($"CharacterInventoryManager.PlaceInEmpty({instantiatedItem.ResourceName}): checking slot");
+                    if (inventorySlot.IsEmpty) {
+                        //Debug.Log($"CharacterInventoryManager.PlaceInEmpty({instantiatedItem.ResourceName}): checking slot: its empty.  adding item");
+                        inventorySlot.AddItem(instantiatedItem);
+                        unitController.UnitEventController.NotifyOnPlaceInEmpty(instantiatedItem, addToBank, slotIndex);
+                        return true;
+                    }
+                    slotIndex++;
+                }
+            }
+            if (EmptySlotCount(addToBank) == 0) {
+                //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.PlaceInEmpty({instantiatedItem.ResourceName}, {addToBank}): no empty slots");
+                unitController.UnitEventController.NotifyOnWriteMessageFeedMessage($"{(addToBank == false ? "Inventory" : "Bank")} is full!");
+            }
+            return false;
+        }
+
+        private (int, bool) CanPlaceInStackOrEmpty(InstantiatedItem instantiatedItem, bool addToBank) {
+            int slotIndex = 0;
+            if (addToBank == false) {
+                foreach (InventorySlot inventorySlot in inventorySlots) {
+                    if (inventorySlot.CanStackOrEmptyItem(instantiatedItem) == true) {
+                        return (slotIndex, true);
+                    }
+                    slotIndex++;
+                }
+            } else {
+                foreach (InventorySlot inventorySlot in bankSlots) {
+                    if (inventorySlot.CanStackOrEmptyItem(instantiatedItem) == true) {
+                        return (slotIndex, true);
+                    }
+                    slotIndex++;
+                }
+            }
+
+            return (-1, false);
+        }
+
+        private bool PlaceInStack(InstantiatedItem instantiatedItem, bool addToBank) {
+            int slotIndex = 0;
+            if (addToBank == false) {
+                foreach (InventorySlot inventorySlot in inventorySlots) {
+                    if (PlaceInStack(inventorySlot, slotIndex, instantiatedItem, addToBank) == true) {
+                        return true;
+                    }
+                    slotIndex++;
+                }
+            } else {
+                foreach (InventorySlot inventorySlot in bankSlots) {
+                    if (PlaceInStack(inventorySlot, slotIndex, instantiatedItem, addToBank) == true) {
+                        return true;
+                    }
+                    slotIndex++;
+                }
+            }
+
+            return false;
+        }
+
+        public void PlaceInStack(int slotIndex, InstantiatedItem instantiatedItem, bool addToBank) {
+            if (addToBank == false) {
+                if (inventorySlots.Count > slotIndex) {
+                    PlaceInStack(inventorySlots[slotIndex], slotIndex, instantiatedItem, addToBank);
+                }
+            } else {
+                if (bankSlots.Count > slotIndex) {
+                    PlaceInStack(inventorySlots[slotIndex], slotIndex, instantiatedItem, addToBank);
+                }
+            }
+        }
+
+
+        private bool PlaceInStack(InventorySlot inventorySlot, int slotIndex, InstantiatedItem instantiatedItem, bool addToBank) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.PlaceInStack({slotIndex}, {instantiatedItem.Item.ResourceName}, {addToBank})");
+
+            if (inventorySlot.StackItem(instantiatedItem)) {
+                unitController.UnitEventController.NotifyOnPlaceInStack(instantiatedItem, addToBank, slotIndex);
+                return true;
+            }
+            return false;
+        }
+
+        /*
+        public IUseable GetUseable(IUseable useable) {
+            //IUseable useable = new Stack<IUseable>();
+            foreach (BagNode bagNode in bagNodes) {
+                if (bagNode.Bag != null) {
+                    foreach (SlotScript slot in bagNode.InventorySlots) {
+                        if (!slot.IsEmpty && SystemDataUtility.MatchResource(slot.Item.DisplayName, useable.DisplayName)) {
+                            return (slot.Item as IUseable);
+                        }
+                    }
+                }
+            }
+            return null;
+            //return useables;
+        }
+        */
+
+        public int GetUseableCount(IUseable useable) {
+            int count = 0;
+            foreach (InventorySlot slot in inventorySlots) {
+                if (!slot.IsEmpty && SystemDataUtility.MatchResource(slot.InstantiatedItem.Item.ResourceName, useable.ResourceName)) {
+                    count += slot.Count;
+                }
+            }
+            return count;
+        }
+
+        public void NotifyOnItemCountChanged(Item item) {
+            unitController.UnitEventController.NotifyOnItemCountChanged(item);
+        }
+
+        public int GetItemCount(string type, bool partialMatch = false) {
+            //Debug.Log("InventoryManager.GetItemCount(" + type + ")");
+            int itemCount = 0;
+
+            foreach (InventorySlot slot in inventorySlots) {
+                if (!slot.IsEmpty && SystemDataUtility.MatchResource(slot.InstantiatedItem.Item.ResourceName, type, partialMatch)) {
+                    itemCount += slot.Count;
+                }
+            }
+            foreach (InventorySlot slot in bankSlots) {
+                if (!slot.IsEmpty && SystemDataUtility.MatchResource(slot.InstantiatedItem.Item.ResourceName, type, partialMatch)) {
+                    itemCount += slot.Count;
+                }
+            }
+
+            return itemCount;
+        }
+
+        public List<InstantiatedItem> GetItems(string itemType, int count) {
+            //Debug.Log("InventoryManager.GetItems(" + itemType + ", " + count + ")");
+            List<InstantiatedItem> instantiatedItems = new List<InstantiatedItem>();
+            foreach (InventorySlot slot in inventorySlots) {
+                //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag and we are looking in a slotscript");
+                if (!slot.IsEmpty && SystemDataUtility.MatchResource(slot.InstantiatedItem.Item.ResourceName, itemType)) {
+                    //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag and we are looking in a slotscript and the slot is not empty and it matches");
+                    foreach (InstantiatedItem instantiatedItem in slot.InstantiatedItems.Values) {
+                        //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag and we are looking in a slotscript and the slot is not empty and it matches and we are ading and item");
+                        instantiatedItems.Add(instantiatedItem);
+                        if (instantiatedItems.Count == count) {
+                            //Debug.Log("InventoryManager.GetItems() return items with count: " + items.Count);
+                            return instantiatedItems;
+                        }
+                    }
+                }
+            }
+            return instantiatedItems;
+        }
+
+        /*
+        public List<SlotScript> GetSlots() {
+            List<SlotScript> items = new List<SlotScript>();
+            foreach (BagNode bagNode in bagNodes) {
+                if (bagNode.Bag != null) {
+                    foreach (SlotScript slot in bagNode.InventorySlots) {
+                        items.Add(slot);
+                    }
+                }
+            }
+            return items;
+        }
+        */
+
+        /*
+        /// <summary>
+        /// Get a new instantiated Item
+        /// </summary>
+        /// <param name="resourceName"></param>
+        /// <returns></returns>
+        public InstantiatedItem GetNewInstantiatedItemFromSaveData(Item item, InventorySlotSaveData inventorySlotSaveData) {
+            //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
+            long itemInstanceId = systemItemManager.GetNewItemInstanceId();
+            return GetNewInstantiatedItemFromSaveData(itemInstanceId, item, inventorySlotSaveData);
+        }
+        */
+
+
+        public InstantiatedItem GetNewInstantiatedItem(string itemName) {
+            //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
+
+            return GetNewInstantiatedItem(itemName, null);
+        }
+
+        public InstantiatedItem GetNewInstantiatedItem(string itemName, ItemQuality itemQuality) {
+            //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
+            Item item = systemDataFactory.GetResource<Item>(itemName);
+            if (item == null) {
+                return null;
+            }
+            return GetNewInstantiatedItem(item, itemQuality, null);
+        }
+
+        public InstantiatedItem GetNewInstantiatedItem(Item item) {
+            return GetNewInstantiatedItem(item, null, null);
+        }
+
+        public InstantiatedItem GetNewInstantiatedItem(Item item, ItemQuality itemQuality) {
+            return GetNewInstantiatedItem(item, itemQuality, null);
+        }
+
+        public InstantiatedItem GetNewInstantiatedItem(Item item, ItemQuality itemQuality, IInstantiatedItemRequestor requestor) {
+            //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
+            InstantiatedItem instantiatedItem = systemItemManager.GetNewInstantiatedItem(item, itemQuality);
+            //instantiatedItem.InitializeNewItem(itemQuality);
+            instantiatedItem.DropLevel = unitController.CharacterStats.Level;
+            if (requestor != null) {
+                requestor.InitializeItem(instantiatedItem);
+            }
+            //instantiatedItems.Add(instantiatedItem.InstanceId, instantiatedItem);
+            unitController.UnitEventController.NotifyOnGetNewInstantiatedItem(instantiatedItem);
+            return instantiatedItem;
+        }
+
+        public InstantiatedItem GetNewInstantiatedItemFromSaveData(ItemInstanceSaveData itemInstanceSaveData) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData({inventorySlotSaveData.ItemName})");
+
+            return GetNewInstantiatedItemFromSaveData(itemInstanceSaveData, itemInstanceSaveData.ItemInstanceId);
+        }
+
+        public InstantiatedItem GetNewInstantiatedItemFromSaveData(ItemInstanceSaveData itemInstanceSaveData, long itemInstanceId) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData({inventorySlotSaveData.ItemName})");
+
+            if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId)) {
+                //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData() item already exists in instantiated items");
+                return systemItemManager.InstantiatedItems[itemInstanceId];
+            }
+
+            Item item = null;
+            if (itemInstanceSaveData.ItemName == "System Currency Loot Item") {
+                item = lootManager.CurrencyLootItem;
+            } else {
+                item = systemDataFactory.GetResource<Item>(itemInstanceSaveData.ItemName);
+            }
+            if (item == null) {
+                return null;
+            }
+            return GetNewInstantiatedItemFromSaveData(item, itemInstanceSaveData);
+        }
+
+        public InstantiatedItem GetNewInstantiatedItemFromSaveData(Item item, ItemInstanceSaveData itemInstanceSaveData) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData({item.ResourceName})");
+
+            ItemQuality usedItemQuality = null;
+            if (itemInstanceSaveData.ItemQuality != null && itemInstanceSaveData.ItemQuality != string.Empty) {
+                usedItemQuality = systemDataFactory.GetResource<ItemQuality>(itemInstanceSaveData.ItemQuality);
+            }
+            InstantiatedItem instantiatedItem = systemItemManager.GetNewInstantiatedItem(itemInstanceSaveData.ItemInstanceId, item, usedItemQuality);
+            //instantiatedItem.InitializeNewItem(usedItemQuality);
+            instantiatedItem.LoadSaveData(itemInstanceSaveData);
+
+            //instantiatedItems.Add(instantiatedItem.InstanceId, instantiatedItem);
+            return instantiatedItem;
+        }
+
+        public InstantiatedBag GetInstantiatedBagFromSaveData(EquippedBagSaveData equippedBagSaveData) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData({itemInstanceId}, {itemName})");
+
+            if (equippedBagSaveData.HasItem == false) {
+                return null;
+            }
+
+            if (systemItemManager.InstantiatedItems.ContainsKey(equippedBagSaveData.ItemInstanceId)) {
+                //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData() item already exists in instantiated items");
+                return systemItemManager.InstantiatedItems[equippedBagSaveData.ItemInstanceId] as InstantiatedBag;
+            }
+            return null;
+        }
+
+        public InstantiatedEquipment GetInstantiatedEquipmentFromSaveData(EquipmentInventorySlotSaveData equipmentSaveData) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData({equipmentSaveData.EquipmentName}({equipmentSaveData.itemInstanceId}))");
+
+            if (equipmentSaveData.HasItem == false) {
+                return null;
+            }
+
+            if (systemItemManager.InstantiatedItems.ContainsKey(equipmentSaveData.ItemInstanceId)) {
+                //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData() item already exists in instantiated items");
+                return systemItemManager.InstantiatedItems[equipmentSaveData.ItemInstanceId] as InstantiatedEquipment;
+            }
+            return null;
+        }
+
+        public void RequestDeleteItem(InstantiatedItem instantiatedItem) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // currently this only gets called from the hand script
+                DeleteItem(instantiatedItem);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestDeleteItem(instantiatedItem);
+            }
+        }
+
+        public void DeleteItem(long instanceId) {
+            if (systemItemManager.InstantiatedItems.ContainsKey(instanceId)) {
+                DeleteItem(systemItemManager.InstantiatedItems[instanceId]);
+            }
+        }
+
+        public void DeleteItem(InstantiatedItem instantiatedItem) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.DeleteItem({instantiatedItem.InstanceId}({instantiatedItem.ResourceName}))");
+
+            List<InstantiatedItem> itemsToRemove = new List<InstantiatedItem>();
+            if (instantiatedItem.Slot != null) {
+                //instantiatedItem.Slot.Clear();
+                foreach (InstantiatedItem item in instantiatedItem.Slot.InstantiatedItems.Values) {
+                    itemsToRemove.Add(item);
+                }
+                instantiatedItem.Slot.RemoveAllItems();
+                NotifyOnItemCountChanged(instantiatedItem.Item);
+            } else {
+                // first we want to get this items equipment slot
+                // next we want to query the equipmentmanager on the charcter to see if he has an item in this items slot, and if it is the item we are dropping
+                // if it is, then we will unequip it, and then destroy it
+                if (instantiatedItem is InstantiatedEquipment) {
+                    unitController.CharacterEquipmentManager.Unequip(instantiatedItem as InstantiatedEquipment);
+                    if (instantiatedItem.Slot != null) {
+                        foreach (InstantiatedItem item in instantiatedItem.Slot.InstantiatedItems.Values) {
+                            itemsToRemove.Add(item);
+                        }
+                        instantiatedItem.Slot.RemoveAllItems();
+                        NotifyOnItemCountChanged(instantiatedItem.Item);
+                    }
+                    unitController.UnitModelController.RebuildModelAppearance();
+                }
+            }
+
+            if (networkManagerServer.ServerModeActive == true) {
+                foreach (InstantiatedItem instantiatedItemToRemove in itemsToRemove) {
+                    serverDataService.DeleteItemInstance(instantiatedItemToRemove);
+                }
+            }
+            //unitController.UnitEventController.NotifyOnDeleteItem(instantiatedItem);
+            messageLogServer.WriteSystemMessage(unitController, $"Destroyed {instantiatedItem.DisplayName}");
+        }
+
+        public void RequestDropItemOnGround(InventorySlot inventorySlot) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                DropItemOnGround(inventorySlot);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestDropItemOnGround(inventorySlot.GetCurrentInventorySlotIndex(unitController));
+            }
+        }
+
+        public void DropItemOnGround(int inventorySlotIndex) {
+            if (inventorySlots.Count > inventorySlotIndex) {
+                DropItemOnGround(inventorySlots[inventorySlotIndex]);
+            }
+        }
+
+        public void DropItemOnGround(InventorySlot inventorySlot) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround()");
+            if (inventorySlot.IsEmpty) {
+                return;
+            }
+            if (inventorySlot.InstantiatedItem?.Item?.ItemPickupPrefabProfile == null) {
+                return;
+            }
+            List<InstantiatedItem> itemsToDrop = new List<InstantiatedItem>();
+            foreach (InstantiatedItem instantiatedItem in inventorySlot.InstantiatedItems.Values) {
+                itemsToDrop.Add(instantiatedItem);
+            }
+            inventorySlot.RemoveAllItems();
+
+            if (systemConfigurationManager.SplitStacksOnDrop == true) {
+                foreach (InstantiatedItem instantiatedItem in itemsToDrop) {
+                    List<InstantiatedItem> singleItemList = new List<InstantiatedItem>();
+                    singleItemList.Add(instantiatedItem);
+                    DropItemsOnGround(singleItemList);
+                }
+            } else {
+                DropItemsOnGround(itemsToDrop);
+            }
+        }
+
+        private void DropItemsOnGround(List<InstantiatedItem> itemsToDrop) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemsOnGround(count: {itemsToDrop.Count})");
+
+            GameObject droppedPrefab = null;
+            // spawn the item drop prefab for each item we are dropping
+            if (systemGameManager.GameMode == GameMode.Local) {
+                droppedPrefab = objectPooler.GetPooledObject(systemGameManager.DroppedItemPrefab, unitController.transform.position, Quaternion.identity, null);
+            } else {
+                droppedPrefab = networkManagerServer.SpawnDroppedItem(unitController.gameObject.scene, unitController.transform.position, Quaternion.identity);
+            }
+            if (droppedPrefab == null) {
+                Debug.LogWarning($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() could not spawn dropped item prefab");
+                return;
+            }
+            if (systemGameManager.GameMode == GameMode.Local) {
+                droppedPrefab.transform.position = unitController.transform.position;
+            }
+            SceneManager.MoveGameObjectToScene(droppedPrefab, unitController.gameObject.scene);
+            UUID uuidComponent = droppedPrefab.GetComponent<UUID>();
+            if (uuidComponent != null) {
+                // generate a new uuid for this dropped item so it doesn't conflict with the UUID of the prefab it was spawned from
+                uuidComponent.ForceUpdateUUID = true;
+            }
+            Interactable _interactable = droppedPrefab.GetComponent<Interactable>();
+            if (_interactable == null) {
+                Debug.LogWarning($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() could not find interactable component on dropped item prefab");
+                return;
+            }
+            _interactable.Configure(systemGameManager);
+            _interactable.PersistentObjectComponent.MoveOnStart = false;
+            DroppedItemComponent droppedItemComponent = _interactable.GetFirstInteractableOption(typeof(DroppedItemComponent)) as DroppedItemComponent;
+            if (droppedItemComponent != null) {
+                droppedItemComponent.SetDroppedItems(itemsToDrop);
+            } else {
+                Debug.LogWarning($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() could not find DroppedItemComponent on dropped item prefab");
+            }
+            levelManagerServer.RegisterDroppedItem(_interactable);
+            _interactable.Init();
+
+            if (droppedItemComponent.Rigidbody != null) {
+                // 1. Reset everything
+                // first, move the object up so that the bottom of the object collider bounds is at the player's feet, so it doesn't drop through the ground when spawned
+                float yOffset = droppedItemComponent.BoxCollider.bounds.extents.y;
+                droppedItemComponent.Rigidbody.position = new Vector3(droppedItemComponent.Rigidbody.position.x, droppedItemComponent.Rigidbody.position.y + yOffset, droppedItemComponent.Rigidbody.position.z);
+
+                // move the object up by half the character height so it looks like we are dropping it from the character's hands instead of the ground
+                droppedItemComponent.Rigidbody.position += Vector3.up * (unitController.Collider.bounds.extents.y);
+                droppedItemComponent.Rigidbody.linearVelocity = Vector3.zero;
+                droppedItemComponent.Rigidbody.angularVelocity = Vector3.zero;
+                // 2. Calculate a random angle within a 45-degree arc to the left or right (-45 to 45)
+                float randomAngle = UnityEngine.Random.Range(-45f, 45f);
+
+                // 3. Rotate the player's forward vector by that random angle
+                // This ensures the spread is always relative to where the player is facing
+                Vector3 spreadDirection = Quaternion.Euler(0, randomAngle, 0) * unitController.transform.forward;
+                //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() randomAngle: {randomAngle}, spreadDirection: {spreadDirection} forward: {unitController.transform.forward}");
+
+                // 4. Add a smaller upward lift
+                // A 0.4f lift is enough to clear the ground without launching it too high
+                Vector3 jumpDirection = (spreadDirection + Vector3.up * 0.4f).normalized;
+                //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() jumpDirection: {jumpDirection}");
+
+                // 5. Set the speed for a ~1 meter landing
+                // Since we lowered the arc, a speed of ~3.2m/s is the "sweet spot" for 1m distance
+                float jumpSpeed = 3.2f;
+                droppedItemComponent.Rigidbody.linearVelocity = jumpDirection * jumpSpeed;
+
+                // 6. Gentle spin
+                droppedItemComponent.Rigidbody.angularVelocity = UnityEngine.Random.insideUnitSphere * 2f;
+            }
+
+        }
+
+        public void RequestDropItemFromInventorySlot(InventorySlot fromSlot, InventorySlot toSlot, bool fromSlotIsInventory, bool toSlotIsInventory) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestDropItemFromInventorySlot()");
+
+            unitController.UnitEventController.NotifyOnRequestDropItemFromInventorySlot(fromSlot, toSlot, fromSlotIsInventory, toSlotIsInventory);
+            if (systemGameManager.GameMode == GameMode.Local) {
+                DropItemFromInventorySlot(fromSlot, toSlot);
+            }
+        }
+
+        public void DropItemFromInventorySlot(int fromslotIndex, int toSlotIndex, bool fromSlotIsInventory, bool toSlotIsInventory) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemFromInventorySlot({fromslotIndex}, {toSlotIndex})");
+
+            if (fromSlotIsInventory) {
+                if (inventorySlots.Count <= fromslotIndex) {
+                    return;
+                }
+            } else {
+                if (bankSlots.Count <= fromslotIndex) {
+                    return;
+                }
+            }
+            if (toSlotIsInventory) {
+                if (inventorySlots.Count <= toSlotIndex) {
+                    return;
+                }
+            } else {
+                if (bankSlots.Count <= toSlotIndex) {
+                    return;
+                }
+            }
+            InventorySlot fromSlot;
+            InventorySlot toSlot;
+            if (fromSlotIsInventory) {
+                fromSlot = inventorySlots[fromslotIndex];
+            } else {
+                fromSlot = bankSlots[fromslotIndex];
+            }
+            if (toSlotIsInventory) {
+                toSlot = inventorySlots[toSlotIndex];
+            } else {
+                toSlot = bankSlots[toSlotIndex];
+            }
+            DropItemFromInventorySlot(fromSlot, toSlot);
+        }
+
+        public void DropItemFromInventorySlot(InventorySlot fromSlot, InventorySlot toSlot) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemFromInventorySlot()");
+
+            if (toSlot.MergeItems(fromSlot)) {
+                return;
+            }
+            if (toSlot.SwapItems(fromSlot)) {
+                return;
+            }
+
+            // merge and swap failed, so attempt to add items
+            toSlot.AddItems(fromSlot.InstantiatedItems.Values.ToList());
+
+        }
+
+        public void RequestMoveFromBankToInventory(InventorySlot inventorySlot) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                MoveFromBankToInventory(inventorySlot);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestMoveFromBankToInventory(inventorySlot.GetCurrentBankSlotIndex(unitController));
+            }
+        }
+
+        public void MoveFromBankToInventory(InventorySlot inventorySlot) {
+            List<InstantiatedItem> moveList = new List<InstantiatedItem>();
+            //Debug.Log("SlotScript.InteractWithSlot(): interacting with item in bank");
+            foreach (InstantiatedItem instantiatedItem in inventorySlot.InstantiatedItems.Values) {
+                moveList.Add(instantiatedItem);
+            }
+            foreach (InstantiatedItem instantiatedItem in moveList) {
+                if (AddItem(instantiatedItem, false, false)) {
+                    inventorySlot.RemoveItem(instantiatedItem);
+                }
+            }
+        }
+
+        public void MoveFromBankToInventory(int slotIndex) {
+            //Debug.Log($"CharacterInventoryManager.MoveFromBankToInventory({slotIndex})");
+
+            if (bankSlots.Count > slotIndex) {
+                MoveFromBankToInventory(bankSlots[slotIndex]);
+            }
+        }
+
+        public void RequestMoveFromInventoryToBank(InventorySlot inventorySlot) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                MoveFromInventoryToBank(inventorySlot);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestMoveFromInventoryToBank(inventorySlot.GetCurrentInventorySlotIndex(unitController));
+            }
+        }
+
+        public void MoveFromInventoryToBank(InventorySlot inventorySlot) {
+            List<InstantiatedItem> moveList = new List<InstantiatedItem>();
+            foreach (InstantiatedItem instantiatedItem in inventorySlot.InstantiatedItems.Values) {
+                moveList.Add(instantiatedItem);
+            }
+            foreach (InstantiatedItem instantiatedItem in moveList) {
+                if (AddItem(instantiatedItem, true, false)) {
+                    inventorySlot.RemoveItem(instantiatedItem);
+                }
+            }
+        }
+
+        public void MoveFromInventoryToBank(int slotIndex) {
+            //Debug.Log($"CharacterInventoryManager.MoveFromInventoryToBank({slotIndex})");
+
+            if (inventorySlots.Count > slotIndex) {
+                MoveFromInventoryToBank(inventorySlots[slotIndex]);
+            }
+        }
+
+        public void RequestUseItem(InventorySlot inventorySlot) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestUseItem()");
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                UseItem(inventorySlot);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestUseItem(inventorySlot.GetCurrentInventorySlotIndex(unitController));
+            }
+        }
+
+        public void UseItem(InventorySlot inventorySlot) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.UseItem()");
+
+            if (inventorySlot.InstantiatedItem != null) {
+                inventorySlot.UseItem(unitController);
+            }
+        }
+
+        public void UseItem(int slotIndex) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.UseItem({slotIndex})");
+
+            if (inventorySlots.Count > slotIndex) {
+                UseItem(inventorySlots[slotIndex]);
+            }
+        }
+
+        public void RequestUnequipBag(InstantiatedBag instantiatedBag, bool isBank) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestUnequipBag({instantiatedBag.DisplayName}, {isBank})");
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                UnequipBag(instantiatedBag, isBank);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestUnequipBag(instantiatedBag, isBank);
+            }
+        }
+
+        public void UnequipBag(InstantiatedBag instantiatedBag, bool isBank) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.UnequipBag({instantiatedBag.DisplayName}, {isBank})");
+
+            AddItem(instantiatedBag, isBank);
+            RemoveBag(instantiatedBag);
+        }
+
+        public void RequestUnequipBagToSlot(InstantiatedBag instantiatedBag, InventorySlot inventorySlot, bool isBankSlot) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestUnequipBag({instantiatedBag.DisplayName}, inventoryslot, {isBankSlot})");
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                UnequipBagToSlot(instantiatedBag, inventorySlot);
+            } else {
+                int slotIndex;
+                if (isBankSlot) {
+                    slotIndex = inventorySlot.GetCurrentBankSlotIndex(unitController);
+                } else {
+                    slotIndex = inventorySlot.GetCurrentInventorySlotIndex(unitController);
+                }
+
+                unitController.UnitEventController.NotifyOnRequestUnequipBagToSlot(instantiatedBag, slotIndex, isBankSlot);
+            }
+        }
+
+        public void UnequipBagToSlot(InstantiatedBag instantiatedBag, int slotIndex, bool isBank) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.UnequipBag({instantiatedBag.DisplayName}, {slotIndex}, {isBank})");
+
+            InventorySlot inventorySlot;
+            if (isBank && bankSlots.Count > slotIndex) {
+                inventorySlot = bankSlots[slotIndex];
+            } else if (isBank == false && inventorySlots.Count > slotIndex) {
+                inventorySlot = inventorySlots[slotIndex];
+            } else {
+                return;
+            }
+            UnequipBagToSlot(instantiatedBag, inventorySlot);
+        }
+
+        public void UnequipBagToSlot(InstantiatedBag instantiatedBag, InventorySlot inventorySlot) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.UnequipBag({instantiatedBag.DisplayName})");
+
+            inventorySlot.AddItem(instantiatedBag);
+            RemoveBag(instantiatedBag);
+        }
+
+        public void RequestMoveBag(InstantiatedBag bag, BagNode bagNode) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestMoveBag({bag.DisplayName}, {bagNode.NodeIndex})");
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                MoveBag(bag, bagNode);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestMoveBag(bag, bagNode.NodeIndex, bagNode.IsBankNode);
+            }
+        }
+
+        public void MoveBag(InstantiatedBag bag, BagNode bagNode) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.MoveBag({bag.DisplayName}, {bagNode.NodeIndex})");
+
+            if (EmptySlotCount(bag.BagNode.IsBankNode) - bag.Slots >= 0) {
+                RemoveBag(bag);
+                AddBag(bag, bagNode);
+            }
+        }
+
+        public void MoveBag(InstantiatedBag instantiatedBag, int nodeIndex, bool isBankNode) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.MoveBag({instantiatedBag.DisplayName}, {nodeIndex}, {isBankNode})");
+
+            if (isBankNode) {
+                if (bankNodes.Count > nodeIndex) {
+                    MoveBag(instantiatedBag, bankNodes[nodeIndex]);
+                }
+            } else {
+                if (bagNodes.Count > nodeIndex) {
+                    MoveBag(instantiatedBag, bagNodes[nodeIndex]);
+                }
+            }
+        }
+
+        public void RequestEquipBagFromSlot(InstantiatedBag instantiatedBag, InventorySlot inventorySlot, bool isBankSlot) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestEquipBagFromSlot({instantiatedBag.ResourceName}, isBankSlot: {isBankSlot})");
+            
+            if (systemGameManager.GameMode == GameMode.Local) {
+                EquipBagFromSlot(instantiatedBag, inventorySlot, isBankSlot);
+            } else {
+                int slotIndex;
+                if (isBankSlot) {
+                    slotIndex = inventorySlot.GetCurrentBankSlotIndex(unitController);
+                } else {
+                    slotIndex = inventorySlot.GetCurrentInventorySlotIndex(unitController);
+                }
+                unitController.UnitEventController.NotifyOnRequestEquipBagFromSlot(instantiatedBag, slotIndex, isBankSlot);
+            }
+        }
+
+        public void EquipBagFromSlot(InstantiatedBag instantiatedBag, int slotIndex, bool isBank) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.EquipBagFromSlot({instantiatedBag.DisplayName}, {slotIndex}, {isBank})");
+
+            InventorySlot inventorySlot;
+            if (isBank && bankSlots.Count > slotIndex) {
+                inventorySlot = bankSlots[slotIndex];
+            } else if (isBank == false && inventorySlots.Count > slotIndex) {
+                inventorySlot = inventorySlots[slotIndex];
+            } else {
+                return;
+            }
+            EquipBagFromSlot(instantiatedBag, inventorySlot, isBank);
+        }
+
+        public void EquipBagFromSlot(InstantiatedBag instantiatedBag, InventorySlot inventorySlot, bool isBank) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.EquipBagFromSlot({instantiatedBag.ResourceName}, {isBank})");
+
+            if (inventorySlot.InstantiatedItem == null) {
+                return;
+            }
+            if (isBank) {
+                (bool success, BagNode bagNode) = AddBankBag(instantiatedBag);
+                if (success) {
+                    inventorySlot.RemoveItem(instantiatedBag);
+                    unitController.UnitEventController.NotifyOnAddBag(instantiatedBag, bagNode);
+                } else {
+                    unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("There are no free bag slots!");
+                }
+            } else {
+                (bool success, BagNode bagNode) = AddInventoryBag(instantiatedBag);
+                if (success) {
+                    inventorySlot.RemoveItem(instantiatedBag);
+                    unitController.UnitEventController.NotifyOnAddBag(instantiatedBag, bagNode);
+                } else {
+                    unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("There are no free bag slots!");
+                }
+            }
+        }
+
+        public void RequestAddBagFromInventory(InstantiatedBag instantiatedBag, BagNode bagNode) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestAddBagFromInventory({instantiatedBag.DisplayName}, {bagNode})");
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                AddBagFromInventory(instantiatedBag, bagNode);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestAddBagFromInventory(instantiatedBag, bagNode.NodeIndex, bagNode.IsBankNode);
+            }
+        }
+
+        public void AddBagFromInventory(InstantiatedBag instantiatedBag, BagNode bagNode) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddBagFromInventory({instantiatedBag.DisplayName}, {bagNode})");
+
+            AddBag(instantiatedBag, bagNode);
+            instantiatedBag.Remove();
+        }
+
+        public void AddBagFromInventory(InstantiatedBag instantiatedBag, int nodeIndex, bool isBankNode) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddBagFromInventory({instantiatedBag.DisplayName}, {nodeIndex}, {isBankNode})");
+
+            if (isBankNode) {
+                if (bankNodes.Count > nodeIndex) {
+                    AddBagFromInventory(instantiatedBag, bankNodes[nodeIndex]);
+                }
+            } else {
+                if (bagNodes.Count > nodeIndex) {
+                    AddBagFromInventory(instantiatedBag, bagNodes[nodeIndex]);
+                }
+            }
+        }
+
+        public bool HasItem(long itemInstanceId) {
+            foreach (InventorySlot slot in inventorySlots) {
+                foreach (InstantiatedItem instantiatedItem in slot.InstantiatedItems.Values) {
+                    if (instantiatedItem.InstanceId == itemInstanceId) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public void RequestSplitStack(int stackSize) {
+            if (fromSlot != null) {
+                if (systemGameManager.GameMode == GameMode.Local) {
+                    SplitStack(fromSlot.InventorySlot, stackSize);
+                } else {
+                    unitController.UnitEventController.NotifyOnRequestSplitStack(fromSlot.InventorySlot.GetCurrentInventorySlotIndex(unitController), stackSize);
+                }
+            }
+            fromSlot = null;
+        }
+
+        public void SplitStack(int inventorySlotIndex, int stackSize) {
+            if (inventorySlots.Count > inventorySlotIndex) {
+                SplitStack(inventorySlots[inventorySlotIndex], stackSize);
+            }
+        }
+
+        public void SplitStack(InventorySlot inventorySlot, int stackSize) {
+            // check to ensure we have an empty slot to split into
+            if (EmptySlotCount(false) == 0) {
+                unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("No empty slots to split into!");
+                return;
+            }
+            // remove the items from the old slot, then place them into the new empty slot
+            List<InstantiatedItem> splitItems = new List<InstantiatedItem>();
+            foreach (InstantiatedItem instantiatedItem in inventorySlot.InstantiatedItems.Values) {
+                splitItems.Add(instantiatedItem);
+                if (splitItems.Count == stackSize) {
+                    break;
+                }
+            }
+            foreach (InstantiatedItem instantiatedItem in splitItems) {
+                inventorySlot.RemoveItem(instantiatedItem);
+            }
+            // find an empty slot and place the split stack there
+            foreach (InventorySlot searchedInventorySlot in inventorySlots) {
+                if (searchedInventorySlot.IsEmpty) {
+                    searchedInventorySlot.AddItems(splitItems);
+                    return;
+                }
+            }
+        }
+
+        public void RequestMoveItemFromStorageContainer(StorageContainerComponent storageContainerComponent, int toSlotIndex) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                MoveItemFromStorageContainer(storageContainerComponent, toSlotIndex);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestMoveItemFromStorageContainer(storageContainerComponent, toSlotIndex);
+            }
+        }
+
+        public void MoveItemFromStorageContainer(StorageContainerComponent storageContainerComponent, int fromSlotIndex) {
+            if (storageContainerComponent.InventorySlots.Count <= fromSlotIndex) {
+                return;
+            }
+            // If there is only a single item in this slot, we can attempt to merge or swap it into the inventory.
+            // If there are multiple items in this slot, we will just move the entire stack into the inventory and let the player sort it out
+            if (storageContainerComponent.InventorySlots[fromSlotIndex].IsEmpty) {
+                return;
+            }
+            if (storageContainerComponent.InventorySlots[fromSlotIndex].InstantiatedItems.Count > 1) {
+                // get the first empty slot in the inventory and move all items to it
+                InventorySlot emptySlot = inventorySlots.FirstOrDefault(s => s.IsEmpty);
+                if (emptySlot == null) {
+                    unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("Inventory is full");
+                    return;
+                }
+                // this function name may look funny, but it will actually swap the empty stack in the inventory with the full stack in the storage container, effectively moving the stack to the inventory
+                MoveItemToStorageContainer(storageContainerComponent, fromSlotIndex, emptySlot);
+                return;
+            }
+            InstantiatedItem instantiatedItem = storageContainerComponent.InventorySlots[fromSlotIndex].InstantiatedItem;
+            (int toSlotIndex, bool canSpaceInStack) = CanPlaceInStackOrEmpty(instantiatedItem, false);
+            if (canSpaceInStack == false || toSlotIndex == -1) {
+                unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("Inventory is full");
+                return;
+            }
+            storageContainerComponent.InventorySlots[fromSlotIndex].RemoveItem(instantiatedItem);
+            AddInventoryItem(instantiatedItem, toSlotIndex);
+        }
+
+        public void RequestMoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, InventorySlot inventorySlot, bool isBankSlot) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                MoveItemToStorageContainer(storageContainerComponent, inventorySlot);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestMoveItemToStorageContainer(storageContainerComponent, isBankSlot ? inventorySlot.GetCurrentBankSlotIndex(unitController) : inventorySlot.GetCurrentInventorySlotIndex(unitController), isBankSlot);
+            }
+        }
+
+        public void MoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, int fromSlotIndex, bool fromBankSlot) {
+            if (fromBankSlot) {
+                if (bankSlots.Count > fromSlotIndex) {
+                    MoveItemToStorageContainer(storageContainerComponent, bankSlots[fromSlotIndex]);
+                }
+            } else {
+                if (inventorySlots.Count > fromSlotIndex) {
+                    MoveItemToStorageContainer(storageContainerComponent, inventorySlots[fromSlotIndex]);
+                }
+            }
+        }
+
+        public void MoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, InventorySlot inventorySlot) {
+            
+            // If there is only a single item in this slot, we can attempt to merge or swap it into the container.
+            // If there are multiple items in this slot, we will just move the entire stack into the container and let the player sort it out
+            if (inventorySlot.IsEmpty) {
+                return;
+            }
+            if (inventorySlot.InstantiatedItems.Count > 1) {
+                // get the first empty slot in the container and move all items to it
+                InventorySlot emptySlot = storageContainerComponent.InventorySlots.FirstOrDefault(s => s.IsEmpty);
+                if (emptySlot == null) {
+                    unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("Storage container is full");
+                    return;
+                }
+                // this function name may look funny, but it will actually swap the empty stack in the container with the full stack in the inventory, effectively moving the stack to the container
+                MoveItemToStorageContainer(storageContainerComponent, storageContainerComponent.GetCurrentSlotIndex(emptySlot), inventorySlot);
+                return;
+            }
+            // attempt to stack item into container
+            InstantiatedItem instantiatedItem = inventorySlot.InstantiatedItem;
+            (int toSlotIndex, bool canSpaceInStack) = storageContainerComponent.CanPlaceInStackOrEmpty(instantiatedItem);
+            if (canSpaceInStack == false || toSlotIndex == -1) {
+                unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("Storage container is full");
+                return;
+            }
+            if (instantiatedItem == null) {
+                Debug.LogWarning($"{unitController.gameObject.name}.CharacterInventoryManager.MoveItemToStorageContainer() instantiated item was null");
+                return;
+            }
+            inventorySlot.RemoveItem(instantiatedItem);
+            storageContainerComponent.InventorySlots[toSlotIndex].AddItem(instantiatedItem);
+        }
+
+        public void RequestSwapItemToStorageContainer(StorageContainerComponent storageContainerComponent, int toSlotIndex, InventorySlot inventorySlot, bool isBankSlot) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                MoveItemToStorageContainer(storageContainerComponent, toSlotIndex, inventorySlot);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestSwapItemToStorageContainer(storageContainerComponent, toSlotIndex, isBankSlot ? inventorySlot.GetCurrentBankSlotIndex(unitController) : inventorySlot.GetCurrentInventorySlotIndex(unitController), isBankSlot);
+            }
+        }
+
+        public void MoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, int toSlotIndex, int fromSlotIndex, bool fromBankSlot) {
+            if (fromBankSlot) {
+                if (bankSlots.Count > fromSlotIndex) {
+                    MoveItemToStorageContainer(storageContainerComponent, toSlotIndex, bankSlots[fromSlotIndex]);
+                }
+            } else {
+                if (inventorySlots.Count > fromSlotIndex) {
+                    MoveItemToStorageContainer(storageContainerComponent, toSlotIndex, inventorySlots[fromSlotIndex]);
+                }
+            }
+        }
+
+        public void MoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, int toSlotIndex, InventorySlot inventorySlot) {
+            if (storageContainerComponent.InventorySlots.Count <= toSlotIndex) {
+                return;
+            }
+            InventorySlot toSlot = storageContainerComponent.InventorySlots[toSlotIndex];
+            toSlot.SwapItems(inventorySlot);
+        }
+
+        public void RequestSwapItemsInStorageContainerSlots(StorageContainerComponent storageContainerComponent, InventorySlot toSlot, InventorySlot fromSlot) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                storageContainerComponent.SwapItemsInSlots(toSlot, fromSlot);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestSwapItemsInStorageContainerSlots(storageContainerComponent.Interactable, storageContainerComponent.GetCurrentSlotIndex(fromSlot), storageContainerComponent.GetCurrentSlotIndex(toSlot));
+            }
+        }
+    
+    }
+
+}

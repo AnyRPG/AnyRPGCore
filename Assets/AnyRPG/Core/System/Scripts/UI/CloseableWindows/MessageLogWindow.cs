@@ -1,0 +1,18 @@
+using UnityEngine;
+
+namespace AnyRPG {
+    public class MessageLogWindow : CloseableWindow {
+
+        [Header("Message Log Window")]
+
+        [SerializeField]
+        protected DraggableWindow buttonsHeading = null;
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            buttonsHeading.Configure(systemGameManager);
+        }
+
+    }
+
+}

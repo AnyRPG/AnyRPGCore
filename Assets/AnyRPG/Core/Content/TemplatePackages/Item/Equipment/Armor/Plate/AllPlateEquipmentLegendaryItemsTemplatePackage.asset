@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllPlateEquipmentLegendaryItemsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Gold Plate Equipment Items
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: a2cd445581abd844fbff48d69848c56b, type: 2}
+  - {fileID: 11400000, guid: d8d054dc261e60c4290bc4700f0b6bd5, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: aadedc3da05efb241bc065ee7f72fe48, type: 2}
+  - {fileID: 11400000, guid: 8e9db8827ca0b7247b759e7b02d9e433, type: 2}
+  - {fileID: 11400000, guid: b07628e3669d7584e86e79c6f0dd46a7, type: 2}
+  - {fileID: 11400000, guid: 16566f1cbc3f74147b0788befa2afce0, type: 2}
+  - {fileID: 11400000, guid: 7bea314a09cc6b448a775b5f2dec017c, type: 2}
+  - {fileID: 11400000, guid: 3db1b26fbb3cac843a43c8d81e7e110f, type: 2}
+  - {fileID: 11400000, guid: 9677ef6a0e03ad147b066087779235e4, type: 2}
+  - {fileID: 11400000, guid: 11e65c78770a36e44a81181d07fe8421, type: 2}

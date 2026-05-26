@@ -1,0 +1,193 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace AnyRPG {
+    public class HighlightController : ConfiguredMonoBehaviour {
+
+        [Tooltip("A reference to the renderer that contains the material with the highlight circle")]
+        [SerializeField]
+        private MeshRenderer meshRenderer = null;
+
+        UnitController unitController = null;
+
+        private bool subscriptionsInitialized = false;
+
+        private Dictionary<string, ProjectorColorMapNode> colorDictionary = new Dictionary<string, ProjectorColorMapNode>();
+
+        private Dictionary<string, ProjectorColorMapNode> colorOverrideDictionary = new Dictionary<string, ProjectorColorMapNode>();
+
+        private float circleRadius = 0f;
+
+        // game manager references
+        private PlayerManagerClient playerManagerClient = null;
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            SetupController();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+        }
+
+        public void SetupController() {
+
+            // make a copy of the material so we can change properties without unity trying to save the original material properties to disk
+            /*
+            materialCopy = new Material(meshRenderer.material);
+            meshRenderer.material = materialCopy;
+            */
+
+            foreach (ProjectorColorMapNode colorMapNode in systemConfigurationManager.FocusProjectorColorMap) {
+                colorDictionary[ColorUtility.ToHtmlStringRGBA(colorMapNode.SourceColor)] = colorMapNode;
+                //Debug.Log("FocusTargettingController.SetupController(): added " + ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor));
+            }
+            meshRenderer.enabled = false;
+        }
+
+        public void HandleTargeted() {
+            //Debug.Log("FocusTargettingController.HandleSetTarget()");
+            if (unitController == null) {
+                // don't show this under inanimate units
+                HandleUnTargeted();
+                return;
+            }
+
+            meshRenderer.enabled = true;
+            colorOverrideDictionary.Clear();
+            if (unitController.BaseCharacter.UnitToughness != null && unitController.BaseCharacter.UnitToughness.FocusProjectorOverrideMap != null) {
+                foreach (ProjectorColorMapNode colorMapNode in unitController.BaseCharacter.UnitToughness.FocusProjectorOverrideMap) {
+                    colorOverrideDictionary[ColorUtility.ToHtmlStringRGBA(colorMapNode.SourceColor)] = colorMapNode;
+                    //Debug.Log("FocusTargettingController.SetupController(): added override " + ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor));
+                }
+            }
+
+            UpdateColors();
+
+            // multiply by 2 to account for circles only being half the width of the plane, and then 2 again
+            SetCircleRadius(unitController.CharacterUnit.HitBoxSize * 2f);
+
+            SubscribeToEvents();
+        }
+
+        private void HandleSystemEventManagerReputationChange(UnitController controller) {
+            UpdateColors();
+        }
+
+
+        public void HandleUnTargeted() {
+            //Debug.Log("FocusTargettingController.HandleClearTarget()");
+            if (meshRenderer != null) {
+                meshRenderer.enabled = false;
+            }
+            UnsubscribeFromEvents();
+        }
+
+        private void SubscribeToEvents() {
+            if (subscriptionsInitialized == false) {
+                systemEventManager.OnReputationChange += HandleSystemEventManagerReputationChange;
+                subscriptionsInitialized = true;
+            }
+        }
+
+        private void UnsubscribeFromEvents() {
+            if (subscriptionsInitialized == true) {
+                systemEventManager.OnReputationChange -= HandleSystemEventManagerReputationChange;
+                subscriptionsInitialized = false;
+            }
+        }
+
+        public void SetMaterial(Color materialColor) {
+            //Debug.Log("FocusTargettingController.SetMaterial(" + (materialColor == null ? "null" : materialColor.ToString()) + ")");
+            if (systemConfigurationManager == null) {
+                return;
+            }
+
+            /*
+            foreach (string tmpColor in colorDictionary.Keys) {
+                //Debug.Log("Dictionary contains key: " + tmpColor.ToString());
+            }
+            */
+            if (colorOverrideDictionary.ContainsKey(ColorUtility.ToHtmlStringRGBA(materialColor)) && unitController.CharacterStats.IsAlive == true) {
+                meshRenderer.material = new Material(colorOverrideDictionary[ColorUtility.ToHtmlStringRGBA(materialColor)].ProjectorMaterial);
+                ProcessTint(colorOverrideDictionary[ColorUtility.ToHtmlStringRGBA(materialColor)]);
+                //Debug.Log("FocusTargettingController.SetMaterial(): override dictionary contained color  " + ColorUtility.ToHtmlStringRGBA(materialColor));
+            } else {
+                if (colorDictionary.ContainsKey(ColorUtility.ToHtmlStringRGBA(materialColor))) {
+                    meshRenderer.material = new Material(colorDictionary[ColorUtility.ToHtmlStringRGBA(materialColor)].ProjectorMaterial);
+                    ProcessTint(colorDictionary[ColorUtility.ToHtmlStringRGBA(materialColor)]);
+                    //Debug.Log("FocusTargettingController.SetMaterial(): dictionary contained color  " + ColorUtility.ToHtmlStringRGBA(materialColor));
+                } else {
+                    meshRenderer.material = new Material(systemConfigurationManager.DefaultCastingLightProjector);
+                    //Debug.Log("FocusTargettingController.SetMaterial(): dictionary did not contain color " + ColorUtility.ToHtmlStringRGBA(materialColor) + ", setting to default highlight");
+                }
+            }
+
+        }
+
+        private void ProcessTint(ProjectorColorMapNode projectorColorMapNode) {
+            if (projectorColorMapNode.TintMaterial) {
+                meshRenderer.material.color = projectorColorMapNode.SourceColor;
+            }
+        }
+
+        public void UpdateColors() {
+            //Debug.Log("CastTargettingController.FollowMouse()");
+
+            if (meshRenderer.enabled == false) {
+                return;
+            }
+
+            if (unitController.CharacterStats?.IsAlive == false) {
+                SetMaterial(Color.gray);
+            } else {
+                Color newColor = Faction.GetFactionColor(playerManagerClient, unitController);
+                SetMaterial(newColor);
+            }
+        }
+
+        public void SetCircleRadius(float newRadius) {
+            //Debug.Log("CastTargettingController.SetCircleRadius()");
+            circleRadius = newRadius;
+            // multiply by 2 because the dimension is the diameter of the plane, not radius
+            transform.localScale = new Vector3(circleRadius * 2f, circleRadius * 2f, 1f);
+        }
+
+        public void SetUnitController(UnitController unitController) {
+            this.unitController = unitController;
+            unitController.InteractableEventController.OnTargeted += HandleTargeted;
+            unitController.InteractableEventController.OnUnTargeted += HandleUnTargeted;
+            unitController.UnitEventController.OnReputationChange += HandleReputationChange;
+            unitController.UnitEventController.OnBeforeDie += HandleBeforeDie;
+            unitController.UnitEventController.OnReviveComplete += HandleReviveComplete;
+            unitController.OnInteractableResetSettings += HandleInteractableResetSettings;
+        }
+
+        private void HandleInteractableResetSettings() {
+            unitController.InteractableEventController.OnTargeted -= HandleTargeted;
+            unitController.InteractableEventController.OnUnTargeted -= HandleUnTargeted;
+            unitController.UnitEventController.OnReputationChange -= HandleReputationChange;
+            unitController.UnitEventController.OnBeforeDie -= HandleBeforeDie;
+            unitController.UnitEventController.OnReviveComplete -= HandleReviveComplete;
+            unitController.OnInteractableResetSettings -= HandleInteractableResetSettings;
+        }
+
+        private void HandleReviveComplete(UnitController controller) {
+            UpdateColors();
+        }
+
+        private void HandleBeforeDie(UnitController controller) {
+            UpdateColors();
+        }
+
+        private void HandleReputationChange(UnitController controller) {
+            UpdateColors();
+        }
+
+        public void ResetSettings() {
+            HandleUnTargeted();
+        }
+    }
+
+}

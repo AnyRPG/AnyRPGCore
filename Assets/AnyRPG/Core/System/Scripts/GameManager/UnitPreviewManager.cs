@@ -1,0 +1,30 @@
+namespace AnyRPG {
+    public class UnitPreviewManager : PreviewManager {
+
+        /*
+        public override UnitProfile GetCloneSource() {
+            return UnitSpawnControlPanel.Instance.SelectedUnitSpawnButton.MyUnitProfile;
+        }
+        */
+
+        public void HandleOpenWindow(UnitSpawnControlPanel unitSpawnControlPanel) {
+            //Debug.Log("UnitPreviewManager.HandleOpenWindow()");
+
+            //cloneSource = GetCloneSource();
+            unitProfile = unitSpawnControlPanel.SelectedUnitSpawnButton.UnitProfile;
+            if (unitProfile == null) {
+                return;
+            }
+
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
+            SpawnUnit(characterConfigurationRequest);
+        }
+
+        public void HandleOpenWindow(CharacterConfigurationRequest characterConfigurationRequest) {
+            //Debug.Log("UnitPreviewManager.HandleOpenWindow()");
+            SpawnUnit(characterConfigurationRequest);
+        }
+
+
+    }
+}

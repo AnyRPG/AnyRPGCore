@@ -1,0 +1,352 @@
+using System.Linq;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace AnyRPG {
+    public class CombatTextController : ConfiguredMonoBehaviour {
+        //[SerializeField]
+        //private TextMeshProUGUI tmpProtext = null;
+
+        [SerializeField]
+        private TextMeshProUGUI tmpProtext = null;
+
+        [SerializeField]
+        private Image image = null;
+
+        [SerializeField]
+        private Image backgroundImage = null;
+
+        [SerializeField]
+        private RectTransform rectTransform = null;
+
+        [SerializeField]
+        private RectTransform textRectTransform = null;
+
+        [Tooltip("Text will always be placed this many pixels to the left or right of the target center")]
+        [SerializeField]
+        private float xUIOffset = 25f;
+
+        // keep track of current y scrolling position
+        private float yUIOffset = 0f;
+
+        [Tooltip("Distance (in game units) above the target pivot to place the text")]
+        [SerializeField]
+        private float yUnitOffset = 2.2f;
+
+        [Tooltip("pixels to move over the total fade time")]
+        [SerializeField]
+        private float distanceToMove = 200f;
+
+        [Tooltip("Text will fade and disappear over this much time")]
+        [SerializeField]
+        private float fadeTime = 3f;
+
+        [SerializeField]
+        private int defaultFontSize = 30;
+
+        [SerializeField]
+        private float randomXLimit = 100f;
+
+        /*
+        [SerializeField]
+        private float randomYLimit = 25f;
+        */
+
+        private string displayText = string.Empty;
+        private Interactable mainTarget = null;
+        private float alpha;
+        private Vector2 targetPos;
+        private Vector3 worldSpawnPos;
+        private float fadeOutTimer;
+        private float fadeRate;
+        private Color textColor;
+        private CombatMagnitude combatMagnitude;
+        private CombatTextType textType;
+        private AbilityEffectContext abilityEffectContext = null;
+
+        private float randomX;
+        //private float randomY;
+
+        // change direction to downward text for hits against player
+        private int directionMultiplier = 1;
+
+        // make text bigger for crits and non white damage
+        private int fontSizeMultiplier = 1;
+
+        // for players, make negative amounts go on the opposite side
+        private int xDirectionMultiplier = 1;
+
+        // reduce use of local variables for garbage collection
+        string preText = string.Empty;
+        string postText = string.Empty;
+
+        private float pushOffset = 0f;
+
+        // game manager references
+        protected CameraManager cameraManager = null;
+        protected CombatTextManager combatTextManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
+
+        public RectTransform RectTransform { get => rectTransform; set => rectTransform = value; }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            cameraManager = systemGameManager.CameraManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+            combatTextManager = systemGameManager.UIManager.CombatTextManager;
+        }
+
+        public void InitializeCombatTextController(Interactable mainTarget, Sprite sprite, string displayText, CombatTextType combatTextType, CombatMagnitude combatMagnitude = CombatMagnitude.normal, AbilityEffectContext abilityEffectContext = null) {
+            this.mainTarget = mainTarget;
+            image.sprite = sprite;
+            this.displayText = displayText;
+            this.textType = combatTextType;
+            this.combatMagnitude = combatMagnitude;
+            this.abilityEffectContext = abilityEffectContext;
+
+            gameObject.SetActive(true);
+
+            // if the combat text ui is not active, then we should just immediately disable this
+            if (gameObject.activeInHierarchy == false) {
+                combatTextManager.RequestReturnControllerToPool(this);
+                return;
+            }
+
+            //Debug.Log("Combat Text spawning: " + textType);
+            randomX = Random.Range(0, randomXLimit);
+            //randomY = Random.Range(0, randomYLimit);
+            //randomY = 0;
+            //Debug.Log("Combat Text spawning: " + textType + "; randomX: " + randomX + "; randomY: " + randomY);
+            //targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position);
+            targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
+            worldSpawnPos = mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0);
+            //alpha = text.color.a;
+            alpha = 1f;
+            fadeOutTimer = fadeTime;
+            fadeRate = 1.0f / fadeTime;
+            directionMultiplier = 1;
+            fontSizeMultiplier = 1;
+            yUIOffset = 0f;
+
+            preText = string.Empty;
+            postText = string.Empty;
+
+            if (image.sprite == null) {
+                image.color = new Color32(0, 0, 0, 0);
+                backgroundImage.color = new Color32(0, 0, 0, 0);
+            } else {
+                image.color = Color.white;
+                backgroundImage.color = Color.black;
+            }
+            // check if this is a player or its pet
+            if (mainTarget.InteractableGameObject == playerManagerClient.ActiveUnitController.gameObject
+                || playerManagerClient.ActiveUnitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.InteractableGameObject).Contains(mainTarget.InteractableGameObject)) {
+                directionMultiplier = -1;
+                switch (textType) {
+                    case CombatTextType.normal:
+                        textColor = Color.red;
+                        int parseResult;
+                        if (int.TryParse(displayText, out parseResult)) {
+                            preText += parseResult > 0 ? "-" : "";
+                            xDirectionMultiplier = parseResult > 0 ? 1 : -1;
+                        }
+                        break;
+                    case CombatTextType.gainXP:
+                        textColor = Color.yellow;
+                        preText += "+";
+                        postText += " XP";
+                        fontSizeMultiplier *= 2;
+                        xDirectionMultiplier = -1;
+                        break;
+                    case CombatTextType.gainSkillExperience:
+                        textColor = Color.cyan;
+                        preText += "+";
+                        postText += " XP";
+                        fontSizeMultiplier *= 2;
+                        xDirectionMultiplier = -1;
+                        break;
+                    case CombatTextType.gainSkillLevel:
+                        textColor = Color.blue;
+                        preText += "+";
+                        //postText += " XP";
+                        //fontSizeMultiplier *= 2;
+                        xDirectionMultiplier = -1;
+                        break;
+                    case CombatTextType.gainBuff:
+                        textColor = Color.cyan;
+                        preText += "+";
+                        //text.fontSize = text.fontSize * 2;
+                        xDirectionMultiplier = -1;
+                        break;
+                    case CombatTextType.loseBuff:
+                        textColor = Color.cyan;
+                        preText += "-";
+                        //text.fontSize = text.fontSize * 2;
+                        xDirectionMultiplier = -1;
+                        break;
+                    case CombatTextType.ability:
+                        textColor = Color.magenta;
+                        preText += "-";
+                        fontSizeMultiplier *= 2;
+                        break;
+                    case CombatTextType.gainHealth:
+                        xDirectionMultiplier = -1;
+                        break;
+                    case CombatTextType.gainResource:
+                        xDirectionMultiplier = -1;
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                switch (textType) {
+                    case CombatTextType.normal:
+                        textColor = Color.white;
+                        break;
+                    case CombatTextType.ability:
+                        textColor = Color.yellow;
+                        fontSizeMultiplier *= 2;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            // defaults
+            switch (textType) {
+                case CombatTextType.gainHealth:
+                    textColor = Color.green;
+                    preText += "+";
+                    fontSizeMultiplier *= 2;
+                    break;
+                case CombatTextType.miss:
+                    textColor = Color.white;
+                    //preText += "";
+                    //text.fontSize = text.fontSize * 2;
+                    break;
+                case CombatTextType.immune:
+                    textColor = Color.white;
+                    //preText += "";
+                    //text.fontSize = text.fontSize * 2;
+                    break;
+                case CombatTextType.gainResource:
+                    if (abilityEffectContext?.PowerResource != null) {
+                        textColor = abilityEffectContext.PowerResource.DisplayColor;
+                        postText += " " + abilityEffectContext.PowerResource.DisplayName;
+                    } else {
+                        textColor = Color.blue;
+                    }
+                    preText += "+";
+                    // rage looks funny bigger
+                    //tmpProtext.fontSize = tmpProtext.fontSize * 2;
+                    break;
+                default:
+                    break;
+            }
+
+            tmpProtext.color = textColor;
+            tmpProtext.text = preText + displayText + postText;
+            if (combatMagnitude == CombatMagnitude.critical) {
+                fontSizeMultiplier *= 2;
+            }
+            tmpProtext.fontSize = defaultFontSize * fontSizeMultiplier;
+
+            // make criticals and other large text go farther up and to the right to avoid covering smaller text
+            //randomY += (fontSizeMultiplier / 2f) * randomYLimit;
+            randomX += (fontSizeMultiplier / 2f) * randomXLimit;
+
+            int myQuadrant = GetQuadrantIndex();
+            // before running the first combat text update, the layout should be updated, or the rect for the text will still have the old width before the end of the current frame
+            LayoutRebuilder.ForceRebuildLayoutImmediate(textRectTransform);
+
+            float textHeight = tmpProtext.preferredHeight;
+            float padding = 5f;
+            float totalPushAmount = textHeight + padding;
+            pushOffset = 0f;
+
+            combatTextManager.RegisterAndPush(mainTarget, this, myQuadrant, totalPushAmount);
+            RunCombatTextUpdate();
+        }
+
+        private int GetQuadrantIndex() {
+            if (directionMultiplier == 1) // Moving Up
+                return xDirectionMultiplier == 1 ? 0 : 1;
+            else // Moving Down
+                return xDirectionMultiplier == 1 ? 2 : 3;
+        }
+
+        public void PushUp(float amount) {
+            //Debug.Log($"CombatTextController.PushUp(amount: {amount} text: {tmpProtext.text}");
+
+            // When a new text spawns, this one moves up to make room
+            pushOffset += amount;
+        }
+
+        // Inside CombatTextController.cs
+        public float GetCurrentVerticalDisplacement() {
+            // This represents exactly how far from the 'head' the text is right now
+            return yUIOffset + pushOffset;
+        }
+
+        public void RunCombatTextUpdate() {
+            //Debug.Log($"CombatTextController.RunCombatTextUpdate() fadeOutTimer: {fadeOutTimer} text: {tmpProtext.text}");
+
+            if (mainTarget != null) {
+                /*
+                Vector2 screenPoint = cameraManager.ActiveMainCamera.WorldToScreenPoint(worldSpawnPos);
+                //targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
+                //float finalY = yUIOffset + randomY + pushOffset;
+                float finalY = yUIOffset + (pushOffset * directionMultiplier);
+                transform.position = screenPoint + new Vector2((randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier, finalY);
+                */
+
+                Vector3 screenPoint = cameraManager.ActiveMainCamera.WorldToScreenPoint(worldSpawnPos);
+
+                // 1. CHECK FOR BEHIND CAMERA
+                if (screenPoint.z < 0) {
+                    // The hit is behind us. We should hide it or kill it.
+                    // Option: Immediately return to pool to avoid the "flicker"
+                    combatTextManager.Unregister(mainTarget, this, GetQuadrantIndex());
+                    combatTextManager.RequestReturnControllerToPool(this);
+                    return;
+                }
+
+                // 2. POSITIONING (Only runs if screenPoint.z >= 0)
+                float finalY = yUIOffset + (pushOffset * directionMultiplier);
+                transform.position = (Vector2)screenPoint + new Vector2(
+                    (randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier,
+                    finalY
+                );
+            }
+            if (fadeOutTimer > 0f) {
+                fadeOutTimer -= Time.deltaTime;
+
+                alpha -= fadeRate * Time.deltaTime;
+
+                // fade text
+                Color tmp = tmpProtext.color;
+                tmp.a = alpha;
+                tmpProtext.color = tmp;
+
+                // fade image
+                if (image.sprite != null) {
+                    Color imageColor = image.color;
+                    imageColor.a = alpha;
+                    image.color = imageColor;
+                    Color backgroundImageColor = backgroundImage.color;
+                    backgroundImageColor.a = alpha;
+                    backgroundImage.color = backgroundImageColor;
+                }
+
+                //randomY += (movementSpeed * directionMultiplier);
+                yUIOffset = distanceToMove * (((fadeOutTimer - fadeTime) * -1) / fadeTime) * directionMultiplier;
+            } else {
+                combatTextManager.Unregister(mainTarget, this, GetQuadrantIndex());
+                combatTextManager.RequestReturnControllerToPool(this);
+            }
+
+        }
+
+    }
+
+}

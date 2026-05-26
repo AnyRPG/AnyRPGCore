@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllBasicCopperWeaponRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Basic Copper Weapon Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 15043375e77c7914fb84db9d1203274c, type: 2}
+  - {fileID: 11400000, guid: 2c6c966ae901df5449472564a0974619, type: 2}
+  - {fileID: 11400000, guid: aa8956b5395b52c4780804b77aaad033, type: 2}
+  - {fileID: 11400000, guid: 12ffa1ec7874ce6488ffae2b6e4d38cc, type: 2}
+  - {fileID: 11400000, guid: dd542010e94ea7340b3e8ff864a08bcd, type: 2}
+  - {fileID: 11400000, guid: 42b6ee03d3eebc543b6925ea8dead2f2, type: 2}
+  - {fileID: 11400000, guid: 15e9625ae3c8ea44aa4d7574c6e2e17c, type: 2}
+  - {fileID: 11400000, guid: 635ca7b2dadad6442a5996e88a8073fe, type: 2}
+  - {fileID: 11400000, guid: ab971412223753446b2f39c1e792d126, type: 2}
+  - {fileID: 11400000, guid: 8bb7dd8e203b2694287fd0bf063ff1bf, type: 2}
+  - {fileID: 11400000, guid: 5c1b86f222a0b7744be25896650bfe1c, type: 2}
+  - {fileID: 11400000, guid: edc1f1c2b522c114da7165765a55f71b, type: 2}

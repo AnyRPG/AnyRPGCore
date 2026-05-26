@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: FishingSkillTrainerUnitTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Fishing Skill Trainer Unit
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: ac80b097d289a71429deb8314abea4af, type: 2}
+  - {fileID: 11400000, guid: 57c1379f72ac7814e90dde2f5aa5114f, type: 2}
+  prefabs:
+  - {fileID: 6390993854296471015, guid: e5f9173d1c7667e40a29754804389f8a, type: 3}
+  dependencies:
+  - {fileID: 11400000, guid: 79c8199f86bc2e04ea845b8cd4ce526b, type: 2}

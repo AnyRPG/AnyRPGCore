@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: NetworkChatCommandsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Network Chat Commands
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 107f7a1711efe834187fe11c5e0d370b, type: 2}
+  - {fileID: 11400000, guid: 796f7c447d44cfe4b80f39d85d73aff5, type: 2}
+  - {fileID: 11400000, guid: 2bec39c0c49ea064ab654f905fa24a75, type: 2}
+  - {fileID: 11400000, guid: b980f7b15b11bbc43934fede67b37e3a, type: 2}
+  - {fileID: 11400000, guid: ab9e4d8faa69f2f43bea079caedf5e1c, type: 2}
+  - {fileID: 11400000, guid: 62950e13be3132e4db89b19481e58b2f, type: 2}
+  - {fileID: 11400000, guid: eac46836e1a9a194fa23450e81c88e00, type: 2}
+  - {fileID: 11400000, guid: 018afeca7c02b3c47bc04f2409adb10c, type: 2}
+  - {fileID: 11400000, guid: 017ad21e507c65241a63f366d6fccbdb, type: 2}
+  - {fileID: 11400000, guid: 9ed6161afac3e614eaa7c65716eb347f, type: 2}
+  - {fileID: 11400000, guid: 735cffb40da666040aa70d1dbb8485b9, type: 2}
+  - {fileID: 11400000, guid: 0d212a5fe69cb214f9957cbcaff02f87, type: 2}
+  - {fileID: 11400000, guid: d27ef6b367cba2d44996f8cee65af0ab, type: 2}
+  - {fileID: 11400000, guid: 992038a85dbc336409aa11fabe917171, type: 2}
+  - {fileID: 11400000, guid: b436fcc7d3ecbac43bcbb2a108fcc080, type: 2}
+  - {fileID: 11400000, guid: bc43b5f37900372448e44a4aef154ba3, type: 2}
+  prefabs: []
+  dependencies: []

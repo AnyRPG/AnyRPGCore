@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllClothEquipmentGreenItemsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Green Cloth Equipment
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 8c3cb859e9e043540877c63106f424fe, type: 2}
+  - {fileID: 11400000, guid: bb304b2c19c299048b620f71b50aef54, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: d2c6d28a2aa299c428fe2706d08e61df, type: 2}
+  - {fileID: 11400000, guid: fbffa59fd81c7c04d87ec20e30477dc0, type: 2}
+  - {fileID: 11400000, guid: 0f6f3a923dd119347919114e2f44d817, type: 2}
+  - {fileID: 11400000, guid: 1dbf7d9b7d054924c95d825283ffbf90, type: 2}
+  - {fileID: 11400000, guid: 7d87e10168ed17046b710ad4aff6cc3a, type: 2}
+  - {fileID: 11400000, guid: a822f13ebc7c73f419a271ce59caf276, type: 2}
+  - {fileID: 11400000, guid: 2e9a4c65c3724e043b1972997ffda7ca, type: 2}
+  - {fileID: 11400000, guid: f7b9a613b6c16bd4aa2b935e03cbab4a, type: 2}

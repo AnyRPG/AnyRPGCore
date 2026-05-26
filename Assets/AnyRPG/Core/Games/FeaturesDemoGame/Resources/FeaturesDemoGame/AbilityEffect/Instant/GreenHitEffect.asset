@@ -1,0 +1,174 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d43aa5652b4c2b346b589d6a398c017a, type: 3}
+  m_Name: GreenHitEffect
+  m_EditorClassIdentifier: 
+  resourceName: Green Hit
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  targetOptions:
+    requireTarget: 0
+    requireLineOfSight: 0
+    requireLiveTarget: 0
+    requireDeadTarget: 0
+    canCastOnSelf: 0
+    canCastOnOthers: 0
+    canCastOnEnemy: 0
+    canCastOnNeutral: 0
+    canCastOnFriendly: 0
+    autoSelfCast: 0
+    useMeleeRange: 0
+    maxRange: 0
+    lineOfSightSourceLocation: 0
+    targetRangeSourceLocation: 0
+  chanceToCast: 100
+  effectMaterialName: 
+  materialChangeDuration: 2
+  onHitAudioProfileNames: []
+  randomAudioProfiles: 0
+  hitAbilityEffectNames: []
+  inputMultiplier: 0
+  threatMultiplier: 1
+  abilityPrefabSource: 1
+  randomPrefabs: 0
+  abilityObjectList:
+  - holdableObjectName: Green Hit
+    useUniversalAttachment: 0
+    attachmentName: 
+  prefabSpawnLocation: 2
+  prefabDestroyDelay: 0
+  destroyOnEndCast: 0
+  tickRate: 0
+  castZeroTick: 0
+  tickAbilityEffectNames: []
+  onTickAudioProfileNames: []
+  randomTickAudioProfiles: 0
+  completeAbilityEffectNames: []
+  lengthEffectProperties:
+    targetOptions:
+      requireTarget: 0
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 0
+      lineOfSightSourceLocation: 0
+      targetRangeSourceLocation: 0
+    chanceToCast: 100
+    effectMaterialName: 
+    materialChangeDuration: 2
+    onHitAudioProfileNames: []
+    randomAudioProfiles: 0
+    hitAbilityEffectNames: []
+    inputMultiplier: 0
+    threatMultiplier: 1
+    abilityPrefabSource: 1
+    randomPrefabs: 0
+    abilityObjectList: []
+    prefabSpawnLocation: 0
+    prefabDestroyDelay: 0
+    destroyOnEndCast: 0
+    tickRate: 0
+    castZeroTick: 0
+    tickAbilityEffectNames: []
+    onTickAudioProfileNames: []
+    randomTickAudioProfiles: 0
+    completeAbilityEffectNames: []
+  defaultPrefabLifetime: 1
+  directEffectProperties:
+    targetOptions:
+      requireTarget: 0
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 0
+      lineOfSightSourceLocation: 0
+      targetRangeSourceLocation: 0
+    chanceToCast: 100
+    effectMaterialName: 
+    materialChangeDuration: 2
+    onHitAudioProfileNames: []
+    randomAudioProfiles: 0
+    hitAbilityEffectNames: []
+    inputMultiplier: 0
+    threatMultiplier: 1
+    abilityPrefabSource: 1
+    randomPrefabs: 0
+    abilityObjectList: []
+    prefabSpawnLocation: 0
+    prefabDestroyDelay: 0
+    destroyOnEndCast: 0
+    tickRate: 0
+    castZeroTick: 0
+    tickAbilityEffectNames: []
+    onTickAudioProfileNames: []
+    randomTickAudioProfiles: 0
+    completeAbilityEffectNames: []
+    defaultPrefabLifetime: 10
+  instantEffectProperties:
+    targetOptions:
+      requireTarget: 0
+      requireLineOfSight: 0
+      requireLiveTarget: 0
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 0
+      lineOfSightSourceLocation: 0
+      targetRangeSourceLocation: 0
+    chanceToCast: 100
+    effectMaterialName: 
+    materialChangeDuration: 2
+    onHitAudioProfileNames: []
+    randomAudioProfiles: 0
+    hitAbilityEffectNames: []
+    inputMultiplier: 0
+    threatMultiplier: 1
+    abilityPrefabSource: 1
+    randomPrefabs: 0
+    abilityObjectList:
+    - holdableObjectName: Green Hit
+      useUniversalAttachment: 0
+      attachmentName: 
+    prefabSpawnLocation: 2
+    prefabDestroyDelay: 0
+    destroyOnEndCast: 0
+    tickRate: 0
+    castZeroTick: 0
+    tickAbilityEffectNames: []
+    onTickAudioProfileNames: []
+    randomTickAudioProfiles: 0
+    completeAbilityEffectNames: []
+    defaultPrefabLifetime: 1

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: FootstepHitsGravelFastAudio
+  m_EditorClassIdentifier: 
+  resourceName: Footstep Hits Gravel Fast
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 3bbcad040ba7bae44aec0d6a3a36aedf, type: 3}
+  - {fileID: 8300000, guid: ac9bb1dcdaea63645a8318df389ee390, type: 3}
+  - {fileID: 8300000, guid: b412bbaf77c55364eb081d2e4c7ee1d6, type: 3}
+  - {fileID: 8300000, guid: d942bf664f4994348a940d051d1660b2, type: 3}
+  - {fileID: 8300000, guid: feef94414cf148a42bb75c7a6f73107a, type: 3}
+  - {fileID: 8300000, guid: 0eb9ce355354e2c49864020b12e6fc63, type: 3}

@@ -1,0 +1,14 @@
+using UnityEngine;
+
+namespace AnyRPG {
+    [CreateAssetMenu(fileName = "New TeleportEffect", menuName = "AnyRPG/Abilities/Effects/TeleportEffect")]
+    public class TeleportEffect : AbilityEffect {
+
+        [SerializeField]
+        public TeleportEffectProperties teleportEffectProperties = new TeleportEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => teleportEffectProperties; }
+
+    }
+
+}

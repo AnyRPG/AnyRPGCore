@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f155bed94dacad4d87f2d5053f18099, type: 3}
+  m_Name: AlchemySkill
+  m_EditorClassIdentifier: 
+  resourceName: Alchemy
+  displayName: 
+  icon: {fileID: 21300000, guid: 799e339a8eea16f4d805d555e6c32994, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: Mix herbs to create potions that enhance your abilities and restore
+    energy.
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  requiredLevel: 1
+  autoLearn: 0
+  giveCharacterExperience: 0
+  useSkillLevels: 1
+  skillLevelCapList:
+  - CharacterLevel: 1
+    SkillLevelCap: 10
+  - CharacterLevel: 10
+    SkillLevelCap: 20
+  useSkillExperience: 1
+  skillExperienceChart: f4010000e8030000dc050000d0070000c4090000ac0d0000941100007c150000641900004c1d00003421000010270000ec2c0000c8320000a4380000803e00005c440000384a000008520000d8590000a861000078690000487100000c7b0000d0840000948e0000589800001ca20000e0ab000098b7000050c30000f0d2000090e2000030f20000d001010070110100f824010080380100084c0100905f010018730100a0860100289a0100b0ad010020c5010090dc010000f40100700b0200e022020068360200d84d02003069020088840200e09f02002cbd020078da0200c4f70200101503005c320300a84f0300
+  abilityNames:
+  - Alchemy

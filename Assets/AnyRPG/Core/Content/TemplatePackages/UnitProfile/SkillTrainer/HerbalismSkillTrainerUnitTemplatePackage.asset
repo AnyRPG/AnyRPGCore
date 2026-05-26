@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: HerbalismSkillTrainerUnitTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Herbalism Skill Trainer Unit
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 6108fe4a268f69d4899ca1910e0c9b6c, type: 2}
+  - {fileID: 11400000, guid: 57c1379f72ac7814e90dde2f5aa5114f, type: 2}
+  prefabs:
+  - {fileID: 6390993854296471015, guid: 37efd4bd3db7fbd4cb1440d54b38fe66, type: 3}
+  dependencies:
+  - {fileID: 11400000, guid: 7cfcf4f9616bb6d41ac4c54ae0d96f97, type: 2}

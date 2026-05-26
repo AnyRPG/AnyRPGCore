@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllPlateEquipmentSilverRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Silver Plate Equipment Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 7db56f2b48ed9db41af902c8af168ed9, type: 2}
+  - {fileID: 11400000, guid: 50cb97aa90123504e8599a755d318734, type: 2}
+  - {fileID: 11400000, guid: 8454b0f5cc076e34ea66e9ed21ca7f8e, type: 2}
+  - {fileID: 11400000, guid: 603fd1b77c6af3b44a6ca16ff28da01e, type: 2}
+  - {fileID: 11400000, guid: 6e2fbeaf4ff884042a54740a144ca808, type: 2}
+  - {fileID: 11400000, guid: 3e0bc72234ec91b41be52d51b1fe6b18, type: 2}
+  - {fileID: 11400000, guid: fe92fdd853113744fb827043d953c657, type: 2}
+  - {fileID: 11400000, guid: 744d0cc578243c947b719ad8755d1dba, type: 2}
