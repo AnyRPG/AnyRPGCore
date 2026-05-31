@@ -79,7 +79,7 @@ namespace AnyRPG {
 
         public void ProcessInput() {
             if (inputManager.KeyBindWasPressed("CANCELALL")
-                            || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
+                            || inputManager.KeyBindWasPressed("GAMEPADBUTTONB")) {
                 //Debug.Log("AnyRPGCutsceneCameraController.LateUpdate(): open cancel cutscene window");
                 uIManager.confirmCancelCutsceneWindow.OpenWindow();
             }

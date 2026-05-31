@@ -643,7 +643,7 @@ namespace AnyRPG {
 
             // if the left analog stick was held down, then this is a movement of the window
             // send the event to the window so it can pass it on to the drag handle
-            if (closeableWindow != null && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON8")) {
+            if (closeableWindow != null && inputManager.KeyBindWasPressedOrHeld("GAMEPADBUTTONLEFTSTICK")) {
                 closeableWindow.LeftAnalog(inputHorizontal, inputVertical);
                 return;
             }

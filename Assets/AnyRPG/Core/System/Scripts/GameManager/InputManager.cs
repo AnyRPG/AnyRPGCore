@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace AnyRPG {
 
@@ -103,58 +105,89 @@ namespace AnyRPG {
             }
             lastRegisteredFrame = Time.frameCount;
 
-            /*
-            // this block is commented out because the on screen keyboard needs the key presses to be registered
-            // instead of this, the controls manager will take care of ensuring that inputs are not sent to inappropriate systems
-            // when the name change window is open
-            if (uIManager.nameChangeWindow.IsOpen == true) {
-                //Debug.Log("Not allowing registration of keystrokes to keybinds during name change");
-                return;
-            }
-            */
+            // Get references to active hardware devices
+            var keyboard = Keyboard.current;
+            var gamepad = Gamepad.current;
 
             bool control = false;
-
-            if (Input.GetKeyDown(KeyCode.LeftControl)) {
-                //Debug.Log("InputManager.KeyBindWasPressed(): left control pressed");
-                control = true;
-            }
-            if (Input.GetKey(KeyCode.LeftControl)) {
-                //Debug.Log("InputManager.KeyBindWasPressed(): left control held");
-                control = true;
-            }
-            if (Input.GetKeyDown(KeyCode.RightControl)) {
-                //Debug.Log("InputManager.KeyBindWasPressed(): right control pressed");
-                control = true;
-            }
-            if (Input.GetKey(KeyCode.RightControl)) {
-                //Debug.Log("InputManager.KeyBindWasPressed(): right control held");
-                control = true;
-            }
-
             bool shift = false;
 
-            if (Input.GetKeyDown(KeyCode.LeftShift)) {
-                //Debug.Log("InputManager.KeyBindWasPressed(): left shift pressed");
-                shift = true;
+            // 1. Process Modifiers (Control)
+            if (keyboard != null) {
+                if (keyboard.leftCtrlKey.wasPressedThisFrame || keyboard.leftCtrlKey.isPressed ||
+                    keyboard.rightCtrlKey.wasPressedThisFrame || keyboard.rightCtrlKey.isPressed) {
+                    control = true;
+                }
             }
-            if (Input.GetKey(KeyCode.LeftShift)) {
-                //Debug.Log("InputManager.KeyBindWasPressed(): left shift held");
-                shift = true;
-            }
-            if (Input.GetKeyDown(KeyCode.RightShift)) {
-                //Debug.Log("InputManager.KeyBindWasPressed(): right shift pressed");
-                shift = true;
-            }
-            if (Input.GetKey(KeyCode.RightShift)) {
-                //Debug.Log("InputManager.KeyBindWasPressed(): right shift held");
-                shift = true;
+
+            // 2. Process Modifiers (Shift)
+            if (keyboard != null) {
+                if (keyboard.leftShiftKey.wasPressedThisFrame || keyboard.leftShiftKey.isPressed ||
+                    keyboard.rightShiftKey.wasPressedThisFrame || keyboard.rightShiftKey.isPressed) {
+                    shift = true;
+                }
             }
 
             foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
+
+                // Setup temporary state flags for this loop cycle
+                bool keyDown = false;
+                bool keyHeld = false;
+                bool keyUp = false;
+
+                // 1. Evaluate Keyboard Hardware State
+                if (keyboard != null && keyBindNode.KeyboardKey != Key.None) {
+                    KeyControl keyControl = keyboard[keyBindNode.KeyboardKey];
+                    if (keyControl.wasPressedThisFrame) keyDown = true;
+                    if (keyControl.isPressed) keyHeld = true;
+                    if (keyControl.wasReleasedThisFrame) keyUp = true;
+                }
+
+                // 2. Evaluate Gamepad Hardware State
+                if (gamepad != null) {
+                    // Cast the node's stored enum to an integer to safely verify if it's assigned
+                    int buttonValue = (int)keyBindNode.GamepadButton;
+
+                    // Only run polling logic if the value is 0 or greater (skipping our custom -1 "None" state)
+                    if (buttonValue >= 0) {
+                        var buttonControl = gamepad[keyBindNode.GamepadButton];
+
+                        // If any keyboard state was already true, preserve it via the ||= operator
+                        if (buttonControl.wasPressedThisFrame) keyDown = true;
+                        if (buttonControl.isPressed) keyHeld = true;
+                        if (buttonControl.wasReleasedThisFrame) keyUp = true;
+                    }
+                }
+
+                // --- 3. Execute AnyRPG Logical Matrix Filters ---
+
+                // Register key down state
+                if (keyDown && (keyBindNode.KeyBindType == KeyBindType.Normal ||
+                   ((control == keyBindNode.Control) && (shift == keyBindNode.Shift)))) {
+                    keyBindNode.RegisterKeyPress();
+                } else {
+                    keyBindNode.UnRegisterKeyPress();
+                }
+
+                // Register key held state
+                if (keyHeld && (keyBindNode.KeyBindType == KeyBindType.Normal ||
+                   ((control == keyBindNode.Control) && (shift == keyBindNode.Shift)))) {
+                    keyBindNode.RegisterKeyHeld();
+                } else {
+                    keyBindNode.UnRegisterKeyHeld();
+                }
+
+                // Register key up state
+                if (keyUp) {
+                    keyBindNode.RegisterKeyUp();
+                } else {
+                    keyBindNode.UnRegisterKeyUp();
+                }
+
+                /*
                 // normal should eventually changed to movement, but there is only one other key (toggle run) that is normal for now, so normal is ok until more keys are added
                 // register key down
-                if ((Input.GetKeyDown(keyBindNode.KeyboardKeyCode) || Input.GetKeyDown(keyBindNode.JoystickKeyCode))
+                if ((Input.GetKeyDown(keyBindNode.KeyboardKey) || Input.GetKeyDown(keyBindNode.GamepadButton))
                     && (keyBindNode.KeyBindType == KeyBindType.Normal || ((control == keyBindNode.Control) && (shift == keyBindNode.Shift)))) {
                     //Debug.Log(keyBindNode.KeyboardKeyCode + " " + keyBindNode.JoystickKeyCode + " pressed true! " + keyBindNode.KeyBindID);
                     keyBindNode.RegisterKeyPress();
@@ -162,7 +195,7 @@ namespace AnyRPG {
                     keyBindNode.UnRegisterKeyPress();
                 }
 
-                if ((Input.GetKey(keyBindNode.KeyboardKeyCode) || Input.GetKey(keyBindNode.JoystickKeyCode))
+                if ((Input.GetKey(keyBindNode.KeyboardKey) || Input.GetKey(keyBindNode.GamepadButton))
                     && (keyBindNode.KeyBindType == KeyBindType.Normal || (control == keyBindNode.Control) && (shift == keyBindNode.Shift))) {
                     //Debug.Log(keyBindNode.KeyboardKeyCode + " " + keyBindNode.JoystickKeyCode + " held true!");
                     keyBindNode.RegisterKeyHeld();
@@ -171,12 +204,13 @@ namespace AnyRPG {
                 }
 
                 // register key up
-                if (Input.GetKeyUp(keyBindNode.KeyboardKeyCode) || Input.GetKeyUp(keyBindNode.JoystickKeyCode)) {
+                if (Input.GetKeyUp(keyBindNode.KeyboardKey) || Input.GetKeyUp(keyBindNode.GamepadButton)) {
                     //Debug.Log(keyBindNode.KeyboardKeyCode + " " + keyBindNode.JoystickKeyCode + " up true! " + keyBindNode.KeyBindID);
                     keyBindNode.RegisterKeyUp();
                 } else {
                     keyBindNode.UnRegisterKeyUp();
                 }
+                */
 
             }
         }

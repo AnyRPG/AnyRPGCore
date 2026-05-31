@@ -149,26 +149,26 @@ namespace AnyRPG {
             }
 
             // buttons
-            if (inputManager.KeyBindWasPressed("ACCEPT") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")) {
+            if (inputManager.KeyBindWasPressed("ACCEPT") || inputManager.KeyBindWasPressed("GAMEPADBUTTONA")) {
                 //Debug.Log("Accept");
                 CurrentWindow.Accept();
             }
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
+            if (inputManager.KeyBindWasPressed("GAMEPADBUTTONB")) {
                 CurrentWindow.Cancel();
             }
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")) {
+            if (inputManager.KeyBindWasPressed("GAMEPADBUTTONX")) {
                 CurrentWindow.JoystickButton2();
             }
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON3")) {
+            if (inputManager.KeyBindWasPressed("GAMEPADBUTTONY")) {
                 CurrentWindow.JoystickButton3();
             }
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON4")) {
+            if (inputManager.KeyBindWasPressed("GAMEPADBUTTONLEFTSHOULDER")) {
                 CurrentWindow.JoystickButton4();
             }
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON5")) {
+            if (inputManager.KeyBindWasPressed("GAMEPADBUTTONRIGHTSHOULDER")) {
                 CurrentWindow.JoystickButton5();
             }
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON9")) {
+            if (inputManager.KeyBindWasPressed("GAMEPADBUTTONRIGHTSTICK")) {
                 CurrentWindow.JoystickButton9();
             }
 

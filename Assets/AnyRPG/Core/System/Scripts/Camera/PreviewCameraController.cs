@@ -266,7 +266,7 @@ namespace AnyRPG {
 
             // ==== GAMEPAD ZOOM ====
             if (Input.GetAxis("RightAnalogVertical") != 0f
-                && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9")) {
+                && inputManager.KeyBindWasPressedOrHeld("GAMEPADBUTTONRIGHTSTICK")) {
 
                 currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * gamepadZoomSpeed * -1);
                 currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, currentMaxZoom);
@@ -294,7 +294,7 @@ namespace AnyRPG {
             }
 
             // ==== GAMEPAD PAN ====
-            if (inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9") == false
+            if (inputManager.KeyBindWasPressedOrHeld("GAMEPADBUTTONRIGHTSTICK") == false
                 && (Input.GetAxis("RightAnalogHorizontal") != 0 || Input.GetAxis("RightAnalogVertical") != 0)) {
 
                 if (Input.GetAxis("RightAnalogHorizontal") != 0) {

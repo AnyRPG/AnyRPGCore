@@ -248,7 +248,7 @@ namespace AnyRPG {
             if (playerManagerClient.ActiveUnitController?.CharacterAbilityManager.WaitingForTarget() == false) {
                 if ((windowManager.CurrentWindow == null || windowManager.CurrentWindow.CaptureCamera == false)
                     && Input.GetAxis("RightAnalogVertical") != 0f
-                    && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9")) {
+                    && inputManager.KeyBindWasPressedOrHeld("GAMEPADBUTTONRIGHTSTICK")) {
                     currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * gamepadZoomSpeed * -1);
                     currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);
                     cameraZoom = true;
@@ -292,7 +292,7 @@ namespace AnyRPG {
                 // ====GAMEPAD PAN====
                 if (playerManagerClient.ActiveUnitController?.CharacterAbilityManager.WaitingForTarget() == false) {
                     if ((windowManager.CurrentWindow == null || windowManager.CurrentWindow.CaptureCamera == false)
-                    && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9") == false
+                    && inputManager.KeyBindWasPressedOrHeld("GAMEPADBUTTONRIGHTSTICK") == false
                     && (Input.GetAxis("RightAnalogHorizontal") != 0f || Input.GetAxis("RightAnalogVertical") != 0f)) {
                         if (Input.GetAxis("RightAnalogHorizontal") != 0f) {
                             currentXDegrees += Input.GetAxis("RightAnalogHorizontal") * analogYawSpeed * (PlayerPrefs.GetFloat("JoystickLookSpeed"));

@@ -211,12 +211,12 @@ namespace AnyRPG {
                 LiftRightTrigger();
             }
 
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON4")) {
+            if (inputManager.KeyBindWasPressed("GAMEPADBUTTONLEFTSHOULDER")) {
                 // LB
                 if (currentActionBarSet > 0) {
                     SetGamepadActionButtonSet(currentActionBarSet - 1);
                 }
-            } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON5")) {
+            } else if (inputManager.KeyBindWasPressed("GAMEPADBUTTONRIGHTSHOULDER")) {
                 // RB
                 if (currentActionBarSet < (numActionBarSets - 1)) {
                     SetGamepadActionButtonSet(currentActionBarSet + 1);

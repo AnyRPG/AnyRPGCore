@@ -347,7 +347,7 @@ namespace AnyRPG {
 
         private void CheckToggleAutorun() {
             if (inputManager.KeyBindWasPressed("TOGGLEAUTORUN")
-                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON8") == true) {
+                || inputManager.KeyBindWasPressed("GAMEPADBUTTONLEFTSTICK") == true) {
                 ToggleAutorun();
             }
         }
@@ -589,13 +589,13 @@ namespace AnyRPG {
                     actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[2].OnClick(false);
                 } else if (controlsManager.DPadUpPressed) {
                     actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[3].OnClick(false);
-                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")) {
+                } else if (inputManager.KeyBindWasPressed("GAMEPADBUTTONA")) {
                     actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[4].OnClick(false);
-                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
+                } else if (inputManager.KeyBindWasPressed("GAMEPADBUTTONB")) {
                     actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[5].OnClick(false);
-                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")) {
+                } else if (inputManager.KeyBindWasPressed("GAMEPADBUTTONX")) {
                     actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[6].OnClick(false);
-                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON3")) {
+                } else if (inputManager.KeyBindWasPressed("GAMEPADBUTTONY")) {
                     actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[7].OnClick(false);
                 }
 
@@ -959,7 +959,7 @@ namespace AnyRPG {
             }
 
             if (inputManager.KeyBindWasPressed("CANCELALL")
-                || (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1") && controlsManager.RightTriggerDown == false && controlsManager.LeftTriggerDown == false)) {
+                || (inputManager.KeyBindWasPressed("GAMEPADBUTTONB") && controlsManager.RightTriggerDown == false && controlsManager.LeftTriggerDown == false)) {
                 uIManager.MovementTargetController.DisableProjector();
                 playerManagerClient.UnitController.ClearTarget();
                 if (playerManagerClient.ActiveUnitController.CharacterStats.IsAlive != false) {

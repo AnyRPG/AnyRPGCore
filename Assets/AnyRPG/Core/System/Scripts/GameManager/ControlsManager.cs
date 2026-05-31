@@ -172,16 +172,16 @@ namespace AnyRPG {
             CheckMouse();
 
             if (gamePadInputActive == false) {
-                if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON3")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON4")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON5")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON6")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON7")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON8")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON9")
+                if (inputManager.KeyBindWasPressed("GAMEPADBUTTONA")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONB")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONX")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONY")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONLEFTSHOULDER")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONRIGHTSHOULDER")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONSELECT")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONSTART")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONLEFTSTICK")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONRIGHTSTICK")
                     || rightTriggerPressed
                     || leftTriggerPressed
                     || dPadDownPressed
@@ -204,10 +204,10 @@ namespace AnyRPG {
             if (textInputActive == false) {
                 uIManager.ProcessInput();
 
-                if (windowManager.NavigatingInterface && inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
+                if (windowManager.NavigatingInterface && inputManager.KeyBindWasPressed("GAMEPADBUTTONB")) {
                     windowManager.EndNavigateInterface();
                 }
-                if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON6")) {
+                if (inputManager.KeyBindWasPressed("GAMEPADBUTTONSELECT")) {
                     windowManager.NavigateInterface();
                 }
             }
