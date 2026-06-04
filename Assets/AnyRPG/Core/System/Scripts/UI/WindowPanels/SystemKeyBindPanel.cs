@@ -56,24 +56,24 @@ namespace AnyRPG {
 
         private void InitializeKeys() {
             //Debug.Log("KeyBindMenuController.InitializeKeys()");
-            foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
+            foreach (InputActionNode inputActionNode in inputManager.InputActionNodes.Values) {
                 Transform nodeParent = null;
                 UINavigationController uINavigationController = null;
-                if (keyBindNode.KeyBindType == KeyBindType.Action) {
+                if (inputActionNode.KeyBindType == KeyBindType.Action) {
                     nodeParent = actionBarsKeyParent.transform;
                     uINavigationController = uINavigationControllers[2];
-                } else if (keyBindNode.KeyBindType == KeyBindType.Normal) {
+                } else if (inputActionNode.KeyBindType == KeyBindType.Normal) {
                     nodeParent = movementKeyParent.transform;
                     uINavigationController = uINavigationControllers[1];
-                } else if (keyBindNode.KeyBindType == KeyBindType.Constant || keyBindNode.KeyBindType == KeyBindType.System) {
+                } else if (inputActionNode.KeyBindType == KeyBindType.Constant || inputActionNode.KeyBindType == KeyBindType.System) {
                     nodeParent = systemKeyParent.transform;
                     uINavigationController = uINavigationControllers[3];
                 }
                 if (nodeParent != null) {
                     KeyBindSlotScript keyBindSlotScript = objectPooler.GetPooledObject(keyBindButtonPrefab, nodeParent).GetComponent<KeyBindSlotScript>();
                     keyBindSlotScript.Configure(systemGameManager);
-                    keyBindSlotScript.Initialize(keyBindNode);
-                    keyBindNode.SetSlotScript(keyBindSlotScript);
+                    keyBindSlotScript.Initialize(inputActionNode);
+                    inputActionNode.SetSlotScript(keyBindSlotScript);
                     uINavigationController.AddActiveButton(keyBindSlotScript.KeyboardAssignButton);
                 }
             }

@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 
 namespace AnyRPG {
     public class ConvertEquipmentModelProfileWizard : ScriptableWizard {
@@ -52,7 +49,7 @@ namespace AnyRPG {
 
         private void UpdateEquipmentModelProfile(EquipmentModelProfile equipment) {
             // search inline equipment models for the first model with a valid model prefab and assign it to the dropped item pickup model prefab
-            equipment.Properties.ApplyToEquipmentName = equipment.ResourceName;
+            equipment.Properties.ApplyToEquipmentName = equipment.ResourceName.Replace("UMA ", "");
         }
 
         void OnWizardUpdate() {

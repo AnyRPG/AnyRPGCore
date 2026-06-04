@@ -30,6 +30,7 @@ namespace AnyRPG {
         // game manager references
         protected UIManager uIManager = null;
         protected PlayerManagerClient playerManagerClient = null;
+        protected InputManager inputManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -43,6 +44,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             playerManagerClient = systemGameManager.PlayerManagerClient;
+            inputManager = systemGameManager.InputManager;
         }
 
         public void ShowToolTip(Vector3 position, IDescribable describable) {
@@ -52,12 +54,12 @@ namespace AnyRPG {
             }
             int pivotX;
             int pivotY;
-            if (Input.mousePosition.x < (Screen.width / 2)) {
+            if (inputManager.mousePosition.x < (Screen.width / 2)) {
                 pivotX = 0;
             } else {
                 pivotX = 1;
             }
-            if (Input.mousePosition.y < (Screen.height / 2)) {
+            if (inputManager.mousePosition.y < (Screen.height / 2)) {
                 pivotY = 0;
             } else {
                 pivotY = 1;

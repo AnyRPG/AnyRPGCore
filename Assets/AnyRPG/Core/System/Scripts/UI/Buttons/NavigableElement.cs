@@ -82,6 +82,7 @@ namespace AnyRPG {
         // game manager references
         protected AudioManager audioManager = null;
         protected ControlsManager controlsManager = null;
+        protected InputManager inputManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -111,6 +112,7 @@ namespace AnyRPG {
 
             audioManager = systemGameManager.AudioManager;
             controlsManager = systemGameManager.ControlsManager;
+            inputManager = systemGameManager.InputManager;
         }
 
         public virtual void SetController(UINavigationController uINavigationController) {

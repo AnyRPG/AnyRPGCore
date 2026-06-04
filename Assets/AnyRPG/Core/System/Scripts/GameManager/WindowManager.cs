@@ -124,27 +124,27 @@ namespace AnyRPG {
             //Debug.Log("WindowManager.Navigate() : windowstack is not zero: " + CurrentWindow.gameObject.name);
 
             // joystick movement
-            if (controlsManager.InputHorizontal != 0f || controlsManager.InputVertical != 0f) {
-                CurrentWindow.LeftAnalog(controlsManager.InputHorizontal, controlsManager.InputVertical);
+            if (inputManager.leftAnalogHorizontal != 0f || inputManager.leftAnalogVertical != 0f) {
+                CurrentWindow.LeftAnalog(inputManager.leftAnalogHorizontal, inputManager.leftAnalogVertical);
             }
 
             // d pad navigation
-            if (controlsManager.DPadUpPressed) {
+            if (inputManager.dPadUpPressed) {
                 CurrentWindow.UpButton();
             }
-            if (controlsManager.DPadDownPressed) {
+            if (inputManager.dPadDownPressed) {
                 CurrentWindow.DownButton();
             }
-            if (controlsManager.DPadLeftPressed) {
+            if (inputManager.dPadLeftPressed) {
                 CurrentWindow.LeftButton();
             }
-            if (controlsManager.DPadRightPressed) {
+            if (inputManager.dPadRightPressed) {
                 CurrentWindow.RightButton();
             }
-            if (controlsManager.LeftTriggerPressed) {
+            if (inputManager.leftTriggerPressed) {
                 CurrentWindow.LeftTrigger();
             }
-            if (controlsManager.RightTriggerPressed) {
+            if (inputManager.rightTriggerPressed) {
                 CurrentWindow.RightTrigger();
             }
 

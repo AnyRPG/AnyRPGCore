@@ -55,10 +55,9 @@ namespace AnyRPG {
 
         public string Description => inventorySlot.InstantiatedItem?.Description;
 
-        public override void Configure(SystemGameManager systemGameManager) {
-            base.Configure(systemGameManager);
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
 
-            //inventoryManager = systemGameManager.InventoryManager;
             handScript = systemGameManager.UIManager.HandScript;
             playerManagerClient = systemGameManager.PlayerManagerClient;
             actionBarManager = systemGameManager.UIManager.ActionBarManager;
@@ -160,7 +159,7 @@ namespace AnyRPG {
             if (inventorySlot.InstantiatedItem == null) {
                 return;
             }
-            contextMenuService.ShowContextMenu(this, Input.mousePosition);
+            contextMenuService.ShowContextMenu(this, inputManager.mousePosition);
         }
 
         public override void Accept() {

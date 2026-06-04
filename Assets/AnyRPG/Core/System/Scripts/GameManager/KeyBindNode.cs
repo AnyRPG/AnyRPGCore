@@ -61,9 +61,11 @@ namespace AnyRPG {
                     //Debug.Log("KeyBindNode.SetKeyboardKeyCode : actionbutton is not null");
                     ActionButton.KeyBindText.text = FormatActionButtonLabel();
                 }
+                /*
                 if (KeyBindSlotScript != null) {
                     KeyBindSlotScript.Initialize(this);
                 }
+                */
             }
         }
 
@@ -77,9 +79,11 @@ namespace AnyRPG {
                     MyActionButton.MyKeyBindText.text = FormatActionButtonLabel();
                 }
                 */
+                /*
                 if (KeyBindSlotScript != null) {
                     KeyBindSlotScript.Initialize(this);
                 }
+                */
             }
         }
 
@@ -144,9 +148,9 @@ namespace AnyRPG {
             //Debug.Log("KeyBindNode.UpdateKeyCode(" + inputDeviceType + ", " + keyCode + ", " + control + ", " + shift + ")");
 
             if (inputDeviceType == InputDeviceType.Keyboard) {
-                this.KeyboardKey = keyboardKey;
                 this.controlModifier = control;
                 this.shiftModifier = shift;
+                this.KeyboardKey = keyboardKey;
             } else if (inputDeviceType == InputDeviceType.Joystick) {
                 this.GamepadButton = gamepadButton;
             }/* else if (inputDeviceType == InputDeviceType.Mobile) {
@@ -186,7 +190,5 @@ namespace AnyRPG {
             keyUp = false;
         }
     }
-
-    public enum InputDeviceType { Keyboard, Joystick, Mobile }
 
 }

@@ -241,7 +241,7 @@ namespace AnyRPG {
             }
 
             // there was the assumption that these were only being called when a player clicked to add an ability
-            if (UIManager.MouseInRect(Icon.rectTransform)) {
+            if (UIManager.MouseInRect(Icon.rectTransform, inputManager)) {
                 //uIManager.ShowToolTip(transform.position, useable as IDescribable);
                 uIManager.ShowGamepadTooltip(tooltipTransform, transform, newUseable as IDescribable);
 
@@ -460,7 +460,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (UIManager.MouseInRect(Icon.rectTransform)) {
+            if (UIManager.MouseInRect(Icon.rectTransform, inputManager)) {
                 ProcessOnPointerEnter();
             }
         }

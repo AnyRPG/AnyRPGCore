@@ -78,7 +78,7 @@ namespace AnyRPG {
         protected override void HandleRightClick() {
             base.HandleRightClick();
             if (equippedEquipment != null) {
-                contextMenuService.ShowContextMenu(this, Input.mousePosition);
+                contextMenuService.ShowContextMenu(this, inputManager.mousePosition);
             }
         }
 

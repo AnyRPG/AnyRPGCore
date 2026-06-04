@@ -5,8 +5,7 @@ namespace AnyRPG {
     public class KeyBindSlotScript : ConfiguredMonoBehaviour {
 
         // a unique string that represents the dictionary key for this keybind throughout the game
-        [SerializeField]
-        private string keyBindID = string.Empty;
+        private string actionName = string.Empty;
 
         [SerializeField]
         private TextMeshProUGUI slotLabel = null;
@@ -31,7 +30,7 @@ namespace AnyRPG {
         private HighlightButton mobileAssignButton = null;
         */
 
-        private KeyBindNode keyBindNode = null;
+        private InputActionNode inputActionNode = null;
 
         // game manager references
         KeyBindManager keyBindManager = null;
@@ -52,13 +51,17 @@ namespace AnyRPG {
             keyBindManager = systemGameManager.KeyBindManager;
         }
 
-        public void Initialize(KeyBindNode keyBindNode) {
+        public void Initialize(InputActionNode inputActionNode) {
             //Debug.Log("KeyBindSlotScript.Initialize()");
-            this.keyBindNode = keyBindNode;
-            this.keyBindID = keyBindNode.KeyBindID;
+            this.inputActionNode = inputActionNode;
+            this.actionName = inputActionNode.ActionName;
             //Debug.Log("KeyBindSlotScript.Initialize(): keyBindID: " + this.keyBindID);
-            this.slotLabel.text = keyBindNode.Label;
-            this.keyboardButtonLabel.text = (keyBindNode.Control ? "ctrl+" : "") + (keyBindNode.Shift ? "shift+" : "") + keyBindNode.KeyboardKey.ToString();
+            this.slotLabel.text = inputActionNode.Label;
+
+            // FIX ME - GET PROPER WAY TO DISPLAY CONTROL AND SHIFT KEYS AND THEN RE-ENABLE
+            //this.keyboardButtonLabel.text = (inputActionNode.Control ? "ctrl+" : "") + (inputActionNode.Shift ? "shift+" : "") + inputActionNode.KeyboardKey.ToString();
+            this.keyboardButtonLabel.text = "fix me";
+
             //this.joystickButtonLabel.text = keyBindNode.JoystickKeyCode.ToString();
             //this.mobileButtonLabel.text = keyBindNode.MobileKeyCode.ToString();
         }
@@ -72,7 +75,7 @@ namespace AnyRPG {
 
         public void SetKeyBind(int inputDeviceType) {
             //Debug.Log("KeyBindSlotScript.SetKeyBind(" + inputDeviceType + ")");
-            keyBindManager.BeginKeyBind(keyBindID, (InputDeviceType)inputDeviceType);
+            keyBindManager.BeginKeyBind(actionName, (InputDeviceType)inputDeviceType);
         }
 
 

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace AnyRPG {
 
@@ -220,7 +221,6 @@ namespace AnyRPG {
                 return;
             }
             rectTransform.GetWorldCorners(worldCorners);
-            Vector3 mousePosition = Input.mousePosition;
             if (inputManager.rightMouseButtonUp) {
                 rightMouseClickedOverThisWindow = false;
             }
@@ -230,32 +230,10 @@ namespace AnyRPG {
             if (inputManager.middleMouseButtonUp) {
                 middleMouseClickedOverThisWindow = false;
             }
-            /*
-            for (var i = 0; i < 4; i++) {
-                //Debug.Log("World Corner " + i + " : " + worldCorners[i]);
-            }
-            */
-            if (mousePosition.x < worldCorners[0].x || mousePosition.x > worldCorners[2].x || mousePosition.y < worldCorners[0].y || mousePosition.y > worldCorners[2].y) {
+            if (inputManager.mousePosition.x < worldCorners[0].x || inputManager.mousePosition.x > worldCorners[2].x || inputManager.mousePosition.y < worldCorners[0].y || inputManager.mousePosition.y > worldCorners[2].y) {
                 mouseOutsideWindow = true;
-                //Debug.Log("mouse scroll was outside of onscreen bounds.  ignoring!");
-                /*
-                if (!rightMouseClickedOverThisWindow && !leftMouseClickedOverThisWindow) {
-                    return;
-                }
-                */
             } else {
                 mouseOutsideWindow = false;
-                /*
-                if (inputManager.rightMouseButtonDown) {
-                    rightMouseClickedOverThisWindow = true;
-                }
-                if (inputManager.leftMouseButtonDown) {
-                    leftMouseClickedOverThisWindow = true;
-                }
-                if (inputManager.middleMouseButtonDown) {
-                    middleMouseClickedOverThisWindow = true;
-                }
-                */
             }
 
             cameraPan = false;
@@ -265,10 +243,10 @@ namespace AnyRPG {
             GetMouseZoom();
 
             // ==== GAMEPAD ZOOM ====
-            if (Input.GetAxis("RightAnalogVertical") != 0f
+            if (inputManager.rightAnalogVertical != 0f
                 && inputManager.KeyBindWasPressedOrHeld("GAMEPADBUTTONRIGHTSTICK")) {
 
-                currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * gamepadZoomSpeed * -1);
+                currentZoomDistance += (inputManager.rightAnalogVertical * gamepadZoomSpeed * -1);
                 currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, currentMaxZoom);
                 cameraZoom = true;
 
@@ -279,14 +257,9 @@ namespace AnyRPG {
             if (//!mouseOutsideWindow &&
                 (rightMouseClickedOverThisWindow || leftMouseClickedOverThisWindow)
                 && (inputManager.rightMouseButtonDown || inputManager.leftMouseButtonDown)) {
-                float xInput = Input.GetAxis("Mouse X") * yawSpeed;
+                float xInput = inputManager.mouseDeltaX * yawSpeed;
                 currentXDegrees += xInput;
-                //Debug.Log("xInput: " + xInput + "; currentXDegrees: " + currentXDegrees + "; xQuaternion: " + xQuaternion);
-                //Quaternion camTurnAngle = Quaternion.AngleAxis(Input.GetAxis("Mouse X") * yawSpeed, Vector3.up);
-                //cameraOffsetVector = camTurnAngle * cameraOffsetVector;
-                //Debug.Log("Camera Offset Vector after rotationX: " + cameraOffsetVector);
-                //camTurnAngle = Quaternion.AngleAxis(-Input.GetAxis("Mouse Y") * yawSpeed, transform.right);
-                float yInput = Input.GetAxis("Mouse Y") * yawSpeed;
+                float yInput = inputManager.mouseDeltaY * yawSpeed;
                 currentYDegrees += yInput;
 
                 //Debug.Log($"currentYDegrees: {currentYDegrees}; currentXDegrees: {currentXDegrees}; xInput: {xInput}; yInput: {yInput}");
@@ -295,14 +268,14 @@ namespace AnyRPG {
 
             // ==== GAMEPAD PAN ====
             if (inputManager.KeyBindWasPressedOrHeld("GAMEPADBUTTONRIGHTSTICK") == false
-                && (Input.GetAxis("RightAnalogHorizontal") != 0 || Input.GetAxis("RightAnalogVertical") != 0)) {
+                && (inputManager.rightAnalogHorizontal != 0 || inputManager.rightAnalogVertical != 0)) {
 
-                if (Input.GetAxis("RightAnalogHorizontal") != 0) {
-                    currentXDegrees += Input.GetAxis("RightAnalogHorizontal") * analogYawSpeed;
+                if (inputManager.rightAnalogHorizontal != 0) {
+                    currentXDegrees += inputManager.rightAnalogHorizontal * analogYawSpeed;
                 }
 
-                if (Input.GetAxis("RightAnalogVertical") != 0) {
-                    currentYDegrees += Input.GetAxis("RightAnalogVertical") * analogYawSpeed;
+                if (inputManager.rightAnalogVertical != 0) {
+                    currentYDegrees += inputManager.rightAnalogVertical * analogYawSpeed;
                 }
 
                 cameraPan = true;
@@ -317,9 +290,6 @@ namespace AnyRPG {
                 }
                 Quaternion xQuaternion = Quaternion.AngleAxis(adjustedXDegrees, Vector3.up);
                 Quaternion yQuaternion = Quaternion.AngleAxis(currentYDegrees, Vector3.right);
-                //currentCameraOffset = xQuaternion * yQuaternion * initialCameraPositionOffset;
-                //currentCameraPositionOffset = xQuaternion * yQuaternion * initialCameraPositionOffset;
-                //currentCameraPositionOffset = xQuaternion * yQuaternion * initialCameraLookOffset;
                 if (rotateTarget == true) {
                     unitController.transform.rotation = initialTargetRotation * xQuaternion;
                     currentCameraPositionOffset = yQuaternion * initialLookVector;
@@ -332,11 +302,8 @@ namespace AnyRPG {
             if (!mouseOutsideWindow
                 && middleMouseClickedOverThisWindow
                 && inputManager.middleMouseButtonDown) {
-                //float xInput = Input.GetAxis("Mouse X") * yawSpeed;
-                float xInput = Input.GetAxis("Mouse X");
-                float yInput = Input.GetAxis("Mouse Y");
                 //currentCameraPositionOffset = new Vector3(currentCameraPositionOffset.x + (xInput / mousePanSpeedDivider), currentCameraPositionOffset.y - (yInput / mousePanSpeedDivider), currentCameraPositionOffset.z);
-                currentCameraLookOffset = new Vector3(currentCameraLookOffset.x + (xInput / mousePanSpeedDivider), currentCameraLookOffset.y - (yInput / mousePanSpeedDivider), currentCameraLookOffset.z);
+                currentCameraLookOffset = new Vector3(currentCameraLookOffset.x + (inputManager.mouseDeltaX / mousePanSpeedDivider), currentCameraLookOffset.y - (inputManager.mouseDeltaY / mousePanSpeedDivider), currentCameraLookOffset.z);
                 //Debug.Log("xInput: " + xInput + "; yInput: " + yInput + "; currentTargetOffset: " + currentTargetOffset);
                 cameraPan = true;
             }
@@ -366,13 +333,8 @@ namespace AnyRPG {
             if (scrollDelta == 0f) {
                 return;
             }
-            //if (!mouseOutsideWindow && inputManager.mouseScrolled) {
-            //Debug.Log("Mouse Scrollwheel: " + Input.GetAxis("Mouse ScrollWheel"));
-            //currentZoomDistance += (scrollDelta * cameraSpeed * -1);
             currentZoomDistance += (scrollDelta * -1f);
-            //currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * cameraSpeed * -1);
             currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, currentMaxZoom);
-            //}
 
             cameraZoom = true;
         }
