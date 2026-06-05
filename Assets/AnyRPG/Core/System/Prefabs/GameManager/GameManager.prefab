@@ -7268,7 +7268,7 @@ MonoBehaviour:
     m_Bits: 33554433
   maxMovementSpeed: 20
   maxTurnSpeed: 360
-  useEncumberance: 0
+  useEncumbrance: 0
   baseCarryWeight: 10
   encumberedSpeed: 1
   walkSpeed: 1
@@ -7430,83 +7430,65 @@ MonoBehaviour:
   - sourceColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     projectorMaterial: {fileID: 2100000, guid: e0adbcbf43af54c45b048a9e7b2ebf79, type: 2}
     tintMaterial: 1
-  multipleInteractionNamePlateImage: {fileID: 21300000, guid: cd62bacdc6666fa4c88ff42d8cb179fa,
-    type: 3}
-  multipleCraftNamePlateImage: {fileID: 0}
+  multipleInteractionNameplateImage: {fileID: 0}
+  multipleCraftNameplateImage: {fileID: 0}
   auctionInteractionPanelImage: {fileID: 21300000, guid: 957bbeabbf5f0d145a36adaf44bfa888,
     type: 3}
-  auctionNamePlateImage: {fileID: 21300000, guid: 957bbeabbf5f0d145a36adaf44bfa888,
-    type: 3}
+  auctionNameplateImage: {fileID: 0}
   bankInteractionPanelImage: {fileID: 21300000, guid: e98872aa5b10bc342b6c3c377f5a8e0c,
     type: 3}
-  bankNamePlateImage: {fileID: 21300000, guid: e98872aa5b10bc342b6c3c377f5a8e0c, type: 3}
+  bankNameplateImage: {fileID: 0}
   guildmasterInteractionPanelImage: {fileID: 21300000, guid: b5a39c30dcd09374a8a019b85776cf3b,
     type: 3}
-  guildmasterNamePlateImage: {fileID: 21300000, guid: b5a39c30dcd09374a8a019b85776cf3b,
-    type: 3}
+  guildmasterNameplateImage: {fileID: 0}
   questGiverInteractionPanelImage: {fileID: 21300000, guid: ef2c8a22c3896b441b253241b05ec0ea,
     type: 3}
-  questGiverNamePlateImage: {fileID: 0}
+  questGiverNameplateImage: {fileID: 0}
   dialogInteractionPanelImage: {fileID: 21300000, guid: c28c0c6b05459ad4399d6dbec89cc4f7,
     type: 3}
-  dialogNamePlateImage: {fileID: 21300000, guid: c28c0c6b05459ad4399d6dbec89cc4f7,
-    type: 3}
+  dialogNameplateImage: {fileID: 0}
   mailboxInteractionPanelImage: {fileID: 21300000, guid: 174b04d4c7bce7b488d8c174392497aa,
     type: 3}
-  mailboxNamePlateImage: {fileID: 21300000, guid: 174b04d4c7bce7b488d8c174392497aa,
-    type: 3}
+  mailboxNameplateImage: {fileID: 0}
   nameChangeInteractionPanelImage: {fileID: 21300000, guid: 05e055e05b6408247b5e1fab91ae6bbd,
     type: 3}
-  nameChangeNamePlateImage: {fileID: 21300000, guid: 05e055e05b6408247b5e1fab91ae6bbd,
-    type: 3}
+  nameChangeNameplateImage: {fileID: 0}
   storageContainerInteractionPanelImage: {fileID: 21300000, guid: e98872aa5b10bc342b6c3c377f5a8e0c,
     type: 3}
-  storageContainerNamePlateImage: {fileID: 21300000, guid: e98872aa5b10bc342b6c3c377f5a8e0c,
+  storageContainerNameplateImage: {fileID: 0}
+  cutsceneInteractionPanelImage: {fileID: 21300000, guid: 92d539f1446d2a649bff6c99df6e17ae,
     type: 3}
-  cutSceneInteractionPanelImage: {fileID: 21300000, guid: 92d539f1446d2a649bff6c99df6e17ae,
-    type: 3}
-  cutSceneNamePlateImage: {fileID: 21300000, guid: 92d539f1446d2a649bff6c99df6e17ae,
-    type: 3}
+  cutsceneNameplateImage: {fileID: 0}
   lootableCharacterInteractionPanelImage: {fileID: 21300000, guid: dbbdbbcfafb7d3a45a5f1c11a6943bc8,
     type: 3}
-  lootableCharacterNamePlateImage: {fileID: 21300000, guid: dbbdbbcfafb7d3a45a5f1c11a6943bc8,
-    type: 3}
+  lootableCharacterNameplateImage: {fileID: 0}
   characterCreatorInteractionPanelImage: {fileID: 21300000, guid: 29c6612823ead52458d2959c103597e3,
     type: 3}
-  characterCreatorNamePlateImage: {fileID: 21300000, guid: 29c6612823ead52458d2959c103597e3,
-    type: 3}
+  characterCreatorNameplateImage: {fileID: 0}
   unitSpawnControllerInteractionPanelImage: {fileID: 21300000, guid: b5a39c30dcd09374a8a019b85776cf3b,
     type: 3}
-  unitSpawnControllerNamePlateImage: {fileID: 21300000, guid: b5a39c30dcd09374a8a019b85776cf3b,
-    type: 3}
+  unitSpawnControllerNameplateImage: {fileID: 0}
   factionChangeInteractionPanelImage: {fileID: 21300000, guid: 4a97d5f2b3dae5949ae858129601ad27,
     type: 3}
-  factionChangeNamePlateImage: {fileID: 21300000, guid: 4a97d5f2b3dae5949ae858129601ad27,
-    type: 3}
+  factionChangeNameplateImage: {fileID: 0}
   classChangeInteractionPanelImage: {fileID: 21300000, guid: 504f6c321fd8f7c4bb094a1a4bfb54f6,
     type: 3}
-  classChangeNamePlateImage: {fileID: 21300000, guid: 504f6c321fd8f7c4bb094a1a4bfb54f6,
-    type: 3}
+  classChangeNameplateImage: {fileID: 0}
   vendorInteractionPanelImage: {fileID: 21300000, guid: 180830f1f3288174d8e7ee1820c3a250,
     type: 3}
-  vendorNamePlateImage: {fileID: 21300000, guid: 180830f1f3288174d8e7ee1820c3a250,
-    type: 3}
+  vendorNameplateImage: {fileID: 0}
   portalInteractionPanelImage: {fileID: 21300000, guid: 203f83c3b74019847a98c5223f7b97a9,
     type: 3}
-  portalNamePlateImage: {fileID: 21300000, guid: 203f83c3b74019847a98c5223f7b97a9,
-    type: 3}
+  portalNameplateImage: {fileID: 0}
   skillTrainerInteractionPanelImage: {fileID: 21300000, guid: a4d0bd75ddacfbf4cbc42c4b2cbd641b,
     type: 3}
-  skillTrainerNamePlateImage: {fileID: 21300000, guid: a4d0bd75ddacfbf4cbc42c4b2cbd641b,
-    type: 3}
+  skillTrainerNameplateImage: {fileID: 0}
   musicPlayerInteractionPanelImage: {fileID: 21300000, guid: 0ab38e54abb1f744593a22ef6fb515d9,
     type: 3}
-  musicPlayerNamePlateImage: {fileID: 21300000, guid: 0ab38e54abb1f744593a22ef6fb515d9,
-    type: 3}
+  musicPlayerNameplateImage: {fileID: 0}
   activatableObjectInteractionPanelImage: {fileID: 21300000, guid: cb19cabc72859994b9ca4fce40b1abdd,
     type: 3}
-  activatableObjectNamePlateImage: {fileID: 21300000, guid: cb19cabc72859994b9ca4fce40b1abdd,
-    type: 3}
+  activatableObjectNameplateImage: {fileID: 0}
   questLogSize: 25
   timeOfDaySpeed: 1
   defaultSunAngle: 120
@@ -7594,6 +7576,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3d686e755204da43876d7ddae304771, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputActions: {fileID: -944628639613478452, guid: d9145e1e758749e42a17dfaf1bba9e1a,
+    type: 3}
   rightMouseButtonDown: 0
   middleMouseButtonDown: 0
   rightMouseButtonUp: 0
@@ -7613,6 +7597,32 @@ MonoBehaviour:
   leftMouseButtonDownPosition: {x: 0, y: 0, z: 0}
   leftMouseButtonUpPosition: {x: 0, y: 0, z: 0}
   mouseScrolled: 0
+  mouseScrollDeltaY: 0
+  mouseDeltaX: 0
+  mouseDeltaY: 0
+  mousePosition: {x: 0, y: 0, z: 0}
+  dPadHorizontal: 0
+  dPadVertical: 0
+  dPadDown: 0
+  dPadDownPressed: 0
+  dPadUp: 0
+  dPadUpPressed: 0
+  dPadLeft: 0
+  dPadLeftPressed: 0
+  dPadRight: 0
+  dPadRightPressed: 0
+  leftTriggerAxis: 0
+  rightTriggerAxis: 0
+  leftTriggerDown: 0
+  leftTriggerUp: 0
+  leftTriggerPressed: 0
+  rightTriggerDown: 0
+  rightTriggerUp: 0
+  rightTriggerPressed: 0
+  rightAnalogVertical: 0
+  rightAnalogHorizontal: 0
+  leftAnalogVertical: 0
+  leftAnalogHorizontal: 0
 --- !u!114 &5332626292093196242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7663,7 +7673,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71caf018692b2c645a1353fa71a11742, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkController: {fileID: 0}
 --- !u!114 &8065635434469254371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7676,7 +7685,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474521bfebb46544a83c5d5075163427, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkController: {fileID: 0}
 --- !u!1 &5742173228335772782
 GameObject:
   m_ObjectHideFlags: 0
@@ -8140,7 +8148,7 @@ MonoBehaviour:
   actionBarManager: {fileID: 3372542372360536245}
   combatTextManager: {fileID: 4987049062904966066}
   messageFeedManager: {fileID: 8935282192918879629}
-  namePlateManager: {fileID: 6986250774741738154}
+  nameplateManager: {fileID: 6986250774741738154}
   mapManager: {fileID: 7966818823949176834}
   mainMapManager: {fileID: 3310018683127147123}
   miniMapManager: {fileID: 3478581543287038846}

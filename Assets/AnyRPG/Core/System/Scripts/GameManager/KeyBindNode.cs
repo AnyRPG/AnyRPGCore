@@ -8,7 +8,7 @@ namespace AnyRPG {
 
         private string keyBindID;
 
-        private Key keyboardKey;
+        //private Key keyboardKey;
         private GamepadButton gamepadButton;
         //private KeyCode mobileKeyCode;
 
@@ -26,7 +26,7 @@ namespace AnyRPG {
 
         private KeyBindSlotScript keyBindSlotScript = null;
 
-        private ActionButton actionButton = null;
+        //private ActionButton actionButton = null;
 
         // tracker to see if the key was pressed this frame
         private bool keyPressed = false;
@@ -47,11 +47,12 @@ namespace AnyRPG {
             this.shiftModifier = shift;
             this.gamepadButton = gamepadButton;
             //this.mobileKeyCode = mobileKeyCode;
-            this.KeyboardKey = keyboardKey;
+            //this.KeyboardKey = keyboardKey;
         }
 
         public string KeyBindID { get => keyBindID; set => keyBindID = value; }
 
+        /*
         public Key KeyboardKey {
             get => keyboardKey;
             set {
@@ -61,13 +62,12 @@ namespace AnyRPG {
                     //Debug.Log("KeyBindNode.SetKeyboardKeyCode : actionbutton is not null");
                     ActionButton.KeyBindText.text = FormatActionButtonLabel();
                 }
-                /*
                 if (KeyBindSlotScript != null) {
                     KeyBindSlotScript.Initialize(this);
                 }
-                */
             }
-        }
+    }
+        */
 
         public GamepadButton GamepadButton {
             get => gamepadButton;
@@ -106,6 +106,7 @@ namespace AnyRPG {
 
         public string Label { get => label; set => label = value; }
 
+        /*
         public ActionButton ActionButton {
             get => actionButton;
             set {
@@ -114,6 +115,7 @@ namespace AnyRPG {
                 actionButton.KeyBindText.text = FormatActionButtonLabel();
             }
         }
+        */
 
         public KeyBindSlotScript KeyBindSlotScript { get => keyBindSlotScript; set => keyBindSlotScript = value; }
         public KeyBindType KeyBindType { get => keyBindType; set => keyBindType = value; }
@@ -123,6 +125,7 @@ namespace AnyRPG {
         public bool KeyHeld { get => keyHeld; }
         public bool KeyUp { get => keyUp; }
 
+        /*
         private string FormatActionButtonLabel() {
             //Debug.Log("KeyBindNode.FormatActionButtonLabel() : " + KeyboardKeyCode.ToString());
             if (KeyboardKey.ToString() == "None") {
@@ -131,6 +134,7 @@ namespace AnyRPG {
             return (controlModifier ? "c" : "") + (shiftModifier ? "s" : "") + ReplaceSpecialCharacters(KeyboardKey.ToString());
             //return keyBindID;
         }
+        */
 
         public string ReplaceSpecialCharacters(string inputString) {
             inputString = inputString.Replace("Alpha", "");
@@ -150,7 +154,7 @@ namespace AnyRPG {
             if (inputDeviceType == InputDeviceType.Keyboard) {
                 this.controlModifier = control;
                 this.shiftModifier = shift;
-                this.KeyboardKey = keyboardKey;
+                //this.KeyboardKey = keyboardKey;
             } else if (inputDeviceType == InputDeviceType.Joystick) {
                 this.GamepadButton = gamepadButton;
             }/* else if (inputDeviceType == InputDeviceType.Mobile) {

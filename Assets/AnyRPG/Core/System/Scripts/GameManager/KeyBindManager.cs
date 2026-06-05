@@ -201,6 +201,7 @@ namespace AnyRPG {
         }
         */
 
+        /*
         private void UnbindKeyCode(Dictionary<string, KeyBindNode> currentDictionary, InputDeviceType inputDeviceType, Key keyboardKey, bool control, bool shift) {
             //Debug.Log("KeyBindManager.UnbindKeyCode()");
             foreach (KeyBindNode keyBindNode in currentDictionary.Values) {
@@ -211,22 +212,10 @@ namespace AnyRPG {
                         keyBindNode.Control = false;
                         return;
                     }
-                }/* else if(inputDeviceType == InputDeviceType.Joystick) {
-                    if (keyBindNode.JoystickKeyCode == keyCode) {
-                        keyBindNode.JoystickKeyCode = KeyCode.None;
-                        return;
-                    }
-
-                } else if (inputDeviceType == InputDeviceType.Mobile) {
-                    if (keyBindNode.MobileKeyCode == keyCode) {
-                        keyBindNode.MobileKeyCode = KeyCode.None;
-                        return;
-                    }
-
                 }
-                */
             }
         }
+        */
 
         public void BeginKeyBind(string key, InputDeviceType inputDeviceType) {
             //Debug.Log($"KeyBindManager.BeginKeyBind({key}, {inputDeviceType})");
@@ -266,7 +255,8 @@ namespace AnyRPG {
                     bool isShiftHeld = Keyboard.current.shiftKey.isPressed;
 
                     // NATIVE PATH SHORTCUT: control.path gives you exactly what Unity wants (e.g., "<Keyboard>/equals")
-                    string nativePath = control.path;
+                    //string nativePath = control.path;
+                    string nativePath = $"<Keyboard>/{control.name}";
 
                     // Update your BindKey signature to accept this clean nativePath string
                     BindInputAction(bindName, InputDeviceType.Keyboard, isCtrlHeld, isShiftHeld, nativePath);
@@ -289,18 +279,17 @@ namespace AnyRPG {
             }
         }
 
-        public void BindInputAction(string key, InputDeviceType inputDeviceType, bool control, bool shift, string nativePath) {
-            Debug.Log($"KeyBindManager.BindKey(): Binding key: {key} with inputDeviceType: {inputDeviceType}, control: {control}, shift: {shift}, nativePath: {nativePath}");
+        public void BindInputAction(string actionName, InputDeviceType inputDeviceType, bool control, bool shift, string nativePath) {
+            Debug.Log($"KeyBindManager.BindKey(): Binding key: {actionName} with inputDeviceType: {inputDeviceType}, control: {control}, shift: {shift}, nativePath: {nativePath}");
 
             // since the key cannot control 2 actions, if it already exists, unbind it from that action
-            //UnbindKeyCode(keyBinds, inputDeviceType, keyboardKey, control, shift);
+            inputManager.UnbindInputAction(actionName, control, shift, nativePath);
 
-            inputManager.UpdateInputAction(key, control, shift, nativePath);
+            inputManager.UpdateInputAction(actionName, control, shift, nativePath);
             bindName = string.Empty;
             uIManager.keyBindConfirmWindow.CloseWindow();
             StopListeningForRebind();
         }
-
 
         public void StopListeningForRebind() {
             Debug.Log("KeyBindManager.StopListeningForRebind()");

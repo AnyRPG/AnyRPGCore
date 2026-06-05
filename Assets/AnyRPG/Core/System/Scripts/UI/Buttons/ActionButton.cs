@@ -60,7 +60,6 @@ namespace AnyRPG {
         public Image Icon { get => icon; set => icon = value; }
         public int Count { get => count; }
         public TextMeshProUGUI StackSizeText { get => stackSizeText; }
-        public TextMeshProUGUI KeyBindText { get => keyBindText; }
         public IUseable SavedUseable { get => savedUseable; set => savedUseable = value; }
         public IUseable Useable { get => useable; }
         public Image CoolDownIcon { get => coolDownIcon; set => coolDownIcon = value; }
@@ -88,6 +87,12 @@ namespace AnyRPG {
 
             systemEventManager.OnItemCountChanged += UpdateItemCount;
             HideRangeIndicator();
+        }
+
+        public void UpdateKeybindText(string newText) {
+            Debug.Log($"{gameObject.name}.ActionButton.UpdateKeybindText({newText})");
+
+            keyBindText.text = newText;
         }
 
         public void HideRangeIndicator() {

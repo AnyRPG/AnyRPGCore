@@ -54,14 +54,21 @@ namespace AnyRPG {
         public void Initialize(InputActionNode inputActionNode) {
             //Debug.Log("KeyBindSlotScript.Initialize()");
             this.inputActionNode = inputActionNode;
-            this.actionName = inputActionNode.ActionName;
-            //Debug.Log("KeyBindSlotScript.Initialize(): keyBindID: " + this.keyBindID);
-            this.slotLabel.text = inputActionNode.Label;
+            actionName = inputActionNode.ActionName;
+            slotLabel.text = inputActionNode.Label;
 
-            // FIX ME - GET PROPER WAY TO DISPLAY CONTROL AND SHIFT KEYS AND THEN RE-ENABLE
-            //this.keyboardButtonLabel.text = (inputActionNode.Control ? "ctrl+" : "") + (inputActionNode.Shift ? "shift+" : "") + inputActionNode.KeyboardKey.ToString();
-            this.keyboardButtonLabel.text = "fix me";
+            this.keyboardButtonLabel.text = inputActionNode.KeyboardString;
+            //this.joystickButtonLabel.text = keyBindNode.JoystickKeyCode.ToString();
+            //this.mobileButtonLabel.text = keyBindNode.MobileKeyCode.ToString();
+        }
 
+        public void UpdateLabel() {
+            Debug.Log("KeyBindSlotScript.UpdateLabel()");
+
+            if (inputActionNode == null) {
+                return;
+            }
+            this.keyboardButtonLabel.text = inputActionNode.KeyboardString;
             //this.joystickButtonLabel.text = keyBindNode.JoystickKeyCode.ToString();
             //this.mobileButtonLabel.text = keyBindNode.MobileKeyCode.ToString();
         }

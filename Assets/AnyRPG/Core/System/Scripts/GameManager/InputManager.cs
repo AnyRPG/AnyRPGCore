@@ -342,24 +342,106 @@ namespace AnyRPG {
         }
 
         private void LoadPlayerKeyControls() {
+            Debug.Log("InputManager.LoadPlayerKeyControls()");
+
             if (PlayerPrefs.HasKey("InputActionOverrides")) {
                 inputActions.LoadBindingOverridesFromJson(PlayerPrefs.GetString("InputActionOverrides"));
+                
+                // loop through input action nodes and call their ProcessUpdateAction() method to update their display strings based on the new overrides we just loaded
+                foreach (InputActionNode inputActionNode in inputActionNodes.Values) {
+                    inputActionNode.ProcessUpdateAction();
+                }
             }
         }
 
         public void SavePlayerKeyControls() {
+            Debug.Log("InputManager.SavePlayerKeyControls()");
+
             PlayerPrefs.SetString("InputActionOverrides", inputActions.SaveBindingOverridesAsJson());
         }
 
         public void UpdateInputAction(string actionName, bool control, bool shift, string nativePath) {
+            Debug.Log($"InputManager.UpdateInputAction(actionName: {actionName}, nativePath: {nativePath}, Ctrl: {control}, Shift: {shift})");
+
             if (inputActionNodes.TryGetValue(actionName, out InputActionNode inputActionNode)) {
                 inputActionNode.UpdateInputAction(control, shift, nativePath);
+                SavePlayerKeyControls();
             } else {
                 Debug.LogError("InputManager.UpdateInputAction() - No InputActionNode found for actionName: " + actionName);
             }
         }
 
-        private InputAction InitializeAction(string actionName, string label, KeyBindType keyBindType) {
+        public void UnbindInputAction(string actionName, bool control, bool shift, string nativePath) {
+            Debug.Log($"InputManager.UnbindInputAction() called for action '{actionName}' with nativePath '{nativePath}' (Ctrl: {control}, Shift: {shift})");
+
+            if (string.IsNullOrEmpty(nativePath)) return;
+
+            foreach (InputActionNode inputActionNode in inputActionNodes.Values) {
+                InputAction action = inputActionNode.InputAction;
+                if (action == null) continue;
+
+                // Loop through all bindings attached to this action
+                for (int i = 0; i < action.bindings.Count; i++) {
+                    InputBinding binding = action.bindings[i];
+
+                    // Only look for keyboard paths
+                    string activePath = !string.IsNullOrEmpty(binding.overridePath) ? binding.overridePath : binding.path;
+                    if (activePath.StartsWith("<Keyboard>") && activePath == nativePath) {
+
+                        bool hasCtrlModifier = false;
+                        bool hasShiftModifier = false;
+                        int compositeStartIndex = -1;
+
+                        // --- MODIFIER MATCH CHECK ---
+                        // If this binding is part of a composite (like a modifier binding), we need to validate its siblings
+                        if (binding.isPartOfComposite) {
+                            // Find the header index of this composite group
+                            int currentIndex = i;
+                            while (currentIndex >= 0) {
+                                if (action.bindings[currentIndex].isComposite) {
+                                    compositeStartIndex = currentIndex;
+                                    break;
+                                }
+                                currentIndex--;
+                            }
+
+                            // Scan all parts of this specific composite group to check for active modifiers
+                            if (compositeStartIndex != -1) {
+                                int scanIndex = compositeStartIndex + 1;
+                                while (scanIndex < action.bindings.Count && action.bindings[scanIndex].isPartOfComposite) {
+                                    InputBinding partBinding = action.bindings[scanIndex];
+                                    string partPath = !string.IsNullOrEmpty(partBinding.overridePath) ? partBinding.overridePath : partBinding.path;
+
+                                    // Check if this specific part of the composite is a Ctrl or Shift key
+                                    if (partPath.Contains("ctrl") || partPath.Contains("control")) hasCtrlModifier = true;
+                                    if (partPath.Contains("shift")) hasShiftModifier = true;
+
+                                    scanIndex++;
+                                }
+                            }
+                        }
+
+                        // If the physical binding modifiers match the parameters passed into the method, proceed
+                        if (hasCtrlModifier == control && hasShiftModifier == shift) {
+
+                            // If it was part of a composite, it's safest to reset the entire composite group override
+                            if (binding.isPartOfComposite && compositeStartIndex != -1) {
+                                action.RemoveBindingOverride(compositeStartIndex);
+                            } else {
+                                // Otherwise, it's a standalone key, just remove this specific row override
+                                action.RemoveBindingOverride(i);
+                            }
+
+                            Debug.Log($"Successfully unbound keyboard path '{nativePath}' (Ctrl: {control}, Shift: {shift}) from '{action.name}'. Gamepad settings left untouched.");
+                            inputActionNode.ProcessUpdateAction();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        private InputAction InitializeAction(string actionName, string bindKeyLabel, KeyBindType keyBindType) {
             
             var actionMap = inputActions.FindActionMap(actionName);
             if (actionMap == null) {
@@ -371,7 +453,7 @@ namespace AnyRPG {
 
             // You must explicitly enable the map, or polling will always return false
             actionMap.Enable();
-            InputActionNode inputActionNode = new InputActionNode(actionName, inputAction, label, keyBindType);
+            InputActionNode inputActionNode = new InputActionNode(actionName, inputAction, bindKeyLabel, keyBindType);
             inputActionNodes.Add(actionName, inputActionNode);
 
             return inputAction;
@@ -696,96 +778,41 @@ namespace AnyRPG {
 
         public void RegisterKeyPresses() {
             if (lastRegisteredFrame >= Time.frameCount) {
-                // we have already registered keypresses this frame
-                //Debug.Log("keypresses already registered this frame");
                 return;
             }
             lastRegisteredFrame = Time.frameCount;
 
-            // Get references to active hardware devices
-            var keyboard = Keyboard.current;
-            var gamepad = Gamepad.current;
-
-            bool control = false;
-            bool shift = false;
-
-            // 1. Process Modifiers (Control)
-            if (keyboard != null) {
-                if (keyboard.leftCtrlKey.wasPressedThisFrame || keyboard.leftCtrlKey.isPressed ||
-                    keyboard.rightCtrlKey.wasPressedThisFrame || keyboard.rightCtrlKey.isPressed) {
-                    control = true;
-                }
-            }
-
-            // 2. Process Modifiers (Shift)
-            if (keyboard != null) {
-                if (keyboard.leftShiftKey.wasPressedThisFrame || keyboard.leftShiftKey.isPressed ||
-                    keyboard.rightShiftKey.wasPressedThisFrame || keyboard.rightShiftKey.isPressed) {
-                    shift = true;
-                }
-            }
-
             foreach (InputActionNode inputActionNode in inputActionNodes.Values) {
+                InputAction action = inputActionNode.InputAction;
 
-                // Setup temporary state flags for this loop cycle
-                bool keyDown = false;
-                bool keyHeld = false;
-                bool keyUp = false;
-
-                // FIX ME - RE ENABLE AFTER FIXING ERRORS
-                /*
-                // 1. Evaluate Keyboard Hardware State
-                if (keyboard != null && inputActionNode.KeyboardKey != Key.None) {
-                    KeyControl keyControl = keyboard[inputActionNode.KeyboardKey];
-                    if (keyControl.wasPressedThisFrame) keyDown = true;
-                    if (keyControl.isPressed) keyHeld = true;
-                    if (keyControl.wasReleasedThisFrame) keyUp = true;
+                if (action == null || !action.enabled) {
+                    continue;
                 }
 
-                // 2. Evaluate Gamepad Hardware State
-                if (gamepad != null) {
-                    // Cast the node's stored enum to an integer to safely verify if it's assigned
-                    int buttonValue = (int)inputActionNode.GamepadButton;
+                // --- 1. Corrected Modern Action Polling API ---
+                // Extension methods use uppercase letters, and held states use the IsPressed() method
+                bool keyDown = action.WasPressedThisFrame();
+                bool keyHeld = action.IsPressed();
+                bool keyUp = action.WasReleasedThisFrame();
 
-                    // Only run polling logic if the value is 0 or greater (skipping our custom -1 "None" state)
-                    if (buttonValue >= 0) {
-                        var buttonControl = gamepad[inputActionNode.GamepadButton];
-
-                        // If any keyboard state was already true, preserve it via the ||= operator
-                        if (buttonControl.wasPressedThisFrame) keyDown = true;
-                        if (buttonControl.isPressed) keyHeld = true;
-                        if (buttonControl.wasReleasedThisFrame) keyUp = true;
-                    }
-                }
-                
-
-                // --- 3. Execute AnyRPG Logical Matrix Filters ---
-                // normal should eventually changed to movement, but there is only one other key (toggle run) that is normal for now, so normal is ok until more keys are added
-
-                // Register key down state
-                if (keyDown && (inputActionNode.KeyBindType == KeyBindType.Normal ||
-                   ((control == inputActionNode.Control) && (shift == inputActionNode.Shift)))) {
+                // --- 2. Execute AnyRPG Action Registrations ---
+                if (keyDown) {
                     inputActionNode.RegisterKeyPress();
                 } else {
                     inputActionNode.UnRegisterKeyPress();
                 }
 
-                // Register key held state
-                if (keyHeld && (inputActionNode.KeyBindType == KeyBindType.Normal ||
-                   ((control == inputActionNode.Control) && (shift == inputActionNode.Shift)))) {
+                if (keyHeld) {
                     inputActionNode.RegisterKeyHeld();
                 } else {
                     inputActionNode.UnRegisterKeyHeld();
                 }
-                */
 
-                // Register key up state
                 if (keyUp) {
                     inputActionNode.RegisterKeyUp();
                 } else {
                     inputActionNode.UnRegisterKeyUp();
                 }
-
             }
         }
 
@@ -801,7 +828,6 @@ namespace AnyRPG {
             if (inputActionNodes.ContainsKey(actionName) && inputActionNodes[actionName].KeyPressed == true) {
                 return true;
             }
-            //Debug.Log(keyBindID + " : False");
             return false;
         }
 
