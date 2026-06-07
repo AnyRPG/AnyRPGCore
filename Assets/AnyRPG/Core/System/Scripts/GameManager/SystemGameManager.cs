@@ -441,7 +441,7 @@ namespace AnyRPG {
 
         private void Update() {
             timeOfDayManagerServer.Tick();
-            controlsManager.Update();
+            controlsManager.Tick();
         }
 
         private void SetupPermanentObjects() {

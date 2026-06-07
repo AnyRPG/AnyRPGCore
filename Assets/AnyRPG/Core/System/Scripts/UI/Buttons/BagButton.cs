@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace AnyRPG {
@@ -151,7 +152,7 @@ namespace AnyRPG {
                         handScript.CancelMove();
                     }
                 }
-            } else if (Input.GetKey(KeyCode.LeftShift)) {
+            } else if (Keyboard.current != null && Keyboard.current.leftShiftKey.isPressed) {
                 //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED WITH SHIFT KEY on bagNode.mybag: " + bagNode.MyBag.GetInstanceID());
                 //Debug.Log("InventoryManager.RemoveBag(): Found matching bag in bagNode: " + bagNode.MyBag.GetInstanceID() + "; " + bag.GetInstanceID());
                 handScript.TakeMoveable(this);

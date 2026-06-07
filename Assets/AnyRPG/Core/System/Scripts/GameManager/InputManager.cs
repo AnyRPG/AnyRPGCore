@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -342,37 +343,54 @@ namespace AnyRPG {
         }
 
         private void LoadPlayerKeyControls() {
-            Debug.Log("InputManager.LoadPlayerKeyControls()");
+            //Debug.Log("InputManager.LoadPlayerKeyControls()");
 
             if (PlayerPrefs.HasKey("InputActionOverrides")) {
+                // 1. Temporarily disable the root asset so we can cleanly mutate the underlying schema data
+                inputActions.Disable();
+
+                // 2. Deserialize the raw override values from your JSON stream
+                //Debug.Log($"loading jsonstring: {PlayerPrefs.GetString("InputActionOverrides")}");
                 inputActions.LoadBindingOverridesFromJson(PlayerPrefs.GetString("InputActionOverrides"));
-                
-                // loop through input action nodes and call their ProcessUpdateAction() method to update their display strings based on the new overrides we just loaded
+
+                // 3. CRITICAL FOR MODIFIERS: Force Unity's input compiler to expand and rebuild 
+                // the internal bindings array mapping table to match the saved composites.
+                foreach (var map in inputActions.actionMaps) {
+                    map.Disable();
+                    map.Enable();
+                }
+
+                // 4. Safely re-enable your root asset loop
+                inputActions.Enable();
+
+                // 5. Loop through nodes to update their tracking arrays and display strings
                 foreach (InputActionNode inputActionNode in inputActionNodes.Values) {
                     inputActionNode.ProcessUpdateAction();
                 }
+
+                //Debug.Log("InputManager.LoadPlayerKeyControls(): Overrides successfully loaded and layout structures rebuilt.");
             }
         }
 
         public void SavePlayerKeyControls() {
-            Debug.Log("InputManager.SavePlayerKeyControls()");
+            //Debug.Log($"InputManager.SavePlayerKeyControls() Saving InputAction overrides to PlayerPrefs json: {inputActions.SaveBindingOverridesAsJson()}");
 
             PlayerPrefs.SetString("InputActionOverrides", inputActions.SaveBindingOverridesAsJson());
         }
 
         public void UpdateInputAction(string actionName, bool control, bool shift, string nativePath) {
-            Debug.Log($"InputManager.UpdateInputAction(actionName: {actionName}, nativePath: {nativePath}, Ctrl: {control}, Shift: {shift})");
+            //Debug.Log($"InputManager.UpdateInputAction(actionName: {actionName}, nativePath: {nativePath}, Ctrl: {control}, Shift: {shift})");
 
             if (inputActionNodes.TryGetValue(actionName, out InputActionNode inputActionNode)) {
                 inputActionNode.UpdateInputAction(control, shift, nativePath);
                 SavePlayerKeyControls();
             } else {
-                Debug.LogError("InputManager.UpdateInputAction() - No InputActionNode found for actionName: " + actionName);
+                Debug.LogError($"InputManager.UpdateInputAction() - No InputActionNode found for actionName: {actionName}");
             }
         }
 
         public void UnbindInputAction(string actionName, bool control, bool shift, string nativePath) {
-            Debug.Log($"InputManager.UnbindInputAction() called for action '{actionName}' with nativePath '{nativePath}' (Ctrl: {control}, Shift: {shift})");
+            //Debug.Log($"InputManager.UnbindInputAction() called for action '{actionName}' with nativePath '{nativePath}' (Ctrl: {control}, Shift: {shift})");
 
             if (string.IsNullOrEmpty(nativePath)) return;
 
@@ -413,8 +431,8 @@ namespace AnyRPG {
                                     string partPath = !string.IsNullOrEmpty(partBinding.overridePath) ? partBinding.overridePath : partBinding.path;
 
                                     // Check if this specific part of the composite is a Ctrl or Shift key
-                                    if (partPath.Contains("ctrl") || partPath.Contains("control")) hasCtrlModifier = true;
-                                    if (partPath.Contains("shift")) hasShiftModifier = true;
+                                    if (partPath.ToLower().Contains("ctrl") || partPath.ToLower().Contains("control")) hasCtrlModifier = true;
+                                    if (partPath.ToLower().Contains("shift")) hasShiftModifier = true;
 
                                     scanIndex++;
                                 }
@@ -423,21 +441,95 @@ namespace AnyRPG {
 
                         // If the physical binding modifiers match the parameters passed into the method, proceed
                         if (hasCtrlModifier == control && hasShiftModifier == shift) {
+                            //Debug.Log($"Match found for unbinding {inputActionNode.ActionName} at index {i} with path '{activePath}' (Ctrl: {hasCtrlModifier}, Shift: {hasShiftModifier}). Proceeding to unbind.");
 
-                            // If it was part of a composite, it's safest to reset the entire composite group override
                             if (binding.isPartOfComposite && compositeStartIndex != -1) {
-                                action.RemoveBindingOverride(compositeStartIndex);
+                                // Start at the first child row right after the header
+                                int scanIndex = compositeStartIndex + 1;
+
+                                // Apply an empty string override to every part belonging to this composite
+                                while (scanIndex < action.bindings.Count && action.bindings[scanIndex].isPartOfComposite) {
+                                    //Debug.Log($"Unbinding composite part at index {scanIndex} with path '{action.bindings[scanIndex].path}' and override '{action.bindings[scanIndex].overridePath}'");
+                                    action.ApplyBindingOverride(scanIndex, "{}");
+                                    scanIndex++;
+                                }
                             } else {
-                                // Otherwise, it's a standalone key, just remove this specific row override
-                                action.RemoveBindingOverride(i);
+                                // Standalone key binding row, override with an empty string
+                                action.ApplyBindingOverride(i, "{}");
                             }
 
-                            Debug.Log($"Successfully unbound keyboard path '{nativePath}' (Ctrl: {control}, Shift: {shift}) from '{action.name}'. Gamepad settings left untouched.");
+                            //Debug.Log($"Successfully unbound keyboard path '{nativePath}' (Ctrl: {control}, Shift: {shift}) from '{action.name}'. Gamepad settings left untouched.");
                             inputActionNode.ProcessUpdateAction();
                             return;
                         }
                     }
                 }
+            }
+        }
+
+        public void UnbindKeyboardAction(string actionName) {
+            //Debug.Log($"InputManager.UnbindKeyboardAction(actionName: '{actionName}')");
+
+            if (string.IsNullOrEmpty(actionName)) return;
+
+            if (!inputActionNodes.TryGetValue(actionName, out InputActionNode inputActionNode)) {
+                foreach (var node in inputActionNodes.Values) {
+                    if (node.InputAction != null && node.InputAction.name == actionName) {
+                        inputActionNode = node;
+                        break;
+                    }
+                }
+            }
+
+            if (inputActionNode == null || inputActionNode.InputAction == null) {
+                Debug.LogWarning($"InputManager.UnbindKeyboardAction(): Action '{actionName}' not found.");
+                return;
+            }
+
+            InputAction action = inputActionNode.InputAction;
+            bool boundChangesMade = false;
+
+            // --- STRATEGY A: ADVANCED FLEXIBLE MODIFIER ARCHITECTURE ---
+            // Check if this action is explicitly running on our static FlexibleModifier layout
+            int flexCompositeIdx = action.bindings.IndexOf(b => b.action == action.name && b.isComposite && b.path.Contains("FlexibleModifier"));
+
+            if (flexCompositeIdx != -1) {
+                // Safely clear out the child leaf slots by passing empty string overrides "".
+                // This tells Unity's system that the components are unbound without throwing a native exception.
+                action.ApplyBindingOverride(flexCompositeIdx + 1, "{}"); // Clear Modifier 1
+                action.ApplyBindingOverride(flexCompositeIdx + 2, "{}"); // Clear Modifier 2
+                action.ApplyBindingOverride(flexCompositeIdx + 3, "{}"); // Clear Primary Button
+
+                boundChangesMade = true;
+                //Debug.Log($"Successfully cleared and unmapped FlexibleModifier slots for action '{actionName}'");
+            } else {
+                // --- STRATEGY B: LEGACY/BACKWARD-COMPATIBLE FALLBACK ---
+                // If a modder used standard layout structures, process them with safe path tracking
+                for (int i = action.bindings.Count - 1; i >= 0; i--) {
+                    InputBinding binding = action.bindings[i];
+                    string activePath = !string.IsNullOrEmpty(binding.overridePath) ? binding.overridePath : binding.path;
+
+                    if (activePath.StartsWith("<Keyboard>") || activePath.StartsWith("/Keyboard/")) {
+                        if (binding.isPartOfComposite) {
+                            // FIX: For standard native composites, clear the specific child part row
+                            // rather than assigning a path to the parent composite header node.
+                            action.ApplyBindingOverride(i, "{}");
+                            boundChangesMade = true;
+                            //Debug.Log($"Muted traditional composite child part at index {i} for action '{actionName}'");
+                        } else if (!binding.isComposite) {
+                            // Standard standalone layout slots can safely resolve to "<Keyboard>/none"
+                            action.ApplyBindingOverride(i, "<Keyboard>/none");
+                            boundChangesMade = true;
+                            //Debug.Log($"Muted standalone keyboard binding at index {i} for action '{actionName}'");
+                        }
+                    }
+                }
+            }
+
+            if (boundChangesMade) {
+                inputActionNode.ProcessUpdateAction();
+                SavePlayerKeyControls();
+                //Debug.Log($"Successfully cleared and muted all keyboard bindings for '{actionName}'. Gamepad bindings left untouched.");
             }
         }
 
@@ -658,9 +750,11 @@ namespace AnyRPG {
         }
 
         public void RegisterInput() {
-            if (keyBindManager.BindName != string.Empty) {
-                // we are binding a key.  discard all input
-                //Debug.Log("Key Binding in progress.  returning.");
+            //Debug.Log("InputManager.RegisterInput()");
+
+            if (keyBindManager.BindName != string.Empty || KeyBindManager.SkipInputProcessingThisFrame) {
+                // we are binding a key or skipping input processing this frame.  discard all input
+                //Debug.Log("Key Binding in progress or skipping input processing this frame.  returning.");
                 foreach (InputActionNode inputActionNode in inputActionNodes.Values) {
                     inputActionNode.UnRegisterKeyPress(true);
                     inputActionNode.UnRegisterKeyHeld();
@@ -668,7 +762,6 @@ namespace AnyRPG {
                 }
                 return;
             }
-
 
             RegisterMouseActions();
             RegisterGamepadActions();
@@ -835,6 +928,8 @@ namespace AnyRPG {
         /// Detect clicks and drags
         /// </summary>
         private void RegisterMouseActions() {
+            //Debug.Log("InputManager.RegisterMouseActions()");
+
             leftMouseButtonClicked = false;
             rightMouseButtonClicked = false;
             middleMouseButtonClicked = false;
@@ -844,12 +939,25 @@ namespace AnyRPG {
             mouseScrolled = false;
 
             mouse = Mouse.current;
-            if (mouse == null) return; // Safeguard if no mouse is connected
+            if (mouse == null) {
+                //Debug.Log("mouse.current was null");
+                mouse = InputSystem.GetDevice<Mouse>();
+            }
+            if (mouse == null) {
+                //Debug.Log("No mouse device found");
+                return; // Safeguard if no mouse is connected
+            }
+
+            mouseDeltaX = mouse.delta.x.ReadValue() * 0.05f;
+            mouseDeltaY = mouse.delta.y.ReadValue() * 0.05f;
+            mousePosition = mouse.position.ReadValue();
+            //Debug.Log($"Mouse position: {mousePosition.ToString()} delta: ({mouseDeltaX}, {mouseDeltaY}) scroll delta Y: {mouseScrollDeltaY}");
+
 
             // track left mouse button up and down events to determine difference in click vs drag
             if (mouse.leftButton.wasReleasedThisFrame) {
                 if (leftMouseButtonDown) {
-                    leftMouseButtonUpPosition = mouse.position.ReadValue();
+                    leftMouseButtonUpPosition = mousePosition;
                     leftMouseButtonUp = true;
                     //Debug.Log($"down mouse position: {leftMouseButtonDownPosition.ToString()} up mouse position: {leftMouseButtonUpPosition.ToString()}");
                     if (leftMouseButtonUpPosition == leftMouseButtonDownPosition) {
@@ -865,7 +973,7 @@ namespace AnyRPG {
             // track right mouse button up and down events to determine difference in click vs drag
             if (mouse.rightButton.wasReleasedThisFrame) {
                 if (rightMouseButtonDown) {
-                    rightMouseButtonUpPosition = mouse.position.ReadValue();
+                    rightMouseButtonUpPosition = mousePosition;
                     rightMouseButtonUp = true;
                     //Debug.Log($"down mouse position: {rightMouseButtonDownPosition.ToString()} up mouse position: {rightMouseButtonUpPosition.ToString()}");
                     if (rightMouseButtonUpPosition == rightMouseButtonDownPosition) {
@@ -881,7 +989,7 @@ namespace AnyRPG {
 
             // track middle mouse button up and down events to determine difference in click vs drag
             if (mouse.middleButton.wasReleasedThisFrame && middleMouseButtonDown) {
-                middleMouseButtonUpPosition = mouse.position.ReadValue();
+                middleMouseButtonUpPosition = mousePosition;
                 middleMouseButtonUp = true;
                 //Debug.Log($"down mouse position: {rightMouseButtonDownPosition.ToString()} up mouse position: {rightMouseButtonUpPosition.ToString()}");
                 if (middleMouseButtonUpPosition == middleMouseButtonDownPosition) {
@@ -901,7 +1009,7 @@ namespace AnyRPG {
 
             if (mouse.rightButton.wasPressedThisFrame) {
                 rightMouseButtonDown = true;
-                rightMouseButtonDownPosition = mouse.position.ReadValue();
+                rightMouseButtonDownPosition = mousePosition;
                 // IGNORE NAMEPLATES FOR THE PURPOSE OF CAMERA MOVEMENT
                 if (EventSystem.current.IsPointerOverGameObject() && (namePlateManager != null ? !namePlateManager.MouseOverNameplate() : true)) {
                     rightMouseButtonClickedOverUI = true;
@@ -911,7 +1019,7 @@ namespace AnyRPG {
             // track left mouse button up and down events to determine difference in click vs drag
             if (mouse.leftButton.wasPressedThisFrame) {
                 leftMouseButtonDown = true;
-                leftMouseButtonDownPosition = mouse.position.ReadValue();
+                leftMouseButtonDownPosition = mousePosition;
                 if (EventSystem.current.IsPointerOverGameObject() && (namePlateManager != null ? !namePlateManager.MouseOverNameplate() : true)) {
                     leftMouseButtonClickedOverUI = true;
                 }
@@ -919,23 +1027,66 @@ namespace AnyRPG {
 
             if (mouse.middleButton.wasPressedThisFrame) {
                 middleMouseButtonDown = true;
-                middleMouseButtonDownPosition = mouse.position.ReadValue();
+                middleMouseButtonDownPosition = mousePosition;
                 if (EventSystem.current.IsPointerOverGameObject() && (namePlateManager != null ? !namePlateManager.MouseOverNameplate() : true)) {
                     middleMouseButtonClickedOverUI = true;
                 }
             }
 
-            mouseScrollDeltaY = mouse != null ? mouse.scroll.y.ReadValue() / 120f : 0f;
-            mouseDeltaX = mouse != null ? mouse.delta.x.ReadValue() : 0f;
-            mouseDeltaY = mouse != null ? mouse.delta.y.ReadValue() : 0f;
-            mousePosition = mouse != null ? mouse.position.ReadValue() : Vector3.zero;
-
+            mouseScrollDeltaY = mouse.scroll.y.ReadValue() / 120f;
             if (mouseScrollDeltaY != 0f) {
                 //Debug.Log($"Mouse scrolled: {mouseScrollDeltaY}");
                 mouseScrolled = true;
             }
 
         }
+
+        public void ResetToDefault() {
+            inputActions.RemoveAllBindingOverrides();
+            SavePlayerKeyControls();
+            foreach (InputActionNode inputActionNode in inputActionNodes.Values) {
+                inputActionNode.ProcessUpdateAction();
+            }
+        }
+
+        /*
+        private void OnApplicationFocus(bool hasFocus) {
+            //Debug.Log($"InputManager.OnApplicationFocus({hasFocus}) - Application focus changed. Synchronizing mouse device.");
+
+            if (hasFocus) {
+                SynchronizeMouseDevice();
+            }
+        }
+
+        private void SynchronizeMouseDevice() {
+            //Debug.Log("InputManager.SynchronizeMouseDevice() - Ensuring Mouse device is correctly mapped to InputSystem.current");
+            // 1. Check if the underlying device list even has a mouse registered
+            Mouse hardwareMouse = InputSystem.GetDevice<Mouse>();
+
+            if (hardwareMouse == null) {
+                try {
+                    //Debug.Log($"Mouse device not found in InputSystem. Attempting to re-map hardware mouse reference.");
+                    // 2. Force-reconstruct a system layout device directly into the memory pool
+                    // This forces Unity to re-create the missing hardware reference mapping
+                    InputSystem.AddDevice<Mouse>();
+                    hardwareMouse = InputSystem.GetDevice<Mouse>();
+                } catch (System.Exception) {
+                    // Catch potential layout conflicts safely
+                }
+            }
+
+            // 3. Make sure the newly mapped or found mouse is pinned to .current
+            if (hardwareMouse != null) {
+                // Call the correct instance method to set the static pointer shortcut
+                hardwareMouse.MakeCurrent();
+                //Debug.Log($"Mouse device successfully synchronized. Current mouse position: {hardwareMouse.position.ReadValue().ToString()}");
+            } else {
+                //Debug.Log($"Mouse device still not found after synchronization attempt. Mouse input may not function correctly until a mouse is detected by the Input System.");
+            }
+        }
+        */
+
+
     }
 
 }

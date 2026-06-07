@@ -22,6 +22,7 @@ namespace AnyRPG {
         protected ActionBarManager actionBarManager = null;
         protected CutsceneBarController cutSceneBarController = null;
         protected CastTargetController castTargetController = null;
+        protected KeyBindManager keyBindManager = null;
 
         public bool GamepadModeActive { get => gamePadModeActive; }
         public bool GamePadInputActive { get => gamePadInputActive; }
@@ -47,6 +48,7 @@ namespace AnyRPG {
             actionBarManager = uIManager.ActionBarManager;
             cutSceneBarController = uIManager.CutSceneBarController;
             castTargetController = systemGameManager.CastTargettingManager.CastTargetController;
+            keyBindManager = systemGameManager.KeyBindManager;
         }
 
         public void ActivateTextInput() {
@@ -128,7 +130,7 @@ namespace AnyRPG {
             }
         }
 
-        public void Update() {
+        public void Tick() {
             /*
             if (playerManager.PlayerController != null) {
                 playerManager.PlayerController.ResetMoveInput();
@@ -167,7 +169,7 @@ namespace AnyRPG {
             windowStackCount = windowManager.WindowStack.Count;
 
             // only send input to the next block if the name change window is not open
-            if (textInputActive == false) {
+            if (textInputActive == false && keyBindManager.BindName == string.Empty && KeyBindManager.SkipInputProcessingThisFrame == false) {
                 uIManager.ProcessInput();
 
                 if (windowManager.NavigatingInterface && inputManager.KeyBindWasPressed("GAMEPADBUTTONB")) {

@@ -861,7 +861,7 @@ namespace AnyRPG {
             }
 
             // don't hide windows while binding keys
-            if (keyBindManager.BindName == string.Empty && playerManagerClient.PlayerUnitSpawned != false) {
+            if (/*keyBindManager.BindName == string.Empty &&*/ playerManagerClient.PlayerUnitSpawned != false) {
 
                 // ui element keys pressed
                 if (inputManager.KeyBindWasPressed("HIDEUI")) {
@@ -915,7 +915,11 @@ namespace AnyRPG {
                 }
             }
 
-            
+            /*
+            if (keyBindManager.BindName != string.Empty) {
+                return;
+            }
+            */
 
             if (inputManager.KeyBindWasPressed("CANCELALL") && hadMoveable == false) {
 

@@ -17,6 +17,18 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject keyBindButtonPrefab = null;
 
+        [SerializeField]
+        private UINavigationController navigationMenuController = null;
+
+        [SerializeField]
+        private UINavigationController movementPanelController = null;
+
+        [SerializeField]
+        private UINavigationController actionBarsPanelController = null;
+
+        [SerializeField]
+        private UINavigationController systemPanelController = null;
+
         [Header("Panels")]
         [Tooltip("The UI Sub-Panel under KEY BINDINGS for MOVEMENT")]
         public GameObject PanelMovement = null;
@@ -61,13 +73,13 @@ namespace AnyRPG {
                 UINavigationController uINavigationController = null;
                 if (inputActionNode.KeyBindType == KeyBindType.Action) {
                     nodeParent = actionBarsKeyParent.transform;
-                    uINavigationController = uINavigationControllers[2];
+                    uINavigationController = actionBarsPanelController;
                 } else if (inputActionNode.KeyBindType == KeyBindType.Normal) {
                     nodeParent = movementKeyParent.transform;
-                    uINavigationController = uINavigationControllers[1];
+                    uINavigationController = movementPanelController;
                 } else if (inputActionNode.KeyBindType == KeyBindType.Constant || inputActionNode.KeyBindType == KeyBindType.System) {
                     nodeParent = systemKeyParent.transform;
-                    uINavigationController = uINavigationControllers[3];
+                    uINavigationController = systemPanelController;
                 }
                 if (nodeParent != null) {
                     KeyBindSlotScript keyBindSlotScript = objectPooler.GetPooledObject(keyBindButtonPrefab, nodeParent).GetComponent<KeyBindSlotScript>();
@@ -100,7 +112,7 @@ namespace AnyRPG {
             ResetPanels();
             PanelMovement.gameObject.SetActive(true);
 
-            uINavigationControllers[0].UnHightlightButtonBackgrounds(movementButton);
+            navigationMenuController.UnHightlightButtonBackgrounds(movementButton);
 
             movementButton.HighlightBackground();
             movementButton.Select();
@@ -110,7 +122,7 @@ namespace AnyRPG {
             ResetPanels();
             PanelCombat.gameObject.SetActive(true);
 
-            uINavigationControllers[0].UnHightlightButtonBackgrounds(actionBarsButton);
+            navigationMenuController.UnHightlightButtonBackgrounds(actionBarsButton);
 
             actionBarsButton.HighlightBackground();
             actionBarsButton.Select();
@@ -120,21 +132,22 @@ namespace AnyRPG {
             ResetPanels();
             PanelGeneral.gameObject.SetActive(true);
 
-            uINavigationControllers[0].UnHightlightButtonBackgrounds(systemButton);
+            navigationMenuController.UnHightlightButtonBackgrounds(systemButton);
 
             systemButton.HighlightBackground();
             systemButton.Select();
         }
 
+        public void ResetToDefaults() {
+            inputManager.ResetToDefault();
+        }
+
         public override void ProcessOpenWindowNotification() {
             //Debug.Log("SystemKeyBindPanelController.ProcessOpenWindowNotification()");
             base.ProcessOpenWindowNotification();
-            //currentNavigationController.Focus();
-            //uINavigationControllers[0].SetCurrentButton(movementButton);
             
             ToggleMovementPanel();
-            uINavigationControllers[0].UnFocus();
-
+            navigationMenuController.UnFocus();
         }
 
 

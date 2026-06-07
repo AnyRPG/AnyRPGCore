@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace AnyRPG {
@@ -90,7 +91,7 @@ namespace AnyRPG {
         }
 
         public void UpdateKeybindText(string newText) {
-            Debug.Log($"{gameObject.name}.ActionButton.UpdateKeybindText({newText})");
+            //Debug.Log($"{gameObject.name}.ActionButton.UpdateKeybindText({newText})");
 
             keyBindText.text = newText;
         }
@@ -137,8 +138,8 @@ namespace AnyRPG {
             // it is also used when the player controller sends a click event from the gamepad
 
             if (!fromKeyBind) {
-                // if we did come from a keybind, we don't want to ignore left shift
-                if (Input.GetKey(KeyCode.LeftShift)) {
+                // if we did not come from a keybind, we don't want to ignore left shift
+                if (Keyboard.current != null && Keyboard.current.leftShiftKey.isPressed) {
                     return;
                 }
                 if (handScript.MoveableOwner != null) {
@@ -166,7 +167,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (Input.GetKey(KeyCode.LeftShift)) {
+            if (Keyboard.current != null && Keyboard.current.leftShiftKey.isPressed) {
                 // attempt to pick up - the only valid option when shift is held down
                 if (Useable != null && actionBarManager.FromButton == null && handScript.MoveableOwner == null) {
                     // left shift down, pick up a useable
