@@ -512,7 +512,7 @@ namespace AnyRPG {
         public void OnScroll(PointerEventData eventData) {
             //Debug.Log($"{gameObject.name}.PreviewCameraController.OnScroll()");
 
-            scrollDelta += eventData.scrollDelta.y;
+            scrollDelta += eventData.scrollDelta.y / 24f;
         }
 
 

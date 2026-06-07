@@ -1033,7 +1033,7 @@ namespace AnyRPG {
                 }
             }
 
-            mouseScrollDeltaY = mouse.scroll.y.ReadValue() / 120f;
+            mouseScrollDeltaY = mouse.scroll.y.ReadValue() / 24f;
             if (mouseScrollDeltaY != 0f) {
                 //Debug.Log($"Mouse scrolled: {mouseScrollDeltaY}");
                 mouseScrolled = true;
