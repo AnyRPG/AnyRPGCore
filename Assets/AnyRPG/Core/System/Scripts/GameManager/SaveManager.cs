@@ -196,12 +196,6 @@ namespace AnyRPG {
         }
 
         public void CharacterSaveDataPostLoad(CharacterSaveData characterSaveData) {
-            // when loaded from file, overrides should always be true because the file may have been saved before these were added
-            // disabled because new games create a save file, so if we create a new game, then quit, then load that save file,
-            // it will not have the overrides set, and we don't want to override the location and rotation
-            // AnyRPG v1.0 will not be backwards compatible with old save files.
-            //characterSaveData.OverrideLocation = true;
-            //characterSaveData.OverrideRotation = true;
 
             if (characterSaveData.CharacterName == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Name is null.  Setting to Unknown");
