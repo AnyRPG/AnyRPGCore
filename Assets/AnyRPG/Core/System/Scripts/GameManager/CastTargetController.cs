@@ -24,12 +24,14 @@ namespace AnyRPG {
         protected PlayerManagerClient playerManagerClient = null;
         protected CameraManager cameraManager = null;
         protected ControlsManager controlsManager = null;
+        protected InputManager inputManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManagerClient = systemGameManager.PlayerManagerClient;
             cameraManager = systemGameManager.CameraManager;
             controlsManager = systemGameManager.ControlsManager;
+            inputManager = systemGameManager.InputManager;
         }
 
         public void SetupController() {
@@ -40,7 +42,7 @@ namespace AnyRPG {
             circleColor = meshRenderer.material.color;
         }
 
-        void Update() {
+        public void Follow() {
             //Debug.Log("CastTargettingController.Update()");
             if (controlsManager.GamepadModeActive == true) {
                 FollowVirtualCursor();
@@ -66,8 +68,8 @@ namespace AnyRPG {
             if (playerManagerClient.ActiveUnitController == null) {
                 return;
             }
-            virtualCursor.x += Input.GetAxis("RightAnalogHorizontal");
-            virtualCursor.y += Input.GetAxis("RightAnalogVertical");
+            virtualCursor.x += inputManager.rightAnalogHorizontal;
+            virtualCursor.y += inputManager.rightAnalogVertical;
             FollowVector(virtualCursor);
         }
 
@@ -77,7 +79,7 @@ namespace AnyRPG {
                 return;
             }
             if (!EventSystem.current.IsPointerOverGameObject()) {
-                FollowVector(Input.mousePosition);
+                FollowVector(inputManager.mousePosition);
             }
         }
 

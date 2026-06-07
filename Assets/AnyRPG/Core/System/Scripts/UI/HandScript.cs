@@ -46,8 +46,8 @@ namespace AnyRPG {
             //Debug.Log("HandScript.ProcessInput()");
 
             if (controlsManager.GamepadModeActive == false) {
-                transform.position = Input.mousePosition + offset;
-                if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && MoveableOwner?.Moveable != null) {
+                transform.position = inputManager.mousePosition + offset;
+                if (inputManager.leftMouseButtonDown && !EventSystem.current.IsPointerOverGameObject() && MoveableOwner?.Moveable != null) {
                     if (MoveableOwner.Moveable is InstantiatedItem) {
                         uIManager.confirmDestroyMenuWindow.OpenWindow();
                     } else if (MoveableOwner.Moveable is Ability) {

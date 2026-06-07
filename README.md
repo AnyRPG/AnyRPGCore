@@ -49,7 +49,7 @@ https://x.com/AnyRPGEngine
 There are 2 ways to install AnyRPG, depending on your preference.  They are listed below.
 
 ### Github Installation
-A video tutorial for installing AnyRPG Core version 0.10.1a (and higher) from github can be watched here: https://www.youtube.com/watch?v=oMeWWgNYrYI
+A video tutorial for installing AnyRPG Core version 1.0 (and higher) from github can be watched here: https://youtu.be/o_3pCpv4RHw
 
 1. Install the correct Unity version to open this project.  The current project Unity version is 6000.3.10f1
 2. Clone this repository into a directory on your computer
@@ -58,7 +58,7 @@ A video tutorial for installing AnyRPG Core version 0.10.1a (and higher) from gi
 ### Unity Asset Store Package Installation
 AnyRPG Core is available on the Unity Asset Store at https://assetstore.unity.com/packages/slug/234361
 
-A video tutorial for installing AnyRPG Core version 0.14.5 (and higher) from the Unity Asset Store can be watched here: https://youtu.be/syI3ohFWVck
+A video tutorial for installing AnyRPG Core version 1.0 (and higher) from the Unity Asset Store can be watched here: https://youtu.be/hAPFGAX2o-g
 
 ## Getting Started
 

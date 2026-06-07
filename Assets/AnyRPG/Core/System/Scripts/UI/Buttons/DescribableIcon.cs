@@ -61,7 +61,7 @@ namespace AnyRPG {
             this.Describable = describable;
             UpdateVisual();
 
-            if (gameObject.activeInHierarchy && UIManager.MouseInRect(Icon.rectTransform)) {
+            if (gameObject.activeInHierarchy && UIManager.MouseInRect(Icon.rectTransform, inputManager)) {
                 ProcessMouseEnter();
             }
 

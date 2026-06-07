@@ -143,13 +143,12 @@ namespace AnyRPG {
             }
             
             if (windowManager.CurrentWindow == null) {
-                movementData.RightAnalogHorizontal = Input.GetAxis("RightAnalogHorizontal");
+                movementData.RightAnalogHorizontal = inputManager.rightAnalogHorizontal;
             }
 
             movementData.CameraWantedDirection = cameraManager.MainCameraController.WantedDirection;
             movementData.CameraLocalEulerAngleX = cameraManager.MainCamera.transform.localEulerAngles.x;
 
-            //movementData.GamepadModeActive = controlsManager.GamepadModeActive;
             if (strafeModeActive == false
                 && cameraManager.MainCameraController.FirstPersonView == false) {
                 //Debug.Log("PlayerController.CollectMoveInput() setting RotateModelMode to true because strafe mode is off and we are not in first person view");
@@ -160,7 +159,7 @@ namespace AnyRPG {
             }
 
             // don't allow jump or crouch while activating action bars
-            if (controlsManager.LeftTriggerDown == false && controlsManager.RightTriggerDown == false) {
+            if (inputManager.leftTriggerDown == false && inputManager.rightTriggerDown == false) {
                 if (inputManager.KeyBindWasPressed("JUMP")) {
                     movementData.InputJump = true;
                 }
@@ -178,8 +177,8 @@ namespace AnyRPG {
             movementData.InputStrafe = inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") || inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT");
 
             // gather joystick move input
-            movementData.InputHorizontal = Input.GetAxis("LeftAnalogHorizontal");
-            movementData.InputVertical = Input.GetAxis("LeftAnalogVertical");
+            movementData.InputHorizontal = inputManager.leftAnalogHorizontal;
+            movementData.InputVertical = inputManager.leftAnalogVertical;
 
             // gather keyboard move input
             movementData.InputHorizontal += (inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT") ? 1 : 0);
@@ -207,7 +206,7 @@ namespace AnyRPG {
                 // we will pretend the right mouse was dragged if we have move input so the character will run away from the screen if the camera was pointing
                 // behind them at the start of the right mouse down, which is a common situation when trying to run away from something attacking you.
                 // Otherwise, the player would have to drag the mouse in a direction before the character would start moving, which could be frustrating in a combat situation.
-                if (inputManager.rightMouseButtonDownPosition != Input.mousePosition || movementData.HasMoveInput()) {
+                if (inputManager.rightMouseButtonDownPosition != inputManager.mousePosition || movementData.HasMoveInput()) {
                     if (movementData.RotateModelMode == false
                         || cameraManager.MainCameraController.FirstPersonView == true) {
                         movementData.FaceCameraDirection = true;
@@ -218,7 +217,7 @@ namespace AnyRPG {
             if (cameraManager.MainCameraController.FirstPersonView == true
                 && inputManager.leftMouseButtonDown
                 && (inputManager.leftMouseButtonClickedOverUI == false || (namePlateManager != null ? namePlateManager.MouseOverNameplate() : false))
-                && (inputManager.leftMouseButtonDownPosition != Input.mousePosition || movementData.HasMoveInput())) {
+                && (inputManager.leftMouseButtonDownPosition != inputManager.mousePosition || movementData.HasMoveInput())) {
                 movementData.FaceCameraDirection = true;
             }
 
@@ -229,7 +228,7 @@ namespace AnyRPG {
 
             if (mouseLookActive
                 && (movementData.RotateModelMode == false || cameraManager.MainCameraController.FirstPersonView == true)
-                && (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f)) { 
+                && (inputManager.mouseDeltaX != 0f || inputManager.mouseDeltaY != 0f)) { 
                 movementData.FaceCameraDirection = true;
             }
 
@@ -330,7 +329,7 @@ namespace AnyRPG {
         private void ToggleRun() {
             //Debug.Log("PlayerController.ToggleRun()");
             if (inputManager.KeyBindWasPressed("TOGGLERUN")
-                || (controlsManager.DPadDownPressed == true && controlsManager.LeftTriggerDown == false && controlsManager.RightTriggerDown == false)) {
+                || (inputManager.dPadDownPressed == true && inputManager.leftTriggerDown == false && inputManager.rightTriggerDown == false)) {
                 EventParamProperties eventParamProperties = new EventParamProperties();
                 if (playerManagerClient.ActiveUnitController.Walking == false) {
                     playerManagerClient.ActiveUnitController.Walking = true;
@@ -347,7 +346,7 @@ namespace AnyRPG {
 
         private void CheckToggleAutorun() {
             if (inputManager.KeyBindWasPressed("TOGGLEAUTORUN")
-                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON8") == true) {
+                || inputManager.KeyBindWasPressed("GAMEPADBUTTONLEFTSTICK") == true) {
                 ToggleAutorun();
             }
         }
@@ -366,10 +365,10 @@ namespace AnyRPG {
         }
 
         private bool MouseOutsideScreen() {
-            if (Input.mousePosition.x < 0f
-                            || Input.mousePosition.x > Screen.width
-                            || Input.mousePosition.y < 0f
-                            || Input.mousePosition.y > Screen.height) {
+            if (inputManager.mousePosition.x < 0f
+                            || inputManager.mousePosition.x > Screen.width
+                            || inputManager.mousePosition.y < 0f
+                            || inputManager.mousePosition.y > Screen.height) {
                 return true;
             }
             return false;
@@ -397,7 +396,7 @@ namespace AnyRPG {
                 return;
             }
 
-            Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(inputManager.mousePosition);
             int playerMask = 1 << LayerMask.NameToLayer("Player");
             int ignoreMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
             int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
@@ -571,9 +570,9 @@ namespace AnyRPG {
             }
 
             // determine which crossbar, if any, is active
-            if (controlsManager.RightTriggerDown) {
+            if (inputManager.rightTriggerDown) {
                 crossBarIndex = 1;
-            } else if (controlsManager.LeftTriggerDown) {
+            } else if (inputManager.leftTriggerDown) {
                 crossBarIndex = 0;
             } else {
                 crossBarIndex = -1;
@@ -581,21 +580,21 @@ namespace AnyRPG {
 
             // if a crossbar is activated, send the input to it
             if (crossBarIndex > -1) {
-                if (controlsManager.DPadDownPressed) {
+                if (inputManager.dPadDownPressed) {
                     actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[0].OnClick(false);
-                } else if (controlsManager.DPadRightPressed) {
+                } else if (inputManager.dPadRightPressed) {
                     actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[1].OnClick(false);
-                } else if (controlsManager.DPadLeftPressed) {
+                } else if (inputManager.dPadLeftPressed) {
                     actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[2].OnClick(false);
-                } else if (controlsManager.DPadUpPressed) {
+                } else if (inputManager.dPadUpPressed) {
                     actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[3].OnClick(false);
-                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")) {
+                } else if (inputManager.KeyBindWasPressed("GAMEPADBUTTONA")) {
                     actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[4].OnClick(false);
-                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
+                } else if (inputManager.KeyBindWasPressed("GAMEPADBUTTONB")) {
                     actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[5].OnClick(false);
-                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")) {
+                } else if (inputManager.KeyBindWasPressed("GAMEPADBUTTONX")) {
                     actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[6].OnClick(false);
-                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON3")) {
+                } else if (inputManager.KeyBindWasPressed("GAMEPADBUTTONY")) {
                     actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[7].OnClick(false);
                 }
 
@@ -623,9 +622,9 @@ namespace AnyRPG {
                         FinishGroundTarget(castTargettingManager.CastTargetController.VirtualCursor);
                     }
                 }
-            } else if (controlsManager.DPadRightPressed) {
+            } else if (inputManager.dPadRightPressed) {
                 GetNextTabTarget(playerManagerClient.UnitController.Target, true, false);
-            } else if (controlsManager.DPadLeftPressed) {
+            } else if (inputManager.dPadLeftPressed) {
                 GetNextTabTarget(playerManagerClient.UnitController.Target, true, false, false);
             }
         }
@@ -694,12 +693,12 @@ namespace AnyRPG {
             }
 
             if (playerManagerClient.ActiveUnitController.CharacterAbilityManager.WaitingForTarget()) {
-                FinishGroundTarget(Input.mousePosition);
+                FinishGroundTarget(inputManager.mousePosition);
             } else if (systemConfigurationManager.AllowClickToMove == true) {
                 if (playerManagerClient?.ActiveUnitController != null && playerManagerClient.ActiveUnitController.ControlLocked == true) {
                     return;
                 }
-                ClickToMove(Input.mousePosition);
+                ClickToMove(inputManager.mousePosition);
             }
         }
 
@@ -864,7 +863,7 @@ namespace AnyRPG {
 
             // reset to closest unit every 3 seconds if starting a new round of tabbing.
             // otherwise, just keep going through the index
-            if (controlsManager.DPadRightPressed == true) {
+            if (inputManager.dPadRightPressed == true) {
                 playerManagerClient.UnitController.ClearTarget();
                 if (oldTarget == null) {
                     //Debug.Log("DPadRightPressed : setting closest Target Index: " + closestTargetIndex + "; " + allTabTargets[closestTargetIndex]);
@@ -879,7 +878,7 @@ namespace AnyRPG {
                     playerManagerClient.UnitController.SetTarget(allTabTargets[farthestLeftIndex]);
                 }
                 return;
-            } else if (controlsManager.DPadLeftPressed == true) {
+            } else if (inputManager.dPadLeftPressed == true) {
                 playerManagerClient.UnitController.ClearTarget();
                 if (oldTarget == null) {
                     playerManagerClient.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
@@ -959,7 +958,7 @@ namespace AnyRPG {
             }
 
             if (inputManager.KeyBindWasPressed("CANCELALL")
-                || (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1") && controlsManager.RightTriggerDown == false && controlsManager.LeftTriggerDown == false)) {
+                || (inputManager.KeyBindWasPressed("GAMEPADBUTTONB") && inputManager.rightTriggerDown == false && inputManager.leftTriggerDown == false)) {
                 uIManager.MovementTargetController.DisableProjector();
                 playerManagerClient.UnitController.ClearTarget();
                 if (playerManagerClient.ActiveUnitController.CharacterStats.IsAlive != false) {
@@ -979,12 +978,12 @@ namespace AnyRPG {
 
         public void RegisterAbilityButtonPresses() {
             //Debug.Log("PlayerController.RegisterAbilityButtonPresses()");
-            foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
+            foreach (InputActionNode inputActionNode in inputManager.InputActionNodes.Values) {
                 //Debug.Log("PlayerController.RegisterAbilityButtonPresses() keyBindNode.GetKeyDown: " + keyBindNode.GetKeyDown);
                 //Debug.Log("PlayerController.RegisterAbilityButtonPresses() keyBindNode.GetKeyDown: " + keyBindNode.GetKey);
-                if (keyBindNode.KeyBindType == KeyBindType.Action && inputManager.KeyBindWasPressed(keyBindNode.KeyBindID) == true) {
+                if (inputActionNode.KeyBindType == KeyBindType.Action && inputManager.KeyBindWasPressed(inputActionNode.ActionName) == true) {
                     //Debug.Log("PlayerController.RegisterAbilityButtonPresses(): key pressed: " + keyBindNode.MyKeyCode.ToString());
-                    keyBindNode.ActionButton.OnClick(true);
+                    inputActionNode.ActionButton.OnClick(true);
                 }
             }
         }

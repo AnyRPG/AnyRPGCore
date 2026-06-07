@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace AnyRPG {
@@ -60,7 +61,6 @@ namespace AnyRPG {
         public Image Icon { get => icon; set => icon = value; }
         public int Count { get => count; }
         public TextMeshProUGUI StackSizeText { get => stackSizeText; }
-        public TextMeshProUGUI KeyBindText { get => keyBindText; }
         public IUseable SavedUseable { get => savedUseable; set => savedUseable = value; }
         public IUseable Useable { get => useable; }
         public Image CoolDownIcon { get => coolDownIcon; set => coolDownIcon = value; }
@@ -88,6 +88,12 @@ namespace AnyRPG {
 
             systemEventManager.OnItemCountChanged += UpdateItemCount;
             HideRangeIndicator();
+        }
+
+        public void UpdateKeybindText(string newText) {
+            //Debug.Log($"{gameObject.name}.ActionButton.UpdateKeybindText({newText})");
+
+            keyBindText.text = newText;
         }
 
         public void HideRangeIndicator() {
@@ -132,8 +138,8 @@ namespace AnyRPG {
             // it is also used when the player controller sends a click event from the gamepad
 
             if (!fromKeyBind) {
-                // if we did come from a keybind, we don't want to ignore left shift
-                if (Input.GetKey(KeyCode.LeftShift)) {
+                // if we did not come from a keybind, we don't want to ignore left shift
+                if (Keyboard.current != null && Keyboard.current.leftShiftKey.isPressed) {
                     return;
                 }
                 if (handScript.MoveableOwner != null) {
@@ -161,7 +167,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (Input.GetKey(KeyCode.LeftShift)) {
+            if (Keyboard.current != null && Keyboard.current.leftShiftKey.isPressed) {
                 // attempt to pick up - the only valid option when shift is held down
                 if (Useable != null && actionBarManager.FromButton == null && handScript.MoveableOwner == null) {
                     // left shift down, pick up a useable
@@ -241,7 +247,7 @@ namespace AnyRPG {
             }
 
             // there was the assumption that these were only being called when a player clicked to add an ability
-            if (UIManager.MouseInRect(Icon.rectTransform)) {
+            if (UIManager.MouseInRect(Icon.rectTransform, inputManager)) {
                 //uIManager.ShowToolTip(transform.position, useable as IDescribable);
                 uIManager.ShowGamepadTooltip(tooltipTransform, transform, newUseable as IDescribable);
 
@@ -460,7 +466,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (UIManager.MouseInRect(Icon.rectTransform)) {
+            if (UIManager.MouseInRect(Icon.rectTransform, inputManager)) {
                 ProcessOnPointerEnter();
             }
         }

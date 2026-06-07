@@ -5,8 +5,7 @@ namespace AnyRPG {
     public class KeyBindSlotScript : ConfiguredMonoBehaviour {
 
         // a unique string that represents the dictionary key for this keybind throughout the game
-        [SerializeField]
-        private string keyBindID = string.Empty;
+        private string actionName = string.Empty;
 
         [SerializeField]
         private TextMeshProUGUI slotLabel = null;
@@ -16,6 +15,9 @@ namespace AnyRPG {
 
         [SerializeField]
         private HighlightButton keyboardAssignButton = null;
+
+        [SerializeField]
+        private HighlightButton unbindButton = null;
 
         /*
         [SerializeField]
@@ -31,16 +33,18 @@ namespace AnyRPG {
         private HighlightButton mobileAssignButton = null;
         */
 
-        private KeyBindNode keyBindNode = null;
+        private InputActionNode inputActionNode = null;
 
         // game manager references
-        KeyBindManager keyBindManager = null;
+        private KeyBindManager keyBindManager = null;
+        private InputManager inputManager = null;
 
         public HighlightButton KeyboardAssignButton { get => keyboardAssignButton; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             keyboardAssignButton.Configure(systemGameManager);
+            unbindButton.Configure(systemGameManager);
             /*
             joystickAssignButton.Configure(systemGameManager);
             mobileAssignButton.Configure(systemGameManager);
@@ -50,15 +54,31 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             keyBindManager = systemGameManager.KeyBindManager;
+            inputManager = systemGameManager.InputManager;
         }
 
-        public void Initialize(KeyBindNode keyBindNode) {
+        public void Initialize(InputActionNode inputActionNode) {
             //Debug.Log("KeyBindSlotScript.Initialize()");
-            this.keyBindNode = keyBindNode;
-            this.keyBindID = keyBindNode.KeyBindID;
-            //Debug.Log("KeyBindSlotScript.Initialize(): keyBindID: " + this.keyBindID);
-            this.slotLabel.text = keyBindNode.Label;
-            this.keyboardButtonLabel.text = (keyBindNode.Control ? "ctrl+" : "") + (keyBindNode.Shift ? "shift+" : "") + keyBindNode.KeyboardKeyCode.ToString();
+            this.inputActionNode = inputActionNode;
+            actionName = inputActionNode.ActionName;
+            slotLabel.text = inputActionNode.Label;
+
+            keyboardButtonLabel.text = inputActionNode.KeyboardString;
+            unbindButton.gameObject.SetActive(inputActionNode.KeyboardString != "Click To Bind");
+            //this.joystickButtonLabel.text = keyBindNode.JoystickKeyCode.ToString();
+            //this.mobileButtonLabel.text = keyBindNode.MobileKeyCode.ToString();
+        }
+
+        public void UpdateLabel() {
+            //Debug.Log("KeyBindSlotScript.UpdateLabel()");
+
+            if (inputActionNode == null) {
+                keyboardButtonLabel.text = string.Empty;
+                unbindButton.gameObject.SetActive(false);
+                return;
+            }
+            keyboardButtonLabel.text = inputActionNode.KeyboardString;
+            unbindButton.gameObject.SetActive(inputActionNode.KeyboardString != "Click To Bind");
             //this.joystickButtonLabel.text = keyBindNode.JoystickKeyCode.ToString();
             //this.mobileButtonLabel.text = keyBindNode.MobileKeyCode.ToString();
         }
@@ -72,7 +92,12 @@ namespace AnyRPG {
 
         public void SetKeyBind(int inputDeviceType) {
             //Debug.Log("KeyBindSlotScript.SetKeyBind(" + inputDeviceType + ")");
-            keyBindManager.BeginKeyBind(keyBindID, (InputDeviceType)inputDeviceType);
+            keyBindManager.BeginKeyBind(actionName, (InputDeviceType)inputDeviceType);
+        }
+
+        public void Unbind() {
+            //Debug.Log("KeyBindSlotScript.Unbind()");
+            inputManager.UnbindKeyboardAction(actionName);
         }
 
 

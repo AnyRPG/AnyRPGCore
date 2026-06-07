@@ -861,7 +861,7 @@ namespace AnyRPG {
             }
 
             // don't hide windows while binding keys
-            if (keyBindManager.BindName == string.Empty && playerManagerClient.PlayerUnitSpawned != false) {
+            if (/*keyBindManager.BindName == string.Empty &&*/ playerManagerClient.PlayerUnitSpawned != false) {
 
                 // ui element keys pressed
                 if (inputManager.KeyBindWasPressed("HIDEUI")) {
@@ -915,7 +915,11 @@ namespace AnyRPG {
                 }
             }
 
-            
+            /*
+            if (keyBindManager.BindName != string.Empty) {
+                return;
+            }
+            */
 
             if (inputManager.KeyBindWasPressed("CANCELALL") && hadMoveable == false) {
 
@@ -1682,8 +1686,8 @@ namespace AnyRPG {
             }
         }
 
-        public static bool MouseInRect(RectTransform rectTransform) {
-            Vector2 localMousePosition = rectTransform.InverseTransformPoint(Input.mousePosition);
+        public static bool MouseInRect(RectTransform rectTransform, InputManager inputManager) {
+            Vector2 localMousePosition = rectTransform.InverseTransformPoint(inputManager.mousePosition);
             //Debug.Log($"{gameObject.name}.MouseInRect(): local Mouse Position: " + localMousePosition + "; rectTransform.rect: " + rectTransform.rect);
             if (rectTransform.rect.Contains(localMousePosition)) {
                 return true;

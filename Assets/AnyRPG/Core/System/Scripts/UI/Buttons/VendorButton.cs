@@ -118,7 +118,7 @@ namespace AnyRPG {
 
                 }
                 gameObject.SetActive(true);
-                if (UIManager.MouseInRect(rectTransform)) {
+                if (UIManager.MouseInRect(rectTransform, inputManager)) {
                     ProcessMouseEnter();
                 }
             }
@@ -170,12 +170,10 @@ namespace AnyRPG {
         }
 
         public virtual void CheckMouse() {
-            if (UIManager.MouseInRect(transform as RectTransform)) {
+            if (UIManager.MouseInRect(transform as RectTransform, inputManager)) {
                 uIManager.HideToolTip();
             }
         }
-
-        
 
         public override void Select() {
             //Debug.Log("VendorButton.Select()");

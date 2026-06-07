@@ -2362,7 +2362,6 @@ namespace AnyRPG {
             }
             Interactable oldTarget = target;
             target = null;
-            // FIX ME (reenable possibly?)
             if (UnitMotor != null) {
                 UnitMotor.StopFollowingTarget();
             }

@@ -198,25 +198,25 @@ namespace AnyRPG {
 
 
         public void ProcessGamepadInput() {
-            if (controlsManager.LeftTriggerDown) {
+            if (inputManager.leftTriggerDown) {
                 PressLeftTrigger();
             }
-            if (controlsManager.LeftTriggerUp) {
+            if (inputManager.leftTriggerUp) {
                 LiftLeftTrigger();
             }
-            if (controlsManager.RightTriggerDown) {
+            if (inputManager.rightTriggerDown) {
                 PressRightTrigger();
             }
-            if (controlsManager.RightTriggerUp) {
+            if (inputManager.rightTriggerUp) {
                 LiftRightTrigger();
             }
 
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON4")) {
+            if (inputManager.KeyBindWasPressed("GAMEPADBUTTONLEFTSHOULDER")) {
                 // LB
                 if (currentActionBarSet > 0) {
                     SetGamepadActionButtonSet(currentActionBarSet - 1);
                 }
-            } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON5")) {
+            } else if (inputManager.KeyBindWasPressed("GAMEPADBUTTONRIGHTSHOULDER")) {
                 // RB
                 if (currentActionBarSet < (numActionBarSets - 1)) {
                     SetGamepadActionButtonSet(currentActionBarSet + 1);
@@ -417,10 +417,9 @@ namespace AnyRPG {
             //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds()");
             int count = 1;
             foreach (ActionButton actionButton in GetMouseActionButtons()) {
-                if (keyBindManager.KeyBinds.Count >= count) {
-                    //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds(): associate count: ACT" + count + " with actionButton " + actionButton.name + actionButton.GetInstanceID());
-                    if (keyBindManager.KeyBinds.ContainsKey("ACT" + count.ToString())) {
-                        keyBindManager.KeyBinds["ACT" + count.ToString()].ActionButton = actionButton;
+                if (inputManager.InputActionNodes.Count >= count) {
+                    if (inputManager.InputActionNodes.ContainsKey("ACTIONBUTTON" + count.ToString())) {
+                        inputManager.InputActionNodes["ACTIONBUTTON" + count.ToString()].ActionButton = actionButton;
                         count++;
                     } else {
                         //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds(): ran out of keybinds to associate with available action buttons!");

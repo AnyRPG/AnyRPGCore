@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace AnyRPG {
     public class MessageLogPanel : NavigableInterfaceElement {
@@ -489,9 +490,14 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="ChatMessage"></param>
         public void ProcessEnterKey(string ChatMessage) {
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKey(KeyCode.Escape)) {
+            
+            /*
+            // monitor for breakage here.  not sure what the point was of checking if escape key was hit at same time as enter key...
+            if (Keyboard.current != null && (Keyboard.current.escapeKey.isPressed)) {
                 return;
             }
+            */
+            
             ParseChatMessage(ChatMessage);
         }
 

@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 namespace AnyRPG {
     public class KeyBindNode {
@@ -6,9 +8,12 @@ namespace AnyRPG {
 
         private string keyBindID;
 
-        private KeyCode keyCode;
-        private KeyCode joystickKeyCode;
+        //private Key keyboardKey;
+        private GamepadButton gamepadButton;
         //private KeyCode mobileKeyCode;
+
+        // A clean, readable reference for your "None" state
+        public const GamepadButton GamepadNone = (GamepadButton)(-1);
 
         private bool controlModifier = false;
 
@@ -21,7 +26,7 @@ namespace AnyRPG {
 
         private KeyBindSlotScript keyBindSlotScript = null;
 
-        private ActionButton actionButton = null;
+        //private ActionButton actionButton = null;
 
         // tracker to see if the key was pressed this frame
         private bool keyPressed = false;
@@ -33,25 +38,26 @@ namespace AnyRPG {
         // prevent multiple triggers
         private bool keyLocked = false;
 
-        public KeyBindNode(string keyBindID, KeyCode keyboardKeyCode, KeyCode joystickKeyCode, KeyCode mobileKeyCode, string label, KeyBindType keyBindType, bool control = false, bool shift = false) {
+        public KeyBindNode(string keyBindID, Key keyboardKey, GamepadButton gamepadButton, /*KeyCode mobileKeyCode,*/ string label, KeyBindType keyBindType, bool control = false, bool shift = false) {
             //Debug.Log("KeyBindNode(" + keyBindID + ")");
             this.keyBindID = keyBindID;
             this.label = label;
             this.keyBindType = keyBindType;
             this.controlModifier = control;
             this.shiftModifier = shift;
-            this.joystickKeyCode = joystickKeyCode;
+            this.gamepadButton = gamepadButton;
             //this.mobileKeyCode = mobileKeyCode;
-            this.KeyboardKeyCode = keyboardKeyCode;
+            //this.KeyboardKey = keyboardKey;
         }
 
         public string KeyBindID { get => keyBindID; set => keyBindID = value; }
 
-        public KeyCode KeyboardKeyCode {
-            get => keyCode;
+        /*
+        public Key KeyboardKey {
+            get => keyboardKey;
             set {
                 //Debug.Log("KeyBindNode.SetKeyboardKeyCode: " + value);
-                keyCode = value;
+                keyboardKey = value;
                 if (ActionButton != null) {
                     //Debug.Log("KeyBindNode.SetKeyboardKeyCode : actionbutton is not null");
                     ActionButton.KeyBindText.text = FormatActionButtonLabel();
@@ -60,21 +66,24 @@ namespace AnyRPG {
                     KeyBindSlotScript.Initialize(this);
                 }
             }
-        }
+    }
+        */
 
-        public KeyCode JoystickKeyCode {
-            get => joystickKeyCode;
+        public GamepadButton GamepadButton {
+            get => gamepadButton;
             set {
                 //Debug.Log("KeyBindNode.SetMyKeyCode");
-                joystickKeyCode = value;
+                gamepadButton = value;
                 /*
                 if (MyActionButton != null) {
                     MyActionButton.MyKeyBindText.text = FormatActionButtonLabel();
                 }
                 */
+                /*
                 if (KeyBindSlotScript != null) {
                     KeyBindSlotScript.Initialize(this);
                 }
+                */
             }
         }
 
@@ -97,6 +106,7 @@ namespace AnyRPG {
 
         public string Label { get => label; set => label = value; }
 
+        /*
         public ActionButton ActionButton {
             get => actionButton;
             set {
@@ -105,6 +115,7 @@ namespace AnyRPG {
                 actionButton.KeyBindText.text = FormatActionButtonLabel();
             }
         }
+        */
 
         public KeyBindSlotScript KeyBindSlotScript { get => keyBindSlotScript; set => keyBindSlotScript = value; }
         public KeyBindType KeyBindType { get => keyBindType; set => keyBindType = value; }
@@ -114,14 +125,16 @@ namespace AnyRPG {
         public bool KeyHeld { get => keyHeld; }
         public bool KeyUp { get => keyUp; }
 
+        /*
         private string FormatActionButtonLabel() {
             //Debug.Log("KeyBindNode.FormatActionButtonLabel() : " + KeyboardKeyCode.ToString());
-            if (KeyboardKeyCode.ToString() == "None") {
+            if (KeyboardKey.ToString() == "None") {
                 return string.Empty;
             }
-            return (controlModifier ? "c" : "") + (shiftModifier ? "s" : "") + ReplaceSpecialCharacters(KeyboardKeyCode.ToString());
+            return (controlModifier ? "c" : "") + (shiftModifier ? "s" : "") + ReplaceSpecialCharacters(KeyboardKey.ToString());
             //return keyBindID;
         }
+        */
 
         public string ReplaceSpecialCharacters(string inputString) {
             inputString = inputString.Replace("Alpha", "");
@@ -135,48 +148,19 @@ namespace AnyRPG {
             this.keyBindSlotScript = keyBindSlotScript;
         }
 
-        public void UpdateKeyCode(InputDeviceType inputDeviceType, KeyCode keyCode, bool control, bool shift) {
+        public void UpdateKeyCode(InputDeviceType inputDeviceType, Key keyboardKey, GamepadButton gamepadButton, bool control, bool shift) {
             //Debug.Log("KeyBindNode.UpdateKeyCode(" + inputDeviceType + ", " + keyCode + ", " + control + ", " + shift + ")");
 
             if (inputDeviceType == InputDeviceType.Keyboard) {
-                this.KeyboardKeyCode = keyCode;
                 this.controlModifier = control;
                 this.shiftModifier = shift;
+                //this.KeyboardKey = keyboardKey;
             } else if (inputDeviceType == InputDeviceType.Joystick) {
-                this.JoystickKeyCode = keyCode;
+                this.GamepadButton = gamepadButton;
             }/* else if (inputDeviceType == InputDeviceType.Mobile) {
                 this.MobileKeyCode = keyCode;
             }*/
-            SendKeyBindEvent();
         }
-
-        public void SendKeyBindEvent() {
-            EventParamProperties eventParamProperties = new EventParamProperties();
-            SimpleParamNode simpleParamNode = new SimpleParamNode();
-            simpleParamNode.ParamType = SimpleParamType.stringType;
-            simpleParamNode.SimpleParams.StringParam = this.keyCode.ToString();
-            eventParamProperties.objectParam.MySimpleParams.Add(simpleParamNode);
-            simpleParamNode = new SimpleParamNode();
-            simpleParamNode.ParamType = SimpleParamType.stringType;
-            simpleParamNode.SimpleParams.StringParam = this.joystickKeyCode.ToString();
-            eventParamProperties.objectParam.MySimpleParams.Add(simpleParamNode);
-            /*
-            simpleParamNode = new SimpleParamNode();
-            simpleParamNode.ParamType = SimpleParamType.stringType;
-            simpleParamNode.SimpleParams.StringParam = this.mobileKeyCode.ToString();
-            eventParamProperties.objectParam.MySimpleParams.Add(simpleParamNode);
-            */
-            SystemEventManager.TriggerEvent("OnBindKey" + keyBindID, eventParamProperties);
-        }
-
-        /*
-        public void UpdateKeyCode(KeyCode keyCode, bool control, bool shift) {
-            //Debug.Log("KeyBindNode.UpdateKeyCode(" + keyCode + ", " + control + ", " + shift + ")");
-            this.control = control;
-            this.shift = shift;
-            this.MyKeyCode = keyCode;
-        }
-        */
 
         public void RegisterKeyPress() {
             if (keyLocked == false) {
@@ -210,7 +194,5 @@ namespace AnyRPG {
             keyUp = false;
         }
     }
-
-    public enum InputDeviceType { Keyboard, Joystick, Mobile }
 
 }

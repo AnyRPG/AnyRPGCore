@@ -252,13 +252,13 @@ namespace AnyRPG {
 
                 // determine if mouse is inside this object
                 rectTransform.GetWorldCorners(worldCorners);
-                Vector3 mousePosition = Input.mousePosition;
+                Vector3 mousePosition = inputManager.mousePosition;
                 if (force != true && (mousePosition.x < worldCorners[0].x || mousePosition.x > worldCorners[2].x || mousePosition.y < worldCorners[0].y || mousePosition.y > worldCorners[2].y)) {
                     //Debug.Log("mouse scroll was outside of onscreen bounds.  ignoring!");
                     return;
                 }
 
-                cameraSize += (Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * -1);
+                cameraSize += (inputManager.mouseScrollDeltaY * zoomSpeed * -1);
                 cameraSize = Mathf.Clamp(cameraSize, minZoom, maxZoom);
 
                 // camera size is the number of meters we want to show in the minimap window

@@ -289,10 +289,6 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultAnimationProfileName = string.Empty;
 
-        /*
-                [FormerlySerializedAs("defaultAttackAnimationProfile")]
-                [SerializeField]
-                */
         private AnimationProfile defaultAnimationProfile;
 
         [SerializeField]
@@ -535,12 +531,10 @@ namespace AnyRPG {
         private List<ProjectorColorMapNode> highlightCircleColorMap = new List<ProjectorColorMapNode>();
 
         [Tooltip("An image to use on a nameplate if there is more than 1 valid interactable option.")]
-        [FormerlySerializedAs("multipleInteractionNameplateImage")]
         [SerializeField]
         private Sprite multipleInteractionNameplateImage = null;
 
         [Tooltip("An image to use on a nameplate if only crafting is available, but more than 1 craft skill can be shown.")]
-        [FormerlySerializedAs("multipleCraftNameplateImage")]
         [SerializeField]
         private Sprite multipleCraftNameplateImage = null;
 
@@ -549,7 +543,6 @@ namespace AnyRPG {
         private Sprite auctionInteractionPanelImage = null;
 
         [Tooltip("An image to use for an auction option on a nameplate.")]
-        [FormerlySerializedAs("auctionNameplateImage")]
         [SerializeField]
         private Sprite auctionNameplateImage = null;
 
@@ -558,7 +551,6 @@ namespace AnyRPG {
         private Sprite bankInteractionPanelImage = null;
 
         [Tooltip("An image to use for a bank option on a nameplate.")]
-        [FormerlySerializedAs("bankNameplateImage")]
         [SerializeField]
         private Sprite bankNameplateImage = null;
 
@@ -567,7 +559,6 @@ namespace AnyRPG {
         private Sprite guildmasterInteractionPanelImage = null;
 
         [Tooltip("An image to use for a guildmaster option on a nameplate.")]
-        [FormerlySerializedAs("guildmasterNameplateImage")]
         [SerializeField]
         private Sprite guildmasterNameplateImage = null;
 
@@ -585,7 +576,6 @@ namespace AnyRPG {
         private Sprite dialogInteractionPanelImage = null;
 
         [Tooltip("An image to use for a dialog option on a nameplate.")]
-        [FormerlySerializedAs("dialogNameplateImage")]
         [SerializeField]
         private Sprite dialogNameplateImage = null;
 
@@ -594,7 +584,6 @@ namespace AnyRPG {
         private Sprite mailboxInteractionPanelImage = null;
 
         [Tooltip("An image to use for a mailbox option on a nameplate.")]
-        [FormerlySerializedAs("mailboxNameplateImage")]
         [SerializeField]
         private Sprite mailboxNameplateImage = null;
 
@@ -603,7 +592,6 @@ namespace AnyRPG {
         private Sprite nameChangeInteractionPanelImage = null;
 
         [Tooltip("An image to use for a name change option on a nameplate.")]
-        [FormerlySerializedAs("nameChangeNameplateImage")]
         [SerializeField]
         private Sprite nameChangeNameplateImage = null;
 
@@ -616,12 +604,10 @@ namespace AnyRPG {
         private Sprite storageContainerNameplateImage = null;
 
         [Tooltip("An image to use beside a cutscene option in the interaction UI window.")]
-        [FormerlySerializedAs("cutSceneInteractionPanelImage")]
         [SerializeField]
         private Sprite cutsceneInteractionPanelImage = null;
 
         [Tooltip("An image to use for a cutscene option on a nameplate.")]
-        [FormerlySerializedAs("cutSceneNameplateImage")]
         [SerializeField]
         private Sprite cutsceneNameplateImage = null;
 
@@ -630,7 +616,6 @@ namespace AnyRPG {
         private Sprite lootableCharacterInteractionPanelImage = null;
 
         [Tooltip("An image to use for a lootable character option on a nameplate.")]
-        [FormerlySerializedAs("lootableCharacterNameplateImage")]
         [SerializeField]
         private Sprite lootableCharacterNameplateImage = null;
 
@@ -639,7 +624,6 @@ namespace AnyRPG {
         private Sprite characterCreatorInteractionPanelImage = null;
 
         [Tooltip("An image to use for a character creator option on a nameplate.")]
-        [FormerlySerializedAs("characterCreatorNameplateImage")]
         [SerializeField]
         private Sprite characterCreatorNameplateImage = null;
 
@@ -648,7 +632,6 @@ namespace AnyRPG {
         private Sprite unitSpawnControllerInteractionPanelImage = null;
 
         [Tooltip("An image to use for a unit spawn controller option on a nameplate.")]
-        [FormerlySerializedAs("unitSpawnControllerNameplateImage")]
         [SerializeField]
         private Sprite unitSpawnControllerNameplateImage = null;
 
@@ -657,7 +640,6 @@ namespace AnyRPG {
         private Sprite factionChangeInteractionPanelImage = null;
 
         [Tooltip("An image to use for a faction change option on a nameplate.")]
-        [FormerlySerializedAs("factionChangeNameplateImage")]
         [SerializeField]
         private Sprite factionChangeNameplateImage = null;
 
@@ -666,7 +648,6 @@ namespace AnyRPG {
         private Sprite classChangeInteractionPanelImage = null;
 
         [Tooltip("An image to use for a class change option on a nameplate.")]
-        [FormerlySerializedAs("classChangeNameplateImage")]
         [SerializeField]
         private Sprite classChangeNameplateImage = null;
 
@@ -675,7 +656,6 @@ namespace AnyRPG {
         private Sprite vendorInteractionPanelImage = null;
 
         [Tooltip("An image to use for a vendor option on a nameplate.")]
-        [FormerlySerializedAs("vendorNameplateImage")]
         [SerializeField]
         private Sprite vendorNameplateImage = null;
 
@@ -684,7 +664,6 @@ namespace AnyRPG {
         private Sprite portalInteractionPanelImage = null;
 
         [Tooltip("An image to use for a portal option on a nameplate.")]
-        [FormerlySerializedAs("portalNameplateImage")]
         [SerializeField]
         private Sprite portalNameplateImage = null;
 
@@ -693,7 +672,6 @@ namespace AnyRPG {
         private Sprite skillTrainerInteractionPanelImage = null;
 
         [Tooltip("An image to use for a skill trainer option on a nameplate.")]
-        [FormerlySerializedAs("skillTrainerNameplateImage")]
         [SerializeField]
         private Sprite skillTrainerNameplateImage = null;
 
@@ -702,7 +680,6 @@ namespace AnyRPG {
         private Sprite musicPlayerInteractionPanelImage = null;
 
         [Tooltip("An image to use for a music player option on a nameplate.")]
-        [FormerlySerializedAs("musicPlayerNameplateImage")]
         [SerializeField]
         private Sprite musicPlayerNameplateImage = null;
 
@@ -711,7 +688,6 @@ namespace AnyRPG {
         private Sprite activatableObjectInteractionPanelImage = null;
 
         [Tooltip("An image to use for an activatable object option on a nameplate.")]
-        [FormerlySerializedAs("activatableObjectNameplateImage")]
         [SerializeField]
         private Sprite activatableObjectNameplateImage = null;
 

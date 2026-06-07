@@ -10,7 +10,7 @@ namespace AnyRPG {
     [InitializeOnLoad]
     public class AddonManager : EditorWindow {
 
-        public const string installedVersion = "1.0";
+        public const string installedVersion = "1.1";
 
         public static Texture2D welcomeBanner = null;
 

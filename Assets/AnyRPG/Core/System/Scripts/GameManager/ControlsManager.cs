@@ -4,29 +4,6 @@ namespace AnyRPG {
 
     public class ControlsManager : ConfiguredClass {
 
-        private float inputHorizontal = 0f;
-        private float inputVertical = 0f;
-
-        private float dPadHorizontal = 0f;
-        private float dPadVertical = 0f;
-        private bool dPadDown = false;
-        private bool dPadDownPressed = false;
-        private bool dPadUp = false;
-        private bool dPadUpPressed = false;
-        private bool dPadLeft = false;
-        private bool dPadLeftPressed = false;
-        private bool dPadRight = false;
-        private bool dPadRightPressed = false;
-
-        private float leftTriggerAxis = 0f;
-        private float rightTriggerAxis = 0f;
-        private bool leftTriggerDown = false;
-        private bool leftTriggerUp = false;
-        private bool leftTriggerPressed = false;
-        private bool rightTriggerDown = false;
-        private bool rightTriggerUp = false;
-        private bool rightTriggerPressed = false;
-
         private bool gamePadModeActive = false;
         private bool gamePadInputActive = false;
         private bool mouseDisabled = false;
@@ -44,21 +21,11 @@ namespace AnyRPG {
         protected PlayerManagerClient playerManagerClient = null;
         protected ActionBarManager actionBarManager = null;
         protected CutsceneBarController cutSceneBarController = null;
+        protected CastTargetController castTargetController = null;
+        protected KeyBindManager keyBindManager = null;
 
         public bool GamepadModeActive { get => gamePadModeActive; }
         public bool GamePadInputActive { get => gamePadInputActive; }
-        public bool DPadDownPressed { get => dPadDownPressed; }
-        public bool DPadUpPressed { get => dPadUpPressed; }
-        public bool DPadLeftPressed { get => dPadLeftPressed; }
-        public bool DPadRightPressed { get => dPadRightPressed; }
-        public bool LeftTriggerDown { get => leftTriggerDown; }
-        public bool LeftTriggerUp { get => leftTriggerUp; }
-        public bool LeftTriggerPressed { get => leftTriggerPressed; }
-        public bool RightTriggerDown { get => rightTriggerDown; }
-        public bool RightTriggerUp { get => rightTriggerUp; }
-        public bool RightTriggerPressed { get => rightTriggerPressed; }
-        public float InputHorizontal { get => inputHorizontal; }
-        public float InputVertical { get => inputVertical; }
         public bool MouseDisabled { get => mouseDisabled; }
         public int WindowStackCount { get => windowStackCount; }
         public bool TextInputActive { get => textInputActive; }
@@ -80,6 +47,8 @@ namespace AnyRPG {
             playerManagerClient = systemGameManager.PlayerManagerClient;
             actionBarManager = uIManager.ActionBarManager;
             cutSceneBarController = uIManager.CutSceneBarController;
+            castTargetController = systemGameManager.CastTargettingManager.CastTargetController;
+            keyBindManager = systemGameManager.KeyBindManager;
         }
 
         public void ActivateTextInput() {
@@ -151,7 +120,7 @@ namespace AnyRPG {
         }
 
         private void CheckMouse() {
-            if (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f) {
+            if (inputManager.mouseDeltaX != 0f || inputManager.mouseDeltaY != 0f) {
                 UnlockMouse();
             }
             if (inputManager.leftMouseButtonClicked == true
@@ -161,33 +130,32 @@ namespace AnyRPG {
             }
         }
 
-        public void Update() {
+        public void Tick() {
             /*
             if (playerManager.PlayerController != null) {
                 playerManager.PlayerController.ResetMoveInput();
             }
             */
-            RegisterAxis();
             inputManager.RegisterInput();
             CheckMouse();
 
             if (gamePadInputActive == false) {
-                if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON3")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON4")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON5")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON6")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON7")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON8")
-                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON9")
-                    || rightTriggerPressed
-                    || leftTriggerPressed
-                    || dPadDownPressed
-                    || dPadUpPressed
-                    || dPadLeftPressed
-                    || dPadRightPressed) {
+                if (inputManager.KeyBindWasPressed("GAMEPADBUTTONA")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONB")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONX")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONY")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONLEFTSHOULDER")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONRIGHTSHOULDER")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONSELECT")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONSTART")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONLEFTSTICK")
+                    || inputManager.KeyBindWasPressed("GAMEPADBUTTONRIGHTSTICK")
+                    || inputManager.rightTriggerPressed
+                    || inputManager.leftTriggerPressed
+                    || inputManager.dPadDownPressed
+                    || inputManager.dPadUpPressed
+                    || inputManager.dPadLeftPressed
+                    || inputManager.dPadRightPressed) {
                     //ActivateGamepadMode();
                     ActivateGamepadInput();
                     if (windowManager.CurrentWindow != null) {
@@ -201,13 +169,13 @@ namespace AnyRPG {
             windowStackCount = windowManager.WindowStack.Count;
 
             // only send input to the next block if the name change window is not open
-            if (textInputActive == false) {
+            if (textInputActive == false && keyBindManager.BindName == string.Empty && KeyBindManager.SkipInputProcessingThisFrame == false) {
                 uIManager.ProcessInput();
 
-                if (windowManager.NavigatingInterface && inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
+                if (windowManager.NavigatingInterface && inputManager.KeyBindWasPressed("GAMEPADBUTTONB")) {
                     windowManager.EndNavigateInterface();
                 }
-                if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON6")) {
+                if (inputManager.KeyBindWasPressed("GAMEPADBUTTONSELECT")) {
                     windowManager.NavigateInterface();
                 }
             }
@@ -237,105 +205,12 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            castTargetController.Follow();
         }
 
 
-        private void RegisterAxis() {
-
-            RegisterJoystickAxis();
-            RegisterDPadAxis();
-            RegisterTriggerAxis();
-
-        }
-
-        private void RegisterJoystickAxis() {
-            inputHorizontal = Input.GetAxis("LeftAnalogHorizontal");
-            inputVertical = Input.GetAxis("LeftAnalogVertical");
-        }
-
-        private void RegisterTriggerAxis() {
-            
-            leftTriggerAxis = Input.GetAxis("LT");
-            rightTriggerAxis = Input.GetAxis("RT");
-
-            //Debug.Log("leftTriggerAxis: " + leftTriggerAxis + "; rightTriggerAxis: " + rightTriggerAxis);
-
-            //leftTriggerDown = false;
-            leftTriggerUp = false;
-            leftTriggerPressed = false;
-            //rightTriggerDown = false;
-            rightTriggerUp = false;
-            rightTriggerPressed = false;
-
-            if (leftTriggerAxis == 1 && leftTriggerDown == false) {
-                leftTriggerDown = true;
-            }
-            if (leftTriggerAxis == 0 && leftTriggerDown == true) {
-                leftTriggerDown = false;
-                leftTriggerUp = true;
-                leftTriggerPressed = true;
-            }
-
-            if (rightTriggerAxis == 1 && rightTriggerDown == false) {
-                rightTriggerDown = true;
-            }
-            if (rightTriggerAxis == 0 && rightTriggerDown == true) {
-                rightTriggerDown = false;
-                rightTriggerUp = true;
-                rightTriggerPressed = true;
-            }
-
-
-        }
-
-        private void RegisterDPadAxis() {
-            dPadHorizontal = Input.GetAxis("D-Pad Horizontal");
-            dPadVertical = Input.GetAxis("D-Pad Vertical");
-            dPadDownPressed = false;
-            dPadUpPressed = false;
-            dPadLeftPressed = false;
-            dPadRightPressed = false;
-            if (dPadDown == false) {
-                dPadDown = (dPadVertical < 0f);
-                if (dPadDown) {
-                    //Debug.Log("dPadDownPressed");
-                    dPadDownPressed = true;
-                    //gamePadModeActive = true;
-                }
-            } else if (dPadVertical >= 0f) {
-                dPadDown = false;
-            }
-            if (dPadUp == false) {
-                dPadUp = (dPadVertical > 0f);
-                if (dPadUp) {
-                    //Debug.Log("dPadUpPressed");
-                    dPadUpPressed = true;
-                    //gamePadModeActive = true;
-                }
-            } else if (dPadVertical <= 0f) {
-                dPadUp = false;
-            }
-            if (dPadLeft == false) {
-                dPadLeft = (dPadHorizontal < 0f);
-                if (dPadLeft) {
-                    //Debug.Log("dPadLeftPressed");
-                    dPadLeftPressed = true;
-                    //gamePadModeActive = true;
-                }
-            } else if (dPadHorizontal >= 0f) {
-                dPadLeft = false;
-            }
-            if (dPadRight == false) {
-                dPadRight = (dPadHorizontal > 0f);
-                if (dPadRight) {
-                    //Debug.Log("dPadRightPressed");
-                    dPadRightPressed = true;
-                    //gamePadModeActive = true;
-                }
-            } else if (dPadHorizontal <= 0f) {
-                dPadRight = false;
-            }
-        }
+       
 
     }
 

@@ -6,30 +6,19 @@ namespace AnyRPG {
     /// </summary>
     public class RespawnArea : AutoConfiguredMonoBehaviour {
 
-        /*
-        [SerializeField]
-        private Collider respawnCollider = null;
-        */
-
         // game manager references
-        private PlayerManagerClient playerManagerClient = null;
+        private PlayerManagerServer playerManagerServer = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManagerClient = systemGameManager.PlayerManagerClient;
+            playerManagerServer = systemGameManager.PlayerManagerServer;
         }
 
         public void OnTriggerEnter(Collider other) {
-            //Debug.Log($"{gameObject.name}.MovementSoundArea.OnTriggerEnter()");
 
-            // TO DO : FIX ME this will not work in multiplayer
-
-            if (playerManagerClient.ActiveUnitController == null) {
-                return;
-            }
-            if (other.gameObject == playerManagerClient.ActiveUnitController.gameObject) {
-                playerManagerClient.RequestRespawnPlayer();
+            if (playerManagerServer.ActivePlayerGameObjects.ContainsKey(other.gameObject)) {
+                playerManagerServer.RespawnPlayerUnit(playerManagerServer.ActivePlayerGameObjects[other.gameObject]);
             }
         }
 

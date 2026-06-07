@@ -124,51 +124,51 @@ namespace AnyRPG {
             //Debug.Log("WindowManager.Navigate() : windowstack is not zero: " + CurrentWindow.gameObject.name);
 
             // joystick movement
-            if (controlsManager.InputHorizontal != 0f || controlsManager.InputVertical != 0f) {
-                CurrentWindow.LeftAnalog(controlsManager.InputHorizontal, controlsManager.InputVertical);
+            if (inputManager.leftAnalogHorizontal != 0f || inputManager.leftAnalogVertical != 0f) {
+                CurrentWindow.LeftAnalog(inputManager.leftAnalogHorizontal, inputManager.leftAnalogVertical);
             }
 
             // d pad navigation
-            if (controlsManager.DPadUpPressed) {
+            if (inputManager.dPadUpPressed) {
                 CurrentWindow.UpButton();
             }
-            if (controlsManager.DPadDownPressed) {
+            if (inputManager.dPadDownPressed) {
                 CurrentWindow.DownButton();
             }
-            if (controlsManager.DPadLeftPressed) {
+            if (inputManager.dPadLeftPressed) {
                 CurrentWindow.LeftButton();
             }
-            if (controlsManager.DPadRightPressed) {
+            if (inputManager.dPadRightPressed) {
                 CurrentWindow.RightButton();
             }
-            if (controlsManager.LeftTriggerPressed) {
+            if (inputManager.leftTriggerPressed) {
                 CurrentWindow.LeftTrigger();
             }
-            if (controlsManager.RightTriggerPressed) {
+            if (inputManager.rightTriggerPressed) {
                 CurrentWindow.RightTrigger();
             }
 
             // buttons
-            if (inputManager.KeyBindWasPressed("ACCEPT") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")) {
+            if (inputManager.KeyBindWasPressed("ACCEPT") || inputManager.KeyBindWasPressed("GAMEPADBUTTONA")) {
                 //Debug.Log("Accept");
                 CurrentWindow.Accept();
             }
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
+            if (inputManager.KeyBindWasPressed("GAMEPADBUTTONB")) {
                 CurrentWindow.Cancel();
             }
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")) {
+            if (inputManager.KeyBindWasPressed("GAMEPADBUTTONX")) {
                 CurrentWindow.JoystickButton2();
             }
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON3")) {
+            if (inputManager.KeyBindWasPressed("GAMEPADBUTTONY")) {
                 CurrentWindow.JoystickButton3();
             }
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON4")) {
+            if (inputManager.KeyBindWasPressed("GAMEPADBUTTONLEFTSHOULDER")) {
                 CurrentWindow.JoystickButton4();
             }
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON5")) {
+            if (inputManager.KeyBindWasPressed("GAMEPADBUTTONRIGHTSHOULDER")) {
                 CurrentWindow.JoystickButton5();
             }
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON9")) {
+            if (inputManager.KeyBindWasPressed("GAMEPADBUTTONRIGHTSTICK")) {
                 CurrentWindow.JoystickButton9();
             }
 

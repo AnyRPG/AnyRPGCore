@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace AnyRPG {
     public class AnyRPGCameraController : ConfiguredMonoBehaviour {
@@ -229,7 +230,7 @@ namespace AnyRPG {
             if (focusJustRegained == false
                 && inputManager.mouseScrolled
                 && (!EventSystem.current.IsPointerOverGameObject() || nameplateManager.MouseOverNameplate())) {
-                currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * -1);
+                currentZoomDistance += (inputManager.mouseScrollDeltaY * zoomSpeed * -1);
                 //currentZoomDistance += (Input.mouseScrollDelta.y * zoomSpeed * -1);
                 currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);
                 cameraZoom = true;
@@ -244,12 +245,13 @@ namespace AnyRPG {
                 }
             }
 
+            
             // ====GAMEPAD ZOOM====
             if (playerManagerClient.ActiveUnitController?.CharacterAbilityManager.WaitingForTarget() == false) {
                 if ((windowManager.CurrentWindow == null || windowManager.CurrentWindow.CaptureCamera == false)
-                    && Input.GetAxis("RightAnalogVertical") != 0f
-                    && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9")) {
-                    currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * gamepadZoomSpeed * -1);
+                    && inputManager.rightAnalogVertical != 0f
+                    && inputManager.KeyBindWasPressedOrHeld("GAMEPADBUTTONRIGHTSTICK")) {
+                    currentZoomDistance += (inputManager.rightAnalogVertical * gamepadZoomSpeed * -1);
                     currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);
                     cameraZoom = true;
                 }
@@ -267,8 +269,8 @@ namespace AnyRPG {
                     } else {
                         usedTurnSpeed = PlayerPrefs.GetFloat("MouseLookSpeed") + 0.5f;
                     }
-                    currentXDegrees += Input.GetAxis("Mouse X") * yawSpeed * usedTurnSpeed;
-                    currentYDegrees += (Input.GetAxis("Mouse Y") * yawSpeed * usedTurnSpeed) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
+                    currentXDegrees += inputManager.mouseDeltaX * yawSpeed * usedTurnSpeed;
+                    currentYDegrees += (inputManager.mouseDeltaY * yawSpeed * usedTurnSpeed) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
 
                     if (inputManager.rightMouseButtonDown == false && playerManagerClient.PlayerController.mouseLookActive == false) {
                         // RE-ANCHOR: Calculate how far 'off-center' we are from the player's current facing.
@@ -292,14 +294,14 @@ namespace AnyRPG {
                 // ====GAMEPAD PAN====
                 if (playerManagerClient.ActiveUnitController?.CharacterAbilityManager.WaitingForTarget() == false) {
                     if ((windowManager.CurrentWindow == null || windowManager.CurrentWindow.CaptureCamera == false)
-                    && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9") == false
-                    && (Input.GetAxis("RightAnalogHorizontal") != 0f || Input.GetAxis("RightAnalogVertical") != 0f)) {
-                        if (Input.GetAxis("RightAnalogHorizontal") != 0f) {
-                            currentXDegrees += Input.GetAxis("RightAnalogHorizontal") * analogYawSpeed * (PlayerPrefs.GetFloat("JoystickLookSpeed"));
+                    && inputManager.KeyBindWasPressedOrHeld("GAMEPADBUTTONRIGHTSTICK") == false
+                    && (inputManager.rightAnalogHorizontal != 0f || inputManager.rightAnalogVertical != 0f)) {
+                        if (inputManager.rightAnalogHorizontal != 0f) {
+                            currentXDegrees += inputManager.rightAnalogHorizontal * analogYawSpeed * (PlayerPrefs.GetFloat("JoystickLookSpeed"));
                             cameraPan = true;
                         }
-                        if (Input.GetAxis("RightAnalogVertical") != 0f) {
-                            currentYDegrees += (Input.GetAxis("RightAnalogVertical") * analogYawSpeed * (PlayerPrefs.GetFloat("JoystickLookSpeed"))) * (PlayerPrefs.GetInt("JoystickInvert") == 0 ? 1 : -1);
+                        if (inputManager.rightAnalogVertical != 0f) {
+                            currentYDegrees += (inputManager.rightAnalogVertical * analogYawSpeed * (PlayerPrefs.GetFloat("JoystickLookSpeed"))) * (PlayerPrefs.GetInt("JoystickInvert") == 0 ? 1 : -1);
                             cameraPan = true;
                         }
                     }
@@ -344,12 +346,12 @@ namespace AnyRPG {
 
         private bool IsTurningWithCamera() {
             if (playerManagerClient.PlayerController.mouseLookActive
-                //&& (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f)
+                //&& (inputManager.mouseX != 0f || inputManager.mouseY != 0f)
                 ) {
                 return true;
             }
             if (inputManager.rightMouseButtonDown
-                && (inputManager.rightMouseButtonDownPosition != Input.mousePosition || playerManagerClient.PlayerController.MovementData.HasMoveInput())) {
+                && (inputManager.rightMouseButtonDownPosition != inputManager.mousePosition || playerManagerClient.PlayerController.MovementData.HasMoveInput())) {
                 return true;
             }
             return false;
