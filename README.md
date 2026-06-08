@@ -38,7 +38,7 @@ https://discord.gg/huSAuqk
 
 ### Trello
 
-https://trello.com/anyrpg/
+https://trello.com/w/anyrpg/
 
 ### X.com
 
