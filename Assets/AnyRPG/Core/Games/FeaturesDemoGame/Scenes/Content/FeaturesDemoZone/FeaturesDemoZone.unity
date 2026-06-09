@@ -872,6 +872,11 @@ PrefabInstance:
       propertyPath: persistentObjectComponent.saveOnLevelUnload
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2076345672503358558, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5114853980853533880, guid: 182e453858cadc34392feb6b095a7fa1,
         type: 3}
       propertyPath: m_RootOrder
@@ -931,6 +936,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: WoodGateLocked
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801561424717635737, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7774598034463850189, guid: 182e453858cadc34392feb6b095a7fa1,
         type: 3}
@@ -11188,6 +11198,11 @@ PrefabInstance:
       propertyPath: persistentObjectComponent.saveOnLevelUnload
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2076345672503358558, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5114853980853533880, guid: 182e453858cadc34392feb6b095a7fa1,
         type: 3}
       propertyPath: m_RootOrder
@@ -11247,6 +11262,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: WoodGateLockedUseKey
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801561424717635737, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7774598034463850189, guid: 182e453858cadc34392feb6b095a7fa1,
         type: 3}
@@ -65364,6 +65384,11 @@ PrefabInstance:
       propertyPath: persistentObjectComponent.saveOnLevelUnload
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2076345672503358558, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5114853980853533880, guid: 182e453858cadc34392feb6b095a7fa1,
         type: 3}
       propertyPath: m_RootOrder
@@ -65423,6 +65448,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: WoodGateUnlockableUseKey
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801561424717635737, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7774598034463850189, guid: 182e453858cadc34392feb6b095a7fa1,
         type: 3}
@@ -77667,6 +77697,11 @@ PrefabInstance:
       propertyPath: persistentObjectComponent.saveOnLevelUnload
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2076345672503358558, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5114853980853533880, guid: 182e453858cadc34392feb6b095a7fa1,
         type: 3}
       propertyPath: m_RootOrder
@@ -77726,6 +77761,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: WoodGateUnlockable
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801561424717635737, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7774598034463850189, guid: 182e453858cadc34392feb6b095a7fa1,
         type: 3}

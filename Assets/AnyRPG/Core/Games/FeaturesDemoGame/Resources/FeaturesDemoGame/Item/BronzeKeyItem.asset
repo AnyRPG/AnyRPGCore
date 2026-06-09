@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4cd8632a7dd644c4fb9788820076220d, type: 3}
-  m_Name: CopperKey
+  m_Name: BronzeKeyItem
   m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.Item
-  resourceName: Copper Key
+  resourceName: Bronze Key
   displayName: 
-  icon: {fileID: 21300000, guid: ed08ade12d136be4b80891887a0c4443, type: 3}
+  icon: {fileID: 21300000, guid: 1124d35e890c35c4eb2c5b3d05d0764d, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -28,11 +28,11 @@ MonoBehaviour:
   levelCap: 0
   itemLevel: 1
   useLevel: 1
-  currencyName: Copper
+  currencyName: Silver
   dynamicCurrencyAmount: 0
   pricePerLevel: 1
   basePrice: 1
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0.1
-  itemPickupPrefabProfileName: Copper Key
+  itemPickupPrefabProfileName: Bronze Key

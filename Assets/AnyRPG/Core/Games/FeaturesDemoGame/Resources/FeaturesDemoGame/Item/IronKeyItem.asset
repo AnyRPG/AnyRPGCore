@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4cd8632a7dd644c4fb9788820076220d, type: 3}
-  m_Name: BronzeKey
+  m_Name: IronKeyItem
   m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.Item
-  resourceName: Bronze Key
+  resourceName: Iron Key
   displayName: 
-  icon: {fileID: 21300000, guid: 1124d35e890c35c4eb2c5b3d05d0764d, type: 3}
+  icon: {fileID: 21300000, guid: 0d06f5dcab9a0ae4fbe04447f8f3630b, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -31,8 +31,8 @@ MonoBehaviour:
   currencyName: Silver
   dynamicCurrencyAmount: 0
   pricePerLevel: 1
-  basePrice: 1
+  basePrice: 10
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0.1
-  itemPickupPrefabProfileName: Bronze Key
+  itemPickupPrefabProfileName: Iron Key
