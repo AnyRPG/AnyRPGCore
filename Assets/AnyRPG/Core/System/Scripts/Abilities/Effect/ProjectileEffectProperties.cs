@@ -47,14 +47,14 @@ namespace AnyRPG {
             playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
-        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
+        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, InteractableBase target, InteractableBase originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{ResourceName}.ProjectileEffect.Cast({source.AbilityManager.Name}, {(target == null ? "null" : target.name)})");
 
             Dictionary<PrefabProfile, List<GameObject>> returnObjects = source.AbilityManager.SpawnProjectileEffectPrefabs(target, originalTarget, this, abilityEffectContext);
             return returnObjects;
         }
 
-        protected override void CheckDestroyObjects(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        protected override void CheckDestroyObjects(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput) {
             // intentionally not calling base to avoid pool recycled projectiles getting despawned mid-flight
         }
 

@@ -15,7 +15,7 @@ namespace AnyRPG {
         /// <summary>
         /// The currently focused nameplate so we can highlight the outline
         /// </summary>
-        private Interactable focus;
+        private InteractableBase focus;
 
         private NativeArray<RaycastCommand> commands;
         private NativeArray<RaycastHit> results;
@@ -26,7 +26,7 @@ namespace AnyRPG {
 
         private List<NameplateController> mouseOverList = new List<NameplateController>();
 
-        private Dictionary<Interactable, NameplateController> namePlates = new Dictionary<Interactable, NameplateController>();
+        private Dictionary<InteractableBase, NameplateController> namePlates = new Dictionary<InteractableBase, NameplateController>();
 
         // game manager references
         private ObjectPooler objectPooler = null;
@@ -159,7 +159,7 @@ namespace AnyRPG {
         }
         */
 
-        public void SetFocus(Interactable newInteractable) {
+        public void SetFocus(InteractableBase newInteractable) {
             ClearFocus();
             //Debug.Log("NameplateManager.SetFocus(" + characterUnit.MyCharacter.MyCharacterName + ")");
             if (namePlates.ContainsKey(newInteractable)) {
@@ -180,7 +180,7 @@ namespace AnyRPG {
             focus = null;
         }
 
-        public NameplateController SpawnNameplate(Interactable interactable, bool usePositionOffset) {
+        public NameplateController SpawnNameplate(InteractableBase interactable, bool usePositionOffset) {
             //Debug.Log($"NameplateManager.SpawnNameplate({namePlateUnit.gameObject.name})");
 
             NameplateController namePlate = objectPooler.GetPooledObject(namePlatePrefab, namePlateContainer).GetComponent<NameplateController>();
@@ -193,7 +193,7 @@ namespace AnyRPG {
             return namePlate;
         }
 
-        public NameplateController AddNameplate(Interactable interactable, bool usePositionOffset) {
+        public NameplateController AddNameplate(InteractableBase interactable, bool usePositionOffset) {
             //Debug.Log($"NameplateManager.AddNameplate({interactable.gameObject.name})");
 
             if (namePlates.ContainsKey(interactable) == false) {
@@ -203,7 +203,7 @@ namespace AnyRPG {
             return namePlates[interactable];
         }
 
-        public void RemoveNameplate(Interactable interactable) {
+        public void RemoveNameplate(InteractableBase interactable) {
             //Debug.Log($"Nameplatemanager.RemoveNameplate({namePlateUnit?.gameObject?.name})");
 
             if (namePlates.ContainsKey(interactable)) {

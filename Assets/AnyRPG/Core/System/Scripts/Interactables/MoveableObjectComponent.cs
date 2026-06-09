@@ -23,7 +23,7 @@ namespace AnyRPG {
         private Vector3 originalRotation = Vector3.zero;
         ObjectAudioController objectAudioController = null;
 
-        public MoveableObjectComponent(Interactable interactable, MoveableObjectProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public MoveableObjectComponent(InteractableBase interactable, MoveableObjectProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactionPanelTitle = "Interactable";
             if (Props.MoveableObject != null) {
                 originalPosition = Props.MoveableObject.transform.localPosition;

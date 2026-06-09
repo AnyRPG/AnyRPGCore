@@ -56,12 +56,12 @@ namespace AnyRPG {
             if (sceneData == null) {
                 return;
             }
-            foreach (Interactable interactable in sceneData.Interactables) {
+            foreach (InteractableBase interactable in sceneData.Interactables) {
                 if (interactable != null) {
                     interactable.ProcessPlayerUnitSpawn(sourceUnitController);
                 }
             }
-            foreach (Interactable interactable in sceneData.DroppedItems) {
+            foreach (InteractableBase interactable in sceneData.DroppedItems) {
                 if (interactable != null) {
                     interactable.ProcessPlayerUnitSpawn(sourceUnitController);
                 }
@@ -220,7 +220,7 @@ namespace AnyRPG {
                 //Debug.Log($"LevelManagerServer.SpawnEphemeralObjects() UUID BEFORE: {uuidComponent.ID}");
                 uuidComponent.ID = persistentObjectSaveData.UUID;
                 //Debug.Log($"LevelManagerServer.SpawnEphemeralObjects() UUID AFTER: {uuidComponent.ID}");
-                Interactable interactable = droppedPrefab.GetComponent<Interactable>();
+                InteractableBase interactable = droppedPrefab.GetComponent<InteractableBase>();
                 if (interactable == null) {
                     Debug.LogWarning($"LevelManagerServer.SpawnEphemeralObjects() could not find interactable component on dropped item prefab");
                     return;
@@ -298,8 +298,8 @@ namespace AnyRPG {
 
             SceneData sceneData = GetSceneData(scene);
             if (sceneData != null) {
-                List<Interactable> interactables = new List<Interactable>(sceneData.Interactables);
-                foreach (Interactable interactable in interactables) {
+                List<InteractableBase> interactables = new List<InteractableBase>(sceneData.Interactables);
+                foreach (InteractableBase interactable in interactables) {
                     if (interactable != null) {
                         if (systemGameManager.GameMode == GameMode.Local) {
                             interactable.PersistentObjectComponent.ProcessBeforeUnloadScene(false);
@@ -307,8 +307,8 @@ namespace AnyRPG {
                         interactable.ResetSettings();
                     }
                 }
-                List<Interactable> droppedItems = new List<Interactable>(sceneData.DroppedItems);
-                foreach (Interactable interactable in droppedItems) {
+                List<InteractableBase> droppedItems = new List<InteractableBase>(sceneData.DroppedItems);
+                foreach (InteractableBase interactable in droppedItems) {
                     if (interactable != null) {
                         if (systemGameManager.GameMode == GameMode.Local) {
                             interactable.PersistentObjectComponent.ProcessBeforeUnloadScene(true);
@@ -357,7 +357,7 @@ namespace AnyRPG {
 
             SceneData sceneData = GetSceneData(scene);
             if (sceneData != null) {
-                foreach (Interactable interactable in sceneData.Interactables) {
+                foreach (InteractableBase interactable in sceneData.Interactables) {
                     if (interactable != null && interactable.PersistentObjectComponent.SaveOnGameSave == true) {
                         interactable.PersistentObjectComponent.ProcessSaveGame(false);
                     }
@@ -387,7 +387,7 @@ namespace AnyRPG {
             }
         }
 
-        public void RegisterInteractable(Interactable interactable) {
+        public void RegisterInteractable(InteractableBase interactable) {
             //Debug.Log($"LevelManagerServer.RegisterInteractable({interactable.gameObject.name})");
 
             Scene scene = interactable.gameObject.scene;
@@ -401,7 +401,7 @@ namespace AnyRPG {
             loadedScenes[scene.name][scene.handle].RegisterInteractable(interactable);
         }
 
-        public void UnregisterInteractable(Interactable interactable) {
+        public void UnregisterInteractable(InteractableBase interactable) {
             //Debug.Log($"LevelManagerServer.UnregisterInteractable({interactable.gameObject.name})");
             Scene scene = interactable.gameObject.scene;
             if (loadedScenes.ContainsKey(scene.name) == false) {
@@ -467,7 +467,7 @@ namespace AnyRPG {
             loadedScenes[scene.name][scene.handle].UnregisterPersistentObject(persistentObjectOwner);
         }
 
-        public void RegisterDroppedItem(Interactable interactable) {
+        public void RegisterDroppedItem(InteractableBase interactable) {
             //Debug.Log($"LevelManagerServer.RegisterDroppedItem({interactable.gameObject.name})");
 
             Scene scene = interactable.gameObject.scene;
@@ -480,7 +480,7 @@ namespace AnyRPG {
             loadedScenes[scene.name][scene.handle].RegisterDroppedItem(interactable);
         }
 
-        public void UnregisterDroppedItem(Interactable interactable) {
+        public void UnregisterDroppedItem(InteractableBase interactable) {
             //Debug.Log($"LevelManagerServer.UnregisterDroppedItem({interactable.gameObject.name})");
 
             Scene scene = interactable.gameObject.scene;

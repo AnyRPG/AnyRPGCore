@@ -240,7 +240,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnExitInteractableTrigger -= HandleExitInteractableTrigger;
         }
 
-        private void HandleEnterInteractableTrigger(UnitController unitController, Interactable interactable) {
+        private void HandleEnterInteractableTrigger(UnitController unitController, InteractableBase interactable) {
             //Debug.Log($"PlayerManagerServer.HandleEnterInteractableTrigger({unitController.gameObject.name})");
 
             if (networkManagerServer.ServerModeActive || systemGameManager.GameMode == GameMode.Local) {
@@ -248,7 +248,7 @@ namespace AnyRPG {
             }
         }
 
-        private void HandleExitInteractableTrigger(UnitController unitController, Interactable interactable) {
+        private void HandleExitInteractableTrigger(UnitController unitController, InteractableBase interactable) {
             //Debug.Log($"PlayerManagerServer.HandleEnterInteractableTrigger({unitController.gameObject.name})");
 
             if (networkManagerServer.ServerModeActive || systemGameManager.GameMode == GameMode.Local) {

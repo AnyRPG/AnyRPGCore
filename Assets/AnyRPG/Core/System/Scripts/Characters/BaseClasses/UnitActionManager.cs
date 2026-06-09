@@ -239,7 +239,7 @@ namespace AnyRPG {
         /// <param name="animatedAction"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public IEnumerator PerformActionCast(AnimatedAction animatedAction, Interactable target) {
+        public IEnumerator PerformActionCast(AnimatedAction animatedAction, InteractableBase target) {
             //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.PerformActionCast({animatedAction.ResourceName})");
             
             float startTime = Time.time;
@@ -321,13 +321,13 @@ namespace AnyRPG {
         }
 
         /*
-        public void BeginAction(AnimatedAction animatedAction, Interactable target) {
+        public void BeginAction(AnimatedAction animatedAction, InteractableBase target) {
             //Debug.Log($"{gameObject.name}.CharacterAbilityManager.BeginAbility(" + ability.DisplayName + ")");
             BeginActionCommon(animatedAction, target);
         }
         */
 
-        protected void BeginActionCommon(AnimatedAction animatedAction, Interactable target, bool playerInitiated = false) {
+        protected void BeginActionCommon(AnimatedAction animatedAction, InteractableBase target, bool playerInitiated = false) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.gameObject.name) + ")");
 
             if (unitController != null) {

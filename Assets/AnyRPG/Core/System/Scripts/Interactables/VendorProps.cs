@@ -18,7 +18,7 @@ namespace AnyRPG {
         public override Sprite NameplateImage { get => (systemConfigurationManager.VendorNameplateImage != null ? systemConfigurationManager.VendorNameplateImage : base.NameplateImage); }
         public List<VendorCollection> VendorCollections { get => vendorCollections; set => vendorCollections = value; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new VendorComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

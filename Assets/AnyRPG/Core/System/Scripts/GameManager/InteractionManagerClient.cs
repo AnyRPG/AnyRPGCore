@@ -1,9 +1,9 @@
 namespace AnyRPG {
     public class InteractionManagerClient : ConfiguredClass {
 
-        public event System.Action<Interactable> OnSetInteractable = delegate { };
+        public event System.Action<InteractableBase> OnSetInteractable = delegate { };
 
-        private Interactable currentInteractable = null;
+        private InteractableBase currentInteractable = null;
         private InteractableOptionComponent currentInteractableOptionComponent = null;
         private InteractableOptionManager interactableOptionManager = null;
 
@@ -20,7 +20,7 @@ namespace AnyRPG {
             interactionManagerServer = systemGameManager.InteractionManagerServer;
         }
 
-        public void InteractWithInteractable(UnitController sourceUnitController, Interactable target) {
+        public void InteractWithInteractable(UnitController sourceUnitController, InteractableBase target) {
             //Debug.Log($"InteractionManager.Interact({sourceUnitController.gameObject.name}, {target.gameObject.name})");
             
             if (systemGameManager.GameMode == GameMode.Local) {
@@ -30,7 +30,7 @@ namespace AnyRPG {
             }
         }
 
-        public void InteractWithOption(UnitController sourceUnitController, Interactable targetInteractable, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
+        public void InteractWithOption(UnitController sourceUnitController, InteractableBase targetInteractable, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
             //Debug.Log($"InteractionManager.InteractWithOptionClient({sourceUnitController.gameObject.name}, {targetInteractable.gameObject.name}, {componentIndex}, {choiceIndex})");
 
             if (systemGameManager.GameMode == GameMode.Local) {
@@ -40,7 +40,7 @@ namespace AnyRPG {
             }
         }
 
-        public void OpenInteractionWindow(Interactable targetInteractable) {
+        public void OpenInteractionWindow(InteractableBase targetInteractable) {
             //Debug.Log($"InteractionManager.OpenInteractionWindow");
 
             BeginInteraction(targetInteractable);
@@ -49,7 +49,7 @@ namespace AnyRPG {
         }
 
 
-        public void BeginInteraction(Interactable interactable) {
+        public void BeginInteraction(InteractableBase interactable) {
             SetInteractable(interactable);
             interactable.ProcessStartInteract();
         }
@@ -59,7 +59,7 @@ namespace AnyRPG {
             SetInteractable(null);
         }
 
-        public void SetInteractable(Interactable interactable) {
+        public void SetInteractable(InteractableBase interactable) {
             currentInteractable = interactable;
             OnSetInteractable(currentInteractable);
         }

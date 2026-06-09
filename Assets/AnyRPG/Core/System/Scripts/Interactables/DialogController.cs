@@ -5,7 +5,7 @@ namespace AnyRPG {
     public class DialogController : ConfiguredClass {
 
         // references
-        private Interactable interactable;
+        private InteractableBase interactable;
 
         private int shownNodeCount = 0;
 
@@ -21,7 +21,7 @@ namespace AnyRPG {
 
         public int DialogIndex { get => shownNodeCount; }
 
-        public DialogController(Interactable interactable, SystemGameManager systemGameManager) {
+        public DialogController(InteractableBase interactable, SystemGameManager systemGameManager) {
             this.interactable = interactable;
             Configure(systemGameManager);
         }

@@ -6,7 +6,7 @@ namespace AnyRPG {
 
         public SpecializationChangeProps Props { get => interactableOptionProps as SpecializationChangeProps; }
 
-        public SpecializationChangeComponent(Interactable interactable, SpecializationChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public SpecializationChangeComponent(InteractableBase interactable, SpecializationChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactionPanelTitle == string.Empty) {
                 interactionPanelTitle = Props.ClassSpecialization.DisplayName + " Specialization";
             }

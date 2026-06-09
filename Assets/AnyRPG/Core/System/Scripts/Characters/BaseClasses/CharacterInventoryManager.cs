@@ -968,7 +968,7 @@ namespace AnyRPG {
                 // generate a new uuid for this dropped item so it doesn't conflict with the UUID of the prefab it was spawned from
                 uuidComponent.ForceUpdateUUID = true;
             }
-            Interactable _interactable = droppedPrefab.GetComponent<Interactable>();
+            InteractableBase _interactable = droppedPrefab.GetComponent<InteractableBase>();
             if (_interactable == null) {
                 Debug.LogWarning($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() could not find interactable component on dropped item prefab");
                 return;
@@ -1346,6 +1346,17 @@ namespace AnyRPG {
             return false;
         }
 
+        public bool HasItem(string itemResourceName) {
+            foreach (InventorySlot slot in inventorySlots) {
+                foreach (InstantiatedItem instantiatedItem in slot.InstantiatedItems.Values) {
+                    if (instantiatedItem.Item.ResourceName == itemResourceName) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public void RequestSplitStack(int stackSize) {
             if (fromSlot != null) {
                 if (systemGameManager.GameMode == GameMode.Local) {
@@ -1515,7 +1526,18 @@ namespace AnyRPG {
                 unitController.UnitEventController.NotifyOnRequestSwapItemsInStorageContainerSlots(storageContainerComponent.Interactable, storageContainerComponent.GetCurrentSlotIndex(fromSlot), storageContainerComponent.GetCurrentSlotIndex(toSlot));
             }
         }
-    
+
+        public void RemoveItem(string keyName) {
+            foreach (InventorySlot inventorySlot in inventorySlots) {
+                foreach (InstantiatedItem instantiatedItem in inventorySlot.InstantiatedItems.Values) {
+                    if (instantiatedItem.Item.ResourceName == keyName) {
+                        inventorySlot.RemoveItem(instantiatedItem);
+                        return;
+                    }
+                }
+            }
+        }
+
     }
 
 }

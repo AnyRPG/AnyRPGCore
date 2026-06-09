@@ -6,7 +6,7 @@ namespace AnyRPG {
 
         public MusicPlayerProps Props { get => interactableOptionProps as MusicPlayerProps; }
 
-        public MusicPlayerComponent(Interactable interactable, MusicPlayerProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public MusicPlayerComponent(InteractableBase interactable, MusicPlayerProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactionPanelTitle == string.Empty) {
                 interactionPanelTitle = "Music Player";
             }

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 namespace AnyRPG {
     public class VendorManagerServer : InteractableOptionManager {
 
-        public void SellItemToVendor(UnitController sourceUnitController, Interactable interactable, int componentIndex, InstantiatedItem instantiatedItem) {
+        public void SellItemToVendor(UnitController sourceUnitController, InteractableBase interactable, int componentIndex, InstantiatedItem instantiatedItem) {
             Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(sourceUnitController);
             if (currentInteractables[componentIndex] is VendorComponent) {
                 (currentInteractables[componentIndex] as VendorComponent).SellItemToVendor(sourceUnitController, componentIndex, instantiatedItem);
             }
         }
 
-        public void BuyItemFromVendor(UnitController sourceUnitController, Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName, int accountId) {
+        public void BuyItemFromVendor(UnitController sourceUnitController, InteractableBase interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName, int accountId) {
             //Debug.Log($"VendorManager.BuyItemFromVendorServer({sourceUnitController.gameObject.name}, {interactable.gameObject.name}, {componentIndex}, {collectionIndex}, {itemIndex}, {resourceName}, {accountId})");
 
             Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(sourceUnitController);

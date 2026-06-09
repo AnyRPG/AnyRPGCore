@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace AnyRPG {
     public class QuestGiverManagerServer : InteractableOptionManager {
 
-        public void AcceptQuest(Interactable interactable, int componentIndex, UnitController sourceUnitController, Quest quest) {
+        public void AcceptQuest(InteractableBase interactable, int componentIndex, UnitController sourceUnitController, Quest quest) {
             //Debug.Log($"QuestGiverManager.AcceptQuestInternal({sourceUnitController.gameObject.name}, {quest.ResourceName})");
 
             Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(sourceUnitController);
@@ -12,7 +12,7 @@ namespace AnyRPG {
             }
         }
 
-        public void CompleteQuest(Interactable interactable, int componentIndex, UnitController sourceUnitController, Quest quest, QuestRewardChoices questRewardChoices) {
+        public void CompleteQuest(InteractableBase interactable, int componentIndex, UnitController sourceUnitController, Quest quest, QuestRewardChoices questRewardChoices) {
 
             Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(sourceUnitController);
             if (currentInteractables[componentIndex] is QuestGiverComponent) {

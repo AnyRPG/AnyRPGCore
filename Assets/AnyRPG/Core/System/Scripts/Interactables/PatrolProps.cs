@@ -26,7 +26,7 @@ namespace AnyRPG {
         //public bool UseBehaviorCopy { get => useBehaviorCopy; }
         //public List<string> BehaviorNames { get => behaviorNames; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             //Debug.Log("BehaviorProps.GetInteractableOption(" + interactable.gameObject.name + ") systemGameManager = " + (systemGameManager == null ? "null" : systemGameManager.gameObject.name));
             InteractableOptionComponent returnValue = new PatrolComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {

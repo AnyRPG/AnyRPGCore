@@ -3,7 +3,7 @@ namespace AnyRPG {
     [System.Serializable]
     public class GatherAbilityProperties : AbilityProperties {
 
-        public override bool Cast(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public override bool Cast(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             if (target == null) {
                 return false;
             }
@@ -21,7 +21,7 @@ namespace AnyRPG {
             return returnResult;
         }
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
+        public override bool CanUseOn(InteractableBase target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             //Debug.Log(DisplayName + ".GatherAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.DisplayName) + ")");
             if (!base.CanUseOn(target, sourceCharacter, performCooldownChecks, abilityEffectContext, playerInitiated, performRangeCheck)) {
                 return false;

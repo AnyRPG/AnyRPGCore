@@ -24,7 +24,7 @@ namespace AnyRPG {
         public override Sprite Icon { get => (systemConfigurationManager.QuestGiverInteractionPanelImage != null ? systemConfigurationManager.QuestGiverInteractionPanelImage : base.Icon); }
         public override Sprite NameplateImage { get => (systemConfigurationManager.QuestGiverNameplateImage != null ? systemConfigurationManager.QuestGiverNameplateImage : base.NameplateImage); }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new QuestGiverComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

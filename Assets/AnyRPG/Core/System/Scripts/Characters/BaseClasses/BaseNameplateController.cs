@@ -11,7 +11,7 @@ namespace AnyRPG {
 
         protected NameplateController nameplate;
 
-        protected Interactable interactable;
+        protected InteractableBase interactable;
 
         // game manager references
         protected NameplateManager namePlateManager = null;
@@ -76,7 +76,7 @@ namespace AnyRPG {
             }
         }
 
-        public virtual Interactable Interactable {
+        public virtual InteractableBase Interactable {
             get {
                 return interactable;
             }
@@ -111,7 +111,7 @@ namespace AnyRPG {
             }
         }
 
-        public BaseNameplateController(Interactable interactable, SystemGameManager systemGameManager) {
+        public BaseNameplateController(InteractableBase interactable, SystemGameManager systemGameManager) {
             this.interactable = interactable;
             Configure(systemGameManager);
         }

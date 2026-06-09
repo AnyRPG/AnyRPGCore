@@ -926,7 +926,7 @@ namespace AnyRPG {
             return null;
         }
 
-        public virtual float GetLOSMaxRange(IAbilityCaster source, Interactable target) {
+        public virtual float GetLOSMaxRange(IAbilityCaster source, InteractableBase target) {
             //Debug.Log(DisplayName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ")");
             if (source.AbilityManager.PerformLOSCheck(target, this)) {
                 //Debug.Log(DisplayName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + "): return max " + GetTargetOptions(source).MaxRange);
@@ -936,7 +936,7 @@ namespace AnyRPG {
             return source.AbilityManager.GetMeleeRange();
         }
 
-        public virtual void PerformChanneledEffect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public virtual void PerformChanneledEffect(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("BaseAbility.PerformChanneledEffect(" + DisplayName + ", " + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ")");
             foreach (AbilityEffectProperties abilityEffect in channeledAbilityEffects) {
 
@@ -1000,7 +1000,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public virtual bool Cast(IAbilityCaster sourceCharacter, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public virtual bool Cast(IAbilityCaster sourceCharacter, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{ResourceName}.AbilityProperties.Cast({(sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.Name)}, {(target == null ? "null" : target.name)})");
             
             if (!CanCast(sourceCharacter)) {
@@ -1049,14 +1049,14 @@ namespace AnyRPG {
         }
 
         
-        public void HandleAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public void HandleAbilityHit(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{ResourceName}.HandleAbilityHit()");
 
             List<AbilityEffectProperties> abilityEffectProperties = GetActionHitEffects(source);
             HandleAbilityHitCommon(source, target, abilityEffectContext, abilityEffectProperties);
         }
 
-        public void HandleAbilityEndHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public void HandleAbilityEndHit(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             List<AbilityEffectProperties> abilityEffectProperties = GetActionEndEffects(source);
             if (abilityEffectProperties.Count == 0) {
                 return;
@@ -1064,7 +1064,7 @@ namespace AnyRPG {
             HandleAbilityHitCommon(source, target, abilityEffectContext, abilityEffectProperties);
         }
 
-        public void HandleAbilityHitCommon(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffectProperties> abilityEffectProperties) {
+        public void HandleAbilityHitCommon(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext, List<AbilityEffectProperties> abilityEffectProperties) {
             //Debug.Log($"{ResourceName}.AbilityProperties.HandleAbilityHitCommon()");
 
             // perform a check that includes range to target, and does not include in progress ability action check
@@ -1131,7 +1131,7 @@ namespace AnyRPG {
             sourceCharacter.AbilityManager.DespawnAbilityObjects();
         }
 
-        public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
+        public virtual bool CanUseOn(InteractableBase target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             //Debug.Log($"{ResourceName}.AbilityProperties.CanUseOn({(target != null ? target.name : "null")}, {(sourceCharacter != null ? sourceCharacter.AbilityManager.Name : "null")}, {performCooldownChecks})");
             
             if (performCooldownChecks && !sourceCharacter.AbilityManager.PerformAbilityActionCheck(this)) {
@@ -1159,7 +1159,7 @@ namespace AnyRPG {
         }
 
         // to be used at the end of ability hit because it doesn't perform in progress check
-        public bool CanUseOnBase(Interactable target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
+        public bool CanUseOnBase(InteractableBase target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             if (useAbilityEffectTargetting == true) {
                 List<AbilityEffectProperties> abilityEffects = null;
                 if (abilityEffectTargetStage == AbilityStage.CastChannel) {
@@ -1183,20 +1183,20 @@ namespace AnyRPG {
 
         }
 
-        public virtual void PerformCastEndEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public virtual void PerformCastEndEffects(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             List<AbilityEffectProperties> usedCastEndEffects = GetCastEndEffects(source);
 
         }
 
-        public virtual void PerformActionHitEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public virtual void PerformActionHitEffects(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             List<AbilityEffectProperties> usedActionHitEffects = GetActionHitEffects(source);
         }
 
-        public virtual void PerformActionEndEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public virtual void PerformActionEndEffects(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             List<AbilityEffectProperties> usedActionEndEffects = GetActionEndEffects(source);
         }
 
-        public virtual bool PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffectProperties> abilityEffectProperties) {
+        public virtual bool PerformAbilityEffects(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext, List<AbilityEffectProperties> abilityEffectProperties) {
             //Debug.Log($"{ResourceName}.AbilityProperties.PerformAbilityEffects({source.AbilityManager.Name}, {(target ? target.name : "null")})");
             
             // FIX ME - this line existed only for DirectAbility - does it break anything else by being here ?
@@ -1236,7 +1236,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="sourceCharacter"></param>
         /// <returns></returns>
-        public virtual Interactable ReturnTarget(IAbilityCaster sourceCharacter, Interactable target, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
+        public virtual InteractableBase ReturnTarget(IAbilityCaster sourceCharacter, InteractableBase target, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
             if (playerInitiated) {
                 //Debug.Log(DisplayName + ".BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ")");
             }
@@ -1252,7 +1252,7 @@ namespace AnyRPG {
             if (CanUseOn(target, sourceCharacter, performCooldownChecks, abilityEffectContext, playerInitiated) == false) {
                 //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + " was false");
                 if (GetTargetOptions(sourceCharacter).CanCastOnSelf && GetTargetOptions(sourceCharacter).AutoSelfCast) {
-                    target = sourceCharacter.AbilityManager.UnitGameObject.GetComponent<Interactable>();
+                    target = sourceCharacter.AbilityManager.UnitGameObject.GetComponent<InteractableBase>();
                     //Debug.Log(DisplayName + ".BaseAbility.ReturnTarget(): returning target as sourcecharacter: " + target.name);
                     return target;
                 } else {
@@ -1279,7 +1279,7 @@ namespace AnyRPG {
         }
         */
 
-        public virtual float OnCastTimeChanged(float currentCastPercent, float nextTickPercent, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public virtual float OnCastTimeChanged(float currentCastPercent, float nextTickPercent, IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".BaseAbility.OnCastTimeChanged(" + currentCastPercent + ", " + nextTickPercent + ")");
             // overwrite me
             if (currentCastPercent >= nextTickPercent) {

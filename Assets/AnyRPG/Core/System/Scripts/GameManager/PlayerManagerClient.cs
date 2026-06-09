@@ -712,7 +712,7 @@ namespace AnyRPG {
         }
         */
 
-        public void HandleReceiveCombatTextEvent(Interactable targetInteractable, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+        public void HandleReceiveCombatTextEvent(InteractableBase targetInteractable, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"PlayerManagerClient.HandleReceiveCombatTextEvent({targetInteractable?.gameObject.name}, {amount}, {combatTextType}, {combatMagnitude})");
 
             combatTextManager.SpawnCombatText(targetInteractable, amount, combatTextType, combatMagnitude, abilityEffectContext);
@@ -869,11 +869,11 @@ namespace AnyRPG {
             systemEventManager.NotifyOnAcceptQuest(sourceUnitController, questBase);
         }
 
-        public void HandleEnterInteractableRange(UnitController controller, Interactable interactable) {
+        public void HandleEnterInteractableRange(UnitController controller, InteractableBase interactable) {
             playerController.AddInteractable(interactable);
         }
 
-        public void HandleExitInteractableRange(UnitController controller, Interactable interactable) {
+        public void HandleExitInteractableRange(UnitController controller, InteractableBase interactable) {
             playerController.RemoveInteractable(interactable);
         }
 
@@ -910,7 +910,7 @@ namespace AnyRPG {
         }
 
         /*
-        public void HandleCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
+        public void HandleCombatMiss(InteractableBase targetObject, AbilityEffectContext abilityEffectContext) {
             combatTextManager.SpawnCombatText(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
         }
         */
@@ -949,7 +949,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleEnterCombat(Interactable interactable) {
+        public void HandleEnterCombat(InteractableBase interactable) {
             if (messageLogClient != null) {
                 messageLogClient.WriteCombatMessage($"Entered combat with {interactable.DisplayName}");
             }
@@ -961,7 +961,7 @@ namespace AnyRPG {
             systemEventManager.NotifyOnReputationChange(sourceUnitController);
         }
 
-        public void HandleTargetInAbilityRangeFail(AbilityProperties baseAbility, Interactable target) {
+        public void HandleTargetInAbilityRangeFail(AbilityProperties baseAbility, InteractableBase target) {
             if (baseAbility != null && messageLogClient != null) {
                 messageLogClient.WriteCombatMessage($"{target.name} is out of range of {(baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName)}");
             }

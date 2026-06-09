@@ -8,7 +8,7 @@ namespace AnyRPG {
 
         public DialogProps Props { get => interactableOptionProps as DialogProps; }
 
-        public DialogComponent(Interactable interactable, DialogProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public DialogComponent(InteractableBase interactable, DialogProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override void SetGameManagerReferences() {

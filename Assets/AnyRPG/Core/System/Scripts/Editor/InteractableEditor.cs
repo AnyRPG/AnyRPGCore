@@ -20,7 +20,7 @@ namespace AnyRPG.EditorTools {
         }
 
         public override void OnInspectorGUI() {
-            Interactable interactable = target as Interactable;
+            InteractableBase interactable = target as Interactable;
             if (!validLayers.Contains(interactable.gameObject.layer)) {
                 string l = LayerMask.LayerToName(interactable.gameObject.layer);
                 EditorGUILayout.BeginHorizontal();

@@ -155,7 +155,7 @@ namespace AnyRPG {
             return null;
         }
 
-        public virtual bool PerformLOSCheck(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
+        public virtual bool PerformLOSCheck(InteractableBase target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
             return true;
         }
 
@@ -173,11 +173,11 @@ namespace AnyRPG {
             return 1f;
         }
 
-        public void BeginPerformAbilityHitDelay(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, ChanneledEffectProperties channeledEffect) {
+        public void BeginPerformAbilityHitDelay(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput, ChanneledEffectProperties channeledEffect) {
             abilityHitDelayCoroutine = abilityCasterMonoBehaviour.StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput, channeledEffect));
         }
 
-        public IEnumerator PerformAbilityHitDelay(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, ChanneledEffectProperties channeledEffect) {
+        public IEnumerator PerformAbilityHitDelay(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput, ChanneledEffectProperties channeledEffect) {
             //Debug.Log("ChanelledEffect.PerformAbilityEffectDelay()");
             float timeRemaining = channeledEffect.effectDelay;
             while (timeRemaining > 0f) {
@@ -200,7 +200,7 @@ namespace AnyRPG {
             // do nothing for now
         }
 
-        public virtual void ProcessWeaponHitEffects(AttackEffectProperties attackEffect, Interactable target, AbilityEffectContext abilityEffectOutput) {
+        public virtual void ProcessWeaponHitEffects(AttackEffectProperties attackEffect, InteractableBase target, AbilityEffectContext abilityEffectOutput) {
             // do nothing.  There is no weapon on the base class
         }
 
@@ -350,7 +350,7 @@ namespace AnyRPG {
             return 1f;
         }
 
-        public virtual bool IsTargetInMeleeRange(Interactable target) {
+        public virtual bool IsTargetInMeleeRange(InteractableBase target) {
             return true;
         }
 
@@ -359,16 +359,16 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool IsTargetInRange(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
+        public virtual bool IsTargetInRange(InteractableBase target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
             return true;
         }
         /*
-        public virtual bool IsTargetInAbilityRange(BaseAbility baseAbility, Interactable target, AbilityEffectContext abilityEffectContext = null, bool notify = false) {
+        public virtual bool IsTargetInAbilityRange(BaseAbility baseAbility, InteractableBase target, AbilityEffectContext abilityEffectContext = null, bool notify = false) {
             // environmental effects only target things inside their collider, so everything is always in range
             return true;
         }
 
-        public virtual bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, Interactable target, AbilityEffectContext abilityEffectContext = null) {
+        public virtual bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, InteractableBase target, AbilityEffectContext abilityEffectContext = null) {
             // environmental effects only target things inside their collider, so everything is always in range
             return true;
         }
@@ -382,7 +382,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool ProcessAnimatedAbilityHit(Interactable target, bool deactivateAutoAttack) {
+        public virtual bool ProcessAnimatedAbilityHit(InteractableBase target, bool deactivateAutoAttack) {
             // we can now continue because everything beyond this point is single target oriented and it's ok if we cancel attacking due to lack of alive/unfriendly target
             // check for friendly target in case it somehow turned friendly mid swing
             if (target == null || deactivateAutoAttack == true) {
@@ -393,7 +393,7 @@ namespace AnyRPG {
         }
 
         /*
-        public virtual Interactable ReturnTarget(AbilityEffect abilityEffect, Interactable target) {
+        public virtual InteractableBase ReturnTarget(AbilityEffect abilityEffect, InteractableBase target) {
             return target;
         }
         */
@@ -405,7 +405,7 @@ namespace AnyRPG {
             return 0f;
         }
 
-        public virtual bool DidAbilityHit(Interactable target, AbilityEffectContext abilityEffectContext) {
+        public virtual bool DidAbilityHit(InteractableBase target, AbilityEffectContext abilityEffectContext) {
             return true;
         }
 
@@ -419,11 +419,11 @@ namespace AnyRPG {
             return;
         }
 
-        public virtual Dictionary<PrefabProfile, List<GameObject>> SpawnAbilityEffectPrefabs(Interactable target, Interactable originalTarget, FixedLengthEffectProperties fixedLengthEffectProperties, AbilityEffectContext abilityEffectContext) {
+        public virtual Dictionary<PrefabProfile, List<GameObject>> SpawnAbilityEffectPrefabs(InteractableBase target, InteractableBase originalTarget, FixedLengthEffectProperties fixedLengthEffectProperties, AbilityEffectContext abilityEffectContext) {
             return ProcessSpawnAbilityEffectPrefabs(target, originalTarget, fixedLengthEffectProperties, abilityEffectContext);
         }
 
-        public virtual Dictionary<PrefabProfile, List<GameObject>> ProcessSpawnAbilityEffectPrefabs(Interactable target, Interactable originalTarget, FixedLengthEffectProperties fixedLengthEffectProperties, AbilityEffectContext abilityEffectInput) {
+        public virtual Dictionary<PrefabProfile, List<GameObject>> ProcessSpawnAbilityEffectPrefabs(InteractableBase target, InteractableBase originalTarget, FixedLengthEffectProperties fixedLengthEffectProperties, AbilityEffectContext abilityEffectInput) {
             //Debug.Log($"{abilityCaster.gameObject.name}.AbilityManager.ProcessSpawnAbilityEffectPrefabs({target}, {(originalTarget == null ? "null" : originalTarget.name)}, {fixedLengthEffectProperties.ResourceName})");
 
             Dictionary<PrefabProfile, List<GameObject>> prefabObjects = new Dictionary<PrefabProfile, List<GameObject>>();
@@ -519,7 +519,7 @@ namespace AnyRPG {
             return prefabObjects;
         }
 
-        public virtual Dictionary<PrefabProfile, List<GameObject>> SpawnStatusEffectPrefabs(Interactable target, StatusEffectProperties statusEffectProperties, AbilityEffectContext abilityEffectContext) {
+        public virtual Dictionary<PrefabProfile, List<GameObject>> SpawnStatusEffectPrefabs(InteractableBase target, StatusEffectProperties statusEffectProperties, AbilityEffectContext abilityEffectContext) {
 
             Dictionary<PrefabProfile, List<GameObject>> prefabObjects = new Dictionary<PrefabProfile, List<GameObject>>();
             foreach (AbilityAttachmentNode abilityAttachmentNode in statusEffectProperties.StatusEffectObjectList) {
@@ -564,7 +564,7 @@ namespace AnyRPG {
             return prefabObjects;
         }
 
-        public virtual Dictionary<PrefabProfile, List<GameObject>> SpawnProjectileEffectPrefabs(Interactable target, Interactable originalTarget, ProjectileEffectProperties projectileEffectProperties, AbilityEffectContext abilityEffectContext) {
+        public virtual Dictionary<PrefabProfile, List<GameObject>> SpawnProjectileEffectPrefabs(InteractableBase target, InteractableBase originalTarget, ProjectileEffectProperties projectileEffectProperties, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{abilityCaster.gameObject.name}.AbilityManager.SpawnProjectileEffectPrefabs({target}, {(originalTarget == null ? "null" : originalTarget.name)}, {projectileEffectProperties.ResourceName})");
 
             Dictionary<PrefabProfile, List<GameObject>> prefabObjects = ProcessSpawnAbilityEffectPrefabs(target, originalTarget, projectileEffectProperties, abilityEffectContext);
@@ -595,7 +595,7 @@ namespace AnyRPG {
             return prefabObjects;
         }
 
-        public virtual Dictionary<PrefabProfile, List<GameObject>> SpawnChanneledEffectPrefabs(Interactable target, Interactable originalTarget, ChanneledEffectProperties channeledEffectProperties, AbilityEffectContext abilityEffectContext) {
+        public virtual Dictionary<PrefabProfile, List<GameObject>> SpawnChanneledEffectPrefabs(InteractableBase target, InteractableBase originalTarget, ChanneledEffectProperties channeledEffectProperties, AbilityEffectContext abilityEffectContext) {
             Dictionary<PrefabProfile, List<GameObject>> prefabObjects = ProcessSpawnAbilityEffectPrefabs(target, originalTarget, channeledEffectProperties, abilityEffectContext);
 
             if (prefabObjects != null) {
@@ -614,7 +614,7 @@ namespace AnyRPG {
                         IChanneledObject channeledObjectScript = go.GetComponent<IChanneledObject>();
                         if (channeledObjectScript != null) {
                             Vector3 endPosition = Vector3.zero;
-                            Interactable usedTarget = target;
+                            InteractableBase usedTarget = target;
                             if (abilityEffectContext.BaseAbility != null && abilityEffectContext.BaseAbility.GetTargetOptions(abilityCaster).RequiresGroundTarget == true) {
                                 endPosition = abilityEffectContext.GroundTargetLocation;
                                 usedTarget = null;
@@ -643,7 +643,7 @@ namespace AnyRPG {
             return prefabObjects;
         }
 
-        public void HandleProjectileCollision(IAbilityCaster source, Interactable target, GameObject abilityEffectObject, AbilityEffectContext abilityEffectInput, ProjectileScript projectileScript) {
+        public void HandleProjectileCollision(IAbilityCaster source, InteractableBase target, GameObject abilityEffectObject, AbilityEffectContext abilityEffectInput, ProjectileScript projectileScript) {
             //Debug.Log($"{abilityCaster.gameObject.name}.AbilityManager.HandleProjectileCollision({source.AbilityManager.Name}, {(target == null ? "null" : target.gameObject.name)}, {abilityEffectObject.name}, {projectileScript.ProjectileEffectProperties.ResourceName})");
 
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {

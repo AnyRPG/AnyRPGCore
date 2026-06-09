@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public abstract class InteractableOptionComponent : ConfiguredClass, IPrerequisiteOwner {
 
-        protected Interactable interactable = null;
+        protected InteractableBase interactable = null;
         protected InteractableOptionProps interactableOptionProps = null;
 
         protected bool eventSubscriptionsInitialized = false;
@@ -20,7 +20,7 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected InteractionManagerClient interactionManagerClient = null;
 
-        public Interactable Interactable { get => interactable; set => interactable = value; }
+        public InteractableBase Interactable { get => interactable; set => interactable = value; }
         public virtual InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
         public virtual int PriorityValue { get => 0; }
         public virtual InteractionType InteractionType { get => InteractionType.Interact; }
@@ -48,7 +48,7 @@ namespace AnyRPG {
                 return true;
         }
 
-        public InteractableOptionComponent(Interactable interactable, InteractableOptionProps interactableOptionProps, SystemGameManager systemGameManager) {
+        public InteractableOptionComponent(InteractableBase interactable, InteractableOptionProps interactableOptionProps, SystemGameManager systemGameManager) {
             //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent(" + interactable.gameObject.name + ", " + (systemGameManager == null ? "null" : systemGameManager.gameObject.name) + ")");
             this.interactable = interactable;
             this.interactableOptionProps = interactableOptionProps;

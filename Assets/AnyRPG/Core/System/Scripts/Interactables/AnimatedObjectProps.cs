@@ -59,7 +59,7 @@ namespace AnyRPG {
         public AudioClip OpenAudioClip { get => openAudioClip; set => openAudioClip = value; }
         public AudioClip CloseAudioClip { get => closeAudioClip; set => closeAudioClip = value; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new AnimatedObjectComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

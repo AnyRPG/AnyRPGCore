@@ -71,7 +71,7 @@ namespace AnyRPG {
         public AudioClip CloseAudioClip { get => closeAudioClip; set => closeAudioClip = value; }
         public float DelayTime { get => delayTime; set => delayTime = value; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new MoveableObjectComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

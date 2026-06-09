@@ -226,7 +226,7 @@ namespace AnyRPG {
             CharacterName.text = unitNameplateController.GetNameplateString();
         }
 
-        public void SetNameplateUnit(Interactable interactable, bool usePositionOffset) {
+        public void SetNameplateUnit(InteractableBase interactable, bool usePositionOffset) {
             //Debug.Log($"NameplateController.SetNameplateUnit({interactable.gameObject.name}) setting namePlateUnit on nameplate in instanceid {GetInstanceID()}");
 
             unitNameplateController = interactable.NameplateController;

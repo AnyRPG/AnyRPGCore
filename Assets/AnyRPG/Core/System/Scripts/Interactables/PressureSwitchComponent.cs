@@ -5,7 +5,7 @@ namespace AnyRPG {
 
         public PressureSwitchProps PressureSwitchProps { get => interactableOptionProps as PressureSwitchProps; }
 
-        public PressureSwitchComponent(Interactable interactable, PressureSwitchProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public PressureSwitchComponent(InteractableBase interactable, PressureSwitchProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {

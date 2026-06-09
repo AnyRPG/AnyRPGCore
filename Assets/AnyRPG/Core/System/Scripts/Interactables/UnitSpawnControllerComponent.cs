@@ -6,7 +6,7 @@ namespace AnyRPG {
 
         public UnitSpawnControllerProps Props { get => interactableOptionProps as UnitSpawnControllerProps; }
 
-        public UnitSpawnControllerComponent(Interactable interactable, UnitSpawnControllerProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public UnitSpawnControllerComponent(InteractableBase interactable, UnitSpawnControllerProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactionPanelTitle == string.Empty) {
                 interactionPanelTitle = "Spawn Characters";
             }

@@ -21,14 +21,14 @@ namespace AnyRPG {
         }
         */
 
-        public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public override void CastTick(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".PetControlEffect.CastTick()");
             base.CastTick(source, target, abilityEffectContext);
 
             CheckPetSpawn(source, target, abilityEffectContext);
         }
 
-        public void CheckPetSpawn(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public void CheckPetSpawn(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn()");
             CharacterPetManager characterPetManager = null;
             if ((source as UnitController) is UnitController) {

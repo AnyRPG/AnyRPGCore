@@ -19,7 +19,7 @@ namespace AnyRPG {
         public List<InventorySlot> InventorySlots { get => inventorySlots; }
         public float Weight { get => weight; }
 
-        public StorageContainerComponent(Interactable interactable, StorageContainerProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public StorageContainerComponent(InteractableBase interactable, StorageContainerProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactionPanelTitle == string.Empty) {
                 interactionPanelTitle = "Container";
             }

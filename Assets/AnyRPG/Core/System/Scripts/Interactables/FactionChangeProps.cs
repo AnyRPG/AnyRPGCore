@@ -16,7 +16,7 @@ namespace AnyRPG {
         public override Sprite NameplateImage { get => (systemConfigurationManager.FactionChangeNameplateImage != null ? systemConfigurationManager.FactionChangeNameplateImage : base.NameplateImage); }
         public Faction Faction { get => faction; set => faction = value; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new FactionChangeComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

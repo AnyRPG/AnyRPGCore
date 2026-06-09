@@ -30,7 +30,7 @@ namespace AnyRPG {
         //public List<Item> DefaultItems { get => defaultItems; }
         public ContainerLootTable ContainerLootTable { get => containerLootTable; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new StorageContainerComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

@@ -22,7 +22,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
         }
 
-        public void ShowInteractionTooltip(Interactable interactable) {
+        public void ShowInteractionTooltip(InteractableBase interactable) {
             if (interactable == null) {
                 HideInteractionTooltip();
                 return;

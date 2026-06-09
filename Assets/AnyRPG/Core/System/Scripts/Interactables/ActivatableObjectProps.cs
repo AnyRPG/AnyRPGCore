@@ -21,7 +21,7 @@ namespace AnyRPG {
         //public float DespawnTimer { get => despawnTimer; set => despawnTimer = value; }
         public GameObject SpawnObject { get => spawnObject; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new ActivatableObjectComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

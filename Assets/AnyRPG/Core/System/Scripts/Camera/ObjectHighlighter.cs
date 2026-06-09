@@ -11,8 +11,8 @@ namespace AnyRPG {
 		private Color outlineColor = new Color(1, 0, 0, 0.5f);
 		public Camera cam;
 
-		private Dictionary<Interactable, Renderer[]> meshRenderersDict = new Dictionary<Interactable, Renderer[]>();
-		private Dictionary<Interactable, List<uint>> originalRenderingLayersDict = new Dictionary<Interactable, List<uint>>();
+		private Dictionary<InteractableBase, Renderer[]> meshRenderersDict = new Dictionary<InteractableBase, Renderer[]>();
+		private Dictionary<InteractableBase, List<uint>> originalRenderingLayersDict = new Dictionary<InteractableBase, List<uint>>();
 
         private void Awake() {
 			//cam.depthTextureMode = DepthTextureMode.Depth;
@@ -25,7 +25,7 @@ namespace AnyRPG {
 		void Cleanup() {
 		}
 
-		public void AddOutlinedObject(Interactable interactable, Color outlineColor, Renderer[] meshRenderers) {
+		public void AddOutlinedObject(InteractableBase interactable, Color outlineColor, Renderer[] meshRenderers) {
 			//Debug.Log($"ObjectHighlighter.AddOutlinedObject({interactable.gameObject.name}, {outlineColor})");
 
 			if (meshRenderersDict.ContainsKey(interactable)) {
@@ -49,7 +49,7 @@ namespace AnyRPG {
             }
         }
 
-        public void RemoveOutlinedObject(Interactable interactable) {
+        public void RemoveOutlinedObject(InteractableBase interactable) {
             //Debug.Log($"ObjectHighlighter.RemoveOutlinedObject({interactable.gameObject.name})");
 
 			if (meshRenderersDict.ContainsKey(interactable) == false) {

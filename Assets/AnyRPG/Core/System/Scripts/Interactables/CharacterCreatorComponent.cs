@@ -9,7 +9,7 @@ namespace AnyRPG {
 
         public CharacterCreatorProps Props { get => interactableOptionProps as CharacterCreatorProps; }
 
-        public CharacterCreatorComponent(Interactable interactable, CharacterCreatorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public CharacterCreatorComponent(InteractableBase interactable, CharacterCreatorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override void SetGameManagerReferences() {

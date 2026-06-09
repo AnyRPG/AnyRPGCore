@@ -6,9 +6,9 @@ namespace AnyRPG {
 
         public event System.Action OnMovement = delegate { };
 
-        protected Interactable target = null;
-        protected Interactable attackTarget = null;
-        protected Interactable interactionTarget = null;
+        protected InteractableBase target = null;
+        protected InteractableBase attackTarget = null;
+        protected InteractableBase interactionTarget = null;
         protected float attackRange = 0f;
 
         // if true, the navmeshAgent will be directed to this destination on the next update
@@ -67,12 +67,12 @@ namespace AnyRPG {
 
         // properties
         public float MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
-        public Interactable Target { get => target; }
+        public InteractableBase Target { get => target; }
         public bool Frozen { get => frozen; set => frozen = value; }
         public float NavMeshDistancePadding { get => navMeshDistancePadding; }
         public bool UseRootMotion { get => useRootMotion; set => useRootMotion = value; }
-        public Interactable InteractionTarget { get => interactionTarget; }
-        public Interactable AttackTarget { get => attackTarget; }
+        public InteractableBase InteractionTarget { get => interactionTarget; }
+        public InteractableBase AttackTarget { get => attackTarget; }
         public Transform InteractionTransform { get => interactionTransform; set => interactionTransform = value; }
         public IMovementBody MovementBody { get => movementBody; }
         public bool SetMoveDestination { get => setMoveDestination; }
@@ -177,7 +177,7 @@ namespace AnyRPG {
 
                         // cache the interaction variables because they will be reset in StopFollowingTarget()
                         Transform cachedInteractionTransform = interactionTransform;
-                        Interactable cachedInteractionTarget = interactionTarget;
+                        InteractableBase cachedInteractionTarget = interactionTarget;
                         // face the prefered direction of the interaction
                         if (interactionTransform != null) {
                             FaceDirection(interactionTransform.forward);
@@ -571,7 +571,7 @@ namespace AnyRPG {
 
         }
 
-        public void FollowAttackTarget(Interactable newTarget, float minAttackRange) {
+        public void FollowAttackTarget(InteractableBase newTarget, float minAttackRange) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowAttackTarget({newTarget.name}, minAttackRange: {minAttackRange})");
 
             unitController.RigidBody.isKinematic = true;
@@ -583,7 +583,7 @@ namespace AnyRPG {
             FollowTarget(newTarget, minAttackRange);
         }
 
-        public void FollowInteractionTarget(Interactable newTarget) {
+        public void FollowInteractionTarget(InteractableBase newTarget) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowInteractionTarget({(newTarget == null ? "null" : newTarget.name)})");
 
             unitController.RigidBody.isKinematic = true;
@@ -594,7 +594,7 @@ namespace AnyRPG {
             FollowTarget(newTarget, unitController.CharacterUnit.HitBoxSize);
         }
 
-        public void FollowTarget(Interactable newTarget, float minAttackRange) {
+        public void FollowTarget(InteractableBase newTarget, float minAttackRange) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowTarget({(newTarget == null ? "null" : newTarget.name)}, {minAttackRange})");
 
             if (frozen) {
@@ -611,7 +611,7 @@ namespace AnyRPG {
             // moving to a target happens when we click on an interactable.  Since it might be moving, we will manually update the rotation every frame
             // TEST DISABLE THIS TO PREVENT WALKING SIDEWAYS AROUND CORNERS
             //unitController.MyAgent.updateRotation = false;
-            Interactable oldTarget = target;
+            InteractableBase oldTarget = target;
             target = newTarget;
             lastTargetPosition = target.transform.position;
             if (oldTarget == null || (minAttackRange > 0f && currentMaxSampleRadius != minAttackRange)) {
@@ -622,7 +622,7 @@ namespace AnyRPG {
             }
         }
 
-        private void MoveToInteractionPoint(Interactable newTarget, float minAttackRange) {
+        private void MoveToInteractionPoint(InteractableBase newTarget, float minAttackRange) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.MoveToInteractionPoint({newTarget.name}, {minAttackRange})");
 
             // cycle through newTarget interactaionLocations and determine the shortest path, then move to that one
@@ -686,7 +686,7 @@ namespace AnyRPG {
             ResetPath(true);
         }
 
-        public void FaceTarget(Interactable newTarget) {
+        public void FaceTarget(InteractableBase newTarget) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FaceTarget(" + newTarget.name + ")");
             if (frozen) {
                 return;

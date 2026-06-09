@@ -28,7 +28,7 @@ namespace AnyRPG {
 
         public CraftAbilityProperties Ability { get => ability; set => ability = value; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             return new CraftingNodeComponent(interactable, this, systemGameManager);
         }
 

@@ -38,7 +38,7 @@ namespace AnyRPG {
             playerManagerServer = systemGameManager.PlayerManagerServer;
         }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
 
             foreach (string unitSpawnNodeTag in unitSpawnNodeTagList) {
                 GameObject spawnLocation = playerManagerServer.GetSceneObjectByTag(unitSpawnNodeTag, interactable.gameObject.scene);

@@ -46,7 +46,7 @@ namespace AnyRPG {
 
         public LootHolder LootHolder { get => lootHolder; set => lootHolder = value; }
 
-        public LootableNodeComponent(Interactable interactable, LootableNodeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public LootableNodeComponent(InteractableBase interactable, LootableNodeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             // initialize loot tables and states
             // why was this commented out?
             InitializeLootTableStates();

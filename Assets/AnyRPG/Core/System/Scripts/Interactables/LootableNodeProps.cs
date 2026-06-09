@@ -28,7 +28,7 @@ namespace AnyRPG {
         public GameObject SpawnObject { get => spawnObject; }
 
         /*
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             return new LootableNodeComponent(interactable, this);
         }
         */

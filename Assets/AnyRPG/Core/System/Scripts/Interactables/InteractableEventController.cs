@@ -32,20 +32,21 @@ namespace AnyRPG {
         public event Action<List<InstantiatedItem>> OnSetDroppedItems = delegate { };
         public event Action<int, long> OnRemoveItemFromStorageContainerSlot = delegate { };
         public event Action<int, long> OnAddItemToStorageContainerSlot = delegate { };
+        public event Action OnUnlock = delegate { };
 
         // interactable this controller is attached to
-        private Interactable interactable;
+        private InteractableBase interactable;
 
         public InteractableEventController() {
             //this.Interactable = interactable;
         }
 
-        public void SetInteractable(Interactable interactable, SystemGameManager systemGameManager) {
+        public void SetInteractable(InteractableBase interactable, SystemGameManager systemGameManager) {
             this.interactable = interactable;
             Configure(systemGameManager);
         }
 
-        public InteractableEventController(Interactable interactable, SystemGameManager systemGameManager) {
+        public InteractableEventController(InteractableBase interactable, SystemGameManager systemGameManager) {
             this.interactable = interactable;
             Configure(systemGameManager);
         }
@@ -156,6 +157,10 @@ namespace AnyRPG {
 
         public void NotifyOnAddItemToStorageContainerSlot(int slotIndex, InstantiatedItem instantiatedItem) {
             OnAddItemToStorageContainerSlot(slotIndex, instantiatedItem.InstanceId);
+        }
+
+        public void NotifyOnUnlock() {
+            OnUnlock();
         }
 
 

@@ -315,7 +315,7 @@ namespace AnyRPG {
                         continue;
                     }
                     if (hitCollider.isTrigger == true) {
-                        Interactable interactable = hitCollider.gameObject.GetComponent<Interactable>();
+                        InteractableBase interactable = hitCollider.gameObject.GetComponent<InteractableBase>();
                         if (interactable != null && interactable.IsTrigger == true) {
                             canSave = false;
                             break;

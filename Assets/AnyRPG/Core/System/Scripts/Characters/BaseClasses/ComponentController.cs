@@ -21,7 +21,7 @@ namespace AnyRPG {
         [SerializeField]
         private AggroRange aggroRangeController = null;
 
-        private Interactable interactable = null;
+        private InteractableBase interactable = null;
         private UnitController unitController = null;
 
         private Vector3 initialNameplatePosition = Vector3.zero;
@@ -81,7 +81,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnCharacterConfigured += HandleCharacterConfigured;
         }
 
-        public void SetInteractable(Interactable interactable) {
+        public void SetInteractable(InteractableBase interactable) {
             this.interactable = interactable;
             interactableRange.SetInteractable(interactable);
             namePlateTransform.localPosition = initialNameplatePosition;

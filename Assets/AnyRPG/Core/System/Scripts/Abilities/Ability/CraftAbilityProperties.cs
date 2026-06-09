@@ -29,7 +29,7 @@ namespace AnyRPG {
             return base.GetHoldableObjectList(abilityCaster);
         }
 
-        public override bool Cast(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public override bool Cast(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"CraftAbility.Cast({source.gameObject.name}, {(target ? target.name : "null")})");
 
             bool returnResult = base.Cast(source, target, abilityEffectContext);
@@ -39,7 +39,7 @@ namespace AnyRPG {
             return returnResult;
         }
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeChecks = true) {
+        public override bool CanUseOn(InteractableBase target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeChecks = true) {
             //Debug.Log($"CraftAbility.CanUseOn({source.gameObject.name}, {(target ? target.gameObject.name : "null")})");
 
             if (!base.CanUseOn(target, source, performCooldownChecks, abilityEffectContext, playerInitiated, performRangeChecks)) {

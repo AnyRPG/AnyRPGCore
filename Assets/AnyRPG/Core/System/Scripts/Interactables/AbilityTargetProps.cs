@@ -51,7 +51,7 @@ namespace AnyRPG {
         public bool RequireFacingTarget { get => requireFacingTarget; }
         public bool RequireBehindTarget { get => requireBehindTarget; }
 
-        public override bool CanUseOn(ITargetable targetable, Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
+        public override bool CanUseOn(ITargetable targetable, InteractableBase target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             //Debug.Log("AbilityTargetProps.CanUseOn()");
             if (base.CanUseOn(targetable, target, sourceCharacter, abilityEffectContext, playerInitiated, performRangeCheck) == false ) {
                 return false;

@@ -31,7 +31,7 @@ namespace AnyRPG {
         }
         */
 
-        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput) {
             base.PerformAbilityHit(source, target, abilityEffectInput);
 
             List<StatusEffectNode> removeEffects = new List<StatusEffectNode>();

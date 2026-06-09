@@ -6,7 +6,7 @@ namespace AnyRPG {
 
         public PortalProps Props { get => interactableOptionProps as PortalProps; }
 
-        public PortalComponent(Interactable interactable, PortalProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public PortalComponent(InteractableBase interactable, PortalProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override void SetGameManagerReferences() {

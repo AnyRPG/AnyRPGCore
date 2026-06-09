@@ -6,7 +6,7 @@ namespace AnyRPG {
         // by default it is considered closed when not using the sheathed position
         private bool objectOpen = false;
 
-        public AnimatedObjectComponent(Interactable interactable, AnimatedObjectProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public AnimatedObjectComponent(InteractableBase interactable, AnimatedObjectProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactionPanelTitle = "Interactable";
         }
 

@@ -36,7 +36,7 @@ namespace AnyRPG {
         }
         */
 
-        public ActivatableObjectComponent(Interactable interactable, ActivatableObjectProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public ActivatableObjectComponent(InteractableBase interactable, ActivatableObjectProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex = 0) {

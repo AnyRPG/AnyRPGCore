@@ -13,7 +13,7 @@ namespace AnyRPG {
         }
         */
 
-        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
+        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, InteractableBase target, InteractableBase originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".InstantEffect.Cast()");
 
             if (abilityEffectContext == null) {

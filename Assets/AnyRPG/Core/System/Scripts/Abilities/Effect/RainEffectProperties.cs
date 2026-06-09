@@ -14,7 +14,7 @@ namespace AnyRPG {
         }
         */
 
-        protected override List<AOETargetNode> GetValidTargets(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, List<AbilityEffectProperties> abilityEffectList) {
+        protected override List<AOETargetNode> GetValidTargets(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput, List<AbilityEffectProperties> abilityEffectList) {
             //Debug.Log(DisplayName + ".RainEffect.GetValidTargets()");
             // we are intentionally not calling the base class
 

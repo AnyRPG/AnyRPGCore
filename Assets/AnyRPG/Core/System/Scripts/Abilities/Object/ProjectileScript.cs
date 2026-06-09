@@ -5,7 +5,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class ProjectileScript : ConfiguredMonoBehaviour {
 
-        public event System.Action<IAbilityCaster, Interactable, GameObject, AbilityEffectContext, ProjectileScript> OnCollission = delegate { };
+        public event System.Action<IAbilityCaster, InteractableBase, GameObject, AbilityEffectContext, ProjectileScript> OnCollission = delegate { };
         public event System.Action<ProjectileScript> OnFlightTimeout = delegate { };
 
         [SerializeField]
@@ -16,7 +16,7 @@ namespace AnyRPG {
 
         private IAbilityCaster source = null;
 
-        private Interactable target = null;
+        private InteractableBase target = null;
 
         private Vector3 positionOffset = Vector3.zero;
 
@@ -59,7 +59,7 @@ namespace AnyRPG {
             }
         }
 
-        public void Initialize(SystemGameManager systemGameManager, ProjectileEffectProperties projectileEffectProperties, IAbilityCaster source, Interactable target, Vector3 positionOffset, GameObject go, AbilityEffectContext abilityEffectContext) {
+        public void Initialize(SystemGameManager systemGameManager, ProjectileEffectProperties projectileEffectProperties, IAbilityCaster source, InteractableBase target, Vector3 positionOffset, GameObject go, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{gameObject.name}.ProjectileScript.Initialize({projectileEffectProperties.ResourceName}, {source.AbilityManager.Name}, {(target == null ? "null" : target.name)}, {positionOffset}, {go.name})");
 
             Configure(systemGameManager);

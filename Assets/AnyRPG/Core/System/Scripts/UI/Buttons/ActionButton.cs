@@ -208,7 +208,7 @@ namespace AnyRPG {
             UpdateVisual();
         }
 
-        public void HandleEnterCombat(Interactable interactable) {
+        public void HandleEnterCombat(InteractableBase interactable) {
             UpdateVisual();
         }
 

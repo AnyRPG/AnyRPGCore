@@ -54,7 +54,7 @@ namespace AnyRPG {
         */
 
         private string displayText = string.Empty;
-        private Interactable mainTarget = null;
+        private InteractableBase mainTarget = null;
         private float alpha;
         private Vector2 targetPos;
         private Vector3 worldSpawnPos;
@@ -97,7 +97,7 @@ namespace AnyRPG {
             combatTextManager = systemGameManager.UIManager.CombatTextManager;
         }
 
-        public void InitializeCombatTextController(Interactable mainTarget, Sprite sprite, string displayText, CombatTextType combatTextType, CombatMagnitude combatMagnitude = CombatMagnitude.normal, AbilityEffectContext abilityEffectContext = null) {
+        public void InitializeCombatTextController(InteractableBase mainTarget, Sprite sprite, string displayText, CombatTextType combatTextType, CombatMagnitude combatMagnitude = CombatMagnitude.normal, AbilityEffectContext abilityEffectContext = null) {
             this.mainTarget = mainTarget;
             image.sprite = sprite;
             this.displayText = displayText;

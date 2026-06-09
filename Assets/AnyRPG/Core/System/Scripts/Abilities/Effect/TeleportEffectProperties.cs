@@ -57,7 +57,7 @@ namespace AnyRPG {
             playerManagerServer = systemGameManager.PlayerManagerServer;
         }
 
-        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, InteractableBase target, InteractableBase originalTarget, AbilityEffectContext abilityEffectInput) {
             Dictionary<PrefabProfile, List<GameObject>> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
             
             CharacterUnit characterUnit = source.AbilityManager.GetCharacterUnit();

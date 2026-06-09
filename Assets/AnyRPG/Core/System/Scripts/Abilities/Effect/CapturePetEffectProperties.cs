@@ -21,7 +21,7 @@ namespace AnyRPG {
         }
         */
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
+        public override bool CanUseOn(InteractableBase target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             //Debug.Log(DisplayName + ".CapturePetEffect.CanUseOn()");
             if (target == null) {
                 // capture pet effect requires a target under all circumstances
@@ -61,7 +61,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, InteractableBase target, InteractableBase originalTarget, AbilityEffectContext abilityEffectInput) {
             if (target == null) {
                 //Debug.Log(DisplayName + ".CapturePetEffect.Cast(): target is null, returning");
                 return null;

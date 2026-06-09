@@ -25,8 +25,8 @@ namespace AnyRPG {
         [HideInInspector]
         public bool strafeModeActive = true;
 
-        private List<Interactable> interactables = new List<Interactable>();
-        private Interactable mouseOverInteractable = null;
+        private List<InteractableBase> interactables = new List<InteractableBase>();
+        private InteractableBase mouseOverInteractable = null;
 
         //private int tabTargetIndex = 0;
 
@@ -54,7 +54,7 @@ namespace AnyRPG {
         protected ContextMenuService contextMenuService = null;
         protected SystemEventManager systemEventManager = null;
 
-        public List<Interactable> Interactables { get => interactables; }
+        public List<InteractableBase> Interactables { get => interactables; }
         public RaycastHit MouseOverhit { get => mouseOverhit; set => mouseOverhit = value; }
         public MovementData MovementData { get => movementData; }
 
@@ -78,7 +78,7 @@ namespace AnyRPG {
             systemEventManager = systemGameManager.SystemEventManager;
         }
 
-        public void AddInteractable(Interactable interactable) {
+        public void AddInteractable(InteractableBase interactable) {
             //Debug.Log($"PlayerController.AddInteractable({interactable.gameObject.name})");
 
             if (interactables.Contains(interactable) == false) {
@@ -92,7 +92,7 @@ namespace AnyRPG {
         /// Remove an interactable from the list of interactables in range
         /// </summary>
         /// <param name="_interactable"></param>
-        public void RemoveInteractable(Interactable interactable) {
+        public void RemoveInteractable(InteractableBase interactable) {
             //Debug.Log($"PlayerController.RemoveInteractable({interactable.gameObject.name})");
 
             if (interactables.Contains(interactable)) {
@@ -413,9 +413,9 @@ namespace AnyRPG {
                     // prevent clicking on mount
                     if (mouseOverhit.collider.gameObject != playerManagerClient.ActiveUnitController.gameObject
                         && mouseOverhit.collider.gameObject != playerManagerClient.UnitController.gameObject) {
-                        Interactable newInteractable = mouseOverhit.collider.GetComponent<Interactable>();
+                        InteractableBase newInteractable = mouseOverhit.collider.GetComponent<InteractableBase>();
                         if (newInteractable == null) {
-                            newInteractable = mouseOverhit.collider.GetComponentInParent<Interactable>();
+                            newInteractable = mouseOverhit.collider.GetComponentInParent<InteractableBase>();
                         }
 
                         if (mouseOverInteractable != null && mouseOverInteractable != newInteractable) {
@@ -453,7 +453,7 @@ namespace AnyRPG {
         }
 
         /*
-        public void HandleMouseOver(Interactable newInteractable) {
+        public void HandleMouseOver(InteractableBase newInteractable) {
             //Debug.Log($"{gameObject.name}.PlayerController.HandleMouseOver()");
             if (cameraManager.MyActiveMainCamera == null) {
                 // we are in a cutscene and shouldn't be dealing with mouseover
@@ -463,7 +463,7 @@ namespace AnyRPG {
             mouseOverInteractable = newInteractable;
         }
 
-        public void HandleMouseOut(Interactable oldInteractable) {
+        public void HandleMouseOut(InteractableBase oldInteractable) {
 
             if (mouseOverInteractable == oldInteractable) {
                 mouseOverInteractable = null;
@@ -499,7 +499,7 @@ namespace AnyRPG {
             }
         }
 
-        public void RightMouseInteraction(Interactable interactable) {
+        public void RightMouseInteraction(InteractableBase interactable) {
 
             if (interactable.IsMouseOverBlocked() == true) {
                 //Debug.Log("PlayerController.InterActWithTarget(): mouseover blocked");
@@ -711,7 +711,7 @@ namespace AnyRPG {
             }
         }
 
-        private bool ValidEnemyTarget(Interactable interactable) {
+        private bool ValidEnemyTarget(InteractableBase interactable) {
             UnitController targetCharacterUnit = interactable.GetComponent<UnitController>();
             if (targetCharacterUnit != null
                 && targetCharacterUnit.CharacterStats.IsAlive == true
@@ -721,8 +721,8 @@ namespace AnyRPG {
             return false;
         }
 
-        private List<Interactable> GetTabTargets(Interactable oldTarget, bool includeFriendly, bool includeInteractable) {
-            List<Interactable> allTabTargets = new List<Interactable>();
+        private List<InteractableBase> GetTabTargets(InteractableBase oldTarget, bool includeFriendly, bool includeInteractable) {
+            List<InteractableBase> allTabTargets = new List<InteractableBase>();
             int validMask = 0;
             if (includeInteractable) {
                 validMask = (1 << LayerMask.NameToLayer("CharacterUnit")) | (1 << LayerMask.NameToLayer("Interactable")) | (1 << LayerMask.NameToLayer("Player"));
@@ -740,7 +740,7 @@ namespace AnyRPG {
                 if (hitCollider == null || hitCollider.gameObject == playerManagerClient.UnitController.gameObject) {
                     continue;
                 }
-                Interactable targetInteractable = hitCollider.gameObject.GetComponent<Interactable>();
+                InteractableBase targetInteractable = hitCollider.gameObject.GetComponent<InteractableBase>();
                 if (targetInteractable != null
                     && targetInteractable != oldTarget
                     && targetInteractable.IsMouseOverBlocked() == false
@@ -760,7 +760,7 @@ namespace AnyRPG {
             return allTabTargets;
         }
 
-        private void GetNextTabTarget(Interactable oldTarget, bool includeFriendly, bool includeInteractable, bool right = true) {
+        private void GetNextTabTarget(InteractableBase oldTarget, bool includeFriendly, bool includeInteractable, bool right = true) {
             //Debug.Log("PlayerController.GetNextTabTarget(): maxDistance: " + tabTargetMaxDistance);
             DateTime currentTime = DateTime.Now;
             TimeSpan timeSinceLastTab = currentTime - lastTabTargetTime;
@@ -771,7 +771,7 @@ namespace AnyRPG {
             float targetDistance = 0f;
             float xPosition = 0f;
 
-            List<Interactable> allTabTargets = GetTabTargets(oldTarget, includeFriendly, includeInteractable);
+            List<InteractableBase> allTabTargets = GetTabTargets(oldTarget, includeFriendly, includeInteractable);
 
             if (allTabTargets.Count == 0) {
                 // no valid characters in range
@@ -797,7 +797,7 @@ namespace AnyRPG {
             }
 
             int i = 0;
-            foreach (Interactable collidedGameObject in allTabTargets) {
+            foreach (InteractableBase collidedGameObject in allTabTargets) {
                 //Debug.Log("PlayerController.GetNextTabTarget(): processing target: " + i + "; " + collidedGameObject.name);
                 targetDistance = Vector3.Distance(playerManagerClient.ActiveUnitController.transform.position, collidedGameObject.transform.position);
                 if (closestTargetIndex == -1) {
@@ -929,7 +929,7 @@ namespace AnyRPG {
             }
         }
 
-        public void InterActWithTarget(Interactable interactable, bool resetTarget = true) {
+        public void InterActWithTarget(InteractableBase interactable, bool resetTarget = true) {
             //Debug.Log($"{gameObject.name}.InterActWithTarget({interactable.gameObject.name})");
 
             if (interactable.IsMouseOverBlocked() == true) {
@@ -988,7 +988,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleClearTarget(Interactable oldTarget) {
+        public void HandleClearTarget(InteractableBase oldTarget) {
             //Debug.Log("PlayerController.HandleClearTarget()");
 
             if (PlayerPrefs.HasKey("LockUI") == true && PlayerPrefs.GetInt("LockUI") == 0) {
@@ -1000,7 +1000,7 @@ namespace AnyRPG {
             oldTarget?.PhysicalTarget.SetUnTargeted();
         }
 
-        public void HandleSetTarget(Interactable newTarget) {
+        public void HandleSetTarget(InteractableBase newTarget) {
             //Debug.Log($"PlayerController.HandleSetTarget({(newTarget == null ? "null" : newTarget.gameObject.name)})");
 
             if (newTarget == null) {
@@ -1088,7 +1088,7 @@ namespace AnyRPG {
         }
 
         public void NotifyInteractablesOnDespawn() {
-            foreach (Interactable interactable in interactables) {
+            foreach (InteractableBase interactable in interactables) {
                 interactable.RegisterDespawn(playerManagerClient.ActiveUnitController.gameObject);
             }
         }

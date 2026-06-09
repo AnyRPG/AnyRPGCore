@@ -6,7 +6,7 @@ namespace AnyRPG {
     public class ObjectMaterialController : ConfiguredClass {
 
         // interactable of owning object
-        protected Interactable interactable = null;
+        protected InteractableBase interactable = null;
 
         protected Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
 
@@ -14,7 +14,7 @@ namespace AnyRPG {
 
         public Renderer[] MeshRenderers { get => meshRenderers; }
 
-        public ObjectMaterialController(Interactable interactable, SystemGameManager systemGameManager) {
+        public ObjectMaterialController(InteractableBase interactable, SystemGameManager systemGameManager) {
             this.interactable = interactable;
             Configure(systemGameManager);
         }

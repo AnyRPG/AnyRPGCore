@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class UnitController : Interactable, IAbilityCaster {
+    public class UnitController : InteractableBase, IAbilityCaster {
 
         public event Action OnCameraTargetReady = delegate { };
 
@@ -80,8 +80,8 @@ namespace AnyRPG {
         private uint offlineTickCounter = 0;
 
         // targeting
-        private List<Interactable> inRangeInteractables = new List<Interactable>();
-        private Interactable target = null;
+        private List<InteractableBase> inRangeInteractables = new List<InteractableBase>();
+        private InteractableBase target = null;
         private float distanceToTarget = 0f;
         // keep track of target position to determine of distance check is needed
         private Vector3 lastTargetPosition = Vector3.zero;
@@ -185,7 +185,7 @@ namespace AnyRPG {
         public IState CurrentState { get => currentState; set => currentState = value; }
         public float LeashDistance { get => leashDistance; }
         public PatrolController PatrolController { get => patrolController; }
-        public Interactable Target { get => target; }
+        public InteractableBase Target { get => target; }
         //public BaseCharacter BaseCharacter { get => characterUnit.BaseCharacter; }
         public float MovementSpeed {
             get {
@@ -367,7 +367,7 @@ namespace AnyRPG {
             }
         }
 
-        public override Interactable InteractableTarget {
+        public override InteractableBase InteractableTarget {
             get {
                 // allow collider checks to consider this collider to be the collider of the rider when this unit is the mount
                 // this allows things like the mount hittin a portal or entering an enemy agro range to trigger the player interaction
@@ -384,7 +384,7 @@ namespace AnyRPG {
             }
         }
 
-        public override Interactable CharacterTarget {
+        public override InteractableBase CharacterTarget {
             get {
                 // allow collider checks to consider this collider to be the collider of the rider when this unit is the mount
                 // this allows things like the mount hittin a portal or entering an enemy agro range to trigger the player interaction
@@ -395,7 +395,7 @@ namespace AnyRPG {
             }
         }
 
-        public override Interactable PhysicalTarget {
+        public override InteractableBase PhysicalTarget {
             get {
                 // allow collider checks to consider this collider to be the collider of the mount when the unit is mounted
                 // this allows things like projectile effects and hitbox collider checks to aim for the active collider on the mount
@@ -1572,7 +1572,7 @@ namespace AnyRPG {
             lastPosition = rigidBody.position;
         }
 
-        public void FollowAttackTarget(Interactable target, float minAttackRange) {
+        public void FollowAttackTarget(InteractableBase target, float minAttackRange) {
             //Debug.Log($"{gameObject.name}.UnitController.FollowAttackTarget() target: {(target != null ? target.gameObject.name : "null")} minAttackRange: {minAttackRange}");
 
             if (!(currentState is DeathState)) {
@@ -2307,7 +2307,7 @@ namespace AnyRPG {
         }
 
 
-        public void SetTarget(Interactable newTarget) {
+        public void SetTarget(InteractableBase newTarget) {
             //Debug.Log($"{gameObject.name}.UnitController.SetTarget({(newTarget == null ? "null" : newTarget.gameObject.name)})");
 
             if (unitControllerMode == UnitControllerMode.AI || unitControllerMode == UnitControllerMode.Pet) {
@@ -2347,7 +2347,7 @@ namespace AnyRPG {
         }
 
         // receive messages from master and pass them on
-        public void HandleClearTarget(Interactable oldTarget) {
+        public void HandleClearTarget(InteractableBase oldTarget) {
             //Debug.Log($"{gameObject.name}.UnitController.HandleClearTarget({(oldTarget == null ? "null" : oldTarget.gameObject.name)})");
 
             ClearTarget();
@@ -2360,7 +2360,7 @@ namespace AnyRPG {
                 target.OnInteractableResetSettings -= HandleTargetResetSettings;
                 target.OnInteractableDisable -= HandleTargetDisable;
             }
-            Interactable oldTarget = target;
+            InteractableBase oldTarget = target;
             target = null;
             if (UnitMotor != null) {
                 UnitMotor.StopFollowingTarget();
@@ -2390,7 +2390,7 @@ namespace AnyRPG {
             return new Vector3(characterUnit.HitBoxSize, myCollider.bounds.extents.y * 3f, characterUnit.HitBoxSize);
         }
 
-        public bool IsTargetInHitBox(Interactable newTarget) {
+        public bool IsTargetInHitBox(InteractableBase newTarget) {
             //Debug.Log($"{gameObject.name}.UnitController.IsTargetInHitBox(" + (newTarget == null ? "null" : newTarget.gameObject.name) + ")");
             if (newTarget == null) {
                 return false;
@@ -2689,7 +2689,7 @@ namespace AnyRPG {
             //return nameplateTransform.position + nameplateVector;
         }
 
-        public void EnterInteractableRange(Interactable interactable) {
+        public void EnterInteractableRange(InteractableBase interactable) {
             //Debug.Log($"{gameObject.name}.UnitController.EnterInteractableRange({interactable.gameObject.name})");
 
             if ((unitControllerMode == UnitControllerMode.Player || unitControllerMode == UnitControllerMode.Mount) == false) {

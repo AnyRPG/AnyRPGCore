@@ -102,7 +102,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public static Color GetFactionColor(PlayerManagerClient playerManager, Interactable interactable) {
+        public static Color GetFactionColor(PlayerManagerClient playerManager, InteractableBase interactable) {
             //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ")");
             if (playerManager.UnitController != null && (interactable as MonoBehaviour).gameObject == playerManager.UnitController?.gameObject) {
                 // when retrieving the color that should be displayed on the player character, always green even if it has no faction

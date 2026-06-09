@@ -91,7 +91,7 @@ namespace AnyRPG {
         }
         */
 
-        private void HandleReceiveCombatTextEvent(Interactable targetInteractable, int amount, CombatTextType type, CombatMagnitude magnitude, AbilityEffectContext context) {
+        private void HandleReceiveCombatTextEvent(InteractableBase targetInteractable, int amount, CombatTextType type, CombatMagnitude magnitude, AbilityEffectContext context) {
             unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetInteractable, amount, type, magnitude, context);
         }
 
@@ -102,7 +102,7 @@ namespace AnyRPG {
         */
 
         /*
-        private void HandleReceiveCombatMiss(Interactable targetInteractable, AbilityEffectContext abilityEffectContext) {
+        private void HandleReceiveCombatMiss(InteractableBase targetInteractable, AbilityEffectContext abilityEffectContext) {
             unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetInteractable, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
         }
         */

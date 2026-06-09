@@ -8,7 +8,7 @@ namespace AnyRPG {
         public override Sprite Icon { get => (systemConfigurationManager.AuctionInteractionPanelImage != null ? systemConfigurationManager.AuctionInteractionPanelImage : base.Icon); }
         public override Sprite NameplateImage { get => (systemConfigurationManager.AuctionNameplateImage != null ? systemConfigurationManager.AuctionNameplateImage : base.NameplateImage); }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new AuctionComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

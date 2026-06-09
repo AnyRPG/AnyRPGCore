@@ -4,15 +4,15 @@ namespace AnyRPG {
         //public event System.Action OnClearSettings = delegate { };
 
         private DialogComponent dialogComponent = null;
-        private Interactable interactable = null;
+        private InteractableBase interactable = null;
         private Dialog dialog = null;
         private Quest quest = null;
 
         public Dialog Dialog { get => dialog; set => dialog = value; }
-        public Interactable Interactable { get => interactable; set => interactable = value; }
+        public InteractableBase Interactable { get => interactable; set => interactable = value; }
         public Quest Quest { get => quest; set => quest = value; }
 
-        public void SetQuestDialog(Quest quest, Interactable interactable, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
+        public void SetQuestDialog(Quest quest, InteractableBase interactable, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
             //Debug.Log("DialogPanelController.Setup(" + (quest == null ? "null" : quest.DisplayName) + ", " + (interactable == null ? "null" : interactable.DisplayName) + ")");
             this.quest = quest;
             this.interactable = interactable;
@@ -21,7 +21,7 @@ namespace AnyRPG {
             BeginInteraction(interactableOptionComponent, componentIndex, choiceIndex, false);
         }
 
-        public void SetDialog(Dialog dialog, Interactable interactable, DialogComponent dialogComponent, int componentIndex, int choiceIndex) {
+        public void SetDialog(Dialog dialog, InteractableBase interactable, DialogComponent dialogComponent, int componentIndex, int choiceIndex) {
             //Debug.Log("DialogPanelController.Setup(" + dialog.DisplayName + ", " + interactable.DisplayName + ")");
             this.interactable = interactable;
             this.dialog = dialog;

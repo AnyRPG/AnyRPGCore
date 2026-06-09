@@ -69,7 +69,7 @@ namespace AnyRPG {
             playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
-        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
+        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, InteractableBase target, InteractableBase originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".KnockBackEffect.Cast()");
             if (target == null) {
                 return null;
@@ -122,7 +122,7 @@ namespace AnyRPG {
                         //rigidbody.AddForce(GetKnockBackVelocity(targetPosition, collider.gameObject.transform.position), ForceMode.VelocityChange);
 
                         // if this is a character, we want to freeze their rotation.  for inanimate objects, we want rotation
-                        Interactable _interactable = collider.gameObject.GetComponent<Interactable>();
+                        InteractableBase _interactable = collider.gameObject.GetComponent<InteractableBase>();
                         if (_interactable != null) {
                             CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(_interactable);
                             if (_characterUnit != null) {

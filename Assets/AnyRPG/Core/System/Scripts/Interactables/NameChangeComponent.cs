@@ -7,7 +7,7 @@ namespace AnyRPG {
 
         public NameChangeProps Props { get => interactableOptionProps as NameChangeProps; }
 
-        public NameChangeComponent(Interactable interactable, NameChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public NameChangeComponent(InteractableBase interactable, NameChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override void SetGameManagerReferences() {

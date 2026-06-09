@@ -7,7 +7,7 @@ namespace AnyRPG {
 
         public GatheringNodeProps GatheringNodeProps { get => interactableOptionProps as GatheringNodeProps; }
 
-        public GatheringNodeComponent(Interactable interactable, GatheringNodeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public GatheringNodeComponent(InteractableBase interactable, GatheringNodeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override bool PrerequisitesMet(UnitController sourceUnitController) {
@@ -35,7 +35,7 @@ namespace AnyRPG {
             HandlePrerequisiteUpdates(sourceUnitController);
         }
 
-        public static GatheringNodeComponent GetGatheringNodeComponent(Interactable searchInteractable) {
+        public static GatheringNodeComponent GetGatheringNodeComponent(InteractableBase searchInteractable) {
             if (searchInteractable == null) {
                 return null;
             }

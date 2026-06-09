@@ -13,7 +13,7 @@ namespace AnyRPG {
             playerManagerServer = systemGameManager.PlayerManagerServer;
         }
 
-        public void RequestListAuctionItems(UnitController sourceUnitController, Interactable interactable, int componentIndex, ListAuctionItemRequest listAuctionItemRequest) {
+        public void RequestListAuctionItems(UnitController sourceUnitController, InteractableBase interactable, int componentIndex, ListAuctionItemRequest listAuctionItemRequest) {
             Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(sourceUnitController);
             if (currentInteractables[componentIndex] is AuctionComponent) {
                 (currentInteractables[componentIndex] as AuctionComponent).ListItems(sourceUnitController, listAuctionItemRequest);
@@ -40,7 +40,7 @@ namespace AnyRPG {
             }
         }
 
-        public void RequestSearchAuctions(UnitController sourceUnitController, Interactable interactable, int componentIndex, string searchText, bool onlyShowOwnAuctions) {
+        public void RequestSearchAuctions(UnitController sourceUnitController, InteractableBase interactable, int componentIndex, string searchText, bool onlyShowOwnAuctions) {
             Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(sourceUnitController);
             if (currentInteractables[componentIndex] is AuctionComponent) {
                 (currentInteractables[componentIndex] as AuctionComponent).SearchAuctions(sourceUnitController, searchText, onlyShowOwnAuctions);
