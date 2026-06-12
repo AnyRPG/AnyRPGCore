@@ -107,7 +107,7 @@ namespace AnyRPG {
 
         public abstract float GetAmountMultiplyModifier(IAbilityCaster sourceCharacter);
 
-        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public override void PerformAbilityHit(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AmountEffect.PerformAbilityHit(" + (source == null ? "null" : source.AbilityManager.UnitGameObject.name) + ", " + (target == null ? "null" : target.gameObject.name) + ")");
             if (source == null || target == null) {
                 // something died or despawned mid cast
@@ -179,12 +179,12 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="abilityEffectContext"></param>
         /// <returns></returns>
-        public virtual AbilityEffectContext ProcessAbilityEffectContext(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public virtual AbilityEffectContext ProcessAbilityEffectContext(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             return abilityEffectContext;
         }
         
-        public virtual bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
-            //public virtual bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
+        public virtual bool ProcessAbilityHit(InteractableBase target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
+            //public virtual bool ProcessAbilityHit(InteractableBase target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
             // nothing here for now, override by heal or attack
             return true;
         }

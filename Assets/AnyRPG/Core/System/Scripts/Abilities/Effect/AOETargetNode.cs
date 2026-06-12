@@ -1,7 +1,7 @@
 namespace AnyRPG {
 
     public class AOETargetNode {
-        public Interactable targetGameObject;
+        public InteractableBase targetGameObject;
         public AbilityEffectContext abilityEffectInput;
     }
 

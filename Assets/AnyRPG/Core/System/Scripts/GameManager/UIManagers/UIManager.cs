@@ -820,7 +820,7 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
-        public void ShowInteractionTooltip(Interactable interactable) {
+        public void ShowInteractionTooltip(InteractableBase interactable) {
             if (controlsManager.GamepadModeActive == false) {
                 return;
             }

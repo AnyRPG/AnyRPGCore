@@ -7,7 +7,7 @@ namespace AnyRPG {
 
         public AuctionProps Props { get => interactableOptionProps as AuctionProps; }
 
-        public AuctionComponent(Interactable interactable, AuctionProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public AuctionComponent(InteractableBase interactable, AuctionProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override void SetGameManagerReferences() {

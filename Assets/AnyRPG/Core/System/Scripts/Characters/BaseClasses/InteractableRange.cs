@@ -11,7 +11,7 @@ namespace AnyRPG {
         protected bool autoSetRadius = true;
         */
 
-        protected Interactable interactable = null;
+        protected InteractableBase interactable = null;
         protected bool colliderWasActive = false;
 
         // game manager references
@@ -32,7 +32,7 @@ namespace AnyRPG {
             levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
-        public void SetInteractable(Interactable interactable) {
+        public void SetInteractable(InteractableBase interactable) {
             //Debug.Log($"InteractableRange.SetInteractable({interactable.gameObject.name}) instanceId: {GetInstanceID()}");
 
             this.interactable = interactable;

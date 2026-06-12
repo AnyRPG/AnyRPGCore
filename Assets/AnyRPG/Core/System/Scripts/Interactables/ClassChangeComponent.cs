@@ -6,7 +6,7 @@ namespace AnyRPG {
 
         public ClassChangeProps Props { get => interactableOptionProps as ClassChangeProps; }
 
-        public ClassChangeComponent(Interactable interactable, ClassChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public ClassChangeComponent(InteractableBase interactable, ClassChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactionPanelTitle == string.Empty) {
                 interactionPanelTitle = Props.CharacterClass.DisplayName + " Class";
             }

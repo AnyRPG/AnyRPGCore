@@ -109,7 +109,7 @@ namespace AnyRPG {
 
             if (AutoAttackActive == true && unitController.Target != null) {
                 //Debug.Log("player controller is in combat and target is not null");
-                //Interactable _interactable = controller.MyTarget.GetComponent<Interactable>();
+                //InteractableBase _interactable = controller.MyTarget.GetComponent<InteractableBase>();
                 CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(unitController.Target);
                 if (_characterUnit?.UnitController != null) {
                     //Debug.Log($"{unitController.gameObject.name}.PlayerCombat.HandleAutoAttack(). targetCharacter is not null.  Attacking");
@@ -228,7 +228,7 @@ namespace AnyRPG {
                     // this could maybe be done better through an event subscription
                     if (statusEffectNode.StatusEffect.ReflectAbilityEffectList.Count > 0) {
                         // we can't reflect on system attackers, so check if this is an interactable
-                        Interactable targetInteractable = sourceCaster.AbilityManager.UnitGameObject.GetComponent<Interactable>();
+                        InteractableBase targetInteractable = sourceCaster.AbilityManager.UnitGameObject.GetComponent<InteractableBase>();
                         if (targetInteractable != null) {
                             statusEffectNode.StatusEffect.CastReflect(unitController, targetInteractable, abilityEffectContext);
                         }
@@ -276,7 +276,7 @@ namespace AnyRPG {
                     // this could maybe be done better through an event subscription
                     if (statusEffectNode.StatusEffect.ReflectAbilityEffectList.Count > 0) {
                         // we can't reflect on system attackers, so check if this is an interactable
-                        Interactable targetInteractable = sourceCaster.AbilityManager.UnitGameObject.GetComponent<Interactable>();
+                        InteractableBase targetInteractable = sourceCaster.AbilityManager.UnitGameObject.GetComponent<InteractableBase>();
                         if (targetInteractable != null) {
                             statusEffectNode.StatusEffect.CastReflect(unitController, targetInteractable, abilityEffectContext);
                         }
@@ -404,7 +404,7 @@ namespace AnyRPG {
         /*
         public bool EnterCombat(CharacterUnit _characterUnit) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.EnterCombat(" + (target == null ? "null" : target.AbilityManager.Name) + ")");
-            //Interactable _interactable = target.AbilityManager.UnitGameObject.GetComponent<Interactable>();
+            //InteractableBase _interactable = target.AbilityManager.UnitGameObject.GetComponent<InteractableBase>();
             //if (_interactable != null) {
                 //CharacterUnit _characterUnit =  CharacterUnit.GetCharacterUnit(_interactable);
                 if (_characterUnit != null) {
@@ -431,7 +431,7 @@ namespace AnyRPG {
         }
 
         /*
-        public virtual bool PullIntoCombat(Interactable target) {
+        public virtual bool PullIntoCombat(InteractableBase target) {
             
             return EnterCombat(target);
         }
@@ -600,7 +600,7 @@ namespace AnyRPG {
             ProcessAttackHit(abilityEffectContext);
         }
 
-        public virtual void ReceiveCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
+        public virtual void ReceiveCombatMiss(InteractableBase targetObject, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.ReceiveCombatMiss(caster: {abilityEffectContext.AbilityCaster.AbilityManager.Name})");
 
             lastCombatEvent = Time.time;

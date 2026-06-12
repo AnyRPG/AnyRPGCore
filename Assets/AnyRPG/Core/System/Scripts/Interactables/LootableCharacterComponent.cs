@@ -39,7 +39,7 @@ namespace AnyRPG {
         public bool CurrencyCollected { get => currencyCollected; set => currencyCollected = value; }
         public LootHolder LootHolder { get => lootHolder; set => lootHolder = value; }
 
-        public LootableCharacterComponent(Interactable interactable, LootableCharacterProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public LootableCharacterComponent(InteractableBase interactable, LootableCharacterProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.Constructor()");
 
             CreateLootTables();
@@ -61,7 +61,7 @@ namespace AnyRPG {
             lootManager = systemGameManager.LootManager;
         }
 
-        public static LootableCharacterComponent GetLootableCharacterComponent(Interactable searchInteractable) {
+        public static LootableCharacterComponent GetLootableCharacterComponent(InteractableBase searchInteractable) {
             return searchInteractable.GetFirstInteractableOption(typeof(LootableCharacterComponent)) as LootableCharacterComponent;
         }
 
@@ -388,18 +388,18 @@ namespace AnyRPG {
             return lootCount;
         }
 
-        public List<Interactable> GetLootableTargets() {
+        public List<InteractableBase> GetLootableTargets() {
             Vector3 aoeSpawnCenter = CharacterUnit.Interactable.transform.position;
             Collider[] colliders = new Collider[100];
             int validMask = 1 << LayerMask.NameToLayer("CharacterUnit");
             interactable.PhysicsScene.OverlapSphere(aoeSpawnCenter, 15f, colliders, validMask, QueryTriggerInteraction.UseGlobal);
             //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
-            List<Interactable> validTargets = new List<Interactable>();
+            List<InteractableBase> validTargets = new List<InteractableBase>();
             foreach (Collider collider in colliders) {
                 if (collider == null) {
                     continue;
                 }
-                Interactable _interactable = collider.gameObject.GetComponent<Interactable>();
+                InteractableBase _interactable = collider.gameObject.GetComponent<InteractableBase>();
                 if (_interactable != null) {
                     validTargets.Add(_interactable);
                 }
@@ -450,7 +450,7 @@ namespace AnyRPG {
                 List<LootDrop> itemDrops = new List<LootDrop>();
                 
                 // aoe loot
-                foreach (Interactable interactable in GetLootableTargets()) {
+                foreach (InteractableBase interactable in GetLootableTargets()) {
                     LootableCharacterComponent lootableCharacter = LootableCharacterComponent.GetLootableCharacterComponent(interactable);
                     if (lootableCharacter != null) {
                         CharacterStats characterStats = CharacterUnit.GetCharacterUnit(interactable).UnitController.CharacterStats as CharacterStats;

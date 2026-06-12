@@ -43,7 +43,7 @@ namespace AnyRPG {
         protected IUseable assigningUseable = null;
 
         // the action bar target for range checks
-        private Interactable target = null;
+        private InteractableBase target = null;
 
         protected PlayerManagerClient playerManagerClient = null;
         protected KeyBindManager keyBindManager = null;
@@ -299,7 +299,7 @@ namespace AnyRPG {
             playerManagerClient.UnitController.UnitEventController.OnClearTarget -= HandleClearTarget;
         }
 
-        public void HandleSetTarget(Interactable target) {
+        public void HandleSetTarget(InteractableBase target) {
             //Debug.Log("ActionBarmanager.HandleSetTarget()");
             this.target = target;
             if (targetRangeRoutine == null) {
@@ -307,7 +307,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleClearTarget(Interactable oldTarget) {
+        public void HandleClearTarget(InteractableBase oldTarget) {
             //Debug.Log("ActionBarmanager.HandleClearTarget()");
             if (targetRangeRoutine != null) {
                 StopCoroutine(targetRangeRoutine);
@@ -359,7 +359,7 @@ namespace AnyRPG {
         public void UpdateAbilityTargetRange(AbilityProperties baseAbilityProperties, ActionButton actionButton) {
             //Debug.Log($"ActionBarmanager.UpdateAbilityTargetRange({baseAbilityProperties.DisplayName})");
 
-            Interactable finalTarget = baseAbilityProperties.ReturnTarget(playerManagerClient.UnitController, target, false);
+            InteractableBase finalTarget = baseAbilityProperties.ReturnTarget(playerManagerClient.UnitController, target, false);
 
             if (finalTarget == null || playerManagerClient.UnitController.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbilityProperties) == false) {
                 //Debug.Log($"ActionBarmanager.UpdateAbilityTargetRange({baseAbilityProperties.DisplayName}) finalTarget: {(finalTarget == null ? "null" : finalTarget.gameObject.name)}");

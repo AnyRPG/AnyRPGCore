@@ -21,7 +21,7 @@ namespace AnyRPG {
         public bool AllowGenderChange { get => allowGenderChange; }
         public List<UnitProfile> UnitProfileList { get => unitProfileList; set => unitProfileList = value; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new CharacterCreatorComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

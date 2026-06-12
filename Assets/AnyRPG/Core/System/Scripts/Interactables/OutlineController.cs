@@ -5,7 +5,7 @@ namespace AnyRPG {
 
     public class OutlineController : ConfiguredClass {
 
-        private Interactable interactable;
+        private InteractableBase interactable;
         private Color outlineColor;
 
         // state tracking
@@ -16,7 +16,7 @@ namespace AnyRPG {
         // game manager references
         protected CameraManager cameraManager = null;
 
-        public OutlineController(Interactable interactable, SystemGameManager systemGameManager) {
+        public OutlineController(InteractableBase interactable, SystemGameManager systemGameManager) {
             this.interactable = interactable;
             Configure(systemGameManager);
         }

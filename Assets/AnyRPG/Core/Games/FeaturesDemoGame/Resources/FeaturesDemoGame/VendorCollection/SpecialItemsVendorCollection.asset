@@ -41,3 +41,23 @@ MonoBehaviour:
     unlimited: 1
     itemQualityName: 
     itemIndex: 0
+  - itemName: Copper Key
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+    itemIndex: 0
+  - itemName: Bronze Key
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+    itemIndex: 0
+  - itemName: Iron Key
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+    itemIndex: 0
+  - itemName: Gold Key
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+    itemIndex: 0

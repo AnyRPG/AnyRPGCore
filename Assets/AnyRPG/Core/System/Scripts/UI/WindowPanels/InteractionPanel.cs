@@ -4,7 +4,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class InteractionPanel : WindowPanel {
 
-        private Interactable interactable = null;
+        private InteractableBase interactable = null;
 
         [SerializeField]
         private GameObject interactableButtonPrefab = null;
@@ -50,7 +50,7 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
         }
 
-        public void HandleSetInteractable(Interactable _interactable) {
+        public void HandleSetInteractable(InteractableBase _interactable) {
             //Debug.Log("InteractionPanelUI.HandleSetInteractable()");
             if (interactable != null) {
                 interactable.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
@@ -101,7 +101,7 @@ namespace AnyRPG {
             ShowInteractables(true);
         }
 
-        public void ShowInteractablesCommon(Interactable interactable, bool suppressAutoInteract = false) {
+        public void ShowInteractablesCommon(InteractableBase interactable, bool suppressAutoInteract = false) {
             //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + ")");
             ClearButtons();
 
@@ -243,7 +243,7 @@ namespace AnyRPG {
             }
         }
 
-        public void ShowInteractables(Interactable interactable) {
+        public void ShowInteractables(InteractableBase interactable) {
             //Debug.Log("InteractionPanelUI.ShowInteractables(" + interactable.name + ")");
             interactionManagerClient.SetInteractable(interactable);
             ShowInteractablesCommon(this.interactable);

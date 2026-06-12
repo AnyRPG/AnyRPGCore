@@ -466,7 +466,7 @@ namespace AnyRPG {
             levelManagerClient.ProcessBeforeLevelUnload();
         }
 
-        public void RequestInteractWithOption(UnitController sourceUnitController, Interactable targetInteractable, int componentIndex, int choiceIndex) {
+        public void RequestInteractWithOption(UnitController sourceUnitController, InteractableBase targetInteractable, int componentIndex, int choiceIndex) {
             //Debug.Log($"NetworkManagerClient.InteractWithOption({targetInteractable.gameObject.name}, {componentIndex}, {choiceIndex})");
 
             networkController.InteractWithOption(sourceUnitController, targetInteractable, componentIndex, choiceIndex);
@@ -486,35 +486,35 @@ namespace AnyRPG {
             levelManagerClient.SetLoadingProgress(percent);
         }
 
-        public void RequestSetPlayerCharacterClass(Interactable interactable, int componentIndex) {
+        public void RequestSetPlayerCharacterClass(InteractableBase interactable, int componentIndex) {
             networkController.RequestSetPlayerCharacterClass(interactable, componentIndex);
         }
 
-        public void SetPlayerCharacterSpecialization(Interactable interactable, int componentIndex) {
+        public void SetPlayerCharacterSpecialization(InteractableBase interactable, int componentIndex) {
             networkController.SetPlayerCharacterSpecialization(interactable, componentIndex);
         }
 
-        public void RequestSetPlayerFaction(Interactable interactable, int componentIndex) {
+        public void RequestSetPlayerFaction(InteractableBase interactable, int componentIndex) {
             networkController.RequestSetPlayerFaction(interactable, componentIndex);
         }
 
-        public void RequestCreateGuild(Interactable interactable, int componentIndex, string guildName) {
+        public void RequestCreateGuild(InteractableBase interactable, int componentIndex, string guildName) {
             networkController.RequestCreateGuild(interactable, componentIndex, guildName);
         }
 
-        public void CheckGuildName(Interactable interactable, int componentIndex, string guildName) {
+        public void CheckGuildName(InteractableBase interactable, int componentIndex, string guildName) {
             networkController.CheckGuildName(interactable, componentIndex, guildName);
         }
 
-        public void RequestLearnSkill(Interactable interactable, int componentIndex, int skillId) {
+        public void RequestLearnSkill(InteractableBase interactable, int componentIndex, int skillId) {
             networkController.RequestLearnSkill(interactable, componentIndex, skillId);
         }
 
-        public void RequestAcceptQuest(Interactable interactable, int componentIndex, Quest quest) {
+        public void RequestAcceptQuest(InteractableBase interactable, int componentIndex, Quest quest) {
             networkController.RequestAcceptQuest(interactable, componentIndex, quest);
         }
 
-        public void RequestCompleteQuest(Interactable interactable, int componentIndex, Quest quest, QuestRewardChoices questRewardChoices) {
+        public void RequestCompleteQuest(InteractableBase interactable, int componentIndex, Quest quest, QuestRewardChoices questRewardChoices) {
             networkController.RequestCompleteQuest(interactable, componentIndex, quest, questRewardChoices);
         }
 
@@ -526,18 +526,18 @@ namespace AnyRPG {
             messageLogClient.WriteSystemMessage(message);
         }
 
-        public void SellItemToVendor(Interactable interactable, int componentIndex, long itemInstanceId) {
+        public void SellItemToVendor(InteractableBase interactable, int componentIndex, long itemInstanceId) {
             networkController.SellVendorItem(interactable, componentIndex, itemInstanceId);
         }
 
-        public void RequestSpawnUnit(Interactable interactable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, string unitProfileName, string unitToughnessName) {
+        public void RequestSpawnUnit(InteractableBase interactable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, string unitProfileName, string unitToughnessName) {
             //Debug.Log($"NetworkManagerClient.RequestSpawnUnit({unitLevel}, {extraLevels}, {useDynamicLevel}, {unitProfileName}, {unitToughnessName})");
 
             networkController.RequestSpawnUnit(interactable, componentIndex, unitLevel, extraLevels, useDynamicLevel, unitProfileName, unitToughnessName);
         }
 
 
-        public void AdvertiseAddToBuyBackCollection(UnitController sourceUnitController, Interactable interactable, int componentIndex, long instantiatedItemId) {
+        public void AdvertiseAddToBuyBackCollection(UnitController sourceUnitController, InteractableBase interactable, int componentIndex, long instantiatedItemId) {
             if (systemItemManager.InstantiatedItems.ContainsKey(instantiatedItemId) == false) {
                 return;
             }
@@ -548,7 +548,7 @@ namespace AnyRPG {
 
         }
 
-        public void BuyItemFromVendor(Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName) {
+        public void BuyItemFromVendor(InteractableBase interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName) {
             networkController.BuyItemFromVendor(interactable, componentIndex, collectionIndex, itemIndex, resourceName);
         }
 
@@ -590,11 +590,11 @@ namespace AnyRPG {
             networkController.RequestCancelCrafting();
         }
 
-        public void RequestUpdatePlayerAppearance(Interactable interactable, int componentIndex, string unitProfileName, string appearanceString, List<SwappableMeshSaveData> swappableMeshSaveData) {
+        public void RequestUpdatePlayerAppearance(InteractableBase interactable, int componentIndex, string unitProfileName, string appearanceString, List<SwappableMeshSaveData> swappableMeshSaveData) {
             networkController.RequestUpdatePlayerAppearance(interactable, componentIndex, unitProfileName, appearanceString, swappableMeshSaveData);
         }
 
-        public void RequestChangePlayerName(Interactable interactable, int componentIndex, string newName) {
+        public void RequestChangePlayerName(InteractableBase interactable, int componentIndex, string newName) {
             networkController.RequestChangePlayerName(interactable, componentIndex, newName);
         }
 
@@ -648,7 +648,7 @@ namespace AnyRPG {
 
         }
 
-        public void RequestTurnInDialog(Interactable interactable, int componentIndex, Dialog dialog) {
+        public void RequestTurnInDialog(InteractableBase interactable, int componentIndex, Dialog dialog) {
             networkController.RequestTurnInDialog(interactable, componentIndex, dialog);
         }
 
@@ -859,13 +859,13 @@ namespace AnyRPG {
             tradeServiceClient.AdvertiseTradeComplete();
         }
 
-        public void RequestSendMail(Interactable interactable, int componentIndex, MailMessageRequest sendMailRequest) {
+        public void RequestSendMail(InteractableBase interactable, int componentIndex, MailMessageRequest sendMailRequest) {
             //Debug.Log($"mailboxManagerClient.RequestSendMail()");
 
             networkController.RequestSendMail(interactable, componentIndex, sendMailRequest);
         }
 
-        public void RequestListAuctionItems(Interactable interactable, int componentIndex, ListAuctionItemRequest listAuctionItemRequest) {
+        public void RequestListAuctionItems(InteractableBase interactable, int componentIndex, ListAuctionItemRequest listAuctionItemRequest) {
             //Debug.Log($"mailboxManagerClient.RequestSendMail()");
 
             networkController.RequestListAuctionItems(interactable, componentIndex, listAuctionItemRequest);
@@ -927,7 +927,7 @@ namespace AnyRPG {
             auctionManagerClient.AdvertiseCancelAuction(auctionItemId);
         }
 
-        public void RequestSearchAuctions(Interactable interactable, int componentIndex, string searchText, bool onlyShowOwnAuctions) {
+        public void RequestSearchAuctions(InteractableBase interactable, int componentIndex, string searchText, bool onlyShowOwnAuctions) {
             networkController.RequestSearchAuctions(interactable, componentIndex, searchText, onlyShowOwnAuctions);
         }
 
@@ -1043,11 +1043,11 @@ namespace AnyRPG {
             networkController.RequestDemoteGuildCharacter(characterId);
         }
 
-        public void AdvertiseOpenInteractionWindow(Interactable interactable) {
+        public void AdvertiseOpenInteractionWindow(InteractableBase interactable) {
             interactionManagerClient.OpenInteractionWindow(interactable);
         }
 
-        public void RequestInteractWithInteractable(Interactable target) {
+        public void RequestInteractWithInteractable(InteractableBase target) {
             networkController.RequestInteractWithInteractable(target);
         }
     }

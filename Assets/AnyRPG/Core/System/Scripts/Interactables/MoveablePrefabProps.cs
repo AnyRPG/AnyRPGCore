@@ -19,7 +19,7 @@ namespace AnyRPG {
         public float RotationSpeed { get => rotationSpeed; set => rotationSpeed = value; }
         public bool Loop { get => loop; set => loop = value; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new MoveablePrefabComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

@@ -2,7 +2,7 @@ namespace AnyRPG {
     public interface IQuestGiver {
         QuestGiverProps QuestGiverProps { get; }
         void UpdateQuestStatus(UnitController sourceUnitController);
-        Interactable Interactable { get; }
+        InteractableBase Interactable { get; }
         InteractableOptionComponent InteractableOptionComponent { get; }
         bool Interact(UnitController source, int componentIndex = 0, int choiceIndex = 0);
         void HandleCompleteQuest();

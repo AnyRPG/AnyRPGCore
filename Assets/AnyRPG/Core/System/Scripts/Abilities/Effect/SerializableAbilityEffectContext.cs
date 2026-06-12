@@ -16,7 +16,7 @@ namespace AnyRPG {
 
         public Vector3 groundTargetLocation = Vector3.zero;
 
-        //public Interactable originalTarget;
+        //public InteractableBase originalTarget;
 
         // track the ability that was originally cast that resulted in this effect
         public string baseAbilityName = string.Empty;

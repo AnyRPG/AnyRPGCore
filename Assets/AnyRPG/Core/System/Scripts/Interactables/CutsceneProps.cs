@@ -19,7 +19,7 @@ namespace AnyRPG {
         public override Sprite NameplateImage { get => (systemConfigurationManager.CutSceneNameplateImage != null ? systemConfigurationManager.CutSceneNameplateImage : base.NameplateImage); }
         public Cutscene Cutscene { get => cutscene; set => cutscene = value; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new CutsceneComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

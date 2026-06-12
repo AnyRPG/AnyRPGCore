@@ -20,7 +20,7 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log($"{ResourceName}.HealEffectProperties.PerformAbilityHit({source.AbilityManager.UnitGameObject.name}, {(target == null ? "null" : target.gameObject.name)}");
 
             base.PerformAbilityHit(source, target, abilityEffectInput);
@@ -30,7 +30,7 @@ namespace AnyRPG {
             return 1f;
         }
 
-        public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
+        public override bool ProcessAbilityHit(InteractableBase target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
             //Debug.Log($"{ResourceName}.HealEffectProperties.ProcessAbilityHit({(target == null ? "null" : target.gameObject.name)}, {finalAmount}, {source.AbilityManager.UnitGameObject.name}, {powerResource.ResourceName})");
 
             abilityEffectContext.PowerResource = powerResource;

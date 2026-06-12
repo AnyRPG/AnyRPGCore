@@ -26,7 +26,7 @@ namespace AnyRPG {
             playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
-        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
+        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, InteractableBase target, InteractableBase originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + "ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ")");
             if (target == null) {
                 // maybe target died or despawned in the middle of cast?
@@ -43,7 +43,7 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
+        public override bool CanUseOn(InteractableBase target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             if (target == null) {
                 // channeled effect always requires target because the prefab object must have a start and end point
                 if (playerInitiated) {

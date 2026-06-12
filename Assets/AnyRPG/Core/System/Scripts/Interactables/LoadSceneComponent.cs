@@ -6,7 +6,7 @@ namespace AnyRPG {
 
         public LoadSceneProps LoadSceneProps { get => interactableOptionProps as LoadSceneProps; }
 
-        public LoadSceneComponent(Interactable interactable, LoadSceneProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public LoadSceneComponent(InteractableBase interactable, LoadSceneProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex = 0) {

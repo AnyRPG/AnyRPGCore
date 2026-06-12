@@ -37,7 +37,7 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public override void PerformAbilityHit(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{ResourceName}.AttackEffectProperties.PerformAbilityHit({(source == null ? "null" : source.AbilityManager.Name)}, {(target == null ? "null" : target.gameObject.name)})");
 
             // handle regular effects
@@ -48,7 +48,7 @@ namespace AnyRPG {
             return sourceCharacter.AbilityManager.GetOutgoingDamageModifiers();
         }
 
-        public override AbilityEffectContext ProcessAbilityEffectContext(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public override AbilityEffectContext ProcessAbilityEffectContext(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AttackEffect.ProcessAbilityEffectContext(" + source.AbilityManager.Name + ", " + target.name + ")");
 
             if (abilityEffectContext.WeaponHitHasCast == true) {
@@ -68,8 +68,8 @@ namespace AnyRPG {
             return abilityEffectContext;
         }
 
-        public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
-            //public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
+        public override bool ProcessAbilityHit(InteractableBase target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
+            //public override bool ProcessAbilityHit(InteractableBase target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
             bool returnValue = CharacterUnit.GetCharacterUnit(target).UnitController.CharacterCombat.TakeDamage(abilityEffectContext, powerResource, finalAmount, source, combatMagnitude, this);
             if (returnValue == false) {
                 return false;
@@ -102,7 +102,7 @@ namespace AnyRPG {
         }
 
         /*
-        public override bool CanUseOn(Interactable target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null) {
+        public override bool CanUseOn(InteractableBase target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log("AttackEffect.CanUseOn(" + (target == null ? " null" : target.name) + ", " + source.gameObject.name + ")");
             return base.CanUseOn(target, source, abilityEffectContext);
         }

@@ -7,7 +7,7 @@ namespace AnyRPG {
 
         public MailboxProps Props { get => interactableOptionProps as MailboxProps; }
 
-        public MailboxComponent(Interactable interactable, MailboxProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public MailboxComponent(InteractableBase interactable, MailboxProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override void SetGameManagerReferences() {

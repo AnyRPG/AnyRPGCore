@@ -3,7 +3,7 @@ namespace AnyRPG {
 
         public BankProps Props { get => interactableOptionProps as BankProps; }
 
-        public BankComponent(Interactable interactable, BankProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public BankComponent(InteractableBase interactable, BankProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactionPanelTitle = "Bank";
         }
 

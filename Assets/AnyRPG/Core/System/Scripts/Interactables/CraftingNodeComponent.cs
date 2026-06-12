@@ -5,17 +5,9 @@ using UnityEngine;
 namespace AnyRPG {
     public class CraftingNodeComponent : InteractableOptionComponent {
 
-        // game manager references
-        private CraftingManager craftingManager = null;
-
         public CraftingNodeProps Props { get => interactableOptionProps as CraftingNodeProps; }
 
-        public CraftingNodeComponent(Interactable interactable, CraftingNodeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            craftingManager = systemGameManager.CraftingManager;
+        public CraftingNodeComponent(InteractableBase interactable, CraftingNodeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override bool PrerequisitesMet(UnitController sourceUnitController) {
@@ -39,7 +31,7 @@ namespace AnyRPG {
             systemEventManager.OnAbilityListChanged -= HandleAbilityListChange;
         }
 
-        public static List<CraftingNodeComponent> GetCraftingNodeComponents(Interactable searchInteractable) {
+        public static List<CraftingNodeComponent> GetCraftingNodeComponents(InteractableBase searchInteractable) {
             if (searchInteractable == null) {
                 return new List<CraftingNodeComponent>();
             }

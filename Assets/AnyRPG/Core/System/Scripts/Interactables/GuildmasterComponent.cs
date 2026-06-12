@@ -7,7 +7,7 @@ namespace AnyRPG {
 
         public GuildmasterProps Props { get => interactableOptionProps as GuildmasterProps; }
 
-        public GuildmasterComponent(Interactable interactable, GuildmasterProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public GuildmasterComponent(InteractableBase interactable, GuildmasterProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactionPanelTitle == string.Empty) {
                 interactionPanelTitle = "Guildmaster";
             }

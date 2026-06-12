@@ -36,9 +36,9 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected ObjectPooler objectPooler = null;
 
-        protected Dictionary<Interactable, MainMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MainMapIndicatorController>();
+        protected Dictionary<InteractableBase, MainMapIndicatorController> mapIndicatorControllers = new Dictionary<InteractableBase, MainMapIndicatorController>();
 
-        public Dictionary<Interactable, MainMapIndicatorController> MapIndicatorControllers { get => mapIndicatorControllers; }
+        public Dictionary<InteractableBase, MainMapIndicatorController> MapIndicatorControllers { get => mapIndicatorControllers; }
 
         public GameObject MapGraphic { get => mapGraphic; }
 
@@ -60,13 +60,13 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
         }
 
-        public void HandleInteractableStatusUpdate(Interactable interactable, InteractableOptionComponent interactableOptionComponent) {
+        public void HandleInteractableStatusUpdate(InteractableBase interactable, InteractableOptionComponent interactableOptionComponent) {
             if (mapIndicatorControllers.ContainsKey(interactable)) {
                 mapIndicatorControllers[interactable].HandleMainMapStatusUpdate(interactableOptionComponent);
             }
         }
 
-        public void HandleAddIndicator(Interactable interactable) {
+        public void HandleAddIndicator(InteractableBase interactable) {
             //Debug.Log("MainMapController.AddIndicator(" + interactable.gameObject.name + ")");
             if (mapIndicatorControllers.ContainsKey(interactable) == false) {
                 GameObject mainMapIndicator = objectPooler.GetPooledObject(mainMapManager.MapIndicatorPrefab, (mapGraphic.transform));
@@ -88,7 +88,7 @@ namespace AnyRPG {
             //return mapIndicatorControllers[interactable];
         }
 
-        public void HandleRemoveIndicator(Interactable interactable) {
+        public void HandleRemoveIndicator(InteractableBase interactable) {
             if (mapIndicatorControllers.ContainsKey(interactable)) {
                 mapIndicatorControllers[interactable].ResetSettings();
                 objectPooler.ReturnObjectToPool(mapIndicatorControllers[interactable].gameObject);
@@ -96,7 +96,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleIndicatorRotation(Interactable interactable) {
+        public void HandleIndicatorRotation(InteractableBase interactable) {
             mapIndicatorControllers[interactable].transform.rotation = Quaternion.Euler(0, 0, interactable.transform.eulerAngles.y * -1f);
         }
 
@@ -126,7 +126,7 @@ namespace AnyRPG {
         }
 
         private void UpdateIndicatorPositions() {
-            foreach (Interactable interactable in mapIndicatorControllers.Keys) {
+            foreach (InteractableBase interactable in mapIndicatorControllers.Keys) {
                 if (mapIndicatorControllers[interactable].gameObject.activeSelf == true) {
                     mapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - levelManagerclient.SceneBounds.center.x) * levelScaleFactor, (interactable.transform.position.z - levelManagerclient.SceneBounds.center.z) * levelScaleFactor, 0);
                     mapIndicatorControllers[interactable].transform.localScale = new Vector3(1f / mapGraphic.transform.localScale.x, 1f / mapGraphic.transform.localScale.y, 1f / mapGraphic.transform.localScale.z);

@@ -3,7 +3,7 @@ namespace AnyRPG {
 
         public TeleportProps TeleportProps { get => interactableOptionProps as TeleportProps; }
 
-        public TeleportComponent(Interactable interactable, TeleportProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public TeleportComponent(InteractableBase interactable, TeleportProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {

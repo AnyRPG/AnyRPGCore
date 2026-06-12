@@ -15,7 +15,7 @@ namespace AnyRPG {
         private List<CombatTextController> inUseCombatTextControllers = new List<CombatTextController>();
         private List<CombatTextController> returnList = new List<CombatTextController>();
 
-        private Dictionary<Interactable, List<CombatTextController>[]> quadrantTracks = new Dictionary<Interactable, List<CombatTextController>[]>();
+        private Dictionary<InteractableBase, List<CombatTextController>[]> quadrantTracks = new Dictionary<InteractableBase, List<CombatTextController>[]>();
 
         // game manager references
         private CameraManager cameraManager = null;
@@ -113,7 +113,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SpawnCombatText(Interactable target, int damage, CombatTextType combatType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+        public void SpawnCombatText(InteractableBase target, int damage, CombatTextType combatType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"CombatTextManager.SpawnCombatText({target.gameObject.name}, {damage}, {combatType}, {combatMagnitude})");
 
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
@@ -141,7 +141,7 @@ namespace AnyRPG {
         }
 
         /*
-        public void SpawnCombatText(Interactable target, StatusEffectProperties statusEffect, bool gainEffect) {
+        public void SpawnCombatText(InteractableBase target, StatusEffectProperties statusEffect, bool gainEffect) {
             //Debug.Log($"CombatTextManager.SpawnCombatText({target.gameObject.name}, {statusEffect.ResourceName}, {gainEffect})");
 
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
@@ -162,7 +162,7 @@ namespace AnyRPG {
         }
         */
 
-        public void SpawnCombatText(Interactable target, string displayText, CombatTextType combatType) {
+        public void SpawnCombatText(InteractableBase target, string displayText, CombatTextType combatType) {
             //Debug.Log($"CombatTextManager.SpawnCombatText({target.gameObject.name}, {displayText}, {combatType})");
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
                 return;
@@ -181,7 +181,7 @@ namespace AnyRPG {
             }
         }
 
-        public void RegisterAndPush(Interactable target, CombatTextController newText, int quadrant, float pushAmount) {
+        public void RegisterAndPush(InteractableBase target, CombatTextController newText, int quadrant, float pushAmount) {
             //Debug.Log($"CombatTextManager.RegisterAndPush({target.gameObject.name}, text: {newText.gameObject.name}, quadrant: {quadrant}, pushAmount: {pushAmount})");
 
             if (!quadrantTracks.ContainsKey(target)) {
@@ -218,7 +218,7 @@ namespace AnyRPG {
             track.Add(newText);
         }
 
-        public void Unregister(Interactable target, CombatTextController text, int quadrant) {
+        public void Unregister(InteractableBase target, CombatTextController text, int quadrant) {
             //Debug.Log($"CombatTextManager.Unregister({target.gameObject.name}, {text.gameObject.name}, quadrant: {quadrant})");
 
             if (quadrantTracks.ContainsKey(target)) {

@@ -31,7 +31,7 @@ namespace AnyRPG {
 
         AudioClip GetAnimatedAbilityHitSound();
 
-        //Interactable ReturnTarget(AbilityEffect abilityEffect, Interactable target);
+        //Interactable ReturnTarget(AbilityEffect abilityEffect, InteractableBase target);
         float PerformAbilityAction(AbilityProperties baseAbility, AnimationClip animationClip, int clipIndex, UnitController targetUnitController, AbilityEffectContext abilityEffectContext);
 
         void SummonMount(UnitProfile mountUnitProfile);
@@ -95,7 +95,7 @@ namespace AnyRPG {
         /// <param name="target"></param>
         /// <param name="targetable"></param>
         /// <returns></returns>
-        bool PerformLOSCheck(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null);
+        bool PerformLOSCheck(InteractableBase target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null);
 
         float GetMeleeRange();
 
@@ -105,7 +105,7 @@ namespace AnyRPG {
         /// give a chance to cast any onhit abilities from the equipped weapon
         /// </summary>
         /// <param name="attackEffect"></param>
-        void ProcessWeaponHitEffects(AttackEffectProperties attackEffect, Interactable target, AbilityEffectContext abilityEffectOutput);
+        void ProcessWeaponHitEffects(AttackEffectProperties attackEffect, InteractableBase target, AbilityEffectContext abilityEffectOutput);
 
         /// <summary>
         /// return a float that increases damage by the animation time to ensure long cast abilities get the same benefit from dps increases
@@ -160,27 +160,27 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        bool IsTargetInMeleeRange(Interactable target);
+        bool IsTargetInMeleeRange(InteractableBase target);
 
         /*
         /// <summary>
         /// True if the target is in the correct range for the ability
         /// </summary>
         /// <returns></returns>
-        bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, Interactable target, AbilityEffectContext abilityEffectContext = null);
+        bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, InteractableBase target, AbilityEffectContext abilityEffectContext = null);
 
         /// <summary>
         /// True if the target is in the correct range for the ability
         /// </summary>
         /// <returns></returns>
-        bool IsTargetInAbilityRange(BaseAbility baseAbility, Interactable target, AbilityEffectContext abilityEffectContext = null, bool notify = false);
+        bool IsTargetInAbilityRange(BaseAbility baseAbility, InteractableBase target, AbilityEffectContext abilityEffectContext = null, bool notify = false);
         */
 
         /// <summary>
         /// True if the target is in the correct range for the targetable
         /// </summary>
         /// <returns></returns>
-        bool IsTargetInRange(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null);
+        bool IsTargetInRange(InteractableBase target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null);
 
         /// <summary>
         /// Put an ability on cooldown and prevent it from being cast for x seconds
@@ -221,7 +221,7 @@ namespace AnyRPG {
         /// <param name="target"></param>
         /// <param name="deactivateAutoAttack"></param>
         /// <returns></returns>
-        bool ProcessAnimatedAbilityHit(Interactable target, bool deactivateAutoAttack);
+        bool ProcessAnimatedAbilityHit(InteractableBase target, bool deactivateAutoAttack);
 
         /// <summary>
         /// True if the caster has the weapon equipped required to cast the ability
@@ -242,7 +242,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        bool DidAbilityHit(Interactable target, AbilityEffectContext abilityEffectContext);
+        bool DidAbilityHit(InteractableBase target, AbilityEffectContext abilityEffectContext);
 
         void AddPet(CharacterUnit target);
 
@@ -262,7 +262,7 @@ namespace AnyRPG {
         /// <param name="target"></param>
         /// <param name="abilityEffectInput"></param>
         /// <param name="channeledEffect"></param>
-        void BeginPerformAbilityHitDelay(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, ChanneledEffectProperties channeledEffect);
+        void BeginPerformAbilityHitDelay(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput, ChanneledEffectProperties channeledEffect);
 
         /// <summary>
         /// Destroy ability effect objects after a certain amount of time
@@ -310,10 +310,10 @@ namespace AnyRPG {
         /// pass a message to be emitted as an event
         /// </summary>
         void ReceiveMessageFeedMessage(string messageText);
-        Dictionary<PrefabProfile, List<GameObject>> SpawnAbilityEffectPrefabs(Interactable target, Interactable originalTarget, FixedLengthEffectProperties fixedLengthEffectProperties, AbilityEffectContext abilityEffectContext);
-        Dictionary<PrefabProfile, List<GameObject>> SpawnStatusEffectPrefabs(Interactable target, StatusEffectProperties statusEffectProperties, AbilityEffectContext abilityEffectContext);
-        Dictionary<PrefabProfile, List<GameObject>> SpawnProjectileEffectPrefabs(Interactable target, Interactable originalTarget, ProjectileEffectProperties projectileEffectProperties, AbilityEffectContext abilityEffectContext);
-        Dictionary<PrefabProfile, List<GameObject>> SpawnChanneledEffectPrefabs(Interactable target, Interactable originalTarget, ChanneledEffectProperties channeledEffectProperties, AbilityEffectContext abilityEffectContext);
+        Dictionary<PrefabProfile, List<GameObject>> SpawnAbilityEffectPrefabs(InteractableBase target, InteractableBase originalTarget, FixedLengthEffectProperties fixedLengthEffectProperties, AbilityEffectContext abilityEffectContext);
+        Dictionary<PrefabProfile, List<GameObject>> SpawnStatusEffectPrefabs(InteractableBase target, StatusEffectProperties statusEffectProperties, AbilityEffectContext abilityEffectContext);
+        Dictionary<PrefabProfile, List<GameObject>> SpawnProjectileEffectPrefabs(InteractableBase target, InteractableBase originalTarget, ProjectileEffectProperties projectileEffectProperties, AbilityEffectContext abilityEffectContext);
+        Dictionary<PrefabProfile, List<GameObject>> SpawnChanneledEffectPrefabs(InteractableBase target, InteractableBase originalTarget, ChanneledEffectProperties channeledEffectProperties, AbilityEffectContext abilityEffectContext);
         void ReceiveCombatTextEvent(UnitController unitController, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext);
         void ProcessAbilityEffectPooled(GameObject go);
     }

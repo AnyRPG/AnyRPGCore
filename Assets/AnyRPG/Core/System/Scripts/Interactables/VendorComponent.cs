@@ -15,7 +15,7 @@ namespace AnyRPG {
         public VendorProps Props { get => interactableOptionProps as VendorProps; }
         //public Dictionary<int, VendorCollection> BuyBackCollections { get => buyBackCollections; set => buyBackCollections = value; }
 
-        public VendorComponent(Interactable interactable, VendorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public VendorComponent(InteractableBase interactable, VendorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactionPanelTitle = "Purchase Items";
             // pre populate collection zero so vendor UI works in single player game
             VendorCollection tmpVendorCollection = ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection;

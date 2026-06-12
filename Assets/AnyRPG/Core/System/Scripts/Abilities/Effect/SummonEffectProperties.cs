@@ -32,7 +32,7 @@ namespace AnyRPG {
         }
         */
 
-        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, InteractableBase target, InteractableBase originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".SummonEffect.Cast()");
             // cast twice?  is this intentional?
             base.Cast(source, target, originalTarget, abilityEffectInput);
@@ -53,7 +53,7 @@ namespace AnyRPG {
         }
         */
 
-        protected override void CheckDestroyObjects(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        protected override void CheckDestroyObjects(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput) {
             // intentionally not calling base to avoid getting our pet destroyed
         }
 

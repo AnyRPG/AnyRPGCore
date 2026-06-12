@@ -11,19 +11,19 @@ namespace AnyRPG {
         */
 
         /*
-        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, InteractableBase target, InteractableBase originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".DirectEffect.Cast()");
             return base.Cast(source, target, originalTarget, abilityEffectInput);
         }
         */
 
-        public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public override void CastTick(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(abilityEffectName + ".DirectEffect.CastTick()");
             base.CastTick(source, target, abilityEffectContext);
             PerformAbilityTick(source, target, abilityEffectContext);
         }
 
-        public override void CastComplete(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public override void CastComplete(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(abilityEffectName + ".DirectEffect.CastComplete()");
             base.CastComplete(source, target, abilityEffectContext);
             PerformAbilityComplete(source, target, abilityEffectContext);

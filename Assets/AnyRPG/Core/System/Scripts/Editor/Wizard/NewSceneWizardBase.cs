@@ -252,7 +252,7 @@ namespace AnyRPG {
 
             GameObject portalObject = (GameObject)AssetDatabase.LoadMainAssetAtPath(destinationAssetpath);
             if (portalObject != null) {
-                Interactable interactable = portalObject.GetComponentInChildren<Interactable>();
+                InteractableBase interactable = portalObject.GetComponentInChildren<InteractableBase>();
                 if (interactable != null) {
                     interactable.DisplayName = "Travel to " + sceneName;
                 }

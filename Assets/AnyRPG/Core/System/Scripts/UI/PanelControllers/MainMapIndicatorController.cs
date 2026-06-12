@@ -15,7 +15,7 @@ namespace AnyRPG {
 
         private Dictionary<InteractableOptionComponent, MiniMapIndicatorLayerController> mainMapLayers = new Dictionary<InteractableOptionComponent, MiniMapIndicatorLayerController>();
 
-        private Interactable interactable = null;
+        private InteractableBase interactable = null;
 
         private bool setupComplete = false;
 
@@ -58,7 +58,7 @@ namespace AnyRPG {
             setupComplete = true;
         }
 
-        public void SetInteractable(Interactable interactable) {
+        public void SetInteractable(InteractableBase interactable) {
             //Debug.Log($"{gameObject.name}.MainMapIndicatorController.SetInteractable(" + interactable.gameObject.name + "): instance: " + instanceNumber);
             this.interactable = interactable;
             SetupMainMap();

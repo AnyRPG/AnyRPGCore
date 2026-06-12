@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         public Vector3 GroundTargetLocation = Vector3.zero;
 
-        public Interactable OriginalTarget;
+        public InteractableBase OriginalTarget;
 
         // track the ability that was originally cast that resulted in this effect
         public AbilityProperties BaseAbility = null;
@@ -57,7 +57,7 @@ namespace AnyRPG {
             abilityCasterRotation = abilityCaster.transform.rotation;
         }
 
-        public AbilityEffectContext(IAbilityCaster abilityCaster, Interactable originalTarget, SerializableAbilityEffectContext serializableAbilityEffectContext, SystemGameManager systemGameManager) {
+        public AbilityEffectContext(IAbilityCaster abilityCaster, InteractableBase originalTarget, SerializableAbilityEffectContext serializableAbilityEffectContext, SystemGameManager systemGameManager) {
             this.abilityCaster = abilityCaster;
             abilityCasterLocation = abilityCaster.transform.position;
             abilityCasterRotation = abilityCaster.transform.rotation;

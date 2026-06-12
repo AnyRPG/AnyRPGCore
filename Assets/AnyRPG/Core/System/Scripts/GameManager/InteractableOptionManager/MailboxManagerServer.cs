@@ -13,7 +13,7 @@ namespace AnyRPG {
             playerManagerServer = systemGameManager.PlayerManagerServer;
         }
 
-        public void RequestSendMail(UnitController sourceUnitController, Interactable interactable, int componentIndex, MailMessageRequest sendMailRequest) {
+        public void RequestSendMail(UnitController sourceUnitController, InteractableBase interactable, int componentIndex, MailMessageRequest sendMailRequest) {
             Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(sourceUnitController);
             if (currentInteractables[componentIndex] is MailboxComponent) {
                 (currentInteractables[componentIndex] as MailboxComponent).SendMail(sourceUnitController, sendMailRequest);

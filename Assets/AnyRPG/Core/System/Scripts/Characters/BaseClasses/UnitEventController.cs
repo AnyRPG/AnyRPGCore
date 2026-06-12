@@ -5,8 +5,8 @@ namespace AnyRPG {
 
     public class UnitEventController : ConfiguredClass {
 
-        public event System.Action<Interactable> OnSetTarget = delegate { };
-        public event System.Action<Interactable> OnClearTarget = delegate { };
+        public event System.Action<InteractableBase> OnSetTarget = delegate { };
+        public event System.Action<InteractableBase> OnClearTarget = delegate { };
         public event System.Action OnAggroTarget = delegate { };
         public event System.Action OnAttack = delegate { };
         public event System.Action<IAbilityCaster, UnitController, int, CombatTextType, CombatMagnitude, string, AbilityEffectContext> OnTakeDamage = delegate { };
@@ -57,14 +57,14 @@ namespace AnyRPG {
         public event System.Action<float> OnReviveBegin = delegate { };
         //public event System.Action OnCombatUpdate = delegate { };
         public event System.Action<UnitController> OnEnterCombat = delegate { };
-        public event System.Action<UnitController, Interactable> OnHitEvent = delegate { };
+        public event System.Action<UnitController, InteractableBase> OnHitEvent = delegate { };
         //public event System.Action<Interactable, AbilityEffectContext> OnReceiveCombatMiss = delegate { };
         public event System.Action<UnitController, UnitController, float> OnKillEvent = delegate { };
         //public event System.Action<InstantiatedEquipment, InstantiatedEquipment, int> OnEquipmentChanged = delegate { };
         public event System.Action<AbilityProperties> OnAbilityActionCheckFail = delegate { };
         public event System.Action<string> OnCombatMessage = delegate { };
         public event System.Action<string, bool> OnBeginAction = delegate { };
-        public event System.Action<AbilityProperties, Interactable, bool> OnBeginAbility = delegate { };
+        public event System.Action<AbilityProperties, InteractableBase, bool> OnBeginAbility = delegate { };
         public event System.Action<AbilityProperties, float> OnBeginAbilityCoolDown = delegate { };
         public event System.Action<InstantiatedActionItem, float> OnBeginActionCoolDown = delegate { };
         public event System.Action OnUnlearnAbilities = delegate { };
@@ -94,13 +94,13 @@ namespace AnyRPG {
         public event System.Action OnDespawnAbilityObjects = delegate { };
         public event System.Action<AnimatedAction> OnSpawnActionObjects = delegate { };
         public event System.Action OnDespawnActionObjects = delegate { };
-        public event System.Action<Interactable, Interactable, LengthEffectProperties, AbilityEffectContext> OnSpawnAbilityEffectPrefabs = delegate { };
-        public event System.Action<Interactable, Interactable, ProjectileEffectProperties, AbilityEffectContext> OnSpawnProjectileEffectPrefabs = delegate { };
-        public event System.Action<Interactable, Interactable, ChanneledEffectProperties, AbilityEffectContext> OnSpawnChanneledEffectPrefabs = delegate { };
-        public event System.Action<UnitController, Interactable> OnEnterInteractableTrigger = delegate { };
-        public event System.Action<UnitController, Interactable> OnExitInteractableTrigger = delegate { };
-        public event System.Action<UnitController, Interactable> OnEnterInteractableRange = delegate { };
-        public event System.Action<UnitController, Interactable> OnExitInteractableRange = delegate { };
+        public event System.Action<InteractableBase, InteractableBase, LengthEffectProperties, AbilityEffectContext> OnSpawnAbilityEffectPrefabs = delegate { };
+        public event System.Action<InteractableBase, InteractableBase, ProjectileEffectProperties, AbilityEffectContext> OnSpawnProjectileEffectPrefabs = delegate { };
+        public event System.Action<InteractableBase, InteractableBase, ChanneledEffectProperties, AbilityEffectContext> OnSpawnChanneledEffectPrefabs = delegate { };
+        public event System.Action<UnitController, InteractableBase> OnEnterInteractableTrigger = delegate { };
+        public event System.Action<UnitController, InteractableBase> OnExitInteractableTrigger = delegate { };
+        public event System.Action<UnitController, InteractableBase> OnEnterInteractableRange = delegate { };
+        public event System.Action<UnitController, InteractableBase> OnExitInteractableRange = delegate { };
         public event System.Action<UnitController, Quest> OnAcceptQuest = delegate { };
         public event System.Action<UnitController, Achievement> OnAcceptAchievement = delegate { };
         public event System.Action<UnitController, QuestBase> OnAbandonQuest = delegate { };
@@ -147,7 +147,7 @@ namespace AnyRPG {
         public event System.Action<InstantiatedBag, int, bool> OnRequestMoveBag = delegate { };
         public event System.Action<InstantiatedBag, int, bool> OnRequestAddBag = delegate { };
         public event System.Action<Vector3> OnSetGroundTarget = delegate { };
-        public event System.Action<Interactable, int, CombatTextType, CombatMagnitude, AbilityEffectContext> OnReceiveCombatTextEvent = delegate {};
+        public event System.Action<InteractableBase, int, CombatTextType, CombatMagnitude, AbilityEffectContext> OnReceiveCombatTextEvent = delegate {};
         //public event System.Action<UnitController, StatusEffectProperties, bool> OnReceiveStatusEffectCombatTextEvent = delegate { };
         public event System.Action<Recipe> OnLearnRecipe = delegate { };
         public event System.Action<Recipe> OnUnlearnRecipe = delegate { };
@@ -192,15 +192,15 @@ namespace AnyRPG {
         public event Action OnEnableAggro = delegate { };
         public event Action OnReachDestination = delegate { };
         public event Action<Vector3> OnRequestClickToMove = delegate { };
-        public event Action<Interactable> OnRequestFollowInteractionTarget = delegate { };
-        public event Action<Interactable, float> OnRequestFollowAttackTarget = delegate { };
+        public event Action<InteractableBase> OnRequestFollowInteractionTarget = delegate { };
+        public event Action<InteractableBase, float> OnRequestFollowAttackTarget = delegate { };
         public event Action<int, int> OnRequestSplitStack = delegate { };
         public event Action<Skill, int> OnAddSkillLevel = delegate { };
         public event Action<Skill, int> OnAddSkillExperience = delegate { };
         public event Action<int> OnRequestDropItemOnGround = delegate { };
         public event Action OnCarryWeightChanged = delegate { };
         public event Action<bool> OnEncumberedChange = delegate { };
-        public event Action<Interactable, int, int> OnRequestSwapItemsInStorageContainerSlots = delegate { };
+        public event Action<InteractableBase, int, int> OnRequestSwapItemsInStorageContainerSlots = delegate { };
         public event Action<StorageContainerComponent, int, int, bool> OnRequestSwapItemToStorageContainer = delegate { };
         public event Action<StorageContainerComponent, int, bool> OnRequestMoveItemToStorageContainer = delegate { };
         public event Action<StorageContainerComponent, int> OnRequestMoveItemFromStorageContainer = delegate { };
@@ -286,7 +286,7 @@ namespace AnyRPG {
             OnBeginAction(actionName, playerInitiated);
         }
 
-        public void NotifyOnBeginAbility(AbilityProperties baseAbility, Interactable target, bool playerInitiated) {
+        public void NotifyOnBeginAbility(AbilityProperties baseAbility, InteractableBase target, bool playerInitiated) {
             OnBeginAbility(baseAbility, target, playerInitiated);
         }
 
@@ -315,12 +315,12 @@ namespace AnyRPG {
         }
 
         /*
-        public void NotifyOnReceiveCombatMiss(Interactable target, AbilityEffectContext abilityEffectContext) {
+        public void NotifyOnReceiveCombatMiss(InteractableBase target, AbilityEffectContext abilityEffectContext) {
             OnReceiveCombatMiss(target, abilityEffectContext);
         }
         */
 
-        public void NotifyOnHitEvent(UnitController source, Interactable target) {
+        public void NotifyOnHitEvent(UnitController source, InteractableBase target) {
             OnHitEvent(source, target);
         }
 
@@ -437,11 +437,11 @@ namespace AnyRPG {
             OnManualMovement();
         }
 
-        public void NotifyOnSetTarget(Interactable interactable) {
+        public void NotifyOnSetTarget(InteractableBase interactable) {
             OnSetTarget(interactable);
         }
 
-        public void NotifyOnClearTarget(Interactable interactable) {
+        public void NotifyOnClearTarget(InteractableBase interactable) {
             OnClearTarget(interactable);
         }
 
@@ -629,27 +629,27 @@ namespace AnyRPG {
             OnDespawnActionObjects();
         }
 
-        public void NotifyOnSpawnAbilityEffectPrefabs(Interactable target, Interactable originalTarget, LengthEffectProperties lengthEffectProperties, AbilityEffectContext abilityEffectInput) {
+        public void NotifyOnSpawnAbilityEffectPrefabs(InteractableBase target, InteractableBase originalTarget, LengthEffectProperties lengthEffectProperties, AbilityEffectContext abilityEffectInput) {
             OnSpawnAbilityEffectPrefabs(target, originalTarget, lengthEffectProperties, abilityEffectInput);
         }
 
-        public void NotifyOnEnterInteractableTrigger(Interactable interactable) {
+        public void NotifyOnEnterInteractableTrigger(InteractableBase interactable) {
             //Debug.Log($"{unitController.gameObject.name}.UniteventController.NotifyOnEnterInteractableTrigger({interactable.gameObject.name})");
 
             OnEnterInteractableTrigger(unitController, interactable);
         }
 
-        public void NotifyOnExitInteractableTrigger(Interactable interactable) {
+        public void NotifyOnExitInteractableTrigger(InteractableBase interactable) {
             //Debug.Log($"{unitController.gameObject.name}.UniteventController.NotifyOnExitInteractableTrigger({interactable.gameObject.name})");
 
             OnExitInteractableTrigger(unitController, interactable);
         }
 
-        public void NotifyOnEnterInteractableRange(Interactable interactable) {
+        public void NotifyOnEnterInteractableRange(InteractableBase interactable) {
             OnEnterInteractableRange(unitController, interactable);
         }
 
-        public void NotifyOnExitInteractableRange(Interactable interactable) {
+        public void NotifyOnExitInteractableRange(InteractableBase interactable) {
             OnExitInteractableRange(unitController, interactable);
         }
 
@@ -872,13 +872,13 @@ namespace AnyRPG {
             OnCancelStatusEffect(statusEffect);
         }
 
-        public void NotifyOnSpawnProjectileEffectPrefabs(Interactable target, Interactable originalTarget, ProjectileEffectProperties projectileEffectProperties, AbilityEffectContext abilityEffectContext) {
+        public void NotifyOnSpawnProjectileEffectPrefabs(InteractableBase target, InteractableBase originalTarget, ProjectileEffectProperties projectileEffectProperties, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnSpawnProjectileEffectPrefabs({projectileEffectProperties.ResourceName})");
 
             OnSpawnProjectileEffectPrefabs(target, originalTarget, projectileEffectProperties, abilityEffectContext);
         }
 
-        public void NotifyOnSpawnChanneledEffectPrefabs(Interactable target, Interactable originalTarget, ChanneledEffectProperties channeledEffectProperties, AbilityEffectContext abilityEffectContext) {
+        public void NotifyOnSpawnChanneledEffectPrefabs(InteractableBase target, InteractableBase originalTarget, ChanneledEffectProperties channeledEffectProperties, AbilityEffectContext abilityEffectContext) {
             OnSpawnChanneledEffectPrefabs(target, originalTarget, channeledEffectProperties, abilityEffectContext);
         }
 
@@ -886,7 +886,7 @@ namespace AnyRPG {
             OnSetGroundTarget(newGroundTarget);
         }
 
-        public void NotifyOnReceiveCombatTextEvent(Interactable targetInteractable, int damage, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+        public void NotifyOnReceiveCombatTextEvent(InteractableBase targetInteractable, int damage, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnReceiveCombatTextEvent({targetInteractable.gameObject.name}, {damage}, {combatTextType}, {combatMagnitude})");
             
             OnReceiveCombatTextEvent(targetInteractable, damage, combatTextType, combatMagnitude, abilityEffectContext);
@@ -1092,11 +1092,11 @@ namespace AnyRPG {
             OnReachDestination();
         }
 
-        public void NotifyOnRequestFollowInteractionTarget(Interactable target) {
+        public void NotifyOnRequestFollowInteractionTarget(InteractableBase target) {
             OnRequestFollowInteractionTarget(target);
         }
 
-        public void NotifyOnRequestFollowAttackTarget(Interactable target, float attackRange) {
+        public void NotifyOnRequestFollowAttackTarget(InteractableBase target, float attackRange) {
             OnRequestFollowAttackTarget(target, attackRange);
         }
 
@@ -1124,7 +1124,7 @@ namespace AnyRPG {
             OnEncumberedChange(isEncumbered);
         }
 
-        public void NotifyOnRequestSwapItemsInStorageContainerSlots(Interactable interactable, int fromSlotIndex, int toSlotIndex) {
+        public void NotifyOnRequestSwapItemsInStorageContainerSlots(InteractableBase interactable, int fromSlotIndex, int toSlotIndex) {
             OnRequestSwapItemsInStorageContainerSlots(interactable, fromSlotIndex, toSlotIndex);
         }
 

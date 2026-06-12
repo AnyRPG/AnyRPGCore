@@ -8,7 +8,7 @@ namespace AnyRPG {
         public override Sprite Icon { get => (systemConfigurationManager.MailboxInteractionPanelImage != null ? systemConfigurationManager.MailboxInteractionPanelImage : base.Icon); }
         public override Sprite NameplateImage { get => (systemConfigurationManager.MailboxNameplateImage != null ? systemConfigurationManager.MailboxNameplateImage : base.NameplateImage); }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new MailboxComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

@@ -16,7 +16,7 @@ namespace AnyRPG {
         public override Sprite NameplateImage { get => (systemConfigurationManager.LootableCharacterNameplateImage != null ? systemConfigurationManager.LootableCharacterNameplateImage : base.NameplateImage); }
         public GameObject SpawnObject { get => spawnObject; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new DroppedItemComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

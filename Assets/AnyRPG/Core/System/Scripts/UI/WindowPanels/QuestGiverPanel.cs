@@ -51,7 +51,7 @@ namespace AnyRPG {
         [SerializeField]
         private QuestDetailsArea questDetailsArea = null;
 
-        private Interactable interactable;
+        private InteractableBase interactable;
 
         private List<QuestNode> questNodes = new List<QuestNode>();
 
@@ -73,7 +73,6 @@ namespace AnyRPG {
         private DialogManagerClient dialogManagerClient = null;
 
         public QuestGiverQuestScript SelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
-        //public Interactable MyInteractable { get => interactable; set => interactable = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

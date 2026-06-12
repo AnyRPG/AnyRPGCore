@@ -66,7 +66,7 @@ namespace AnyRPG {
         public int CharacterExperienceReward { get => characterExperienceReward; set => characterExperienceReward = value; }
         public float ChanceToGainLevel { get => chanceToGainLevel; set => chanceToGainLevel = value; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new GatheringNodeComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

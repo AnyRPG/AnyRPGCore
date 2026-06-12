@@ -3,7 +3,7 @@ namespace AnyRPG {
 
         public ItemPickupProps ItemPickupProps { get => interactableOptionProps as ItemPickupProps; }
 
-        public ItemPickupComponent(Interactable interactable, ItemPickupProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public ItemPickupComponent(InteractableBase interactable, ItemPickupProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override int GetValidOptionCount(UnitController sourceUnitController) {

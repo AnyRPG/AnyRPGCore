@@ -12,13 +12,17 @@ namespace AnyRPG {
             interactionManagerClient = systemGameManager.InteractionManagerClient;
         }
 
-        public bool InteractWithInteractable(UnitController sourceUnitController, Interactable targetInteractable) {
+        public bool InteractWithInteractable(UnitController sourceUnitController, InteractableBase targetInteractable) {
             //Debug.Log($"InteractionManager.InteractWithInteractable({sourceUnitController.gameObject.name}, {targetInteractable.gameObject.name})");
 
             // perform range check
             bool passedRangeCheck = false;
 
             passedRangeCheck = targetInteractable.IsInRange(sourceUnitController);
+
+            if (targetInteractable.PerformPreInteractionCheck(sourceUnitController, passedRangeCheck) == false) {
+                return false;
+            }
 
             // get a list of valid interactables to determine if there is an action we can treat as default
             Dictionary<int, InteractableOptionComponent> validInteractables = targetInteractable.GetCurrentInteractables(sourceUnitController);
@@ -54,7 +58,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public void InteractWithTrigger(UnitController unitController, Interactable triggerInteractable) {
+        public void InteractWithTrigger(UnitController unitController, InteractableBase triggerInteractable) {
             //Debug.Log($"InteractionManager.InteractionWithTrigger({unitController.gameObject.name}, {triggerInteractable.gameObject.name})");
 
             // no range check for triggers since the unit walked into it so we know its in range
@@ -65,7 +69,7 @@ namespace AnyRPG {
             }
         }
 
-        public void InteractWithOption(UnitController sourceUnitController, Interactable targetInteractable, int componentIndex, int choiceIndex) {
+        public void InteractWithOption(UnitController sourceUnitController, InteractableBase targetInteractable, int componentIndex, int choiceIndex) {
             //Debug.Log($"InteractionManager.InteractWithOptionServer({sourceUnitController.gameObject.name}, {targetInteractable.gameObject.name}, {componentIndex}, {choiceIndex})");
 
             Dictionary<int, InteractableOptionComponent> interactionOptions = targetInteractable.GetCurrentInteractables(sourceUnitController);
@@ -74,7 +78,7 @@ namespace AnyRPG {
             }
         }
 
-        public void InteractWithOption(UnitController sourceUnitController, Interactable targetInteractable, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
+        public void InteractWithOption(UnitController sourceUnitController, InteractableBase targetInteractable, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
             //Debug.Log($"InteractionManager.InteractWithOptionInternal({sourceUnitController.gameObject.name}, {targetInteractable.gameObject.name}, {componentIndex}, {choiceIndex})");
             
             sourceUnitController.UnitMotor.StickToGround();
@@ -83,7 +87,7 @@ namespace AnyRPG {
             interactableOptionComponent.Interact(sourceUnitController, componentIndex, choiceIndex);
         }
 
-        public void OpenInteractionWindow(UnitController sourceUnitController, Interactable targetInteractable) {
+        public void OpenInteractionWindow(UnitController sourceUnitController, InteractableBase targetInteractable) {
             //Debug.Log($"InteractionManager.OpenInteractionWindow");
 
             if (systemGameManager.GameMode == GameMode.Local) {

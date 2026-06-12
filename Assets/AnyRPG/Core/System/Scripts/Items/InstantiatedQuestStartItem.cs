@@ -12,7 +12,7 @@ namespace AnyRPG {
         private List<QuestNode> quests = new List<QuestNode>();
         */
 
-        public Interactable Interactable { get => null; }
+        public InteractableBase Interactable { get => null; }
         public InteractableOptionComponent InteractableOptionComponent { get => null; }
 
         public QuestGiverProps QuestGiverProps { get => questStartItem.QuestGiverProps; }

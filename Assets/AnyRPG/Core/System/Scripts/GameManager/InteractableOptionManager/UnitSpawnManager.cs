@@ -35,7 +35,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SpawnUnit(UnitController sourceUnitController, Interactable interactable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, UnitProfile unitProfile, UnitToughness unitToughness) {
+        public void SpawnUnit(UnitController sourceUnitController, InteractableBase interactable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, UnitProfile unitProfile, UnitToughness unitToughness) {
             //Debug.Log($"UnitSpawnManager.SpawnUnit({sourceUnitController.gameObject.name}, {interactable.gameObject.name}, {componentIndex}, {unitLevel}, {extraLevels}, {useDynamicLevel}, {unitProfile.ResourceName}, {(unitToughness == null ? string.Empty : unitToughness.ResourceName)})");
 
             Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(sourceUnitController);

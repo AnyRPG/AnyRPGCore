@@ -21,7 +21,7 @@ namespace AnyRPG {
         // keep track of looping
         private Coroutine loopCoroutine = null;
 
-        public MoveablePrefabComponent(Interactable interactable, MoveablePrefabProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public MoveablePrefabComponent(InteractableBase interactable, MoveablePrefabProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactionPanelTitle = "Interactable";
         }
 

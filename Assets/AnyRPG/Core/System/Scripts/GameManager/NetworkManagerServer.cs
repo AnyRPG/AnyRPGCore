@@ -705,14 +705,14 @@ namespace AnyRPG {
         }
 
         /*
-        public void AdvertiseInteractWithQuestGiver(Interactable interactable, int optionIndex, UnitController sourceUnitController) {
+        public void AdvertiseInteractWithQuestGiver(InteractableBase interactable, int optionIndex, UnitController sourceUnitController) {
             if (playerManagerServer.ActivePlayerLookup.ContainsKey(sourceUnitController)) {
                 networkController.AdvertiseInteractWithQuestGiver(interactable, optionIndex, playerManagerServer.ActivePlayerLookup[sourceUnitController]);
             }
         }
         */
 
-        public void InteractWithOption(UnitController sourceUnitController, Interactable interactable, int componentIndex, int choiceIndex) {
+        public void InteractWithOption(UnitController sourceUnitController, InteractableBase interactable, int componentIndex, int choiceIndex) {
             interactionManagerServer.InteractWithOption(sourceUnitController, interactable, componentIndex, choiceIndex);
         }
 
@@ -723,7 +723,7 @@ namespace AnyRPG {
         */
 
         /*
-        public void AdvertiseInteractWithClassChangeComponent(int accountId, Interactable interactable, int optionIndex) {
+        public void AdvertiseInteractWithClassChangeComponent(int accountId, InteractableBase interactable, int optionIndex) {
             networkController.AdvertiseInteractWithClassChangeComponentServer(accountId, interactable, optionIndex);
         }
         */
@@ -853,7 +853,7 @@ namespace AnyRPG {
             return networkController.SpawnModelPrefabServer(spawnPrefab, parentTransform, position, forward, clientId);
         }
 
-        public void TurnInDialog(Interactable interactable, int componentIndex, Dialog dialog, int clientId) {
+        public void TurnInDialog(InteractableBase interactable, int componentIndex, Dialog dialog, int clientId) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;
@@ -876,7 +876,7 @@ namespace AnyRPG {
         }
 
 
-        public void SetPlayerCharacterClass(Interactable interactable, int componentIndex, int clientId) {
+        public void SetPlayerCharacterClass(InteractableBase interactable, int componentIndex, int clientId) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;
@@ -887,7 +887,7 @@ namespace AnyRPG {
             classChangeManagerServer.ChangeCharacterClass(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex);
         }
 
-        public void SetPlayerCharacterSpecialization(Interactable interactable, int componentIndex, int clientId) {
+        public void SetPlayerCharacterSpecialization(InteractableBase interactable, int componentIndex, int clientId) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;
@@ -898,7 +898,7 @@ namespace AnyRPG {
             specializationChangeManagerServer.ChangeCharacterSpecialization(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex);
         }
 
-        public void SetPlayerFaction(Interactable interactable, int componentIndex, int clientId) {
+        public void SetPlayerFaction(InteractableBase interactable, int componentIndex, int clientId) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;
@@ -909,7 +909,7 @@ namespace AnyRPG {
             factionChangeManagerServer.ChangeCharacterFaction(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex);
         }
 
-        public void RequestCreateGuild(Interactable interactable, int componentIndex, string guildName, int clientId) {
+        public void RequestCreateGuild(InteractableBase interactable, int componentIndex, string guildName, int clientId) {
             //Debug.Log($"NetworkManagerServer.RequestCreateGuild({interactable.gameObject.name}, {componentIndex}, {guildName}, {accountId})");
 
             int accountId = authenticationService.GetAccountId(clientId);
@@ -922,7 +922,7 @@ namespace AnyRPG {
             guildmasterManagerServer.CreateGuild(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, guildName);
         }
 
-        public void CheckGuildName(Interactable interactable, int componentIndex, string guildName, int clientId) {
+        public void CheckGuildName(InteractableBase interactable, int componentIndex, string guildName, int clientId) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;
@@ -934,7 +934,7 @@ namespace AnyRPG {
         }
 
 
-        public void LearnSkill(Interactable interactable, int componentIndex, int skillId, int clientId) {
+        public void LearnSkill(InteractableBase interactable, int componentIndex, int skillId, int clientId) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;
@@ -945,7 +945,7 @@ namespace AnyRPG {
             skillTrainerManagerServer.LearnSkill(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, skillId);
         }
 
-        public void RequestSendMail(Interactable interactable, int componentIndex, MailMessageRequest sendMailRequest, int clientId) {
+        public void RequestSendMail(InteractableBase interactable, int componentIndex, MailMessageRequest sendMailRequest, int clientId) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;
@@ -956,7 +956,7 @@ namespace AnyRPG {
             mailboxManagerServer.RequestSendMail(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, sendMailRequest);
         }
 
-        public void RequestListAuctionItems(Interactable interactable, int componentIndex, ListAuctionItemRequest listAuctionItemRequest, int clientId) {
+        public void RequestListAuctionItems(InteractableBase interactable, int componentIndex, ListAuctionItemRequest listAuctionItemRequest, int clientId) {
             //Debug.Log($"NetworkManagerServer.RequestListAuctionItems()");
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
@@ -968,7 +968,7 @@ namespace AnyRPG {
             auctionManagerServer.RequestListAuctionItems(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, listAuctionItemRequest);
         }
 
-        public void RequestSearchAuctions(Interactable interactable, int componentIndex, string searchText, bool onlyShowOwnAuctions, int clientId) {
+        public void RequestSearchAuctions(InteractableBase interactable, int componentIndex, string searchText, bool onlyShowOwnAuctions, int clientId) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;
@@ -980,7 +980,7 @@ namespace AnyRPG {
         }
 
 
-        public void AcceptQuest(Interactable interactable, int componentIndex, Quest quest, int clientId) {
+        public void AcceptQuest(InteractableBase interactable, int componentIndex, Quest quest, int clientId) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;
@@ -992,7 +992,7 @@ namespace AnyRPG {
             questGiverManagerServer.AcceptQuest(interactable, componentIndex, playerManagerServer.ActiveUnitControllers[accountId], quest);
         }
 
-        public void CompleteQuest(Interactable interactable, int componentIndex, Quest quest, QuestRewardChoices questRewardChoices, int clientId) {
+        public void CompleteQuest(InteractableBase interactable, int componentIndex, Quest quest, QuestRewardChoices questRewardChoices, int clientId) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;
@@ -1017,7 +1017,7 @@ namespace AnyRPG {
             networkController.AdvertiseSystemMessage(playerManagerServer.ActiveUnitControllerLookup[sourceUnitController], message);
         }
 
-        public void SellVendorItem(Interactable interactable, int componentIndex, long itemInstanceId, int clientId) {
+        public void SellVendorItem(InteractableBase interactable, int componentIndex, long itemInstanceId, int clientId) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;
@@ -1031,7 +1031,7 @@ namespace AnyRPG {
             vendorManagerServer.SellItemToVendor(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, systemItemManager.InstantiatedItems[itemInstanceId]);
         }
 
-        public void RequestSpawnUnit(Interactable interactable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, UnitProfile unitProfile, UnitToughness unitToughness, int clientId) {
+        public void RequestSpawnUnit(InteractableBase interactable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, UnitProfile unitProfile, UnitToughness unitToughness, int clientId) {
             //Debug.Log($"NetworkManagerServer.RequestSpawnUnit({interactable.gameObject.name}, {componentIndex}, {unitLevel}, {extraLevels}, {useDynamicLevel}, {unitProfile.ResourceName}, {unitToughness?.ResourceName}, {accountId})");
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
@@ -1045,11 +1045,11 @@ namespace AnyRPG {
         }
 
 
-        public void AdvertiseAddToBuyBackCollection(UnitController sourceUnitController, Interactable interactable, int componentIndex, InstantiatedItem newInstantiatedItem) {
+        public void AdvertiseAddToBuyBackCollection(UnitController sourceUnitController, InteractableBase interactable, int componentIndex, InstantiatedItem newInstantiatedItem) {
             networkController.AdvertiseAddToBuyBackCollection(sourceUnitController, playerManagerServer.ActiveUnitControllerLookup[sourceUnitController], interactable, componentIndex, newInstantiatedItem);
         }
 
-        public void BuyItemFromVendor(Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName, int clientId) {
+        public void BuyItemFromVendor(InteractableBase interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName, int clientId) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;
@@ -1219,7 +1219,7 @@ namespace AnyRPG {
             playerManagerServer.MonitorPlayerUnit(accountId, unitController);
         }
 
-        public void RequestUpdatePlayerAppearance(int clientId, Interactable interactable, int componentIndex, string unitProfileName, string appearanceString, List<SwappableMeshSaveData> swappableMeshSaveData) {
+        public void RequestUpdatePlayerAppearance(int clientId, InteractableBase interactable, int componentIndex, string unitProfileName, string appearanceString, List<SwappableMeshSaveData> swappableMeshSaveData) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;
@@ -1231,7 +1231,7 @@ namespace AnyRPG {
             characterAppearanceManagerServer.UpdatePlayerAppearance(playerManagerServer.ActiveUnitControllers[accountId], accountId, interactable, componentIndex, unitProfileName, appearanceString, swappableMeshSaveData);
         }
 
-        public void RequestChangePlayerName(Interactable interactable, int componentIndex, string newName, int clientId) {
+        public void RequestChangePlayerName(InteractableBase interactable, int componentIndex, string newName, int clientId) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;
@@ -2024,12 +2024,12 @@ namespace AnyRPG {
             levelManagerServer.SetSceneClientCount(name, handle, clientCount);
         }
 
-        public void AdvertiseOpenInteractionWindow(UnitController sourceUnitController, Interactable targetInteractable) {
+        public void AdvertiseOpenInteractionWindow(UnitController sourceUnitController, InteractableBase targetInteractable) {
             int accountId = playerManagerServer.GetAccountIdFromUnitController(sourceUnitController);
             networkController.AdvertiseOpenInteractionWindow(accountId, targetInteractable);
         }
 
-        public void RequestInteractWithInteractable(int clientId, Interactable interactable) {
+        public void RequestInteractWithInteractable(int clientId, InteractableBase interactable) {
             int accountId = authenticationService.GetAccountId(clientId);
             if (accountId == -1) {
                 return;

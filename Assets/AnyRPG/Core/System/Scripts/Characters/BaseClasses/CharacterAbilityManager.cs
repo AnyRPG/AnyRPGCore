@@ -499,23 +499,23 @@ namespace AnyRPG {
         }
 
         /*
-        public override bool IsTargetInAbilityRange(BaseAbility baseAbility, Interactable target, AbilityEffectContext abilityEffectContext = null) {
+        public override bool IsTargetInAbilityRange(BaseAbility baseAbility, InteractableBase target, AbilityEffectContext abilityEffectContext = null) {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
             bool returnResult = IsTargetInRange(target, baseAbility.UseMeleeRange, baseAbility.MaxRange, baseAbility, abilityEffectContext);
             return returnResult;
         }
 
-        public override bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, Interactable target, AbilityEffectContext abilityEffectContext = null) {
+        public override bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, InteractableBase target, AbilityEffectContext abilityEffectContext = null) {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
             return IsTargetInRange(target, abilityEffect.UseMeleeRange, abilityEffect.MaxRange, abilityEffect, abilityEffectContext);
         }
         */
 
-        public override bool IsTargetInMeleeRange(Interactable target) {
+        public override bool IsTargetInMeleeRange(InteractableBase target) {
             return unitController.IsTargetInHitBox(target);
         }
 
-        public override bool PerformLOSCheck(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
+        public override bool PerformLOSCheck(InteractableBase target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.PerformLOSCheck({(target == null ? "null" : target.DisplayName)}, {targetable.DisplayName})");
 
             if (targetable.GetTargetOptions(unitController).RequireLineOfSight == false) {
@@ -563,7 +563,7 @@ namespace AnyRPG {
             return base.PerformLOSCheck(target, targetable, abilityEffectContext);
         }
 
-        public override bool IsTargetInRange(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
+        public override bool IsTargetInRange(InteractableBase target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log(baseCharacter.gameObject.name + ".IsTargetInRange(" + (target == null ? "null" : target.DisplayName) + ")");
             TargetProps targetProps = targetable.GetTargetOptions(unitController);
             if (targetProps.UseMeleeRange) {
@@ -586,7 +586,7 @@ namespace AnyRPG {
             return base.IsTargetInRange(target, targetable, abilityEffectContext);
         }
 
-        public bool IsTargetInMaxRange(Interactable target, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext) {
+        public bool IsTargetInMaxRange(InteractableBase target, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext) {
             if (target == null || UnitGameObject == null) {
                 return false;
             }
@@ -691,7 +691,7 @@ namespace AnyRPG {
         /// Return true if the ability hit, false if it missed
         /// </summary>
         /// <returns></returns>
-        public override bool DidAbilityHit(Interactable target, AbilityEffectContext abilityEffectContext) {
+        public override bool DidAbilityHit(InteractableBase target, AbilityEffectContext abilityEffectContext) {
             // reflected attacks cannot miss
             if (abilityEffectContext.ReflectDamage == false && unitController.CharacterCombat.DidAttackMiss() == true) {
                 //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityHit(" + source.name + ", " + target.name + "): attack missed");
@@ -712,7 +712,7 @@ namespace AnyRPG {
             return base.PerformAbilityActionCheck(baseAbility);
         }
 
-        public override bool ProcessAnimatedAbilityHit(Interactable target, bool deactivateAutoAttack) {
+        public override bool ProcessAnimatedAbilityHit(InteractableBase target, bool deactivateAutoAttack) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.ProcessAnimatedAbilityHit(" + (target == null ? "null" : target.gameObject.name) + ", " + deactivateAutoAttack + ")");
             // we can now continue because everything beyond this point is single target oriented and it's ok if we cancel attacking due to lack of alive/unfriendly target
             // check for friendly target in case it somehow turned friendly mid swing
@@ -1152,7 +1152,7 @@ namespace AnyRPG {
             return HasAbility(baseAbility.DisplayName);
         }
 
-        public void ActivateTargettingMode(AbilityProperties baseAbility, Interactable target) {
+        public void ActivateTargettingMode(AbilityProperties baseAbility, InteractableBase target) {
             //Debug.Log("CharacterAbilityManager.ActivateTargettingMode()");
             targetingModeActive = true;
             groundTargetAbility = baseAbility;
@@ -1299,7 +1299,7 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public IEnumerator PerformAbilityCast(AbilityProperties ability, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public IEnumerator PerformAbilityCast(AbilityProperties ability, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             float startTime = Time.time;
             //Debug.Log($"{unitController.gameObject.name}.CharacterAbilitymanager.PerformAbilityCast({ability.ResourceName}, {(target == null ? "null" : target.name)}) Enter Ienumerator with start time: {startTime}");
 
@@ -1438,7 +1438,7 @@ namespace AnyRPG {
             return BeginAbility(ability, unitController.Target, playerInitiated);
         }
 
-        public bool BeginAbility(AbilityProperties ability, Interactable target, bool playerInitiated = false) {
+        public bool BeginAbility(AbilityProperties ability, InteractableBase target, bool playerInitiated = false) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.BeginAbility({ability.ResourceName})");
 
             unitController.UnitEventController.NotifyOnBeginAbility(ability, target, playerInitiated);
@@ -1471,7 +1471,7 @@ namespace AnyRPG {
             return unitController.CharacterStats.GetOutGoingDamageModifiers();
         }
 
-        public override void ProcessWeaponHitEffects(AttackEffectProperties attackEffect, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public override void ProcessWeaponHitEffects(AttackEffectProperties attackEffect, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.ProcessWeaponHitEffects(" + (abilityEffectContext == null ? "null" : "valid") + ")");
             base.ProcessWeaponHitEffects(attackEffect, target, abilityEffectContext);
 
@@ -1538,7 +1538,7 @@ namespace AnyRPG {
             return base.GetCritChance();
         }
 
-        protected bool BeginAbilityInternal(AbilityProperties ability, Interactable target, AbilityEffectContext abilityEffectContext, bool playerInitiated = false) {
+        protected bool BeginAbilityInternal(AbilityProperties ability, InteractableBase target, AbilityEffectContext abilityEffectContext, bool playerInitiated = false) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.BeginAbilityInternal({ability.ResourceName}, {(target == null ? "null" : target.gameObject.name)}, {playerInitiated})");
 
             if (ability == null) {
@@ -1587,7 +1587,7 @@ namespace AnyRPG {
             }
 
             // get final target before beginning casting
-            Interactable finalTarget = ability.ReturnTarget(unitController, target, true, abilityEffectContext, playerInitiated);
+            InteractableBase finalTarget = ability.ReturnTarget(unitController, target, true, abilityEffectContext, playerInitiated);
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon({ability.DisplayName}) finalTarget: " + (finalTarget == null ? "null" : finalTarget.DisplayName));
 
             unitController.UnitEventController.NotifyOnAttemptPerformAbility(ability);
@@ -1802,7 +1802,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="ability"></param>
         /// <param name="target"></param>
-        public void PerformAbility(AbilityProperties ability, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public void PerformAbility(AbilityProperties ability, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.PerformAbility({ability.ResourceName})");
 
             if (abilityEffectContext == null) {
@@ -1810,7 +1810,7 @@ namespace AnyRPG {
             }
             abilityEffectContext.BaseAbility = ability;
             abilityEffectContext.OriginalTarget = target;
-            Interactable finalTarget = target;
+            InteractableBase finalTarget = target;
 
             if (!PerformPowerResourceCheck(ability)) {
                 return;
@@ -2054,7 +2054,7 @@ namespace AnyRPG {
             BeginAbilityCoolDown(baseAbility, Mathf.Max(animationLength, abilityCoolDown));
         }
 
-        public override Dictionary<PrefabProfile, List<GameObject>> SpawnAbilityEffectPrefabs(Interactable target, Interactable originalTarget, FixedLengthEffectProperties fixedLengthEffectProperties, AbilityEffectContext abilityEffectContext) {
+        public override Dictionary<PrefabProfile, List<GameObject>> SpawnAbilityEffectPrefabs(InteractableBase target, InteractableBase originalTarget, FixedLengthEffectProperties fixedLengthEffectProperties, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.SpawnAbilityEffectPrefabs({target?.name}, {originalTarget?.name}, {fixedLengthEffectProperties.ResourceName})");
 
             Dictionary<PrefabProfile, List<GameObject>> returnValue = base.SpawnAbilityEffectPrefabs(target, originalTarget, fixedLengthEffectProperties, abilityEffectContext);
@@ -2063,13 +2063,13 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override Dictionary<PrefabProfile, List<GameObject>> SpawnStatusEffectPrefabs(Interactable target, StatusEffectProperties statusEffectProperties, AbilityEffectContext abilityEffectContext) {
+        public override Dictionary<PrefabProfile, List<GameObject>> SpawnStatusEffectPrefabs(InteractableBase target, StatusEffectProperties statusEffectProperties, AbilityEffectContext abilityEffectContext) {
             //Dictionary<PrefabProfile, List<GameObject>> returnList = new Dictionary<PrefabProfile, List<GameObject>>();
             //unitController.UnitEventController.NotifyOnSpawnAbilityEffectPrefabs(target, originalTarget, statusEffectProperties, abilityEffectContext);
             return base.SpawnStatusEffectPrefabs(target, statusEffectProperties, abilityEffectContext);
         }
 
-        public override Dictionary<PrefabProfile, List<GameObject>> SpawnProjectileEffectPrefabs(Interactable target, Interactable originalTarget, ProjectileEffectProperties projectileEffectProperties, AbilityEffectContext abilityEffectContext) {
+        public override Dictionary<PrefabProfile, List<GameObject>> SpawnProjectileEffectPrefabs(InteractableBase target, InteractableBase originalTarget, ProjectileEffectProperties projectileEffectProperties, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.SpawnProjectileEffectPrefabs({target?.name}, {originalTarget?.name}, {projectileEffectProperties.ResourceName})");
             
             Dictionary<PrefabProfile, List<GameObject>> returnValue = base.SpawnProjectileEffectPrefabs(target, originalTarget, projectileEffectProperties, abilityEffectContext);
@@ -2078,7 +2078,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override Dictionary<PrefabProfile, List<GameObject>> SpawnChanneledEffectPrefabs(Interactable target, Interactable originalTarget, ChanneledEffectProperties channeledEffectProperties, AbilityEffectContext abilityEffectContext) {
+        public override Dictionary<PrefabProfile, List<GameObject>> SpawnChanneledEffectPrefabs(InteractableBase target, InteractableBase originalTarget, ChanneledEffectProperties channeledEffectProperties, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.SpawnProjectileEffectPrefabs({target?.name}, {originalTarget?.name}, {channeledEffectProperties.ResourceName})");
 
             Dictionary<PrefabProfile, List<GameObject>> returnValue = base.SpawnChanneledEffectPrefabs(target, originalTarget, channeledEffectProperties, abilityEffectContext);

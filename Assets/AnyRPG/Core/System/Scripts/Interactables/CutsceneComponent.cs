@@ -9,7 +9,7 @@ namespace AnyRPG {
 
         public CutsceneProps Props { get => interactableOptionProps as CutsceneProps; }
 
-        public CutsceneComponent(Interactable interactable, CutsceneProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public CutsceneComponent(InteractableBase interactable, CutsceneProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override void SetGameManagerReferences() {

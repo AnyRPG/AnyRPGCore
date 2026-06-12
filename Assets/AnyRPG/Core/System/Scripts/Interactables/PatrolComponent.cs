@@ -9,7 +9,7 @@ namespace AnyRPG {
 
         //private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
 
-        public PatrolComponent(Interactable interactable, PatrolProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public PatrolComponent(InteractableBase interactable, PatrolProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if ((interactable as UnitController) is UnitController) {
                 unitController = (interactable as UnitController);
             }
@@ -17,7 +17,7 @@ namespace AnyRPG {
         }
 
         /*
-        public static PatrolComponent GetPatrolComponent(Interactable searchInteractable) {
+        public static PatrolComponent GetPatrolComponent(InteractableBase searchInteractable) {
             return searchInteractable.GetFirstInteractableOption(typeof(PatrolComponent)) as PatrolComponent;
         }
         */

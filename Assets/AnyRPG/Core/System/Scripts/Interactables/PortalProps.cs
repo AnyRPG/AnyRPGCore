@@ -36,7 +36,7 @@ namespace AnyRPG {
         public Vector3 SpawnForwardDirection { get => spawnForwardDirection; set => spawnForwardDirection = value; }
 
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             return null;
         }
     }

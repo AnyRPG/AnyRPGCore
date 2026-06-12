@@ -23,7 +23,7 @@ namespace AnyRPG {
 
         public List<Dialog> DialogList { get => dialogList; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+        public override InteractableOptionComponent GetInteractableOption(InteractableBase interactable, InteractableOption interactableOption = null) {
             dialogComponent = new DialogComponent(interactable, this, systemGameManager);
             foreach (Dialog dialog in dialogList) {
                 dialog.RegisterPrerequisiteOwner(dialogComponent);

@@ -7,6 +7,7 @@ namespace AnyRPG {
 
     [Serializable]
     public class InteractableSaveData {
+        public bool Locked = false;
         public List<LootableNodeSaveData> LootableNodeSaveData = new List<LootableNodeSaveData>();
         public List<LootableCharacterSaveData> LootableCharacterSaveData = new List<LootableCharacterSaveData>();
         public ItemInstanceListSaveData ItemInstanceListSaveData = new ItemInstanceListSaveData();

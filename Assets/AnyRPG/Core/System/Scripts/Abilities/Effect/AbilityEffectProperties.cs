@@ -105,13 +105,13 @@ namespace AnyRPG {
             return string.Format("{0}", describableData.GetDescription());
         }
 
-        public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
+        public virtual bool CanUseOn(InteractableBase target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             //Debug.Log(DisplayName + ".AbilityEffect.CanUseOn(" + (target == null ? "null " : target.gameObject.name) + ", " + sourceCharacter.AbilityManager.Name + ")");
 
             return targetOptions.CanUseOn(this, target, sourceCharacter, abilityEffectContext, playerInitiated, performRangeCheck);
         }
 
-        public virtual Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
+        public virtual Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, InteractableBase target, InteractableBase originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{ResourceName}.AbilityEffectProperties.Cast({source.AbilityManager.Name}, {(target? target.name : "null")})");
             /*
             if (abilityEffectInput != null) {
@@ -122,7 +122,7 @@ namespace AnyRPG {
         }
 
 
-        public virtual Interactable ReturnTarget(IAbilityCaster sourceCharacter, Interactable target, AbilityEffectContext abilityEffectContext = null) {
+        public virtual InteractableBase ReturnTarget(IAbilityCaster sourceCharacter, InteractableBase target, AbilityEffectContext abilityEffectContext = null) {
             if (sourceCharacter?.AbilityManager?.UnitGameObject == null) {
                 /*
                 /Debug.LogWarning(DisplayName + ".AbilityEffect.ReturnTarget(): source is null! This should never happen!!!!! (unless the thing that put the dot on you despawns)");
@@ -137,7 +137,7 @@ namespace AnyRPG {
             if (CanUseOn(target, sourceCharacter, abilityEffectContext) == false) {
                 //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + " was false");
                 if (GetTargetOptions(sourceCharacter).CanCastOnSelf && GetTargetOptions(sourceCharacter).AutoSelfCast) {
-                    target = sourceCharacter.AbilityManager.UnitGameObject.GetComponent<Interactable>();
+                    target = sourceCharacter.AbilityManager.UnitGameObject.GetComponent<InteractableBase>();
                     //Debug.Log(DisplayName + ".BaseAbility.ReturnTarget(): returning target as sourcecharacter: " + target.name);
                     if (CanUseOn(target, sourceCharacter, abilityEffectContext) == true) {
                         return target;
@@ -158,7 +158,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public Dictionary<PrefabProfile, List<GameObject>> PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffectProperties> abilityEffectList) {
+        public Dictionary<PrefabProfile, List<GameObject>> PerformAbilityEffects(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext, List<AbilityEffectProperties> abilityEffectList) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects(" + source.AbilityManager.Name + ", " + (target ? target.name : "null") + ")");
             Dictionary<PrefabProfile, List<GameObject>> returnList = new Dictionary<PrefabProfile, List<GameObject>>();
 
@@ -202,13 +202,13 @@ namespace AnyRPG {
         /// <param name="abilityEffectContext"></param>
         /// <param name="abilityEffect"></param>
         /// <returns></returns>
-        protected Dictionary<PrefabProfile, List<GameObject>> PerformAbilityEffect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, AbilityEffectProperties abilityEffect) {
+        protected Dictionary<PrefabProfile, List<GameObject>> PerformAbilityEffect(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext, AbilityEffectProperties abilityEffect) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffect(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ", " + abilityEffect.DisplayName + ")");
             Dictionary<PrefabProfile, List<GameObject>> returnObjects = null;
             // give the ability a chance to auto-selfcast if the original target was null
 
             // perform ability dependent target check
-            Interactable finalTarget = abilityEffect.ReturnTarget(source, target, abilityEffectContext);
+            InteractableBase finalTarget = abilityEffect.ReturnTarget(source, target, abilityEffectContext);
 
             // no longer used with targetProps
             // perform source dependent target check
@@ -228,12 +228,12 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public virtual Dictionary<PrefabProfile, List<GameObject>> PerformAbilityHitEffects(IAbilityCaster source, Interactable target, AbilityEffectContext effectOutput) {
+        public virtual Dictionary<PrefabProfile, List<GameObject>> PerformAbilityHitEffects(IAbilityCaster source, InteractableBase target, AbilityEffectContext effectOutput) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHitEffects(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ")");
             return PerformAbilityEffects(source, target, effectOutput, hitAbilityEffectList);
         }
 
-        public virtual void PlayAudioEffects(List<AudioProfile> audioProfiles, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public virtual void PlayAudioEffects(List<AudioProfile> audioProfiles, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.PlayAudioEffects(" + (target == null ? "null" : target.name) + ")");
             if (audioProfiles == null) {
                 return;
@@ -258,7 +258,7 @@ namespace AnyRPG {
             }
         }
 
-        private void PlayEffectsOnTarget(Interactable target, List<AudioClip> audioClips) {
+        private void PlayEffectsOnTarget(InteractableBase target, List<AudioClip> audioClips) {
             foreach (AudioClip audioClip in audioClips) {
                 target.InteractableEventController.NotifyOnPlayEffectSound(audioClip, false);
             }
@@ -287,7 +287,7 @@ namespace AnyRPG {
             return returnList;
         }
 
-        public virtual void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public virtual void PerformAbilityHit(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHit(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ")");
             if (target == null || target != null && target.gameObject.activeSelf == true) {
                 PerformAbilityHitEffects(source, target, abilityEffectContext);

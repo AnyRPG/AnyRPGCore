@@ -110,35 +110,35 @@ namespace AnyRPG {
         }
 
 
-        public virtual void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public virtual void CastTick(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.CastTick(" +source.AbilityManager.Name + ", " + (target ? target.name : "null") + ")");
             // play tick audio effects
             PlayAudioEffects(onTickAudioProfiles, target, abilityEffectContext);
         }
 
-        public virtual void CastComplete(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public virtual void CastComplete(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.CastComplete(" +source.AbilityManager.name + ", " + (target ? target.name : "null") + ")");
         }
 
-        public virtual void BeginMonitoring(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public virtual void BeginMonitoring(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".LengthEffect.BeginMonitoring(" +source.AbilityManager.name + ", " + (target == null ? "null" : target.name) + ")");
             // overwrite me
         }
 
-        public virtual void PerformAbilityTickEffects(IAbilityCaster source, Interactable target, AbilityEffectContext effectOutput) {
+        public virtual void PerformAbilityTickEffects(IAbilityCaster source, InteractableBase target, AbilityEffectContext effectOutput) {
             PerformAbilityEffects(source, target, effectOutput, tickAbilityEffectList);
         }
 
-        public virtual void PerformAbilityCompleteEffects(IAbilityCaster source, Interactable target, AbilityEffectContext effectOutput) {
+        public virtual void PerformAbilityCompleteEffects(IAbilityCaster source, InteractableBase target, AbilityEffectContext effectOutput) {
             PerformAbilityEffects(source, target, effectOutput, completeAbilityEffectList);
         }
 
-        public virtual void PerformAbilityTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public virtual void PerformAbilityTick(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityTick(" +source.AbilityManager.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityTickEffects(source, target, abilityEffectInput);
         }
 
-        public virtual void PerformAbilityComplete(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public virtual void PerformAbilityComplete(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityComplete(" +source.AbilityManager.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityCompleteEffects(source, target, abilityEffectInput);
         }

@@ -16,7 +16,7 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public override void PerformAbilityHit(IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(resourceName + ".ResurrectEffect.PerformAbilityEffect(" + source.name + ", " + (target == null ? "null" : target.name) + ") effect: " + resourceName);
             // is there a reason why there is no copy here ?
             /*
@@ -27,7 +27,7 @@ namespace AnyRPG {
             base.PerformAbilityHit(source, target, abilityEffectContext);
         }
 
-        private void ResurrectTarget(Interactable target) {
+        private void ResurrectTarget(InteractableBase target) {
             if (target == null) {
                 // our target despawned in the middle of the cast
                 return;
@@ -40,7 +40,7 @@ namespace AnyRPG {
             characterUnit.UnitController.CharacterStats.Revive();
         }
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
+        public override bool CanUseOn(InteractableBase target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             if (target == null) {
                 return false;
             }

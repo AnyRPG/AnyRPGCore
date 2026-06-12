@@ -9,10 +9,10 @@ namespace AnyRPG {
         public Scene Scene;
         public SceneNode SceneNode = null;
         public bool HasNavMesh = false;
-        public List<Interactable> Interactables = new List<Interactable>();
+        public List<InteractableBase> Interactables = new List<InteractableBase>();
         public List<UnitController> UnitControllers = new List<UnitController>();
         public List<IPersistentObjectOwner> PersistentObjectOwners = new List<IPersistentObjectOwner>();
-        public List<Interactable> DroppedItems = new List<Interactable>();
+        public List<InteractableBase> DroppedItems = new List<InteractableBase>();
 
         // the time that this scene became empty of players
         // used for tracking instance unloading timeouts
@@ -28,13 +28,13 @@ namespace AnyRPG {
             HasNavMesh = hasNavMesh;
         }
 
-        public void RegisterInteractable(Interactable interactable) {
+        public void RegisterInteractable(InteractableBase interactable) {
             if (!Interactables.Contains(interactable)) {
                 Interactables.Add(interactable);
             }
         }
 
-        public void UnregisterInteractable(Interactable interactable) {
+        public void UnregisterInteractable(InteractableBase interactable) {
             if (Interactables.Contains(interactable)) {
                 Interactables.Remove(interactable);
             }
@@ -64,13 +64,13 @@ namespace AnyRPG {
             }
         }
 
-        public void RegisterDroppedItem(Interactable interactable) {
+        public void RegisterDroppedItem(InteractableBase interactable) {
             if (!DroppedItems.Contains(interactable)) {
                 DroppedItems.Add(interactable);
             }
         }
 
-        public void UnregisterDroppedItem(Interactable interactable) {
+        public void UnregisterDroppedItem(InteractableBase interactable) {
             if (DroppedItems.Contains(interactable)) {
                 DroppedItems.Remove(interactable);
             }

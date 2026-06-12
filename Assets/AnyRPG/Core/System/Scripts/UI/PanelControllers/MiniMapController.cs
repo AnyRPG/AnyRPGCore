@@ -94,7 +94,7 @@ namespace AnyRPG {
         protected TimeOfDayManagerServer timeOfDayManagerServer = null;
 
         // map indicators
-        protected Dictionary<Interactable, MiniMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MiniMapIndicatorController>();
+        protected Dictionary<InteractableBase, MiniMapIndicatorController> mapIndicatorControllers = new Dictionary<InteractableBase, MiniMapIndicatorController>();
 
         public GameObject MapGraphic { get => mapGraphic; set => mapGraphic = value; }
 
@@ -150,17 +150,17 @@ namespace AnyRPG {
             UpdateMiniMap();
         }
 
-        public void HandleIndicatorRotation(Interactable interactable) {
+        public void HandleIndicatorRotation(InteractableBase interactable) {
             mapIndicatorControllers[interactable].transform.rotation = Quaternion.Euler(0, 0, interactable.transform.eulerAngles.y * -1f);
         }
 
-        public void HandleInteractableStatusUpdate(Interactable interactable, InteractableOptionComponent interactableOptionComponent) {
+        public void HandleInteractableStatusUpdate(InteractableBase interactable, InteractableOptionComponent interactableOptionComponent) {
             if (mapIndicatorControllers.ContainsKey(interactable)) {
                 mapIndicatorControllers[interactable].HandleMiniMapStatusUpdate(interactableOptionComponent);
             }
         }
 
-        public void HandleAddIndicator(Interactable interactable) {
+        public void HandleAddIndicator(InteractableBase interactable) {
             //Debug.Log($"MiniMapController.HandleAddIndicator({interactable.gameObject.name} ({interactable.gameObject.GetInstanceID()}))");
 
             if (mapIndicatorControllers.ContainsKey(interactable) == false) {
@@ -181,7 +181,7 @@ namespace AnyRPG {
             //return mapIndicatorControllers[interactable];
         }
 
-        public void HandleRemoveIndicator(Interactable interactable) {
+        public void HandleRemoveIndicator(InteractableBase interactable) {
             //Debug.Log($"MiniMapController.HandleRemoveIndicator({interactable.gameObject.name} ({interactable.gameObject.GetInstanceID()}))");
 
             if (mapIndicatorControllers.ContainsKey(interactable)) {
@@ -238,7 +238,7 @@ namespace AnyRPG {
         }
 
         private void UpdateIndicatorPositions() {
-            foreach (Interactable interactable in mapIndicatorControllers.Keys) {
+            foreach (InteractableBase interactable in mapIndicatorControllers.Keys) {
                 if (mapIndicatorControllers[interactable].gameObject.activeSelf == true) {
                     mapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - levelOffset.x) * levelScaleFactor, (interactable.transform.position.z - levelOffset.z) * levelScaleFactor, 0);
                     mapIndicatorControllers[interactable].transform.localScale = new Vector3(1f / mapGraphic.transform.localScale.x, 1f / mapGraphic.transform.localScale.y, 1f / mapGraphic.transform.localScale.z);

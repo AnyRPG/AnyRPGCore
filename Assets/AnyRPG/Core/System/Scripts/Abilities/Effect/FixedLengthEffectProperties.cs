@@ -91,7 +91,7 @@ namespace AnyRPG {
 
         }
 
-        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, InteractableBase target, InteractableBase originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".LengthEffect.Cast(" + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.gameObject.name) + ", " + (originalTarget == null ? "null" : originalTarget.name) + ")");
 
             //Dictionary<PrefabProfile, List<GameObject>> prefabObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
@@ -108,7 +108,7 @@ namespace AnyRPG {
         }
 
 
-        public override void BeginMonitoring(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public override void BeginMonitoring(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log($"{ResourceName}.FixedLengthEffect.BeginMonitoring({(abilityEffectObjects == null ? "null" : abilityEffectObjects.Count.ToString())}, {(target == null ? "null" : target.name)})");
             
             base.BeginMonitoring(abilityEffectObjects, source, target, abilityEffectInput);
@@ -117,7 +117,7 @@ namespace AnyRPG {
             CheckDestroyObjects(abilityEffectObjects, source, target, abilityEffectInput);
         }
 
-        protected virtual void CheckDestroyObjects(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        protected virtual void CheckDestroyObjects(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, InteractableBase target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".FixedLengthEffect.CheckDestroyObjects(" + (abilityEffectObjects == null ? "null" : abilityEffectObjects.Count.ToString()) + ", " + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ")");
             if (source != null) {
                 systemAbilityController.BeginDestroyAbilityEffectObject(abilityEffectObjects, source, target, defaultPrefabLifetime, abilityEffectInput, this);

@@ -9,14 +9,14 @@ namespace AnyRPG {
 
         //private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
 
-        public BehaviorComponent(Interactable interactable, BehaviorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public BehaviorComponent(InteractableBase interactable, BehaviorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if ((interactable as UnitController) is UnitController) {
                 unitController = (interactable as UnitController);
             }
             InitBehaviors();
         }
 
-        public static BehaviorComponent GetBehaviorComponent(Interactable searchInteractable) {
+        public static BehaviorComponent GetBehaviorComponent(InteractableBase searchInteractable) {
             return searchInteractable.GetFirstInteractableOption(typeof(BehaviorComponent)) as BehaviorComponent;
         }
 

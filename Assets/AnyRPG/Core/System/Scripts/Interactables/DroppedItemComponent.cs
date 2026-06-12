@@ -34,7 +34,7 @@ namespace AnyRPG {
         public BoxCollider BoxCollider { get => boxCollider; set => boxCollider = value; }
         public Rigidbody Rigidbody { get => rigidbody; set => rigidbody = value; }
 
-        public DroppedItemComponent(Interactable interactable, DroppedItemProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public DroppedItemComponent(InteractableBase interactable, DroppedItemProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override void Configure(SystemGameManager systemGameManager) {

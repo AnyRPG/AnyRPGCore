@@ -6,7 +6,7 @@ namespace AnyRPG {
 
         public FactionChangeProps Props { get => interactableOptionProps as FactionChangeProps; }
 
-        public FactionChangeComponent(Interactable interactable, FactionChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public FactionChangeComponent(InteractableBase interactable, FactionChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactionPanelTitle == string.Empty) {
                 interactionPanelTitle = Props.Faction.DisplayName + " Faction";
             }
