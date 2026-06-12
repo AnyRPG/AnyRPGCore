@@ -160,6 +160,8 @@ namespace AnyRPG {
         }
 
         public void NotifyOnUnlock() {
+            //Debug.Log($"{interactable.gameObject.name}.InteractableEventController.NotifyOnUnlock()");
+
             OnUnlock();
         }
 

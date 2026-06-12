@@ -60,6 +60,8 @@ namespace AnyRPG {
         }
 
         public override void Unlock() {
+            //Debug.Log($"{gameObject.name}.Interactable.Unlock()");
+
             base.Unlock();
             locked = false;
             interactableEventController.NotifyOnUnlock();
