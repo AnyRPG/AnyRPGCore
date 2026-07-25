@@ -1,12 +1,5 @@
-﻿using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 
 namespace AnyRPG {
     public class NewGameWizard : NewGameWizardBase {
@@ -15,9 +8,9 @@ namespace AnyRPG {
 
         public override string PathToPlayerUnitsTemplate { get => pathToPlayerUnitsTemplate; }
 
-        [MenuItem("Tools/AnyRPG/Wizard/New Game Wizard")]
+        [MenuItem("Tools/AnyRPG/Wizard/New Game/New Offline Game Wizard")]
         public static void CreateWizard() {
-            ScriptableWizard.DisplayWizard<NewGameWizard>("New Game Wizard", "Create");
+            ScriptableWizard.DisplayWizard<NewGameWizard>("New Offline Game Wizard", "Create");
         }
 
         protected override void ConfigureGameOptions(SystemConfigurationManager systemConfigurationManager) {

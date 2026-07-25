@@ -7,9 +7,9 @@ namespace AnyRPG {
 
         public static string PortalTemplatePath => portalTemplatePath;
 
-        [MenuItem("Tools/AnyRPG/Wizard/New Scene Wizard")]
+        [MenuItem("Tools/AnyRPG/Wizard/New Scene/New Offline Scene Wizard")]
         public static void CreateWizard() {
-            ScriptableWizard.DisplayWizard<NewSceneWizard>("New Scene Wizard", "Create");
+            ScriptableWizard.DisplayWizard<NewSceneWizard>("New Offline Scene Wizard", "Create");
         }
 
         public static bool CheckRequiredTemplatesExistStatic() {
