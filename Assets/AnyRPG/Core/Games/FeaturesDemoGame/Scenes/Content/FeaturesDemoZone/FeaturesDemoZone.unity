@@ -3031,6 +3031,7 @@ MonoBehaviour:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
+    hideOnMiniMap: 0
     prerequisiteConditions: []
     switchOnly: 0
     animationComponent: {fileID: 1749591205}
@@ -11395,6 +11396,7 @@ MonoBehaviour:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
+    hideOnMiniMap: 0
     prerequisiteConditions: []
     switchOnly: 0
     animationComponent: {fileID: 310681193}
@@ -14511,6 +14513,7 @@ MonoBehaviour:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
+    hideOnMiniMap: 0
     prerequisiteConditions: []
     cutsceneName: Dungeon Door
 --- !u!114 &393183660
@@ -14775,6 +14778,7 @@ MonoBehaviour:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
+    hideOnMiniMap: 0
     prerequisiteConditions: []
     controlObjects:
     - {fileID: 398220992}
@@ -14797,6 +14801,7 @@ MonoBehaviour:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
+    hideOnMiniMap: 0
     prerequisiteConditions: []
     switchOnly: 1
     moveableObject: {fileID: 1097422333}
@@ -15937,6 +15942,384 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 424284956}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &426790279
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6158406081187769183, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: m_Name
+      value: HiddenChest
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342410702121170959, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -71.40005
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342410702121170959, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.010192871
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342410702121170959, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -28.839813
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342410702121170959, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.00000010430813
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342410702121170959, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342410702121170959, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342410702121170959, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342410702121170959, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342410702121170959, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342410702121170959, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.hideOnMiniMap
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.defaultItemNames.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: 'storageContainerProps.defaultItemNames.Array.data[0]'
+      value: Health Potion
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: 'storageContainerProps.defaultItemNames.Array.data[1]'
+      value: Mana Potion
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].dropLimit
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].groupChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].guaranteedDrop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[0].itemName
+      value: Epic Medieval Wand Recipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[0].maxDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[0].minDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[1].itemName
+      value: Epic Medieval Two Hand Axe Recipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[1].maxDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[1].minDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[2].itemName
+      value: Epic Medieval Staff Recipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[2].maxDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[2].minDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[3].itemName
+      value: Epic Medieval Shield Recipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[3].maxDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[3].minDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[4].itemName
+      value: Epic Medieval One Hand Sword Recipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[4].maxDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[4].minDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[5].itemName
+      value: Epic Medieval One Hand Mace Recipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[5].maxDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[5].minDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[6].itemName
+      value: Epic Medieval One Hand Axe Recipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[6].maxDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[6].minDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[7].itemName
+      value: Epic Medieval Grimoire Recipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[7].maxDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[7].minDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[8].itemName
+      value: Epic Medieval Dagger Recipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[8].maxDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[8].minDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[9].itemName
+      value: Epic Medieval Crossbow Recipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[9].maxDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[9].minDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[10].itemName
+      value: Epic Medieval Two Hand Mace Recipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[10].maxDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[10].minDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[11].itemName
+      value: Epic Medieval Two Hand Sword Recipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[11].maxDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[11].minDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[12].itemName
+      value: Epic Medieval Bow Recipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[12].maxDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[12].minDrops
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[0].dropChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[1].dropChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[2].dropChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[3].dropChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[4].dropChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[5].dropChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[6].dropChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[7].dropChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[8].dropChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[9].dropChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[10].dropChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[11].dropChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.containerLootTable.lootGroups.Array.data[0].loot.Array.data[12].dropChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 9064853430609823486, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: m_UUID
+      value: d1f6b22d-4c0e-4d01-8678-900aa44d8a6d
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: aca1865effdc6cc4a8508f32084608d5, type: 3}
 --- !u!1001 &428448479
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22616,6 +22999,7 @@ MonoBehaviour:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
+    hideOnMiniMap: 0
     prerequisiteConditions: []
     locationTag: 
     overrideSpawnLocation: 0
@@ -26998,6 +27382,7 @@ MonoBehaviour:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
+    hideOnMiniMap: 0
     prerequisiteConditions: []
     switchOnly: 0
     animationComponent: {fileID: 525308001}
@@ -33152,6 +33537,7 @@ MonoBehaviour:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
+    hideOnMiniMap: 0
     prerequisiteConditions: []
     controlObjects:
     - {fileID: 371638878}
@@ -49190,6 +49576,7 @@ MonoBehaviour:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
+    hideOnMiniMap: 0
     prerequisiteConditions: []
     controlObjects:
     - {fileID: 902514103}
@@ -63375,6 +63762,7 @@ MonoBehaviour:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
+    hideOnMiniMap: 0
     prerequisiteConditions: []
     controlObjects:
     - {fileID: 902514103}
@@ -64398,6 +64786,7 @@ MonoBehaviour:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
+    hideOnMiniMap: 0
     prerequisiteConditions: []
     switchOnly: 0
     animationComponent: {fileID: 1943369240}
@@ -79832,6 +80221,7 @@ MonoBehaviour:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
+    hideOnMiniMap: 0
     prerequisiteConditions: []
     controlObjects:
     - {fileID: 3066990784318149783}
@@ -79867,6 +80257,7 @@ MonoBehaviour:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
+    hideOnMiniMap: 0
     prerequisiteConditions: []
     switchOnly: 1
     moveableObject: {fileID: 330369538}
@@ -81723,6 +82114,7 @@ SceneRoots:
   - {fileID: 735941465}
   - {fileID: 1519953588}
   - {fileID: 891684802}
+  - {fileID: 426790279}
   - {fileID: 1867008494}
   - {fileID: 1796141190}
   - {fileID: 1549510949}

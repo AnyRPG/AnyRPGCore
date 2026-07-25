@@ -244,7 +244,7 @@ namespace AnyRPG {
         }
 
         public virtual bool HasMiniMapIcon() {
-            return (interactableOptionProps.NameplateImage != null);
+            return (interactableOptionProps.NameplateImage != null && interactableOptionProps.HideOnMiniMap == false);
         }
 
         public virtual bool HasMainMapIcon() {

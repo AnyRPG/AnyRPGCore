@@ -21,6 +21,12 @@ namespace AnyRPG {
         [SerializeField]
         protected Sprite namePlateImage;
 
+        [Header("MiniMap")]
+
+        [Tooltip("If true, this interactable option will not be displayed on the minimap.")]
+        [SerializeField]
+        protected bool hideOnMiniMap = false;
+
         [Header("Interaction")]
 
         [Tooltip("These game conditions must be satisfied to be able to interact with this option.")]
@@ -30,6 +36,7 @@ namespace AnyRPG {
         public virtual string InteractionPanelTitle { get => interactionPanelTitle; }
         public virtual Sprite Icon { get => interactionPanelImage; }
         public virtual Sprite NameplateImage { get => namePlateImage; }
+        public virtual bool HideOnMiniMap { get => hideOnMiniMap; }
 
         public List<PrerequisiteConditions> PrerequisiteConditions { get => prerequisiteConditions; set => prerequisiteConditions = value; }
 
