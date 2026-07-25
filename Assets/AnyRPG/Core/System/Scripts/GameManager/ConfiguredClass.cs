@@ -1,4 +1,6 @@
 namespace AnyRPG {
+    
+    [System.Serializable]
     public class ConfiguredClass {
 
         protected SystemGameManager systemGameManager = null;
