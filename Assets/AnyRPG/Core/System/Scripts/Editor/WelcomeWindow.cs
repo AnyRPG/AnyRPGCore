@@ -8,7 +8,7 @@ namespace AnyRPG {
     [InitializeOnLoad]
     public class WelcomeWindow : EditorWindow {
 
-        public const string installedVersion = "1.1";
+        public const string installedVersion = "1.1.1";
 
         private const string storyDemoGameScenePath = "AnyRPG/Addons/a-lost-soul-demo-games/Games/ALostSoulStoryDemo/Scenes/Game/ALostSoulStoryDemoGame/ALostSoulStoryDemoGame.unity";
         private const string characterDemoGameScenePath = "AnyRPG/Addons/a-lost-soul-demo-games/Games/ALostSoulCharacterDemo/Scenes/Game/ALostSoulCharacterDemoGame/ALostSoulCharacterDemoGame.unity";
