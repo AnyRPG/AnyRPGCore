@@ -24,13 +24,6 @@ namespace AnyRPG {
         // keep a reference to the actual equipment set
         private EquipmentSet equipmentSet = null;
 
-        [Header("Prefab Equipment Models")]
-
-        [Tooltip("Physical prefabs to attach to bones on the character unit")]
-        [FormerlySerializedAs("holdableObjectList")]
-        [SerializeField]
-        private List<HoldableObjectAttachment> deprecatedHoldableObjectList = new List<HoldableObjectAttachment>();
-
         [Header("Equipment Models")]
 
         [Tooltip("Inline equipment model definitions.")]
@@ -102,7 +95,6 @@ namespace AnyRPG {
         public virtual List<AbilityProperties> LearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
         public bool ManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
         public string EquipmentSlotTypeName { get => equipmentSlotType; set => equipmentSlotType = value; }
-        public List<HoldableObjectAttachment> DeprecatedHoldableObjectList { get => deprecatedHoldableObjectList; set => deprecatedHoldableObjectList = value; }
         public EquipmentSet EquipmentSet { get => equipmentSet; set => equipmentSet = value; }
         public List<ItemPrimaryStatNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public bool RandomSecondaryStats { get => randomSecondaryStats; set => randomSecondaryStats = value; }
