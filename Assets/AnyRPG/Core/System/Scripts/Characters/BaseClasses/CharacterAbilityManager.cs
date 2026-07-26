@@ -730,16 +730,29 @@ namespace AnyRPG {
 
         public override bool PerformWeaponAffinityCheck(AbilityProperties baseAbility, bool playerInitiated = false) {
             foreach (WeaponSkill _weaponAffinity in baseAbility.WeaponAffinityList) {
-                if (unitController != null && unitController.CharacterEquipmentManager != null && unitController.CharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
+                if (unitController?.CharacterEquipmentManager != null && unitController.CharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                     return true;
                 }
             }
 
             if (playerInitiated) {
-                unitController.UnitEventController.NotifyOnCombatMessage("Cannot cast " + baseAbility.DisplayName + ". Required weapon not equipped!");
+                unitController.UnitEventController.NotifyOnCombatMessage($"Cannot cast {baseAbility.DisplayName}. Required weapon not equipped!");
             }
             // intentionally not calling base because it's always true
             return false;
+        }
+
+        public override bool PerformItemCheck(AbilityProperties baseAbility, bool playerInitiated = false) {
+            foreach (Item item in baseAbility.RequireItems) {
+                if (unitController?.CharacterInventoryManager != null && unitController.CharacterInventoryManager.HasItem(item.ResourceName) == false) {
+                    return false;
+                }
+            }
+            if (playerInitiated) {
+                unitController.UnitEventController.NotifyOnCombatMessage($"Cannot cast {baseAbility.DisplayName}. Required item not found in inventory!");
+            }
+            // intentionally not calling base because it's always true
+            return base.PerformItemCheck(baseAbility, playerInitiated);
         }
 
         public override void CleanupCoroutines() {

@@ -23,6 +23,7 @@ MonoBehaviour:
   abilityProperties:
     requireOutOfCombat: 0
     requireStealth: 0
+    requireItemNames: []
     weaponAffinityNames: []
     holdableObjectList: []
     despawnPrefabsOnCastEnd: 0
@@ -91,6 +92,8 @@ MonoBehaviour:
   gatherAbilityProperties:
     requireOutOfCombat: 0
     requireStealth: 0
+    requireItemNames:
+    - Logging Axe
     weaponAffinityNames: []
     holdableObjectList:
     - holdableObjectName: LoggingAxe

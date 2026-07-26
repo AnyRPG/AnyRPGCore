@@ -21,6 +21,13 @@ namespace AnyRPG {
         [SerializeField]
         protected bool requireStealth = false;
 
+        [Tooltip("If this list is not empty, this ability will require the character to have the following items in their inventory to use it.")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(Item))]
+        private List<string> requireItemNames = new List<string>();
+
+        private List<Item> requireItems = new List<Item>();
+
         [Tooltip("If this list is not empty, this ability will require the character to have the following weapons equipped to use it.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(WeaponSkill))]
@@ -392,6 +399,7 @@ namespace AnyRPG {
         */
         //public AnimationProfile AnimationProfile { get => animationProfile; set => animationProfile = value; }
         public List<WeaponSkill> WeaponAffinityList { get => weaponAffinityList; set => weaponAffinityList = value; }
+        public List<Item> RequireItems { get => requireItems; set => requireItems = value; }
         public List<CharacterClass> CharacterClassRequirementList { get => characterClassRequirementList; set => characterClassRequirementList = value; }
         public List<ClassSpecialization> ClassSpecializationRequirementList { get => classSpecializationRequirementList; set => classSpecializationRequirementList = value; }
         public PowerResource PowerResource { get => powerResource; set => powerResource = value; }
@@ -814,6 +822,7 @@ namespace AnyRPG {
         public virtual string GetDescription() {
             string requireString = string.Empty;
             bool affinityMet = false;
+            bool hasItems = false;
             string colorString = string.Empty;
             string addString = string.Empty;
             if (requireStealth == true) {
@@ -838,7 +847,27 @@ namespace AnyRPG {
                 } else {
                     colorString = "#ff0000ff";
                 }
-                addString += string.Format("\n<color={0}>Requires: {1}</color>", colorString, string.Join(",", requireWeaponSkills));
+                addString += string.Format("\n<color={0}>Requires Weapon(s): {1}</color>", colorString, string.Join(",", requireWeaponSkills));
+            }
+
+            if (requireItemNames.Count == 0) {
+                // no item requirements, automatically true
+                hasItems = true;
+            } else {
+                // temporarily set to true to allow does not have logic below
+                List<string> requireItemList = new List<string>();
+                foreach (Item _item in requireItems) {
+                    requireItemList.Add(_item.DisplayName);
+                    if (playerManagerClient.UnitController.CharacterInventoryManager.HasItem(_item.ResourceName) == false) {
+                        hasItems = false;
+                    }
+                }
+                if (hasItems) {
+                    colorString = "#ffffffff";
+                } else {
+                    colorString = "#ff0000ff";
+                }
+                addString += string.Format("\n<color={0}>Requires Item(s): {1}</color>", colorString, string.Join(",", requireItemList));
             }
 
             string abilityRange = (GetTargetOptions(playerManagerClient.UnitController).UseMeleeRange == true ? "melee" : GetTargetOptions(playerManagerClient.UnitController).MaxRange + " meters");
@@ -972,6 +1001,11 @@ namespace AnyRPG {
                     return false;
                 }
             }
+
+            if (requireItemNames.Count != 0 && sourceCharacter.AbilityManager.PerformItemCheck(this, playerInitiated) == false) {
+                return false;
+            }
+
             if (weaponAffinityNames.Count == 0) {
                 // no restrictions, automatically true
                 //Debug.Log($"{ResourceName}.AbilityProperties.CanCast(): no weapon affinity requirements, automatically true");
@@ -979,6 +1013,7 @@ namespace AnyRPG {
             } else {
                 return sourceCharacter.AbilityManager.PerformWeaponAffinityCheck(this, playerInitiated);
             }
+            
         }
 
         public bool Use(UnitController sourceUnitController) {
@@ -1152,6 +1187,10 @@ namespace AnyRPG {
                     //Debug.Log($"{ResourceName}.AbilityProperties.CanUseOn(): failed in-progress check");
                     return false;
                 }
+            }
+
+            if (requireItemNames.Count != 0 && sourceCharacter.AbilityManager.PerformItemCheck(this, playerInitiated) == false) {
+                return false;
             }
 
             //Debug.Log($"{ResourceName}.AbilityProperties.CanUseOn({(target != null ? target.name : "null")}, {(sourceCharacter != null ? sourceCharacter.AbilityManager.Name : "null")}, {performCooldownChecks}): passed all checks");
@@ -1352,6 +1391,18 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            if (requireItemNames != null) {
+                foreach (string requireItemName in requireItemNames) {
+                    Item tmpItem = systemDataFactory.GetResource<Item>(requireItemName);
+                    if (tmpItem != null) {
+                        requireItems.Add(tmpItem);
+                    } else {
+                        Debug.LogError($"AbilityProperties.SetupScriptableObjects(): Could not find item: {requireItemName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
+                    }
+                }
+            }
+
             weaponAffinityList = new List<WeaponSkill>();
             if (weaponAffinityNames != null) {
                 foreach (string weaponAffinityName in weaponAffinityNames) {

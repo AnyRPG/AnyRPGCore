@@ -378,6 +378,10 @@ namespace AnyRPG {
             return true;
         }
 
+        public virtual bool PerformItemCheck(AbilityProperties baseAbility, bool playerInitiated = false) {
+            return true;
+        }
+
         public virtual bool PerformAbilityActionCheck(AbilityProperties baseAbility) {
             return true;
         }

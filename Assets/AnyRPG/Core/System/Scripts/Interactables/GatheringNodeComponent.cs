@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -48,6 +49,12 @@ namespace AnyRPG {
             if (GatheringNodeProps.Skill != null && GatheringNodeProps.RequiredSkillLevel > sourceUnitController.CharacterSkillManager.GetSkillLevel(GatheringNodeProps.Skill)) {
                 colorstring = "#ff0000";
                 returnValue += $"\n<color={colorstring}>Requires Skill Level {GatheringNodeProps.RequiredSkillLevel} skill</color>";
+            }
+            if (GatheringNodeProps.BaseAbility != null && GatheringNodeProps.BaseAbility.AbilityProperties.RequireItems.Count > 0) {
+                if (sourceUnitController.AbilityManager.PerformItemCheck(GatheringNodeProps.BaseAbility.AbilityProperties, true) == false) {
+                    colorstring = "#ff0000";
+                    returnValue += $"\n<color={colorstring}>Requires item(s): {string.Join(", ", GatheringNodeProps.BaseAbility.AbilityProperties.RequireItems.Select(i => i.DisplayName))}</color>";
+                }
             }
             return returnValue;
         }

@@ -231,6 +231,14 @@ namespace AnyRPG {
         bool PerformWeaponAffinityCheck(AbilityProperties baseAbility, bool playerInitiated = false);
 
         /// <summary>
+        /// True if the caster has the item required to cast the ability in their inventory
+        /// </summary>
+        /// <param name="baseAbility"></param>
+        /// <param name="playerInitiated"></param>
+        /// <returns></returns>
+        bool PerformItemCheck(AbilityProperties baseAbility, bool playerInitiated = false);
+
+        /// <summary>
         /// True if an animated ability can be performed
         /// </summary>
         /// <param name="animatedAbility"></param>
