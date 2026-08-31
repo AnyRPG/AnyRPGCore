@@ -755,7 +755,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
   m_StringReference:
     m_TableReference:
-      m_TableCollectionName: GUID:e5e13f0874d320944ac2c9a5b33854f7
+      m_TableCollectionName: GUID:70eb5d1b2498be945bbbd4f5d6d6aabd
     m_TableEntryReference:
       m_KeyId: 1781522438
       m_Key: 
@@ -13769,7 +13769,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
   m_StringReference:
     m_TableReference:
-      m_TableCollectionName: GUID:e5e13f0874d320944ac2c9a5b33854f7
+      m_TableCollectionName: GUID:70eb5d1b2498be945bbbd4f5d6d6aabd
     m_TableEntryReference:
       m_KeyId: 1781522437
       m_Key: 
@@ -20469,7 +20469,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
   m_StringReference:
     m_TableReference:
-      m_TableCollectionName: GUID:e5e13f0874d320944ac2c9a5b33854f7
+      m_TableCollectionName: GUID:70eb5d1b2498be945bbbd4f5d6d6aabd
     m_TableEntryReference:
       m_KeyId: 1781522434
       m_Key: 
@@ -21624,7 +21624,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
   m_StringReference:
     m_TableReference:
-      m_TableCollectionName: GUID:e5e13f0874d320944ac2c9a5b33854f7
+      m_TableCollectionName: GUID:70eb5d1b2498be945bbbd4f5d6d6aabd
     m_TableEntryReference:
       m_KeyId: 1781522440
       m_Key: 
@@ -24443,7 +24443,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
   m_StringReference:
     m_TableReference:
-      m_TableCollectionName: GUID:e5e13f0874d320944ac2c9a5b33854f7
+      m_TableCollectionName: GUID:70eb5d1b2498be945bbbd4f5d6d6aabd
     m_TableEntryReference:
       m_KeyId: 1781522439
       m_Key: 
@@ -26290,9 +26290,9 @@ MonoBehaviour:
   hintBarController: {fileID: 0}
   canvasGroup: {fileID: 0}
   languageButtons:
-  - locale: {fileID: 11400000, guid: 263327fad0b8b1a4baae96d8e6dc6108, type: 2}
+  - locale: {fileID: 11400000, guid: dc392bc2651e913499157aeabeeed08d, type: 2}
     button: {fileID: 120412589232724925}
-  - locale: {fileID: 11400000, guid: 0760a85b3b48432459ff0da8331507de, type: 2}
+  - locale: {fileID: 11400000, guid: f04f9391e2b06bd4e8c116259d51b27c, type: 2}
     button: {fileID: 3977547817327240679}
 --- !u!114 &607420254671239863
 MonoBehaviour:
@@ -27429,7 +27429,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
   m_StringReference:
     m_TableReference:
-      m_TableCollectionName: GUID:e5e13f0874d320944ac2c9a5b33854f7
+      m_TableCollectionName: GUID:70eb5d1b2498be945bbbd4f5d6d6aabd
     m_TableEntryReference:
       m_KeyId: 1781522435
       m_Key: 
@@ -34441,7 +34441,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
   m_StringReference:
     m_TableReference:
-      m_TableCollectionName: GUID:e5e13f0874d320944ac2c9a5b33854f7
+      m_TableCollectionName: GUID:70eb5d1b2498be945bbbd4f5d6d6aabd
     m_TableEntryReference:
       m_KeyId: 1781522436
       m_Key: 
@@ -47000,12 +47000,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 11400000, guid: 0760a85b3b48432459ff0da8331507de,
+      objectReference: {fileID: 11400000, guid: f04f9391e2b06bd4e8c116259d51b27c,
         type: 2}
     - target: {fileID: 898118416167151408, guid: 737ca772fe2dcf34db1935699f65f17b,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: zh-Hans
+      value: zh-CN
       objectReference: {fileID: 0}
     - target: {fileID: 898118416167151408, guid: 737ca772fe2dcf34db1935699f65f17b,
         type: 3}
@@ -50123,7 +50123,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 11400000, guid: 263327fad0b8b1a4baae96d8e6dc6108,
+      objectReference: {fileID: 11400000, guid: dc392bc2651e913499157aeabeeed08d,
         type: 2}
     - target: {fileID: 898118416167151408, guid: 737ca772fe2dcf34db1935699f65f17b,
         type: 3}

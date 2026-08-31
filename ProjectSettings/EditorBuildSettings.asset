@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes: []
   m_configObjects:
-    com.unity.addressableassets: {fileID: 11400000, guid: 3f816d52ec621b44b888915e6b40ed42,
+    com.unity.addressableassets: {fileID: 11400000, guid: a20eb8a4cf894b34288201bf89fc5491,
       type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 9eaa29bc8f5810a4f99d11087d525a3a,
       type: 2}
-    com.unity.localization.settings: {fileID: 11400000, guid: 80e9cb1cac9911646bf50cf5cae97f71,
+    com.unity.localization.settings: {fileID: 11400000, guid: f42ca188813aab146827ee210d225aab,
       type: 2}
   m_UseUCBPForAssetBundles: 0

@@ -10,25 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Localization-String-Tables-English
+  m_Name: Localization-Assets-Shared
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: Localization-String-Tables-English
-  m_GUID: 502d6318652408643ae51121278d19fb
+  m_GroupName: Localization-Assets-Shared
+  m_GUID: 074eb2a9a8e317546a10322655ab7f53
   m_SerializeEntries:
-  - m_GUID: afd32ff4772e98d4d9a04db88f4b24e7
-    m_Address: AnyRPG_en
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale-en
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e5e13f0874d320944ac2c9a5b33854f7
-    m_Address: AnyRPG Shared Data
+  - m_GUID: 70eb5d1b2498be945bbbd4f5d6d6aabd
+    m_Address: Assets/AnyRPG/Core/Content/Localization/StringTables/UI Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
-  m_Settings: {fileID: 11400000, guid: 82f302baaa6e3494b86c0aea72422936, type: 2}
+  m_Settings: {fileID: 11400000, guid: a8d6eebc8bc392c4592033c30cd38782, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 28e2f1d752b6cc94e9e703459c1d0ccb, type: 2}
-    - {fileID: 11400000, guid: 31677790cef28284aba875dc132994b5, type: 2}
+    - {fileID: 11400000, guid: 7bc85ef1bed023c44940a3d83be54821, type: 2}
+    - {fileID: 11400000, guid: e031f597d66661e4f8108c49153e61dc, type: 2}

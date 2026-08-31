@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Localization-String-Tables-Chinese (Simplified)
+  m_Name: Localization-String-Tables-Chinese (Simplified) (zh-CN)
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: Localization-String-Tables-Chinese (Simplified)
-  m_GUID: cdded7b446631bf4eb52b17dacd107cb
+  m_GroupName: Localization-String-Tables-Chinese (Simplified) (zh-CN)
+  m_GUID: 5f6a953a0747a5741983a7c06fe809fa
   m_SerializeEntries:
-  - m_GUID: 4b182fc172cd0d946840a36ce1fe30c6
-    m_Address: AnyRPG_zh-Hans
+  - m_GUID: d89ef7ebf82693f4bb2a1668c4e81d74
+    m_Address: UI_zh-CN
     m_ReadOnly: 1
     m_SerializedLabels:
-    - Locale-zh-Hans
+    - Locale-zh-CN
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
-  m_Settings: {fileID: 11400000, guid: 82f302baaa6e3494b86c0aea72422936, type: 2}
+  m_Settings: {fileID: 11400000, guid: a8d6eebc8bc392c4592033c30cd38782, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 0d36d1c498507544190bb0810e02a7e8, type: 2}
-    - {fileID: 11400000, guid: 03e63827e8055834f88c1b38af181703, type: 2}
+    - {fileID: 11400000, guid: 38c6e80368de5fa46863209ed4167fe6, type: 2}
+    - {fileID: 11400000, guid: 6ac8bdcb34cdc104394e12b986b1fd9e, type: 2}

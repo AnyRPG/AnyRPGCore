@@ -10,72 +10,72 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
-  m_Name: AnyRPG_en
+  m_Name: UI_zh-CN
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
   m_LocaleId:
-    m_Code: en
-  m_SharedData: {fileID: 11400000, guid: e5e13f0874d320944ac2c9a5b33854f7, type: 2}
+    m_Code: zh-CN
+  m_SharedData: {fileID: 11400000, guid: 70eb5d1b2498be945bbbd4f5d6d6aabd, type: 2}
   m_Metadata:
     m_Items: []
   m_TableData:
   - m_Id: 1672470528
-    m_Localized: Play
+    m_Localized: "\u5F00\u59CB\u6E38\u620F"
     m_Metadata:
       m_Items: []
   - m_Id: 1773133824
-    m_Localized: Play Online
+    m_Localized: "\u5728\u7EBF\u6E38\u620F"
     m_Metadata:
       m_Items: []
   - m_Id: 1777328128
-    m_Localized: Settings
+    m_Localized: "\u8BBE\u7F6E"
     m_Metadata:
       m_Items: []
   - m_Id: 1777328129
-    m_Localized: Credits
+    m_Localized: "\u5236\u4F5C\u4EBA\u5458"
     m_Metadata:
       m_Items: []
   - m_Id: 1781522432
-    m_Localized: Exit
+    m_Localized: "\u9000\u51FA"
     m_Metadata:
       m_Items: []
   - m_Id: 1781522433
-    m_Localized: Settings
+    m_Localized: "\u8BBE\u7F6E"
     m_Metadata:
       m_Items: []
   - m_Id: 1781522434
-    m_Localized: Sound
+    m_Localized: "\u58F0\u97F3"
     m_Metadata:
       m_Items: []
   - m_Id: 1781522435
-    m_Localized: Controls
+    m_Localized: "\u63A7\u5236"
     m_Metadata:
       m_Items: []
   - m_Id: 1781522436
-    m_Localized: Video
+    m_Localized: "\u89C6\u9891"
     m_Metadata:
       m_Items: []
   - m_Id: 1781522437
-    m_Localized: Key Bindings
+    m_Localized: "\u6309\u952E\u7ED1\u5B9A"
     m_Metadata:
       m_Items: []
   - m_Id: 1781522438
-    m_Localized: User Interface
+    m_Localized: "\u7528\u6237\u754C\u9762"
     m_Metadata:
       m_Items: []
   - m_Id: 1781522439
-    m_Localized: Language
+    m_Localized: "\u8BED\u8A00"
     m_Metadata:
       m_Items: []
   - m_Id: 1781522440
-    m_Localized: Return
+    m_Localized: "\u8FD4\u56DE"
     m_Metadata:
       m_Items: []
   - m_Id: 1781522441
-    m_Localized: Language
+    m_Localized: "\u8BED\u8A00"
     m_Metadata:
       m_Items: []
   - m_Id: 1781522442
-    m_Localized: English
+    m_Localized: "\u82F1\u8BED"
     m_Metadata:
       m_Items: []
   - m_Id: 1781522443
@@ -83,19 +83,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1781522444
-    m_Localized: On
+    m_Localized: "\u5F00"
     m_Metadata:
       m_Items: []
   - m_Id: 1781522445
-    m_Localized: Off
+    m_Localized: "\u5173"
     m_Metadata:
       m_Items: []
   - m_Id: 1781522446
-    m_Localized: Reset to Defaults
+    m_Localized: "\u6062\u590D\u9ED8\u8BA4"
     m_Metadata:
       m_Items: []
   - m_Id: 5817702508650496
-    m_Localized: PLAY OFFLINE
+    m_Localized: "\u79BB\u7EBF\u6E38\u620F"
     m_Metadata:
       m_Items: []
   references:
