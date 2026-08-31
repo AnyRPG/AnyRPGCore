@@ -1,47 +1,61 @@
 using UnityEngine;
 
-namespace AnyRPG {
-    public class MainSettingsMenuPanel : WindowPanel {
-
+namespace AnyRPG
+{
+    public class MainSettingsMenuPanel : WindowPanel
+    {
         [Header("MAIN BUTTONS")]
         public HighlightButton soundButton;
+
         public HighlightButton controlsButton;
         public HighlightButton videoButton;
         public HighlightButton keyBindingsButton;
         public HighlightButton userInterfaceButton;
+        public HighlightButton languageButton;
         public HighlightButton returnButton;
 
         [Header("Panels")]
         [Tooltip("The UI Panel that holds the GAME window tab")]
         public SystemSoundPanel PanelSound;
+
         [Tooltip("The UI Panel that holds the CONTROLS window tab")]
         public SystemControlsPanel PanelControls;
+
         [Tooltip("The UI Panel that holds the VIDEO window tab")]
         public SystemVideoPanel PanelVideo;
+
         [Tooltip("The UI Panel that holds the KEY BINDINGS window tab")]
         public SystemKeyBindPanel PanelKeyBindings;
+
         [Tooltip("The UI Panel that holds the USER INTERFACE window tab")]
         public SystemUIPanel PanelUserInterface;
+
+        [Tooltip("The UI Panel that holds the LANGUAGE window tab")]
+        public SystemLanguagePanel PanelLanguage;
 
         // game manager references
         private UIManager uIManager = null;
 
-        public override void SetGameManagerReferences() {
+        public override void SetGameManagerReferences()
+        {
             base.SetGameManagerReferences();
 
             uIManager = systemGameManager.UIManager;
         }
 
-        public void ResetSettingsPanels() {
+        public void ResetSettingsPanels()
+        {
             // disable all settings panels
             PanelSound.gameObject.SetActive(false);
             PanelControls.gameObject.SetActive(false);
             PanelVideo.gameObject.SetActive(false);
             PanelKeyBindings.gameObject.SetActive(false);
             PanelUserInterface.gameObject.SetActive(false);
+            PanelLanguage.gameObject.SetActive(false);
         }
 
-        public void SoundPanel() {
+        public void SoundPanel()
+        {
             ResetSettingsPanels();
             PanelSound.gameObject.SetActive(true);
 
@@ -52,7 +66,8 @@ namespace AnyRPG {
             soundButton.Select();
         }
 
-        public void VideoPanel() {
+        public void VideoPanel()
+        {
             ResetSettingsPanels();
             PanelVideo.gameObject.SetActive(true);
 
@@ -63,7 +78,8 @@ namespace AnyRPG {
             videoButton.Select();
         }
 
-        public void ControlsPanel() {
+        public void ControlsPanel()
+        {
             ResetSettingsPanels();
             PanelControls.gameObject.SetActive(true);
 
@@ -74,7 +90,8 @@ namespace AnyRPG {
             controlsButton.Select();
         }
 
-        public void KeyBindingsPanel() {
+        public void KeyBindingsPanel()
+        {
             ResetSettingsPanels();
             PanelKeyBindings.gameObject.SetActive(true);
 
@@ -85,8 +102,8 @@ namespace AnyRPG {
             keyBindingsButton.Select();
         }
 
-
-        public void UserInterfacePanel() {
+        public void UserInterfacePanel()
+        {
             ResetSettingsPanels();
             PanelUserInterface.gameObject.SetActive(true);
 
@@ -97,21 +114,42 @@ namespace AnyRPG {
             userInterfaceButton.Select();
         }
 
-        public void CloseMenu() {
+        public void LanguagePanel()
+        {
+            ResetSettingsPanels();
+            PanelLanguage.gameObject.SetActive(true);
+
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(languageButton);
+            SetOpenSubPanel(PanelLanguage, false);
+
+            languageButton.HighlightBackground();
+            languageButton.Select();
+
+            PanelLanguage.RefreshLanguageButtons();
+        }
+
+        public void CloseMenu()
+        {
             //uIManager.SystemWindowManager.mainMenuWindow.OpenWindow();
             uIManager.settingsMenuWindow.CloseWindow();
         }
 
-        public override void ProcessOpenWindowNotification() {
+        public override void ProcessOpenWindowNotification()
+        {
             //Debug.Log("MainSettingsMenuController.ProcessOpenWindowNotification()");
             base.ProcessOpenWindowNotification();
-            foreach (CloseableWindowContents closeableWindowContents in subPanels) {
+
+            foreach (CloseableWindowContents closeableWindowContents in subPanels)
+            {
+                if (closeableWindowContents == null)
+                {
+                    continue;
+                }
                 closeableWindowContents.ReceiveOpenWindowNotification();
             }
             uINavigationControllers[0].SetCurrentButton(userInterfaceButton);
             userInterfaceButton.HighlightBackground();
             UserInterfacePanel();
         }
-
     }
 }

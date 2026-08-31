@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: AnyRPG Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: AnyRPG
+  m_TableCollectionNameGuidString: e5e13f0874d320944ac2c9a5b33854f7
+  m_Entries:
+  - m_Id: 1672470528
+    m_Key: MainMenu.Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1773133824
+    m_Key: MainMenu.PlayOnline
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5817702508650496
+    m_Key: MainMenu.Offline
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1777328128
+    m_Key: MainMenu.Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1777328129
+    m_Key: MainMenu.Credits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522432
+    m_Key: MainMenu.Exit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522433
+    m_Key: Settings.Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522434
+    m_Key: Settings.Sound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522435
+    m_Key: Settings.Controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522436
+    m_Key: Settings.Video
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522437
+    m_Key: Settings.KeyBindings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522438
+    m_Key: Settings.UserInterface
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522439
+    m_Key: Settings.Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522440
+    m_Key: Settings.Return
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522441
+    m_Key: Language.Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522442
+    m_Key: Language.English
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522443
+    m_Key: Language.ChineseSimplified
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522444
+    m_Key: Common.On
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522445
+    m_Key: Common.Off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522446
+    m_Key: Common.ResetToDefaults
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 1771684041756770562
+  references:
+    version: 2
+    RefIds:
+    - rid: 1771684041756770562
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
+        asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1786513368057
