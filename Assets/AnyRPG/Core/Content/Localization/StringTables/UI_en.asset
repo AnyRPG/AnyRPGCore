@@ -35,7 +35,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1781522432
-    m_Localized: Exit
+    m_Localized: Exit Game
     m_Metadata:
       m_Items: []
   - m_Id: 1781522433
@@ -95,7 +95,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5817702508650496
-    m_Localized: PLAY OFFLINE
+    m_Localized: Play Offline
     m_Metadata:
       m_Items: []
   references:
