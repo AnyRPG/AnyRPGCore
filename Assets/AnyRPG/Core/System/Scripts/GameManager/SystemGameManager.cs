@@ -89,6 +89,7 @@ namespace AnyRPG {
         private ContextMenuService contextMenuService = new ContextMenuService();
         private ControlsManager controlsManager = new ControlsManager();
         private CraftingManager craftingManager = new CraftingManager();
+        private LocalizationManager localizationManager = new LocalizationManager();
         private CurrencyConverter currencyConverter = new CurrencyConverter();
         private DialogManagerClient dialogManagerClient = new DialogManagerClient();
         private DialogManagerServer dialogManagerServer = new DialogManagerServer();
@@ -159,6 +160,7 @@ namespace AnyRPG {
         public static bool DisconnectingNetworkForShutdown { get => disconnectingNetworkForShutdown; set => disconnectingNetworkForShutdown = value; }
 
         public SystemEventManager SystemEventManager { get => systemEventManager; }
+        public LocalizationManager LocalizationManager { get => localizationManager; }
         public AuthenticationService AuthenticationService { get => authenticationService; }
         public UserAccountService UserAccountService { get => userAccountService; }
         public PlayerCharacterService PlayerCharacterService { get => playerCharacterService; }
@@ -321,6 +323,7 @@ namespace AnyRPG {
             objectPooler.Configure(this);
 
             // configure services and managers
+            localizationManager.Configure(this);
             serverDataService.Configure(this);
             userAccountService.Configure(this);
             playerCharacterService.Configure(this);

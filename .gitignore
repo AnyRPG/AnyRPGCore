@@ -112,3 +112,7 @@ Assets/Settings*
 
 #Visual Studio
 .leu
+
+# VS Code
+.vscode/
+*.slnx
