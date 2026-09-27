@@ -95,6 +95,262 @@ MonoBehaviour:
     m_Key: Common.ResetToDefaults
     m_Metadata:
       m_Items: []
+  - m_Id: 1781522447
+    m_Key: Common.Low
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522448
+    m_Key: Common.Medium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522449
+    m_Key: Common.High
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522450
+    m_Key: Settings.DefaultSettings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522451
+    m_Key: Settings.Sound.Header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522452
+    m_Key: Settings.Sound.MasterVolume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522453
+    m_Key: Settings.Sound.MusicVolume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522454
+    m_Key: Settings.Sound.EffectVolume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522455
+    m_Key: Settings.Sound.VoiceVolume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522456
+    m_Key: Settings.Sound.AmbientVolume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522457
+    m_Key: Settings.Sound.UIVolume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522458
+    m_Key: Settings.Video.Header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522459
+    m_Key: Settings.Video.FullScreen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522460
+    m_Key: Settings.Video.VSync
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522461
+    m_Key: Settings.Video.Resolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522462
+    m_Key: Settings.Video.ShadowQuality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522463
+    m_Key: Settings.Video.TextureQuality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522464
+    m_Key: Settings.Video.GraphicsQuality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522465
+    m_Key: Settings.Controls.Header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522466
+    m_Key: Settings.Controls.MouseTurnSpeed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522467
+    m_Key: Settings.Controls.MouseLookSpeed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522468
+    m_Key: Settings.Controls.KeyboardTurnSpeed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522469
+    m_Key: Settings.Controls.JoystickTurnSpeed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522470
+    m_Key: Settings.Controls.JoystickLookSpeed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522471
+    m_Key: Settings.Controls.InvertMouse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522472
+    m_Key: Settings.Controls.InvertJoystick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522473
+    m_Key: Settings.Controls.GamepadMode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522474
+    m_Key: Settings.UI.Header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522475
+    m_Key: Settings.UI.LockUI
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522476
+    m_Key: Settings.UI.PopupWindowOpacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522477
+    m_Key: Settings.UI.InventoryOpacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522478
+    m_Key: Settings.UI.InventorySlotOpacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522479
+    m_Key: Settings.UI.ActionBarOpacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522480
+    m_Key: Settings.UI.PagedButtonOpacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522481
+    m_Key: Settings.UI.SystemMenuOpacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522482
+    m_Key: Settings.UI.QuestTrackerOpacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522483
+    m_Key: Settings.UI.MessageLogOpacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522484
+    m_Key: Settings.UI.UseActionBar1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522485
+    m_Key: Settings.UI.UseActionBar2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522486
+    m_Key: Settings.UI.UseActionBar3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522487
+    m_Key: Settings.UI.UseActionBar4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522488
+    m_Key: Settings.UI.UseActionBar5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522489
+    m_Key: Settings.UI.UseActionBar6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522490
+    m_Key: Settings.UI.UseActionBar7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522491
+    m_Key: Settings.UI.UseMiniMap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522492
+    m_Key: Settings.UI.UseCastBar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522493
+    m_Key: Settings.UI.UseStatusBar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522494
+    m_Key: Settings.UI.UseSystemBar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522495
+    m_Key: Settings.UI.UseMessageLog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522496
+    m_Key: Settings.UI.UseMessageFeed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522497
+    m_Key: Settings.UI.UseExperienceBar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522498
+    m_Key: Settings.UI.UseQuestTracker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522499
+    m_Key: Settings.UI.UseCombatText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522500
+    m_Key: Settings.UI.UsePlayerUnitFrame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522501
+    m_Key: Settings.UI.UseFocusUnitFrame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522502
+    m_Key: Settings.UI.UseGroupUnitFrames
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522503
+    m_Key: Settings.UI.ShowPlayerName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522504
+    m_Key: Settings.UI.ShowPlayerFaction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522505
+    m_Key: Settings.UI.HideFullHealthBar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522506
+    m_Key: Settings.UI.DefaultWindowPositions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522507
+    m_Key: Settings.KeyBindings.Header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522508
+    m_Key: Settings.KeyBindings.Movement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522509
+    m_Key: Settings.KeyBindings.ActionBars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522510
+    m_Key: Settings.KeyBindings.System
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

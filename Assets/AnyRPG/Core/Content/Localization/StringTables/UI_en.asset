@@ -98,6 +98,262 @@ MonoBehaviour:
     m_Localized: Play Offline
     m_Metadata:
       m_Items: []
+  - m_Id: 1781522447
+    m_Localized: Low
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522448
+    m_Localized: Medium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522449
+    m_Localized: High
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522450
+    m_Localized: Default Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522451
+    m_Localized: Sound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522452
+    m_Localized: Master Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522453
+    m_Localized: Music Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522454
+    m_Localized: Effects Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522455
+    m_Localized: Voice Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522456
+    m_Localized: Ambient Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522457
+    m_Localized: UI Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522458
+    m_Localized: Video
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522459
+    m_Localized: Full Screen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522460
+    m_Localized: V-Sync
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522461
+    m_Localized: Resolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522462
+    m_Localized: Shadow Quality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522463
+    m_Localized: Texture Quality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522464
+    m_Localized: Graphics Quality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522465
+    m_Localized: Controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522466
+    m_Localized: Mouse Turn Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522467
+    m_Localized: Mouse Look Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522468
+    m_Localized: Keyboard Turn Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522469
+    m_Localized: Joystick Turn Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522470
+    m_Localized: Joystick Look Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522471
+    m_Localized: Invert Mouse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522472
+    m_Localized: Invert Joystick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522473
+    m_Localized: Gamepad Mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522474
+    m_Localized: User Interface
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522475
+    m_Localized: Lock UI
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522476
+    m_Localized: Popup Window Opacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522477
+    m_Localized: Inventory Opacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522478
+    m_Localized: Inventory Slot Opacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522479
+    m_Localized: Action Bar Opacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522480
+    m_Localized: Paged Button Opacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522481
+    m_Localized: System Menu Opacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522482
+    m_Localized: Quest Tracker Opacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522483
+    m_Localized: Message Log Opacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522484
+    m_Localized: Use Action Bar 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522485
+    m_Localized: Use Action Bar 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522486
+    m_Localized: Use Action Bar 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522487
+    m_Localized: Use Action Bar 4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522488
+    m_Localized: Use Action Bar 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522489
+    m_Localized: Use Action Bar 6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522490
+    m_Localized: Use Action Bar 7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522491
+    m_Localized: Use Mini Map
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522492
+    m_Localized: Use Cast Bar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522493
+    m_Localized: Use Status Bar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522494
+    m_Localized: Use System Bar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522495
+    m_Localized: Use Message Log
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522496
+    m_Localized: Use Message Feed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522497
+    m_Localized: Use Experience Bar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522498
+    m_Localized: Use Quest Tracker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522499
+    m_Localized: Use Combat Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522500
+    m_Localized: Use Player Unit Frame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522501
+    m_Localized: Use Focus Unit Frame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522502
+    m_Localized: Use Group Unit Frames
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522503
+    m_Localized: Show Player Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522504
+    m_Localized: Show Player Faction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522505
+    m_Localized: Hide Full Health Bar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522506
+    m_Localized: Default Window Positions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522507
+    m_Localized: Key Bindings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522508
+    m_Localized: Movement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522509
+    m_Localized: Action Bars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1781522510
+    m_Localized: System
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
