@@ -77,7 +77,8 @@ namespace AnyRPG {
             } else if (sourceLevel == targetCharacter.CharacterStats.Level) {
                 totalXP = baseXP;
             } else if (targetCharacter.CharacterStats.Level > GetGrayLevel(sourceLevel)) {
-                totalXP = baseXP * (1 - (sourceLevel - targetCharacter.CharacterStats.Level) / ZeroDifference(sourceLevel));
+                int zeroDifference = ZeroDifference(sourceLevel);
+                totalXP = (int)((double)baseXP * (zeroDifference - (sourceLevel - targetCharacter.CharacterStats.Level)) / zeroDifference);
             }
             return totalXP;
         }
