@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 namespace AnyRPG {
     static class LevelEquations {
@@ -73,11 +74,21 @@ namespace AnyRPG {
             int totalXP = 0;
             if (sourceLevel < targetCharacter.CharacterStats.Level) {
                 // higher level mob
-                totalXP = (int)(baseXP * (1 + 0.05 * (targetCharacter.CharacterStats.Level - sourceLevel)));
+                int levelDifference = targetCharacter.CharacterStats.Level - sourceLevel;
+                // Explicitly use a double for the multiplier calculation
+                double levelModifier = 1.0 + (0.05 * levelDifference);
+                // Protect against binary truncation errors before casting to int
+                totalXP = (int)Math.Round(baseXP * levelModifier);
             } else if (sourceLevel == targetCharacter.CharacterStats.Level) {
+                // same level mob
                 totalXP = baseXP;
             } else if (targetCharacter.CharacterStats.Level > GetGrayLevel(sourceLevel)) {
-                totalXP = baseXP * (1 - (sourceLevel - targetCharacter.CharacterStats.Level) / ZeroDifference(sourceLevel));
+                // lower level mob, but not gray
+                int zeroDifference = ZeroDifference(sourceLevel);
+                // Calculate the scaling multiplier cleanly using clear double literals
+                double levelModifier = (double)(zeroDifference - (sourceLevel - targetCharacter.CharacterStats.Level)) / zeroDifference;
+                // Multiply and use Math.Round to guarantee precision safety before casting
+                totalXP = (int)Math.Round(baseXP * levelModifier);
             }
             return totalXP;
         }
