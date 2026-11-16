@@ -9,6 +9,9 @@ namespace AnyRPG {
         /// </summary>
         private Dictionary<string, UserAccount> userAccounts = new Dictionary<string, UserAccount>();
 
+        // File-backed lobbies load accounts, but deliberately skip persistent world data.
+        public bool AccountsLoaded { get; private set; }
+
         // game manager references
         private ServerDataService serverDataService = null;
 
@@ -26,6 +29,7 @@ namespace AnyRPG {
         public void ProcessStartServer() {
             //Debug.Log("UserAccountService.HandleStartServer()");
 
+            AccountsLoaded = false;
             LoadAllUserAccounts();
         }
 
@@ -38,6 +42,7 @@ namespace AnyRPG {
         private void ClearAllUserAccounts() {
             //Debug.Log("UserAccountService.ClearAllUserAccounts()");
 
+            AccountsLoaded = false;
             userAccounts.Clear();
         }
 
@@ -61,6 +66,7 @@ namespace AnyRPG {
                 //Debug.Log($"UserAccountService.LoadAllUserAccounts(): Adding user account {userAccount.UserName} with id {userAccount.Id} to in memory lookup.");
                 userAccounts.Add(userAccount.UserName, userAccount);
             }
+            AccountsLoaded = true;
         }
 
         /// <summary>
