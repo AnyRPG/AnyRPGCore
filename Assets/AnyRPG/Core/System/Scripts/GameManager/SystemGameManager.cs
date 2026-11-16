@@ -242,6 +242,17 @@ namespace AnyRPG {
         public NetworkManagerServer NetworkManagerServer { get => networkManagerServer; set => networkManagerServer = value; }
         public CharacterManager CharacterManager { get => characterManager; set => characterManager = value; }
         public GameMode GameMode { get => gameMode; }
+
+        /// <summary>
+        /// True when this instance presents the game to a player on this device: single player, a network client,
+        /// or a host (a server that also has its own connected local client). False only for a server without a local player.
+        /// Use this for presentation (audio, camera, UI, nameplates, effects). Use ServerModeActive for authority.
+        /// </summary>
+        public bool HasLocalPlayer {
+            get => gameMode == GameMode.Local
+                || networkManagerServer.ServerModeActive == false
+                || networkManagerClient.ClientConnectionActive == true;
+        }
         public QuestGiverManagerClient QuestGiverManagerClient { get => questGiverManagerClient; set => questGiverManagerClient = value; }
         public QuestGiverManagerServer QuestGiverManagerServer { get => questGiverManagerServer; set => questGiverManagerServer = value; }
         public CharacterGroupServiceClient CharacterGroupServiceClient { get => characterGroupServiceClient; set => characterGroupServiceClient = value; }

@@ -191,7 +191,7 @@ namespace AnyRPG {
 
             unitController.UnitEventController.NotifyOnActivateMountedState(mountUnitController);
             lateJoin = false;
-            if ((systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) && unitController.IsTargeted == true) {
+            if (systemGameManager.HasLocalPlayer && unitController.IsTargeted == true) {
                 unitController.SetUnTargeted();
                 mountUnitController.SetTargeted();
             }
@@ -286,7 +286,7 @@ namespace AnyRPG {
 
                 unitController.UnitEventController.NotifyOnDeactivateMountedState();
             }
-            if ((systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) && mountUnitController.IsTargeted == true) {
+            if (systemGameManager.HasLocalPlayer && mountUnitController.IsTargeted == true) {
                 unitController.SetTargeted();
                 mountUnitController.SetUnTargeted();
             }

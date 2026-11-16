@@ -99,7 +99,7 @@ namespace AnyRPG {
                 // there is no weather in the main menu or initialization scene, so nothing to do
                 return;
             }
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+            if (systemGameManager.HasLocalPlayer) {
                 EndWeather(currentWeather, true);
             }
             CleanupWeatherEffectControllers();
@@ -113,7 +113,7 @@ namespace AnyRPG {
         public void HandleLevelLoad() {
             //Debug.Log("WeatherManagerClient.HandleLevelLoad()");
 
-            if (networkManagerServer.ServerModeActive == true) {
+            if (systemGameManager.HasLocalPlayer == false) {
                 return;
             }
             if (levelManagerClient.IsMainMenu() == true || levelManagerClient.IsInitializationScene() == true) {

@@ -1194,7 +1194,7 @@ namespace AnyRPG {
         public void SetGroundTargetClient(Vector3 newGroundTarget) {
             //Debug.Log("CharacterAbilityManager.SetGroundTarget(" + newGroundTarget + ")");
             SetGroundTarget(newGroundTarget);
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false || levelManagerClient.IsCutscene()) {
+            if (systemGameManager.HasLocalPlayer || levelManagerClient.IsCutscene()) {
                 AbilityProperties ability = groundTargetAbility;
                 DeactivateTargetingMode();
                 BeginAbility(ability, null);

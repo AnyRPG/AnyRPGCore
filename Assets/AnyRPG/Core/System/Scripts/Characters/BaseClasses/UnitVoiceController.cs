@@ -29,7 +29,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnBeforeDie += HandleBeforeDie;
             unitController.UnitEventController.OnJump += HandleJump;
 
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+            if (systemGameManager.HasLocalPlayer) {
                 unitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamage;
             }
         }
@@ -45,9 +45,9 @@ namespace AnyRPG {
             unitController.UnitEventController.OnBeforeDie -= HandleBeforeDie;
             unitController.UnitEventController.OnJump -= HandleJump;
 
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
-                unitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamage;
-            }
+            // unconditional: removing a handler that was never added is harmless, and HasLocalPlayer can change
+            // between subscribe and cleanup (this line previously used +=, which re-subscribed instead)
+            unitController.UnitEventController.OnTakeFallDamage -= HandleTakeFallDamage;
         }
 
         public void HandleStartInteract() {

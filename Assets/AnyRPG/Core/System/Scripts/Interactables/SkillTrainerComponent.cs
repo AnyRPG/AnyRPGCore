@@ -12,7 +12,7 @@ namespace AnyRPG {
             if (interactionPanelTitle == string.Empty) {
                 interactionPanelTitle = "Train Me";
             }
-            if (systemGameManager.GameMode == GameMode.Local || systemGameManager.NetworkManagerServer.ServerModeActive == false) {
+            if (systemGameManager.HasLocalPlayer) {
                 systemEventManager.OnLearnSkill += HandleSkillListChanged;
                 systemEventManager.OnUnLearnSkill += HandleSkillListChanged;
             }

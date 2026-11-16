@@ -889,7 +889,7 @@ namespace AnyRPG {
 
             InitializeNameplateController();
 
-            if (systemGameManager.GameMode == GameMode.Local || (networkManagerServer.ServerModeActive == false && isOwner == true)) {
+            if (systemGameManager.GameMode == GameMode.Local || (systemGameManager.HasLocalPlayer && isOwner == true)) {
                 // to allow the player to click on objects through their model, the player unit on authoritative clients
                 // needs to be on the player layer
                 unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultPlayerUnitLayer);
@@ -1954,7 +1954,7 @@ namespace AnyRPG {
             // PUT CODE HERE TO CHECK IF THIS ACTUALLY HAS MUSIC PROFILE, OTHERWISE MOBS WITH A STRATEGY BUT NO PROFILE THAT DIE MID BOSS FIGHT CAN RESET MUSIC
 
             if (CombatStrategy != null) {
-                if (CombatStrategy.HasMusic() == true && networkManagerServer.ServerModeActive == false) {
+                if (CombatStrategy.HasMusic() == true && systemGameManager.HasLocalPlayer) {
                     //Debug.Log($"{gameObject.name}.AIController.ResetCombat(): attempting to turn off fight music");
                     SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(gameObject.scene.name);
                     if (sceneNode != null) {
@@ -2627,7 +2627,7 @@ namespace AnyRPG {
         public void ActivateStealth() {
 
             isStealth = true;
-            if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && isOwner == false) {
+            if (systemGameManager.GameMode == GameMode.Network && systemGameManager.HasLocalPlayer && isOwner == false) {
                 characterStats.ClearStatusEffectPrefabs();
                 nameplateController.RemoveNameplate();
                 CleanupMiniMapIndicator();
@@ -2642,7 +2642,7 @@ namespace AnyRPG {
 
             isStealth = false;
             unitMaterialController.DeactivateStealth();
-            if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && isOwner == false) {
+            if (systemGameManager.GameMode == GameMode.Network && systemGameManager.HasLocalPlayer && isOwner == false) {
                 nameplateController.AddNameplate();
                 characterStats.SpawnStatusEffectPrefabs();
                 InstantiateMiniMapIndicator();

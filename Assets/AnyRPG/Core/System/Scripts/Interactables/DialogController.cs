@@ -151,7 +151,7 @@ namespace AnyRPG {
         public void PlayDialogNode(DialogNode dialogNode) {
             //Debug.Log($"{interactable.gameObject.name}.DialogController.PlayDialogNode()");
 
-            if (networkManagerServer.ServerModeActive == true) {
+            if (systemGameManager.HasLocalPlayer == false) {
                 return;
             }
             //bool writeMessage = true;

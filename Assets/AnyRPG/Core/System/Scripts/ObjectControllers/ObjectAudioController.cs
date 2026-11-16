@@ -12,6 +12,9 @@ namespace AnyRPG {
 
         private bool serverModeActive = false;
 
+        // when set, decides at play time whether this device should hear audio (see SetMuteCheck)
+        private System.Func<bool> isMuted = null;
+
         [SerializeField]
         private AudioSource audioSource = null;
 
@@ -21,10 +24,20 @@ namespace AnyRPG {
             this.serverModeActive = serverModeActive;
         }
 
+        /// <summary>
+        /// Decide muting at play time instead of once at configure time. A host's own client can connect after
+        /// objects are configured, so a configure-time "server mode" flag would mute a host permanently.
+        /// </summary>
+        public void SetMuteCheck(System.Func<bool> isMuted) {
+            this.isMuted = isMuted;
+        }
+
+        private bool Muted { get => isMuted != null ? isMuted() : serverModeActive; }
+
         public void PlayAudioClip(AudioClip audioClip) {
             if (audioSource != null && audioClip != null) {
                 audioSource.clip = audioClip;
-                if (serverModeActive == false) {
+                if (Muted == false) {
                     audioSource.Play();
                 }
                 OnPlayAudioClip(audioClip);
@@ -33,7 +46,7 @@ namespace AnyRPG {
 
         public void PlayOneShot(AudioClip audioClip) {
             if (audioSource != null && audioClip != null) {
-                if (serverModeActive == false) {
+                if (Muted == false) {
                     audioSource.PlayOneShot(audioClip);
                 }
                 OnPlayOneShot(audioClip);
@@ -41,19 +54,19 @@ namespace AnyRPG {
         }
 
         public void StopAudio() {
-            if (audioSource != null && serverModeActive == false) {
+            if (audioSource != null && Muted == false) {
                 audioSource.Stop();
             }
             OnStopAudio();
         }
         public void PauseAudio() {
-            if (audioSource != null && serverModeActive == false) {
+            if (audioSource != null && Muted == false) {
                 audioSource.Pause();
             }
             OnPauseAudio();
         }
         public void UnPauseAudio() {
-            if (audioSource != null && serverModeActive == false) {
+            if (audioSource != null && Muted == false) {
                 audioSource.UnPause();
             }
             OnUnPauseAudio();

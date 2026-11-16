@@ -896,7 +896,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (networkManagerServer.ServerModeActive == true) {
+            if (systemGameManager.HasLocalPlayer == false) {
                 return;
             }
 
@@ -1186,7 +1186,7 @@ namespace AnyRPG {
         public void HandleMiniMapStatusUpdate(InteractableOptionComponent interactableOptionComponent) {
             //Debug.Log($"{gameObject.name}.Interactable.HandleMiniMapStatusUpdate({interactableOptionComponent.GetType()})");
 
-            if (networkManagerServer.ServerModeActive == false) {
+            if (systemGameManager.HasLocalPlayer) {
                 miniMapManager.InteractableStatusUpdate(this, interactableOptionComponent);
                 mainMapManager.InteractableStatusUpdate(this, interactableOptionComponent);
             }

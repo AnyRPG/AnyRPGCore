@@ -279,7 +279,10 @@ namespace AnyRPG {
             mecanimModelController?.DespawnModel();
             modelAppearanceController?.DespawnModel();
             if (unitController.UnitProfile?.UnitPrefabProps?.ModelPrefab != null) {
-                if (networkManagerServer.ServerModeActive == true) {
+                if (characterManager.LocalUnits.Contains(unitController) || unitController.UnitControllerMode == UnitControllerMode.Preview) {
+                    // a unit requested locally (single player, or a preview on a host) is never a network object
+                    objectPooler.ReturnObjectToPool(unitModel);
+                } else if (networkManagerServer.ServerModeActive == true) {
                     // this is happening on the server, return the object to the pool
                     networkManagerServer.ReturnObjectToPool(unitModel);
                 } else {
@@ -389,7 +392,8 @@ namespace AnyRPG {
             }
 
             // on non authoritative network clients, do not spawn visual effect when stealthed
-            if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && unitController.IsStealth == true) {
+            if (systemGameManager.GameMode == GameMode.Network && unitController.IsStealth == true
+                && (networkManagerServer.ServerModeActive == false || (systemGameManager.HasLocalPlayer && unitController.IsOwner == false))) {
                 return;
             }
 

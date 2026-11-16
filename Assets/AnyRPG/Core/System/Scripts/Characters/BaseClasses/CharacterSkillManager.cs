@@ -140,7 +140,7 @@ namespace AnyRPG {
                     // only notify on level up if the server is not active.
                     // This will prevent the server sending an extra message to the client to update the skill level,
                     // since the client will calculate the level up on its own when the experience is added.
-                    AddSkillLevel(skill, 1, networkManagerServer.ServerModeActive == false);
+                    AddSkillLevel(skill, 1, networkManagerServer.ServerModeActive == false || unitController.IsOwner == true);
                 }
             }
             unitController.UnitEventController.NotifyOnAddSkillExperience(skill, addExperience);

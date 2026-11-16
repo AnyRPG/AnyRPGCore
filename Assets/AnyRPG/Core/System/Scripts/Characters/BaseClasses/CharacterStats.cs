@@ -1459,7 +1459,7 @@ namespace AnyRPG {
                     // should only be done on server or authoritative client
                     unitController.UnitAnimator.HandleDie();
                 }
-                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false || levelManagerClient.IsCutscene()) {
+                if (systemGameManager.HasLocalPlayer || levelManagerClient.IsCutscene()) {
                     // should be done on client
                     unitController.RemoveNameplate();
                     // should be done on client
@@ -1546,7 +1546,7 @@ namespace AnyRPG {
                 ReviveRaw();
             }
             unitController.FreezeRotation();
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false || levelManagerClient.IsCutscene()) {
+            if (systemGameManager.HasLocalPlayer || levelManagerClient.IsCutscene()) {
                 // should be done on client
                 unitController.InitializeNameplate();
                 // minimap updates

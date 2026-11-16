@@ -54,6 +54,7 @@ namespace AnyRPG {
         protected LevelManagerClient levelManagerClient = null;
         protected InteractionManagerServer interactionManagerServer = null;
         protected PlayerManagerClient playerManagerClient = null;
+        protected NetworkManagerClient networkManagerClient = null;
         protected SystemAchievementManager systemAchievementManager = null;
         protected QuestGiverManagerClient questGiverManager = null;
         protected MessageFeedManager messageFeedManager = null;
@@ -103,6 +104,7 @@ namespace AnyRPG {
             levelManagerClient = systemGameManager.LevelManagerClient;
             interactionManagerServer = systemGameManager.InteractionManagerServer;
             playerManagerClient = systemGameManager.PlayerManagerClient;
+            networkManagerClient = systemGameManager.NetworkManagerClient;
             systemAchievementManager = systemGameManager.SystemAchievementManager;
             questGiverManager = systemGameManager.QuestGiverManagerClient;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
@@ -179,13 +181,33 @@ namespace AnyRPG {
         public void AddActivePlayer(int accountId, UnitController unitController) {
             //Debug.Log($"PlayerManagerServer.AddActivePlayer(accountId: {accountId}, {unitController.gameObject.name})");
 
+            if (activeUnitControllersByAccountId.TryGetValue(accountId, out UnitController existing)) {
+                if (existing == unitController) {
+                    // already registered: a host registers its own character from both the owner and the server spawn path
+                    return;
+                }
+                Debug.LogWarning($"PlayerManagerServer.AddActivePlayer(): account {accountId} was registered to {(existing == null ? "a destroyed unit" : existing.gameObject.name)}; replacing with {unitController.gameObject.name}");
+                RemoveActivePlayerMappings(accountId, existing);
+            }
             int playerCharacterId = GetPlayerCharacterId(accountId);
             //Debug.Log($"PlayerManagerServer.AddActivePlayer(accountId: {accountId}, {unitController.gameObject.name}) playercharacterId: {playerCharacterId} unitcontrollerid: {unitController.CharacterId}");
-            activeUnitControllersByPlayerCharacterId.Add(playerCharacterId, unitController);
+            activeUnitControllersByPlayerCharacterId[playerCharacterId] = unitController;
             activeUnitControllersByAccountId.Add(accountId, unitController);
             activeUnitControllerLookup.Add(unitController, accountId);
             activePlayerGameObjects.Add(unitController.gameObject, accountId);
 
+        }
+
+        private void RemoveActivePlayerMappings(int accountId, UnitController unitController) {
+            activeUnitControllersByAccountId.Remove(accountId);
+            int playerCharacterId = GetPlayerCharacterId(accountId);
+            if (activeUnitControllersByPlayerCharacterId.TryGetValue(playerCharacterId, out UnitController byCharacter) && byCharacter == unitController) {
+                activeUnitControllersByPlayerCharacterId.Remove(playerCharacterId);
+            }
+            if (unitController != null) {
+                activeUnitControllerLookup.Remove(unitController);
+                activePlayerGameObjects.Remove(unitController.gameObject);
+            }
         }
 
         public void MonitorPlayer(UnitController unitController) {
@@ -589,9 +611,20 @@ namespace AnyRPG {
                 UnitController unitController = characterManager.SpawnCharacterPrefab(characterRequestData, null, spawnPlayerRequest.spawnLocation, spawnPlayerRequest.spawnForwardDirection);
                 playerCharacterMonitors[accountId].SetUnitController(unitController);
             } else {
+                if (activeUnitControllersByAccountId.TryGetValue(accountId, out UnitController activeUnit)
+                    && activeUnit != null
+                    && activeUnit.gameObject.scene.name == sceneName) {
+                    // already has a live character in this scene (a host can request its own spawn from both the
+                    // lobby start and its client level load); a second spawn would orphan the first character
+                    Debug.LogWarning($"PlayerManagerServer.RequestSpawnPlayerUnit(): account {accountId} already has {activeUnit.gameObject.name} in {sceneName}; ignoring duplicate spawn request");
+                    return;
+                }
                 CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(systemDataFactory, playerCharacterMonitors[accountId].characterSaveData);
                 characterConfigurationRequest.unitControllerMode = UnitControllerMode.Player;
-                CharacterRequestData characterRequestData = new CharacterRequestData(this, GameMode.Network, characterConfigurationRequest);
+                // host: the server spawns the host's own character, so the host's local player manager must adopt it
+                bool hostOwnCharacter = networkManagerClient.ClientConnectionActive && accountId == networkManagerClient.AccountId;
+                CharacterRequestData characterRequestData = new CharacterRequestData(hostOwnCharacter ? (ICharacterRequestor)playerManagerClient : this, GameMode.Network, characterConfigurationRequest);
+                characterRequestData.isOwner = hostOwnCharacter;
                 characterRequestData.accountId = accountId;
                 characterRequestData.characterId = playerCharacterMonitors[accountId].characterSaveData.CharacterId;
                 characterRequestData.characterGroupId = characterGroupServiceServer.GetCharacterGroupIdFromCharacterId(characterRequestData.characterId);

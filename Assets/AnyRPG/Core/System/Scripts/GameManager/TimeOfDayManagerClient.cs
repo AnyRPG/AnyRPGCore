@@ -109,7 +109,7 @@ namespace AnyRPG {
         public void HandleLevelLoad() {
             //Debug.Log("TimeOfDayManager.HandleLevelLoad()");
 
-            if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == true) {
+            if (systemGameManager.HasLocalPlayer == false) {
                 return;
             }
 

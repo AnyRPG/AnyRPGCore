@@ -162,8 +162,8 @@ namespace AnyRPG {
                 }
             }
 
-            // server does not spawn players
-            if (systemGameManager.GameMode == GameMode.Network  && networkManagerServer.ServerModeActive == true) {
+            // a server without a local player does not spawn players (a host does)
+            if (systemGameManager.GameMode == GameMode.Network && systemGameManager.HasLocalPlayer == false) {
                 return;
             }
 

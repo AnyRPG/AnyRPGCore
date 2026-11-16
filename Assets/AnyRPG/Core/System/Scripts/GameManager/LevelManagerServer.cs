@@ -178,6 +178,11 @@ namespace AnyRPG {
             if (loadedScenes.ContainsKey(scene.name) == false) {
                 loadedScenes.Add(scene.name, new Dictionary<int, SceneData>());
             }
+            if (loadedScenes[scene.name].ContainsKey(scene.handle) == true) {
+                // already registered (a host registers each scene once, from the server side)
+                Debug.LogWarning($"LevelManagerServer.AddLoadedScene(): scene {scene.name} ({scene.handle}) was already registered");
+                return;
+            }
             SceneData sceneData = new SceneData(sceneInstanceType, scene, sceneUtilityService.GetSceneNodeBySceneName(scene.name), SceneUtilityService.DoesSceneHaveNavMesh(scene));
             loadedScenes[scene.name].Add(scene.handle, sceneData);
 

@@ -58,7 +58,7 @@ namespace AnyRPG {
         }
 
         public void StartPhase() {
-            if (networkManagerServer.ServerModeActive == true) {
+            if (systemGameManager.HasLocalPlayer == false) {
                 return;
             }
             if (phaseMusicProfile != null) {

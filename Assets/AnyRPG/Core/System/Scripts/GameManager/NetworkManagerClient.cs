@@ -32,6 +32,9 @@ namespace AnyRPG {
 
         private bool isLoggingInOrOut = false;
 
+        // true while this instance has a live client connection, including a host's own local client
+        private bool clientConnectionActive = false;
+
         //private INetworkConnector networkConnector = null;
         private NetworkServerMode clientMode = NetworkServerMode.Lobby;
         private int accountId;
@@ -103,6 +106,8 @@ namespace AnyRPG {
             friendServiceClient = systemGameManager.FriendServiceClient;
             interactionManagerClient = systemGameManager.InteractionManagerClient;
         }
+
+        public bool ClientConnectionActive { get => clientConnectionActive; }
 
         public bool Login(string username, string password, string server) {
             //Debug.Log($"NetworkManagerClient.Login({username}, {password})");
@@ -193,6 +198,8 @@ namespace AnyRPG {
 
         public void ProcessStopConnection() {
             //Debug.Log($"NetworkManagerClient.ProcessStopConnection()");
+
+            clientConnectionActive = false;
 
             if (SystemGameManager.DisconnectingNetworkForShutdown == true) {
                 systemGameManager.ExitGame();
@@ -617,6 +624,7 @@ namespace AnyRPG {
         }
 
         public void ProcessStartClientConnector() {
+            clientConnectionActive = true;
             OnClientConnectionStarted();
             uIManager.ProcessLoginSuccess();
         }

@@ -169,7 +169,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (unitAudioEmitter != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false)) {
+            if (unitAudioEmitter != null && systemGameManager.HasLocalPlayer) {
                 unitAudioEmitter.PlayCast(audioClip, loop);
             }
         }
@@ -186,7 +186,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (unitAudioEmitter != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false)) {
+            if (unitAudioEmitter != null && systemGameManager.HasLocalPlayer) {
                 unitAudioEmitter.PlayEffect(audioClip, loop);
             }
         }
@@ -197,7 +197,7 @@ namespace AnyRPG {
             if (audioClip == null) {
                 return;
             }
-            if (unitAudioEmitter != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false)) {
+            if (unitAudioEmitter != null && systemGameManager.HasLocalPlayer) {
                 unitAudioEmitter.PlayVoice(audioClip);
             }
         }
@@ -207,35 +207,35 @@ namespace AnyRPG {
             if (audioClip == null) {
                 return;
             }
-            if (unitAudioEmitter != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false)) {
+            if (unitAudioEmitter != null && systemGameManager.HasLocalPlayer) {
                 unitAudioEmitter.PlayMovement(audioClip, loop);
             }
         }
 
         public void HandleStopCastSound() {
             //Debug.Log($"{gameObject.name}UnitAudio.StopCast()");
-            if (unitAudioEmitter != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false)) {
+            if (unitAudioEmitter != null && systemGameManager.HasLocalPlayer) {
                 unitAudioEmitter.StopCast();
             }
         }
 
         public void HandleStopEffectSound() {
             //Debug.Log($"{gameObject.name}UnitAudio.StopEffect()");
-            if (unitAudioEmitter != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false)) {
+            if (unitAudioEmitter != null && systemGameManager.HasLocalPlayer) {
                 unitAudioEmitter.StopEffect();
             }
         }
 
         public void HandleStopVoiceSound() {
             //Debug.Log($"{gameObject.name}UnitAudio.StopVoice()");
-            if (unitAudioEmitter != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false)) {
+            if (unitAudioEmitter != null && systemGameManager.HasLocalPlayer) {
                 unitAudioEmitter.StopVoice();
             }
         }
 
         public void HandleStopMovementSound(bool stopLoopsOnly = true) {
             //Debug.Log($"{gameObject.name}.UnitComponentController.StopMovementSound()");
-            if (unitAudioEmitter != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false)) {
+            if (unitAudioEmitter != null && systemGameManager.HasLocalPlayer) {
                 unitAudioEmitter.StopMovement(stopLoopsOnly);
             }
         }

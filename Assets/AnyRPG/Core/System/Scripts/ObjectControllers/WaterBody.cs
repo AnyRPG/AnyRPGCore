@@ -83,8 +83,8 @@ namespace AnyRPG {
                 return;
             }
 
-            if (networkManagerServer.ServerModeActive == false) {
-                // there is no camera on the server, so this is only run on the client
+            if (systemGameManager.HasLocalPlayer) {
+                // there is no camera on a server without a local player, so this is only run on the client
                 if (useFog == true
                     && other.tag == "MainCamera"
                     && fogActivated == false) {
@@ -112,7 +112,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (networkManagerServer.ServerModeActive == false) {
+            if (systemGameManager.HasLocalPlayer) {
                 // configure camera
                 if (useFog == true
                     && other.tag == "MainCamera"

@@ -217,9 +217,10 @@ namespace AnyRPG {
 
             if (IsMainMenu(newScene.name) == true) {
                 systemGameManager.AutoConfigureMonoBehaviours(newScene);
-            } else {
+            } else if (networkManagerServer.ServerModeActive == false) {
                 // just defaulting to world for now because this is a single player game
                 // might add type "single" or something if this is an issue in the future
+                // on a host, the server side already registered this scene with its real instance type
                 levelManagerServer.AddLoadedScene(newScene, SceneInstanceType.World);
             }
 
@@ -228,8 +229,8 @@ namespace AnyRPG {
             // ensure this is done after addloadedscene so that any initialization of active cameras has completed.
             cameraManager.CheckForCutsceneCamera(newScene);
 
-            if (networkManagerServer.ServerModeActive == false) {
-                // client only
+            if (systemGameManager.HasLocalPlayer) {
+                // client only (including a host that also has a local player)
                 // client only for now
                 if (activeSceneNode != null) {
                     activeSceneNode.PreloadFootStepAudio();
@@ -247,7 +248,7 @@ namespace AnyRPG {
                 ActivateSceneCamera();
             } else {
                 // Monitor for this message and delete the if block if it never happens.
-                Debug.LogWarning("LevelManager.PerformLevelLoadActivities(): This method should never be called if the server is active. ");
+                Debug.LogWarning("LevelManager.PerformLevelLoadActivities(): This method should never be called on a server without a local player. ");
             }
 
             OnLevelLoad();

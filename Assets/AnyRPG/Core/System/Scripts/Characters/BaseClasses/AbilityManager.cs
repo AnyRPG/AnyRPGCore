@@ -584,7 +584,7 @@ namespace AnyRPG {
                             //Debug.Log(DisplayName + ".ProjectileEffect.Cast(): found gameobject: " + go.name + " and it has projectile script");
                             abilityEffectContext = projectileEffectProperties.ApplyInputMultiplier(abilityEffectContext);
                             projectileScript.Initialize(systemGameManager, projectileEffectProperties, abilityCaster, target, new Vector3(0, 1, 0), go, abilityEffectContext);
-                            if (networkManagerServer.ServerModeActive == false) { 
+                            if (systemGameManager.HasLocalPlayer) {
                                 if (projectileEffectProperties.FlightAudioProfiles != null && projectileEffectProperties.FlightAudioProfiles.Count > 0) {
                                     projectileScript.PlayFlightAudio(projectileEffectProperties.FlightAudioProfiles, projectileEffectProperties.RandomFlightAudioProfiles);
                                 }

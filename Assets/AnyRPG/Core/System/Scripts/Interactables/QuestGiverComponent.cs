@@ -18,7 +18,7 @@ namespace AnyRPG {
         public InteractableOptionComponent InteractableOptionComponent { get => this; }
 
         public QuestGiverComponent(InteractableBase interactable, QuestGiverProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+            if (systemGameManager.HasLocalPlayer) {
                 foreach (QuestNode questNode in QuestGiverProps.Quests) {
                     questNode.Quest.OnQuestBaseStatusUpdated += HandlePrerequisiteUpdates;
                 }
