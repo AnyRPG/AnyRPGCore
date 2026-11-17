@@ -223,6 +223,11 @@ namespace AnyRPG {
         public void AddLobbyGameToList(int gameId, LobbyGame lobbyGame) {
             //Debug.Log($"ClientLobbyPanelController.AddLobbyGameToList(gameId: {gameId})");
 
+            if (lobbyGameButtons.ContainsKey(gameId)) {
+                // the list can arrive more than once (refresh, reconnect); update the existing button
+                lobbyGameButtons[gameId].SetGame(lobbyGame);
+                return;
+            }
             GameObject go = objectPooler.GetPooledObject(lobbyGameTemplate, lobbyGameContainer);
             ClientLobbyGameConnectionButtonController clientLobbyGameConnectionButtonController = go.GetComponent<ClientLobbyGameConnectionButtonController>();
             clientLobbyGameConnectionButtonController.Configure(systemGameManager);
